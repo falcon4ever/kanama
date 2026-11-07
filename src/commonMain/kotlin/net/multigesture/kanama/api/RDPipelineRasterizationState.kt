@@ -274,7 +274,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * A constant scale applied to the slope of each polygon's depth. Applied before
      * `depth_bias_constant_factor`.
      *
      * Generated from Godot docs: RDPipelineRasterizationState.set_depth_bias_slope_factor
@@ -286,7 +286,7 @@ class RDPipelineRasterizationState(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * A constant scale applied to the slope of each polygons' depth. Applied before
+     * A constant scale applied to the slope of each polygon's depth. Applied before
      * `depth_bias_constant_factor`.
      *
      * Generated from Godot docs: RDPipelineRasterizationState.get_depth_bias_slope_factor

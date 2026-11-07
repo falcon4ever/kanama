@@ -9,7 +9,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.requireConstructed
 
 /**
- * Configuration header for Aruco markers.
+ * Configuration header for ArUco markers.
  *
  * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco
  */
@@ -34,7 +34,7 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     }
 
     /**
-     * Dictionary to use to decode Aruco markers. Note: Must be set before using this configuration to
+     * Dictionary to use to decode ArUco markers. Note: Must be set before using this configuration to
      * create a spatial context.
      *
      * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.set_aruco_dict
@@ -46,7 +46,7 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     }
 
     /**
-     * Dictionary to use to decode Aruco markers. Note: Must be set before using this configuration to
+     * Dictionary to use to decode ArUco markers. Note: Must be set before using this configuration to
      * create a spatial context.
      *
      * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.get_aruco_dict
@@ -69,97 +69,97 @@ class OpenXRSpatialCapabilityConfigurationAruco(handle: GodotHandle) : OpenXRSpa
     value class ArucoDict(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * 4 by 4 pixel Aruco marker dictionary with 50 IDs.
+             * 4 by 4 pixel ArUco marker dictionary with 50 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_4X4_50
              */
             val DICT_4X4_50: ArucoDict get() = ArucoDict(1L)
             /**
-             * 4 by 4 pixel Aruco marker dictionary with 100 IDs.
+             * 4 by 4 pixel ArUco marker dictionary with 100 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_4X4_100
              */
             val DICT_4X4_100: ArucoDict get() = ArucoDict(2L)
             /**
-             * 4 by 4 pixel Aruco marker dictionary with 250 IDs.
+             * 4 by 4 pixel ArUco marker dictionary with 250 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_4X4_250
              */
             val DICT_4X4_250: ArucoDict get() = ArucoDict(3L)
             /**
-             * 4 by 4 pixel Aruco marker dictionary with 1000 IDs.
+             * 4 by 4 pixel ArUco marker dictionary with 1000 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_4X4_1000
              */
             val DICT_4X4_1000: ArucoDict get() = ArucoDict(4L)
             /**
-             * 5 by 5 pixel Aruco marker dictionary with 50 IDs.
+             * 5 by 5 pixel ArUco marker dictionary with 50 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_5X5_50
              */
             val DICT_5X5_50: ArucoDict get() = ArucoDict(5L)
             /**
-             * 5 by 5 pixel Aruco marker dictionary with 100 IDs.
+             * 5 by 5 pixel ArUco marker dictionary with 100 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_5X5_100
              */
             val DICT_5X5_100: ArucoDict get() = ArucoDict(6L)
             /**
-             * 5 by 5 pixel Aruco marker dictionary with 250 IDs.
+             * 5 by 5 pixel ArUco marker dictionary with 250 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_5X5_250
              */
             val DICT_5X5_250: ArucoDict get() = ArucoDict(7L)
             /**
-             * 5 by 5 pixel Aruco marker dictionary with 1000 IDs.
+             * 5 by 5 pixel ArUco marker dictionary with 1000 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_5X5_1000
              */
             val DICT_5X5_1000: ArucoDict get() = ArucoDict(8L)
             /**
-             * 6 by 6 pixel Aruco marker dictionary with 50 IDs.
+             * 6 by 6 pixel ArUco marker dictionary with 50 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_6X6_50
              */
             val DICT_6X6_50: ArucoDict get() = ArucoDict(9L)
             /**
-             * 6 by 6 pixel Aruco marker dictionary with 100 IDs.
+             * 6 by 6 pixel ArUco marker dictionary with 100 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_6X6_100
              */
             val DICT_6X6_100: ArucoDict get() = ArucoDict(10L)
             /**
-             * 6 by 6 pixel Aruco marker dictionary with 250 IDs.
+             * 6 by 6 pixel ArUco marker dictionary with 250 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_6X6_250
              */
             val DICT_6X6_250: ArucoDict get() = ArucoDict(11L)
             /**
-             * 6 by 6 pixel Aruco marker dictionary with 1000 IDs.
+             * 6 by 6 pixel ArUco marker dictionary with 1000 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_6X6_1000
              */
             val DICT_6X6_1000: ArucoDict get() = ArucoDict(12L)
             /**
-             * 7 by 7 pixel Aruco marker dictionary with 50 IDs.
+             * 7 by 7 pixel ArUco marker dictionary with 50 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_7X7_50
              */
             val DICT_7X7_50: ArucoDict get() = ArucoDict(13L)
             /**
-             * 7 by 7 pixel Aruco marker dictionary with 100 IDs.
+             * 7 by 7 pixel ArUco marker dictionary with 100 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_7X7_100
              */
             val DICT_7X7_100: ArucoDict get() = ArucoDict(14L)
             /**
-             * 7 by 7 pixel Aruco marker dictionary with 250 IDs.
+             * 7 by 7 pixel ArUco marker dictionary with 250 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_7X7_250
              */
             val DICT_7X7_250: ArucoDict get() = ArucoDict(15L)
             /**
-             * 7 by 7 pixel Aruco marker dictionary with 1000 IDs.
+             * 7 by 7 pixel ArUco marker dictionary with 1000 IDs.
              *
              * Generated from Godot docs: OpenXRSpatialCapabilityConfigurationAruco.ARUCO_DICT_7X7_1000
              */

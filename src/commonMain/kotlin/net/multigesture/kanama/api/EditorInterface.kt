@@ -31,6 +31,16 @@ object EditorInterface {
         set(value) = setMovieMakerEnabled(value)
 
     /**
+     * Returns `true` if the editor is currently exiting.
+     *
+     * Generated from Godot docs: EditorInterface.is_exiting
+     */
+    @JvmStatic
+    fun isExiting(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isExitingBind, singleton)
+    }
+
+    /**
      * Restarts the editor. This closes the editor and then opens the same project. If `save` is
      * `true`, the project will be saved before restarting.
      *
@@ -123,6 +133,17 @@ object EditorInterface {
     }
 
     /**
+     * Returns the editor's `ScenePaint2DEditor` instance. Warning: Removing and freeing this node will
+     * render a part of the editor useless and may cause a crash.
+     *
+     * Generated from Godot docs: EditorInterface.get_scene_paint_2d
+     */
+    @JvmStatic
+    fun getScenePaint2d(): ScenePaint2DEditor? {
+        return ScenePaint2DEditor.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getScenePaint2dBind, singleton))
+    }
+
+    /**
      * Returns mesh previews rendered at the given size as an `Array` of `Texture2D`s.
      *
      * Generated from Godot docs: EditorInterface.make_mesh_previews
@@ -177,21 +198,6 @@ object EditorInterface {
     }
 
     /**
-     * Returns the editor control responsible for main screen plugins and tools. Use it with plugins
-     * that implement `EditorPlugin._has_main_screen`. Note: This node is a `VBoxContainer`, which
-     * means that if you add a `Control` child to it, you need to set the child's
-     * `Control.size_flags_vertical` to `Control.SizeFlags.EXPAND_FILL` to make it use the full
-     * available space. Warning: Removing and freeing this node will render a part of the editor
-     * useless and may cause a crash.
-     *
-     * Generated from Godot docs: EditorInterface.get_editor_main_screen
-     */
-    @JvmStatic
-    fun getEditorMainScreen(): VBoxContainer? {
-        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorMainScreenBind, singleton))
-    }
-
-    /**
      * Returns the editor's `ScriptEditor` instance. Warning: Removing and freeing this node will
      * render a part of the editor useless and may cause a crash.
      *
@@ -225,6 +231,16 @@ object EditorInterface {
     }
 
     /**
+     * Returns the editor control responsible for legacy main screen plugins and tools.
+     *
+     * Generated from Godot docs: EditorInterface.get_editor_main_screen
+     */
+    @JvmStatic
+    fun getEditorMainScreen(): VBoxContainer? {
+        return VBoxContainer.wrap(ObjectCalls.ptrcallNoArgsRetObject(Binds.getEditorMainScreenBind, singleton))
+    }
+
+    /**
      * Sets the editor's current main screen to the one specified in `name`. `name` must match the
      * title of the tab in question exactly (e.g. `2D`, `3D`, `Script`, `Game`, or `Asset Store` for
      * default tabs).
@@ -234,6 +250,18 @@ object EditorInterface {
     @JvmStatic
     fun setMainScreenEditor(name: String) {
         ObjectCalls.ptrcallWithStringArg(Binds.setMainScreenEditorBind, singleton, name)
+    }
+
+    /**
+     * Returns an `EditorDock` with the specified `name`. `name` must match the original (untranslated)
+     * title of the tab in question exactly (e.g., `2D`, `Scene`, `Audio`). Returns `null` if the dock
+     * was not found.
+     *
+     * Generated from Godot docs: EditorInterface.get_dock_by_name
+     */
+    @JvmStatic
+    fun getDockByName(name: String): EditorDock? {
+        return EditorDock.wrap(ObjectCalls.ptrcallWithStringArgRetObject(Binds.getDockByNameBind, singleton, name))
     }
 
     /**
@@ -863,6 +891,11 @@ object EditorInterface {
         @JvmField
         val singleton = ObjectCalls.getSingleton("EditorInterface")
 
+        private const val IS_EXITING_HASH = 36873697L
+        @JvmField
+        val isExitingBind =
+            ObjectCalls.getMethodBind("EditorInterface", "is_exiting", IS_EXITING_HASH)
+
         private const val RESTART_EDITOR_HASH = 3216645846L
         @JvmField
         val restartEditorBind =
@@ -908,6 +941,11 @@ object EditorInterface {
         val getEditorUndoRedoBind =
             ObjectCalls.getMethodBind("EditorInterface", "get_editor_undo_redo", GET_EDITOR_UNDO_REDO_HASH)
 
+        private const val GET_SCENE_PAINT_2D_HASH = 4188778635L
+        @JvmField
+        val getScenePaint2dBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_scene_paint_2d", GET_SCENE_PAINT_2D_HASH)
+
         private const val MAKE_MESH_PREVIEWS_HASH = 878078554L
         @JvmField
         val makeMeshPreviewsBind =
@@ -933,11 +971,6 @@ object EditorInterface {
         val getBaseControlBind =
             ObjectCalls.getMethodBind("EditorInterface", "get_base_control", GET_BASE_CONTROL_HASH)
 
-        private const val GET_EDITOR_MAIN_SCREEN_HASH = 1706218421L
-        @JvmField
-        val getEditorMainScreenBind =
-            ObjectCalls.getMethodBind("EditorInterface", "get_editor_main_screen", GET_EDITOR_MAIN_SCREEN_HASH)
-
         private const val GET_SCRIPT_EDITOR_HASH = 90868003L
         @JvmField
         val getScriptEditorBind =
@@ -953,10 +986,20 @@ object EditorInterface {
         val getEditorViewport3dBind =
             ObjectCalls.getMethodBind("EditorInterface", "get_editor_viewport_3d", GET_EDITOR_VIEWPORT_3D_HASH)
 
+        private const val GET_EDITOR_MAIN_SCREEN_HASH = 1706218421L
+        @JvmField
+        val getEditorMainScreenBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_editor_main_screen", GET_EDITOR_MAIN_SCREEN_HASH)
+
         private const val SET_MAIN_SCREEN_EDITOR_HASH = 83702148L
         @JvmField
         val setMainScreenEditorBind =
             ObjectCalls.getMethodBind("EditorInterface", "set_main_screen_editor", SET_MAIN_SCREEN_EDITOR_HASH)
+
+        private const val GET_DOCK_BY_NAME_HASH = 2597074523L
+        @JvmField
+        val getDockByNameBind =
+            ObjectCalls.getMethodBind("EditorInterface", "get_dock_by_name", GET_DOCK_BY_NAME_HASH)
 
         private const val SET_DISTRACTION_FREE_MODE_HASH = 2586408642L
         @JvmField

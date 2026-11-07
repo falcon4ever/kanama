@@ -194,6 +194,7 @@ open class Control(godotObject: GodotHandle) : CanvasItem(godotObject) {
       val EXPAND_FILL: SizeFlags get() = SizeFlags(3L)
       val SHRINK_CENTER: SizeFlags get() = SizeFlags(4L)
       val SHRINK_END: SizeFlags get() = SizeFlags(8L)
+      val MAXIMIZE: SizeFlags get() = SizeFlags(16L)
     }
   }
 

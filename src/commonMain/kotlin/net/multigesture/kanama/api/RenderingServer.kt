@@ -288,6 +288,23 @@ object RenderingServer {
     }
 
     /**
+     * Replaces `texture`'s texture data by the texture specified by the `by_texture` RID, without
+     * changing `texture`'s RID. Unlike `texture_replace`, this method automatically patches any
+     * uniform sets that reference `texture` so they point to the new underlying resource. This makes
+     * it suitable for replacing textures that are already bound in materials or shaders without
+     * invalidating existing draw state. The new texture may have different dimensions (e.g. for
+     * texture streaming mip level changes). Textures that are not compatible will likely cause
+     * rendering errors, so it's recommended to only use this method on textures that are compatible
+     * with each other (e.g. same format and usage flags).
+     *
+     * Generated from Godot docs: RenderingServer.texture_replace_compatible
+     */
+    @JvmStatic
+    fun textureReplaceCompatible(texture: RID, byTexture: RID) {
+        ObjectCalls.ptrcallWithTwoRIDArgs(Binds.textureReplaceCompatibleBind, singleton, texture, byTexture)
+    }
+
+    /**
      * Sets the size at which the texture should be displayed in 2D, ignoring its original size. This
      * does not rescale the texture data itself, only how it is drawn in 2D. Set `width` and `height`
      * to 0 to disable the size override.
@@ -878,6 +895,72 @@ object RenderingServer {
     }
 
     /**
+     * Returns the `RenderingDevice` `RID` handle of the vertex buffer of the given mesh surface
+     * (Vertex, Normal, Tangent). The returned `RID` can be used like any other buffer on the
+     * `RenderingDevice`, so the surface vertices can be read or written from a compute shader without
+     * a CPU round-trip. This is the `Mesh` equivalent of `multimesh_get_buffer_rd_rid` and is intended
+     * for GPU-driven mesh workflows (procedural meshes, ribbon trails, cloth, hair, grass) implemented
+     * from a `GDExtension`. To bind the buffer as a storage buffer in compute, the surface must have
+     * been created with the `ArrayFormat.FLAG_USE_STORAGE_BUFFER` flag set in its format. Returns an
+     * invalid `RID` if the surface has no vertex buffer or if the rendering backend does not expose
+     * `RenderingDevice` `RID`s (such as the OpenGL backend).
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_get_vertex_buffer_rd_rid
+     */
+    @JvmStatic
+    fun meshSurfaceGetVertexBufferRdRid(mesh: RID, surface: Int): RID {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.meshSurfaceGetVertexBufferRdRidBind, singleton, mesh, surface)
+    }
+
+    /**
+     * Returns the `RenderingDevice` `RID` handle of the attribute buffer of the given mesh surface
+     * (Color, UV, UV2, Custom0-3). The returned `RID` can be used like any other buffer on the
+     * `RenderingDevice`, so the surface attributes can be read or written from a compute shader
+     * without a CPU round-trip. To bind the buffer as a storage buffer in compute, the surface must
+     * have been created with the `ArrayFormat.FLAG_USE_STORAGE_BUFFER` flag set in its format. Returns
+     * an invalid `RID` if the surface has no attribute buffer or if the rendering backend does not
+     * expose `RenderingDevice` `RID`s (such as the OpenGL backend).
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_get_attribute_buffer_rd_rid
+     */
+    @JvmStatic
+    fun meshSurfaceGetAttributeBufferRdRid(mesh: RID, surface: Int): RID {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.meshSurfaceGetAttributeBufferRdRidBind, singleton, mesh, surface)
+    }
+
+    /**
+     * Returns the `RenderingDevice` `RID` handle of the skin buffer of the given mesh surface (Bones,
+     * Weights). The returned `RID` can be used like any other buffer on the `RenderingDevice`, so the
+     * skin data can be read or written from a compute shader without a CPU round-trip. This buffer is
+     * created with the storage-buffer usage bit whenever the surface has skinning data, so it can be
+     * bound as a storage buffer in compute even without `ArrayFormat.FLAG_USE_STORAGE_BUFFER`. Returns
+     * an invalid `RID` if the surface has no skin buffer or if the rendering backend does not expose
+     * `RenderingDevice` `RID`s (such as the OpenGL backend).
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_get_skin_buffer_rd_rid
+     */
+    @JvmStatic
+    fun meshSurfaceGetSkinBufferRdRid(mesh: RID, surface: Int): RID {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.meshSurfaceGetSkinBufferRdRidBind, singleton, mesh, surface)
+    }
+
+    /**
+     * Returns the `RenderingDevice` `RID` handle of the index buffer of the given mesh surface. The
+     * returned `RID` can be used like any other buffer on the `RenderingDevice`, so the indices can be
+     * read or written from a compute shader without a CPU round-trip. To bind the buffer as a storage
+     * buffer in compute, the surface must have been created with the
+     * `ArrayFormat.FLAG_USE_STORAGE_BUFFER` flag set in its format. Returns an invalid `RID` if the
+     * surface is not indexed or if the rendering backend does not expose `RenderingDevice` `RID`s
+     * (such as the OpenGL backend).
+     *
+     * Generated from Godot docs: RenderingServer.mesh_surface_get_index_buffer_rd_rid
+     */
+    @JvmStatic
+    fun meshSurfaceGetIndexBufferRdRid(mesh: RID, surface: Int): RID {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetRID(Binds.meshSurfaceGetIndexBufferRdRidBind, singleton, mesh, surface)
+    }
+
+    /**
      * Sets an optional second mesh which can be used for rendering shadows and the depth prepass. Can
      * be used to increase performance by supplying a mesh with fused vertices and only vertex position
      * data (without normals, UVs, colors, etc.). Note: This mesh must have exactly the same vertex
@@ -1454,6 +1537,18 @@ object RenderingServer {
     @JvmStatic
     fun lightSetMaxSdfgiCascade(light: RID, cascade: Long) {
         ObjectCalls.ptrcallWithRIDAndUInt32Arg(Binds.lightSetMaxSdfgiCascadeBind, singleton, light, cascade)
+    }
+
+    /**
+     * If `true`, allows screen-space contact shadows for this light. Only used when
+     * `ProjectSettings.rendering/lights_and_shadows/contact_shadow/enabled` is enabled. Equivalent to
+     * `Light3D.shadow_contact_shadows_allow`.
+     *
+     * Generated from Godot docs: RenderingServer.light_set_allow_contact_shadows
+     */
+    @JvmStatic
+    fun lightSetAllowContactShadows(light: RID, enable: Boolean) {
+        ObjectCalls.ptrcallWithRIDAndBoolArg(Binds.lightSetAllowContactShadowsBind, singleton, light, enable)
     }
 
     /**
@@ -6111,8 +6206,8 @@ object RenderingServer {
     }
 
     /**
-     * Returns `true` if the OS supports a certain `feature`. Features might be `s3tc`, `etc`, and
-     * `etc2`.
+     * Returns `true` if the OS supports a certain `feature`. Features might be `s3tc`, `rgtc`, `bptc`,
+     * `etc`, `etc2`, `astc`, and `astc_hdr`.
      *
      * Generated from Godot docs: RenderingServer.has_os_feature
      */
@@ -6389,8 +6484,8 @@ object RenderingServer {
              */
             val RGBA8: TextureDrawableFormat get() = TextureDrawableFormat(0L)
             /**
-             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an
-             * sRGB to linear color space conversion is performed.
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, a
+             * linear to sRGB color encoding conversion is performed.
              *
              * Generated from Godot docs: RenderingServer.TEXTURE_DRAWABLE_FORMAT_RGBA8_SRGB
              */
@@ -6829,6 +6924,17 @@ object RenderingServer {
              */
             val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
             /**
+             * Flag used to mark that the surface's vertex, attribute, skin, and index buffers must be created
+             * with the storage-buffer usage bit so they can be bound as storage buffers in compute shaders.
+             * This is required to write into them from a compute pipeline through the `RID`s returned by
+             * `RenderingServer.mesh_surface_get_vertex_buffer_rd_rid` and the matching methods for the
+             * attribute, skin, and index buffers. Has no effect on the OpenGL backend, which does not expose
+             * `RenderingDevice` `RID`s.
+             *
+             * Generated from Godot docs: RenderingServer.ARRAY_FLAG_USE_STORAGE_BUFFER
+             */
+            val FLAG_USE_STORAGE_BUFFER: ArrayFormat get() = ArrayFormat(1073741824L)
+            /**
              * Flag used to mark the start of the bits used to store the mesh version.
              *
              * Generated from Godot docs: RenderingServer.ARRAY_FLAG_FORMAT_VERSION_BASE
@@ -7242,11 +7348,18 @@ object RenderingServer {
              */
             val INTENSITY: LightParam get() = LightParam(20L)
             /**
+             * Blurs the edges of the contact shadow. `0.0` produces sharp shadows; higher values increase the
+             * noise magnitude.
+             *
+             * Generated from Godot docs: RenderingServer.LIGHT_PARAM_CONTACT_SHADOW_BLUR
+             */
+            val CONTACT_SHADOW_BLUR: LightParam get() = LightParam(21L)
+            /**
              * Represents the size of the `LightParam` enum.
              *
              * Generated from Godot docs: RenderingServer.LIGHT_PARAM_MAX
              */
-            val MAX: LightParam get() = LightParam(21L)
+            val MAX: LightParam get() = LightParam(22L)
         }
     }
 
@@ -10782,6 +10895,11 @@ object RenderingServer {
         val textureReplaceBind =
             ObjectCalls.getMethodBind("RenderingServer", "texture_replace", TEXTURE_REPLACE_HASH)
 
+        private const val TEXTURE_REPLACE_COMPATIBLE_HASH = 395945892L
+        @JvmField
+        val textureReplaceCompatibleBind =
+            ObjectCalls.getMethodBind("RenderingServer", "texture_replace_compatible", TEXTURE_REPLACE_COMPATIBLE_HASH)
+
         private const val TEXTURE_SET_SIZE_OVERRIDE_HASH = 4288446313L
         @JvmField
         val textureSetSizeOverrideBind =
@@ -11031,6 +11149,26 @@ object RenderingServer {
         @JvmField
         val meshSurfaceUpdateIndexRegionBind =
             ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_update_index_region", MESH_SURFACE_UPDATE_INDEX_REGION_HASH)
+
+        private const val MESH_SURFACE_GET_VERTEX_BUFFER_RD_RID_HASH = 1066463050L
+        @JvmField
+        val meshSurfaceGetVertexBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_vertex_buffer_rd_rid", MESH_SURFACE_GET_VERTEX_BUFFER_RD_RID_HASH)
+
+        private const val MESH_SURFACE_GET_ATTRIBUTE_BUFFER_RD_RID_HASH = 1066463050L
+        @JvmField
+        val meshSurfaceGetAttributeBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_attribute_buffer_rd_rid", MESH_SURFACE_GET_ATTRIBUTE_BUFFER_RD_RID_HASH)
+
+        private const val MESH_SURFACE_GET_SKIN_BUFFER_RD_RID_HASH = 1066463050L
+        @JvmField
+        val meshSurfaceGetSkinBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_skin_buffer_rd_rid", MESH_SURFACE_GET_SKIN_BUFFER_RD_RID_HASH)
+
+        private const val MESH_SURFACE_GET_INDEX_BUFFER_RD_RID_HASH = 1066463050L
+        @JvmField
+        val meshSurfaceGetIndexBufferRdRidBind =
+            ObjectCalls.getMethodBind("RenderingServer", "mesh_surface_get_index_buffer_rd_rid", MESH_SURFACE_GET_INDEX_BUFFER_RD_RID_HASH)
 
         private const val MESH_SET_SHADOW_MESH_HASH = 395945892L
         @JvmField
@@ -11286,6 +11424,11 @@ object RenderingServer {
         @JvmField
         val lightSetMaxSdfgiCascadeBind =
             ObjectCalls.getMethodBind("RenderingServer", "light_set_max_sdfgi_cascade", LIGHT_SET_MAX_SDFGI_CASCADE_HASH)
+
+        private const val LIGHT_SET_ALLOW_CONTACT_SHADOWS_HASH = 1265174801L
+        @JvmField
+        val lightSetAllowContactShadowsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "light_set_allow_contact_shadows", LIGHT_SET_ALLOW_CONTACT_SHADOWS_HASH)
 
         private const val LIGHT_OMNI_SET_SHADOW_MODE_HASH = 2552677200L
         @JvmField

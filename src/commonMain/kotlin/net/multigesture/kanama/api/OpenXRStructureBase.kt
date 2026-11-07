@@ -21,6 +21,19 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
         set(value) = setNext(value)
 
     /**
+     * Returns the structure pointer (any OpenXR structure that has an `XrStructureType`) used for this
+     * structure. The pointer is valid as long as the instance exists.
+     *
+     * Generated from Godot docs: OpenXRStructureBase.get_header
+     */
+    fun getHeader(next: Long): Long {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithLongArgRetLong(Binds.getHeaderBind, segment, next)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * Returns the structure type (OpenXR `XrStructureType`) used for this structure.
      *
      * Generated from Godot docs: OpenXRStructureBase.get_structure_type
@@ -82,6 +95,11 @@ open class OpenXRStructureBase(handle: GodotHandle) : RefCounted(handle) {
     }
 
     private object Binds {
+        private const val GET_HEADER_HASH = 3744713108L
+        @JvmField
+        val getHeaderBind =
+            ObjectCalls.getMethodBind("OpenXRStructureBase", "get_header", GET_HEADER_HASH)
+
         private const val GET_STRUCTURE_TYPE_HASH = 2455072627L
         @JvmField
         val getStructureTypeBind =

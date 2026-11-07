@@ -18,7 +18,7 @@ class WebBuiltinParityTest {
   @Test
   fun webMembersMatchGodot() {
     repeat(256) { round() }
-    skip(130816) // the edge row
+    skip(130944) // the edge row
     recordValues = true
     repeat(8) { facadeRound() }
     val wrong = EXPECTED.filter { (key, hash) -> hashes[key]?.toString(16) != hash }.keys
@@ -374,7 +374,7 @@ class WebBuiltinParityTest {
     pure19()
     pure20()
     pure21()
-    pure22()
+    skip(2) // Vector2.inverse
     pure23()
     pure24()
     pure25()
@@ -551,8 +551,8 @@ class WebBuiltinParityTest {
     pure196()
     pure197()
     pure198()
+    pure199()
     skip(9) // Basis.get_rotation_quaternion
-    pure200()
     pure201()
     pure202()
     pure203()
@@ -697,6 +697,7 @@ class WebBuiltinParityTest {
     pure342()
     pure343()
     pure344()
+    pure345()
   }
 
   /** The facade row: the methods the Web build runs in Kotlin (WebLocalBuiltins), task 134 D1. */
@@ -979,228 +980,228 @@ class WebBuiltinParityTest {
     mix("Vector2.is_finite", b.isFinite())
   }
 
-  private fun pure22() {
+  private fun pure23() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.posmod", b.posmod(a0))
   }
 
-  private fun pure23() {
+  private fun pure24() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.posmodv", b.posmodv(a0))
   }
 
-  private fun pure24() {
+  private fun pure25() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.project", b.project(a0))
   }
 
-  private fun pure25() {
+  private fun pure26() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
     mix("Vector2.lerp", b.lerp(a0, a1))
   }
 
-  private fun pure26() {
+  private fun pure27() {
     val b = Vector2(nv(), nv())
     mix("Vector2.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure27() {
+  private fun pure28() {
     val b = Vector2(nv(), nv())
     mix("Vector2.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure28() {
+  private fun pure29() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = nv()
     mix("Vector2.move_toward", b.moveToward(a0, a1))
   }
 
-  private fun pure29() {
+  private fun pure30() {
     val b = Vector2(nv(), nv())
     mix("Vector2.orthogonal", b.orthogonal())
   }
 
-  private fun pure30() {
+  private fun pure31() {
     val b = Vector2(nv(), nv())
     mix("Vector2.floor", b.floor())
   }
 
-  private fun pure31() {
+  private fun pure32() {
     val b = Vector2(nv(), nv())
     mix("Vector2.ceil", b.ceil())
   }
 
-  private fun pure32() {
+  private fun pure33() {
     val b = Vector2(nv(), nv())
     mix("Vector2.round", b.round())
   }
 
-  private fun pure33() {
+  private fun pure34() {
     val b = Vector2(nv(), nv())
     mix("Vector2.aspect", b.aspect())
   }
 
-  private fun pure34() {
+  private fun pure35() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.dot", b.dot(a0))
   }
 
-  private fun pure35() {
+  private fun pure36() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.slide", b.slide(a0))
   }
 
-  private fun pure36() {
+  private fun pure37() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.bounce", b.bounce(a0))
   }
 
-  private fun pure37() {
+  private fun pure38() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv()).normalized()
     mix("Vector2.reflect", b.reflect(a0))
   }
 
-  private fun pure38() {
+  private fun pure39() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.cross", b.cross(a0))
   }
 
-  private fun pure39() {
+  private fun pure40() {
     val b = Vector2(nv(), nv())
     mix("Vector2.abs", b.abs())
   }
 
-  private fun pure40() {
+  private fun pure41() {
     val b = Vector2(nv(), nv())
     mix("Vector2.sign", b.sign())
   }
 
-  private fun pure41() {
+  private fun pure42() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     val a1 = Vector2(nv(), nv())
     mix("Vector2.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure42() {
+  private fun pure43() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector2.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure43() {
+  private fun pure44() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.min", b.min(a0))
   }
 
-  private fun pure44() {
+  private fun pure45() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.minf", b.minf(a0))
   }
 
-  private fun pure45() {
+  private fun pure46() {
     val b = Vector2(nv(), nv())
     val a0 = Vector2(nv(), nv())
     mix("Vector2.max", b.max(a0))
   }
 
-  private fun pure46() {
+  private fun pure47() {
     val b = Vector2(nv(), nv())
     val a0 = nv()
     mix("Vector2.maxf", b.maxf(a0))
   }
 
-  private fun pure47() {
+  private fun pure48() {
     val l = Vector3(nv(), nv(), nv())
     mix("unary- Vector3", -l)
   }
 
-  private fun pure48() {
-    val l = Vector3(nv(), nv(), nv())
-    mix("unary+ Vector3", +l)
-  }
-
   private fun pure49() {
     val l = Vector3(nv(), nv(), nv())
-    val r = ri().toLong()
-    mix("Vector3 * int", l * r)
+    mix("unary+ Vector3", +l)
   }
 
   private fun pure50() {
     val l = Vector3(nv(), nv(), nv())
     val r = ri().toLong()
-    mix("Vector3 / int", l / r)
+    mix("Vector3 * int", l * r)
   }
 
   private fun pure51() {
     val l = Vector3(nv(), nv(), nv())
-    val r = nv()
-    mix("Vector3 * float", l * r)
+    val r = ri().toLong()
+    mix("Vector3 / int", l / r)
   }
 
   private fun pure52() {
     val l = Vector3(nv(), nv(), nv())
     val r = nv()
-    mix("Vector3 / float", l / r)
+    mix("Vector3 * float", l * r)
   }
 
   private fun pure53() {
     val l = Vector3(nv(), nv(), nv())
-    val r = Vector3(nv(), nv(), nv())
-    mix("Vector3 < Vector3", l < r)
+    val r = nv()
+    mix("Vector3 / float", l / r)
   }
 
   private fun pure54() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
-    mix("Vector3 + Vector3", l + r)
+    mix("Vector3 < Vector3", l < r)
   }
 
   private fun pure55() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
-    mix("Vector3 - Vector3", l - r)
+    mix("Vector3 + Vector3", l + r)
   }
 
   private fun pure56() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
-    mix("Vector3 * Vector3", l * r)
+    mix("Vector3 - Vector3", l - r)
   }
 
   private fun pure57() {
     val l = Vector3(nv(), nv(), nv())
     val r = Vector3(nv(), nv(), nv())
-    mix("Vector3 / Vector3", l / r)
+    mix("Vector3 * Vector3", l * r)
   }
 
   private fun pure58() {
+    val l = Vector3(nv(), nv(), nv())
+    val r = Vector3(nv(), nv(), nv())
+    mix("Vector3 / Vector3", l / r)
+  }
+
+  private fun pure59() {
     val l = Vector3(nv(), nv(), nv())
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Vector3 * Quaternion", l * r)
   }
 
-  private fun pure59() {
+  private fun pure60() {
     val l = Vector3(nv(), nv(), nv())
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Vector3 * Basis", l * r)
   }
 
-  private fun pure60() {
+  private fun pure61() {
     val l = Vector3(nv(), nv(), nv())
     val r =
       Transform3D(
@@ -1210,271 +1211,271 @@ class WebBuiltinParityTest {
     mix("Vector3 * Transform3D", l * r)
   }
 
-  private fun pure61() {
+  private fun pure62() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure62() {
-    val b = Vector3(nv(), nv(), nv())
-    mix("Vector3.max_axis_index", b.maxAxisIndex())
-  }
-
   private fun pure63() {
     val b = Vector3(nv(), nv(), nv())
-    val a0 = Vector3(nv(), nv(), nv())
-    mix("Vector3.direction_to", b.directionTo(a0))
+    mix("Vector3.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure64() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
-    mix("Vector3.distance_to", b.distanceTo(a0))
+    mix("Vector3.direction_to", b.directionTo(a0))
   }
 
   private fun pure65() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
-    mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
+    mix("Vector3.distance_to", b.distanceTo(a0))
   }
 
   private fun pure66() {
     val b = Vector3(nv(), nv(), nv())
-    mix("Vector3.length", b.length())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Vector3.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure67() {
     val b = Vector3(nv(), nv(), nv())
-    mix("Vector3.length_squared", b.lengthSquared())
+    mix("Vector3.length", b.length())
   }
 
   private fun pure68() {
+    val b = Vector3(nv(), nv(), nv())
+    mix("Vector3.length_squared", b.lengthSquared())
+  }
+
+  private fun pure69() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.limit_length", b.limitLength(a0))
   }
 
-  private fun pure69() {
+  private fun pure70() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.normalized", b.normalized())
   }
 
-  private fun pure70() {
+  private fun pure71() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_normalized", b.isNormalized())
   }
 
-  private fun pure71() {
+  private fun pure72() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure72() {
+  private fun pure73() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_zero_approx", b.isZeroApprox())
   }
 
-  private fun pure73() {
+  private fun pure74() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.is_finite", b.isFinite())
   }
 
-  private fun pure74() {
+  private fun pure75() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.inverse", b.inverse())
   }
 
-  private fun pure75() {
+  private fun pure76() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Vector3.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure76() {
+  private fun pure77() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector3.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure77() {
+  private fun pure78() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
     mix("Vector3.lerp", b.lerp(a0, a1))
   }
 
-  private fun pure78() {
+  private fun pure79() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
     mix("Vector3.move_toward", b.moveToward(a0, a1))
   }
 
-  private fun pure79() {
+  private fun pure80() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.dot", b.dot(a0))
   }
 
-  private fun pure80() {
+  private fun pure81() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.cross", b.cross(a0))
   }
 
-  private fun pure81() {
+  private fun pure82() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.abs", b.abs())
   }
 
-  private fun pure82() {
+  private fun pure83() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.floor", b.floor())
   }
 
-  private fun pure83() {
+  private fun pure84() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.ceil", b.ceil())
   }
 
-  private fun pure84() {
+  private fun pure85() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.round", b.round())
   }
 
-  private fun pure85() {
+  private fun pure86() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.posmod", b.posmod(a0))
   }
 
-  private fun pure86() {
+  private fun pure87() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.posmodv", b.posmodv(a0))
   }
 
-  private fun pure87() {
+  private fun pure88() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.project", b.project(a0))
   }
 
-  private fun pure88() {
+  private fun pure89() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.slide", b.slide(a0))
   }
 
-  private fun pure89() {
+  private fun pure90() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.bounce", b.bounce(a0))
   }
 
-  private fun pure90() {
+  private fun pure91() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv()).normalized()
     mix("Vector3.reflect", b.reflect(a0))
   }
 
-  private fun pure91() {
+  private fun pure92() {
     val b = Vector3(nv(), nv(), nv())
     mix("Vector3.sign", b.sign())
   }
 
-  private fun pure92() {
+  private fun pure93() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.min", b.min(a0))
   }
 
-  private fun pure93() {
+  private fun pure94() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.minf", b.minf(a0))
   }
 
-  private fun pure94() {
+  private fun pure95() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Vector3.max", b.max(a0))
   }
 
-  private fun pure95() {
+  private fun pure96() {
     val b = Vector3(nv(), nv(), nv())
     val a0 = nv()
     mix("Vector3.maxf", b.maxf(a0))
   }
 
-  private fun pure96() {
+  private fun pure97() {
     val l = Vector4(nv(), nv(), nv(), nv())
     mix("unary- Vector4", -l)
   }
 
-  private fun pure97() {
-    val l = Vector4(nv(), nv(), nv(), nv())
-    mix("unary+ Vector4", +l)
-  }
-
   private fun pure98() {
     val l = Vector4(nv(), nv(), nv(), nv())
-    val r = ri().toLong()
-    mix("Vector4 * int", l * r)
+    mix("unary+ Vector4", +l)
   }
 
   private fun pure99() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = ri().toLong()
-    mix("Vector4 / int", l / r)
+    mix("Vector4 * int", l * r)
   }
 
   private fun pure100() {
     val l = Vector4(nv(), nv(), nv(), nv())
-    val r = nv()
-    mix("Vector4 * float", l * r)
+    val r = ri().toLong()
+    mix("Vector4 / int", l / r)
   }
 
   private fun pure101() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = nv()
-    mix("Vector4 / float", l / r)
+    mix("Vector4 * float", l * r)
   }
 
   private fun pure102() {
     val l = Vector4(nv(), nv(), nv(), nv())
-    val r = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4 < Vector4", l < r)
+    val r = nv()
+    mix("Vector4 / float", l / r)
   }
 
   private fun pure103() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4 + Vector4", l + r)
+    mix("Vector4 < Vector4", l < r)
   }
 
   private fun pure104() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4 - Vector4", l - r)
+    mix("Vector4 + Vector4", l + r)
   }
 
   private fun pure105() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4 * Vector4", l * r)
+    mix("Vector4 - Vector4", l - r)
   }
 
   private fun pure106() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4 / Vector4", l / r)
+    mix("Vector4 * Vector4", l * r)
   }
 
   private fun pure107() {
+    val l = Vector4(nv(), nv(), nv(), nv())
+    val r = Vector4(nv(), nv(), nv(), nv())
+    mix("Vector4 / Vector4", l / r)
+  }
+
+  private fun pure108() {
     val l = Vector4(nv(), nv(), nv(), nv())
     val r =
       Projection(
@@ -1486,259 +1487,259 @@ class WebBuiltinParityTest {
     mix("Vector4 * Projection", l * r)
   }
 
-  private fun pure108() {
+  private fun pure109() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure109() {
+  private fun pure110() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure110() {
+  private fun pure111() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length", b.length())
   }
 
-  private fun pure111() {
+  private fun pure112() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.length_squared", b.lengthSquared())
   }
 
-  private fun pure112() {
+  private fun pure113() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.abs", b.abs())
   }
 
-  private fun pure113() {
+  private fun pure114() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.sign", b.sign())
   }
 
-  private fun pure114() {
+  private fun pure115() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.floor", b.floor())
   }
 
-  private fun pure115() {
+  private fun pure116() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.ceil", b.ceil())
   }
 
-  private fun pure116() {
+  private fun pure117() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.round", b.round())
   }
 
-  private fun pure117() {
+  private fun pure118() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = nv()
     mix("Vector4.lerp", b.lerp(a0, a1))
   }
 
-  private fun pure118() {
+  private fun pure119() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.posmod", b.posmod(a0))
   }
 
-  private fun pure119() {
+  private fun pure120() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.posmodv", b.posmodv(a0))
   }
 
-  private fun pure120() {
+  private fun pure121() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     val a1 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure121() {
+  private fun pure122() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     val a1 = nv()
     mix("Vector4.clampf", b.clampf(a0, a1))
   }
 
-  private fun pure122() {
-    val b = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.normalized", b.normalized())
-  }
-
   private fun pure123() {
     val b = Vector4(nv(), nv(), nv(), nv())
-    val a0 = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.direction_to", b.directionTo(a0))
+    mix("Vector4.normalized", b.normalized())
   }
 
   private fun pure124() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.distance_to", b.distanceTo(a0))
+    mix("Vector4.direction_to", b.directionTo(a0))
   }
 
   private fun pure125() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.distance_squared_to", b.distanceSquaredTo(a0))
+    mix("Vector4.distance_to", b.distanceTo(a0))
   }
 
   private fun pure126() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.dot", b.dot(a0))
+    mix("Vector4.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure127() {
     val b = Vector4(nv(), nv(), nv(), nv())
-    mix("Vector4.inverse", b.inverse())
+    val a0 = Vector4(nv(), nv(), nv(), nv())
+    mix("Vector4.dot", b.dot(a0))
   }
 
   private fun pure128() {
+    val b = Vector4(nv(), nv(), nv(), nv())
+    mix("Vector4.inverse", b.inverse())
+  }
+
+  private fun pure129() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure129() {
+  private fun pure130() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_zero_approx", b.isZeroApprox())
   }
 
-  private fun pure130() {
+  private fun pure131() {
     val b = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.is_finite", b.isFinite())
   }
 
-  private fun pure131() {
+  private fun pure132() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.min", b.min(a0))
   }
 
-  private fun pure132() {
+  private fun pure133() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.minf", b.minf(a0))
   }
 
-  private fun pure133() {
+  private fun pure134() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = Vector4(nv(), nv(), nv(), nv())
     mix("Vector4.max", b.max(a0))
   }
 
-  private fun pure134() {
+  private fun pure135() {
     val b = Vector4(nv(), nv(), nv(), nv())
     val a0 = nv()
     mix("Vector4.maxf", b.maxf(a0))
   }
 
-  private fun pure135() {
+  private fun pure136() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("unary- Quaternion", -l)
   }
 
-  private fun pure136() {
-    val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-    mix("unary+ Quaternion", +l)
-  }
-
   private fun pure137() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-    val r = ri().toLong()
-    mix("Quaternion * int", l * r)
+    mix("unary+ Quaternion", +l)
   }
 
   private fun pure138() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = ri().toLong()
-    mix("Quaternion / int", l / r)
+    mix("Quaternion * int", l * r)
   }
 
   private fun pure139() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-    val r = nv()
-    mix("Quaternion * float", l * r)
+    val r = ri().toLong()
+    mix("Quaternion / int", l / r)
   }
 
   private fun pure140() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = nv()
-    mix("Quaternion / float", l / r)
+    mix("Quaternion * float", l * r)
   }
 
   private fun pure141() {
+    val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
+    val r = nv()
+    mix("Quaternion / float", l / r)
+  }
+
+  private fun pure142() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Vector3(nv(), nv(), nv())
     mix("Quaternion * Vector3", l * r)
   }
 
-  private fun pure142() {
+  private fun pure143() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion + Quaternion", l + r)
   }
 
-  private fun pure143() {
+  private fun pure144() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion - Quaternion", l - r)
   }
 
-  private fun pure144() {
+  private fun pure145() {
     val l = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val r = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion * Quaternion", l * r)
   }
 
-  private fun pure145() {
+  private fun pure146() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length", b.length())
   }
 
-  private fun pure146() {
+  private fun pure147() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.length_squared", b.lengthSquared())
   }
 
-  private fun pure147() {
+  private fun pure148() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.normalized", b.normalized())
   }
 
-  private fun pure148() {
+  private fun pure149() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure149() {
+  private fun pure150() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.is_finite", b.isFinite())
   }
 
-  private fun pure150() {
+  private fun pure151() {
     val b = Quaternion(nv(), nv(), nv(), nv()).normalized()
     val a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
     mix("Quaternion.dot", b.dot(a0))
   }
 
-  private fun pure151() {
+  private fun pure152() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary- Plane", -l)
   }
 
-  private fun pure152() {
+  private fun pure153() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     mix("unary+ Plane", +l)
   }
 
-  private fun pure153() {
+  private fun pure154() {
     val l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val r =
       Transform3D(
@@ -1748,127 +1749,127 @@ class WebBuiltinParityTest {
     mix("Plane * Transform3D", l * r)
   }
 
-  private fun pure154() {
-    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    mix("Plane.get_center", b.getCenter())
-  }
-
   private fun pure155() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-    val a0 = Vector3(nv(), nv(), nv())
-    mix("Plane.is_point_over", b.isPointOver(a0))
+    mix("Plane.get_center", b.getCenter())
   }
 
   private fun pure156() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
-    mix("Plane.distance_to", b.distanceTo(a0))
+    mix("Plane.is_point_over", b.isPointOver(a0))
   }
 
   private fun pure157() {
+    val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Plane.distance_to", b.distanceTo(a0))
+  }
+
+  private fun pure158() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = nv()
     mix("Plane.has_point", b.hasPoint(a0, a1))
   }
 
-  private fun pure158() {
+  private fun pure159() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     mix("Plane.project", b.project(a0))
   }
 
-  private fun pure159() {
+  private fun pure160() {
     val b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
     val a0 = Vector3(nv(), nv(), nv())
     val a1 = Vector3(nv(), nv(), nv())
     mix("Plane.intersects_ray", b.intersectsRay(a0, a1))
   }
 
-  private fun pure160() {
+  private fun pure161() {
     val l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Rect2 * Transform2D", l * r)
   }
 
-  private fun pure161() {
+  private fun pure162() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_center", b.getCenter())
   }
 
-  private fun pure162() {
+  private fun pure163() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.get_area", b.area())
   }
 
-  private fun pure163() {
+  private fun pure164() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.has_area", b.hasArea())
   }
 
-  private fun pure164() {
+  private fun pure165() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.has_point", b.hasPoint(a0))
   }
 
-  private fun pure165() {
+  private fun pure166() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure166() {
+  private fun pure167() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a1 = rb()
     mix("Rect2.intersects", b.intersects(a0, a1))
   }
 
-  private fun pure167() {
+  private fun pure168() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.encloses", b.encloses(a0))
   }
 
-  private fun pure168() {
+  private fun pure169() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.intersection", b.intersection(a0))
   }
 
-  private fun pure169() {
+  private fun pure170() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.merge", b.merge(a0))
   }
 
-  private fun pure170() {
+  private fun pure171() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.expand", b.expand(a0))
   }
 
-  private fun pure171() {
+  private fun pure172() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = Vector2(nv(), nv())
     mix("Rect2.get_support", b.getSupport(a0))
   }
 
-  private fun pure172() {
+  private fun pure173() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     mix("Rect2.grow", b.grow(a0))
   }
 
-  private fun pure173() {
+  private fun pure174() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = rs().toLong()
     val a1 = nv()
     mix("Rect2.grow_side", b.growSide(a0, a1))
   }
 
-  private fun pure174() {
+  private fun pure175() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     val a0 = nv()
     val a1 = nv()
@@ -1877,12 +1878,12 @@ class WebBuiltinParityTest {
     mix("Rect2.grow_individual", b.growIndividual(a0, a1, a2, a3))
   }
 
-  private fun pure175() {
+  private fun pure176() {
     val b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Rect2.abs", b.abs())
   }
 
-  private fun pure176() {
+  private fun pure177() {
     val l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val r =
       Transform3D(
@@ -1892,137 +1893,127 @@ class WebBuiltinParityTest {
     mix("AABB * Transform3D", l * r)
   }
 
-  private fun pure177() {
+  private fun pure178() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_center", b.getCenter())
   }
 
-  private fun pure178() {
+  private fun pure179() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.get_volume", b.volume())
   }
 
-  private fun pure179() {
+  private fun pure180() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_volume", b.hasVolume())
   }
 
-  private fun pure180() {
+  private fun pure181() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.has_surface", b.hasSurface())
   }
 
-  private fun pure181() {
+  private fun pure182() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = Vector3(nv(), nv(), nv())
     mix("AABB.has_point", b.hasPoint(a0))
   }
 
-  private fun pure182() {
+  private fun pure183() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure183() {
+  private fun pure184() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.intersects", b.intersects(a0))
   }
 
-  private fun pure184() {
+  private fun pure185() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.encloses", b.encloses(a0))
   }
 
-  private fun pure185() {
+  private fun pure186() {
     val b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     val a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
     mix("AABB.merge", b.merge(a0))
   }
 
-  private fun pure186() {
+  private fun pure187() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis * int", l * r)
   }
 
-  private fun pure187() {
+  private fun pure188() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = ri().toLong()
     mix("Basis / int", l / r)
   }
 
-  private fun pure188() {
+  private fun pure189() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis * float", l * r)
   }
 
-  private fun pure189() {
+  private fun pure190() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = nv()
     mix("Basis / float", l / r)
   }
 
-  private fun pure190() {
+  private fun pure191() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Vector3(nv(), nv(), nv())
     mix("Basis * Vector3", l * r)
   }
 
-  private fun pure191() {
+  private fun pure192() {
     val l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis * Basis", l * r)
   }
 
-  private fun pure192() {
+  private fun pure193() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.inverse", b.inverse())
   }
 
-  private fun pure193() {
+  private fun pure194() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.transposed", b.transposed())
   }
 
-  private fun pure194() {
+  private fun pure195() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.orthonormalized", b.orthonormalized())
   }
 
-  private fun pure195() {
+  private fun pure196() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.determinant", b.determinant())
   }
 
-  private fun pure196() {
+  private fun pure197() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Vector3(nv(), nv(), nv())
     mix("Basis.scaled", b.scaled(a0))
   }
 
-  private fun pure197() {
+  private fun pure198() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.get_scale", b.getScale())
   }
 
-  private fun pure198() {
+  private fun pure199() {
     val b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     val a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
     mix("Basis.is_equal_approx", b.isEqualApprox(a0))
-  }
-
-  private fun pure200() {
-    val l =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
-    val r = ri().toLong()
-    mix("Transform3D * int", l * r)
   }
 
   private fun pure201() {
@@ -2032,7 +2023,7 @@ class WebBuiltinParityTest {
         Vector3(nv(), nv(), nv()),
       )
     val r = ri().toLong()
-    mix("Transform3D / int", l / r)
+    mix("Transform3D * int", l * r)
   }
 
   private fun pure202() {
@@ -2041,8 +2032,8 @@ class WebBuiltinParityTest {
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
         Vector3(nv(), nv(), nv()),
       )
-    val r = nv()
-    mix("Transform3D * float", l * r)
+    val r = ri().toLong()
+    mix("Transform3D / int", l / r)
   }
 
   private fun pure203() {
@@ -2052,10 +2043,20 @@ class WebBuiltinParityTest {
         Vector3(nv(), nv(), nv()),
       )
     val r = nv()
-    mix("Transform3D / float", l / r)
+    mix("Transform3D * float", l * r)
   }
 
   private fun pure204() {
+    val l =
+      Transform3D(
+        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
+        Vector3(nv(), nv(), nv()),
+      )
+    val r = nv()
+    mix("Transform3D / float", l / r)
+  }
+
+  private fun pure205() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2065,7 +2066,7 @@ class WebBuiltinParityTest {
     mix("Transform3D * Vector3", l * r)
   }
 
-  private fun pure205() {
+  private fun pure206() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2075,7 +2076,7 @@ class WebBuiltinParityTest {
     mix("Transform3D * Plane", l * r)
   }
 
-  private fun pure206() {
+  private fun pure207() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2085,7 +2086,7 @@ class WebBuiltinParityTest {
     mix("Transform3D * AABB", l * r)
   }
 
-  private fun pure207() {
+  private fun pure208() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2099,7 +2100,7 @@ class WebBuiltinParityTest {
     mix("Transform3D * Transform3D", l * r)
   }
 
-  private fun pure208() {
+  private fun pure209() {
     val l =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2109,7 +2110,7 @@ class WebBuiltinParityTest {
     mix("Transform3D * PackedVector3Array", l * r)
   }
 
-  private fun pure209() {
+  private fun pure210() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2118,7 +2119,7 @@ class WebBuiltinParityTest {
     mix("Transform3D.inverse", b.inverse())
   }
 
-  private fun pure210() {
+  private fun pure211() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2127,23 +2128,13 @@ class WebBuiltinParityTest {
     mix("Transform3D.affine_inverse", b.affineInverse())
   }
 
-  private fun pure211() {
-    val b =
-      Transform3D(
-        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
-        Vector3(nv(), nv(), nv()),
-      )
-    mix("Transform3D.orthonormalized", b.orthonormalized())
-  }
-
   private fun pure212() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
         Vector3(nv(), nv(), nv()),
       )
-    val a0 = Vector3(nv(), nv(), nv())
-    mix("Transform3D.translated", b.translated(a0))
+    mix("Transform3D.orthonormalized", b.orthonormalized())
   }
 
   private fun pure213() {
@@ -2153,10 +2144,20 @@ class WebBuiltinParityTest {
         Vector3(nv(), nv(), nv()),
       )
     val a0 = Vector3(nv(), nv(), nv())
-    mix("Transform3D.translated_local", b.translatedLocal(a0))
+    mix("Transform3D.translated", b.translated(a0))
   }
 
   private fun pure214() {
+    val b =
+      Transform3D(
+        Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
+        Vector3(nv(), nv(), nv()),
+      )
+    val a0 = Vector3(nv(), nv(), nv())
+    mix("Transform3D.translated_local", b.translatedLocal(a0))
+  }
+
+  private fun pure215() {
     val b =
       Transform3D(
         Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())),
@@ -2170,95 +2171,95 @@ class WebBuiltinParityTest {
     mix("Transform3D.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure215() {
+  private fun pure216() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D * int", l * r)
   }
 
-  private fun pure216() {
+  private fun pure217() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = ri().toLong()
     mix("Transform2D / int", l / r)
   }
 
-  private fun pure217() {
+  private fun pure218() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D * float", l * r)
   }
 
-  private fun pure218() {
+  private fun pure219() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = nv()
     mix("Transform2D / float", l / r)
   }
 
-  private fun pure219() {
+  private fun pure220() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Vector2(nv(), nv())
     mix("Transform2D * Vector2", l * r)
   }
 
-  private fun pure220() {
+  private fun pure221() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
     mix("Transform2D * Rect2", l * r)
   }
 
-  private fun pure221() {
+  private fun pure222() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * Transform2D", l * r)
   }
 
-  private fun pure222() {
+  private fun pure223() {
     val l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val r = listOf(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D * PackedVector2Array", l * r)
   }
 
-  private fun pure223() {
+  private fun pure224() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.inverse", b.inverse())
   }
 
-  private fun pure224() {
-    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
-    mix("Transform2D.get_origin", b.origin)
-  }
-
   private fun pure225() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
-    val a0 = Vector2(nv(), nv())
-    mix("Transform2D.translated", b.translated(a0))
+    mix("Transform2D.get_origin", b.origin)
   }
 
   private fun pure226() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
-    mix("Transform2D.translated_local", b.translatedLocal(a0))
+    mix("Transform2D.translated", b.translated(a0))
   }
 
   private fun pure227() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
-    mix("Transform2D.basis_xform", b.basisXform(a0))
+    mix("Transform2D.translated_local", b.translatedLocal(a0))
   }
 
   private fun pure228() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Vector2(nv(), nv())
-    mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
+    mix("Transform2D.basis_xform", b.basisXform(a0))
   }
 
   private fun pure229() {
+    val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+    val a0 = Vector2(nv(), nv())
+    mix("Transform2D.basis_xform_inv", b.basisXformInv(a0))
+  }
+
+  private fun pure230() {
     val b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     val a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
     mix("Transform2D.is_equal_approx", b.isEqualApprox(a0))
   }
 
-  private fun pure230() {
+  private fun pure231() {
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -2270,7 +2271,7 @@ class WebBuiltinParityTest {
     mix("Projection * Vector4", l * r)
   }
 
-  private fun pure231() {
+  private fun pure232() {
     val l =
       Projection(
         Vector4(nv(), nv(), nv(), nv()),
@@ -2288,632 +2289,632 @@ class WebBuiltinParityTest {
     mix("Projection * Projection", l * r)
   }
 
-  private fun pure232() {
+  private fun pure233() {
     val l = Color(nv(), nv(), nv(), nv())
     mix("unary- Color", -l)
   }
 
-  private fun pure233() {
-    val l = Color(nv(), nv(), nv(), nv())
-    mix("unary+ Color", +l)
-  }
-
   private fun pure234() {
     val l = Color(nv(), nv(), nv(), nv())
-    val r = ri().toLong()
-    mix("Color * int", l * r)
+    mix("unary+ Color", +l)
   }
 
   private fun pure235() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = ri().toLong()
-    mix("Color / int", l / r)
+    mix("Color * int", l * r)
   }
 
   private fun pure236() {
     val l = Color(nv(), nv(), nv(), nv())
-    val r = nv()
-    mix("Color * float", l * r)
+    val r = ri().toLong()
+    mix("Color / int", l / r)
   }
 
   private fun pure237() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = nv()
-    mix("Color / float", l / r)
+    mix("Color * float", l * r)
   }
 
   private fun pure238() {
     val l = Color(nv(), nv(), nv(), nv())
-    val r = Color(nv(), nv(), nv(), nv())
-    mix("Color + Color", l + r)
+    val r = nv()
+    mix("Color / float", l / r)
   }
 
   private fun pure239() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
-    mix("Color - Color", l - r)
+    mix("Color + Color", l + r)
   }
 
   private fun pure240() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
-    mix("Color * Color", l * r)
+    mix("Color - Color", l - r)
   }
 
   private fun pure241() {
     val l = Color(nv(), nv(), nv(), nv())
     val r = Color(nv(), nv(), nv(), nv())
-    mix("Color / Color", l / r)
+    mix("Color * Color", l * r)
   }
 
   private fun pure242() {
+    val l = Color(nv(), nv(), nv(), nv())
+    val r = Color(nv(), nv(), nv(), nv())
+    mix("Color / Color", l / r)
+  }
+
+  private fun pure243() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = rb()
     mix("Color.to_html", b.toHtml(a0))
   }
 
-  private fun pure243() {
+  private fun pure244() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = Color(nv(), nv(), nv(), nv())
     mix("Color.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure244() {
+  private fun pure245() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.inverted", b.inverted())
   }
 
-  private fun pure245() {
+  private fun pure246() {
     val b = Color(nv(), nv(), nv(), nv())
     val a0 = Color(nv(), nv(), nv(), nv())
     val a1 = nv()
     mix("Color.lerp", b.lerp(a0, a1))
   }
 
-  private fun pure246() {
+  private fun pure247() {
     val b = Color(nv(), nv(), nv(), nv())
     mix("Color.get_luminance", b.getLuminance())
   }
 
-  private fun pure247() {
+  private fun pure248() {
     val l = Vector2i(ri(), ri())
     mix("unary- Vector2i", -l)
   }
 
-  private fun pure248() {
+  private fun pure249() {
     val l = Vector2i(ri(), ri())
     mix("unary+ Vector2i", +l)
   }
 
-  private fun pure249() {
+  private fun pure250() {
     val l = Vector2i(ri(), ri())
     val r = ri().toLong()
     mix("Vector2i * int", l * r)
   }
 
-  private fun pure250() {
+  private fun pure251() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i / int", l / r)
   }
 
-  private fun pure251() {
+  private fun pure252() {
     val l = Vector2i(ri(), ri())
     val r = rnz().toLong()
     mix("Vector2i % int", l % r)
   }
 
-  private fun pure252() {
+  private fun pure253() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i * float", l * r)
   }
 
-  private fun pure253() {
+  private fun pure254() {
     val l = Vector2i(ri(), ri())
     val r = nv()
     mix("Vector2i / float", l / r)
   }
 
-  private fun pure254() {
+  private fun pure255() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i < Vector2i", l < r)
   }
 
-  private fun pure255() {
+  private fun pure256() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i + Vector2i", l + r)
   }
 
-  private fun pure256() {
+  private fun pure257() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i - Vector2i", l - r)
   }
 
-  private fun pure257() {
+  private fun pure258() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(ri(), ri())
     mix("Vector2i * Vector2i", l * r)
   }
 
-  private fun pure258() {
+  private fun pure259() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i / Vector2i", l / r)
   }
 
-  private fun pure259() {
+  private fun pure260() {
     val l = Vector2i(ri(), ri())
     val r = Vector2i(rnz(), rnz())
     mix("Vector2i % Vector2i", l % r)
   }
 
-  private fun pure260() {
+  private fun pure261() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.aspect", b.aspect())
   }
 
-  private fun pure261() {
+  private fun pure262() {
     val b = Vector2i(ri(), ri())
     mix("Vector2i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure262() {
-    val b = Vector2i(ri(), ri())
-    mix("Vector2i.min_axis_index", b.minAxisIndex())
-  }
-
   private fun pure263() {
     val b = Vector2i(ri(), ri())
-    val a0 = Vector2i(ri(), ri())
-    mix("Vector2i.distance_to", b.distanceTo(a0))
+    mix("Vector2i.min_axis_index", b.minAxisIndex())
   }
 
   private fun pure264() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
-    mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
+    mix("Vector2i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure265() {
     val b = Vector2i(ri(), ri())
-    mix("Vector2i.length", b.length())
+    val a0 = Vector2i(ri(), ri())
+    mix("Vector2i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure266() {
     val b = Vector2i(ri(), ri())
-    mix("Vector2i.length_squared", b.lengthSquared())
+    mix("Vector2i.length", b.length())
   }
 
   private fun pure267() {
     val b = Vector2i(ri(), ri())
-    mix("Vector2i.sign", b.sign())
+    mix("Vector2i.length_squared", b.lengthSquared())
   }
 
   private fun pure268() {
     val b = Vector2i(ri(), ri())
-    mix("Vector2i.abs", b.abs())
+    mix("Vector2i.sign", b.sign())
   }
 
   private fun pure269() {
+    val b = Vector2i(ri(), ri())
+    mix("Vector2i.abs", b.abs())
+  }
+
+  private fun pure270() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     val a1 = Vector2i(ri(), ri())
     mix("Vector2i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure270() {
+  private fun pure271() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector2i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure271() {
+  private fun pure272() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.min", b.min(a0))
   }
 
-  private fun pure272() {
+  private fun pure273() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.mini", b.mini(a0))
   }
 
-  private fun pure273() {
+  private fun pure274() {
     val b = Vector2i(ri(), ri())
     val a0 = Vector2i(ri(), ri())
     mix("Vector2i.max", b.max(a0))
   }
 
-  private fun pure274() {
+  private fun pure275() {
     val b = Vector2i(ri(), ri())
     val a0 = ri().toLong()
     mix("Vector2i.maxi", b.maxi(a0))
   }
 
-  private fun pure275() {
+  private fun pure276() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary- Vector3i", -l)
   }
 
-  private fun pure276() {
+  private fun pure277() {
     val l = Vector3i(ri(), ri(), ri())
     mix("unary+ Vector3i", +l)
   }
 
-  private fun pure277() {
+  private fun pure278() {
     val l = Vector3i(ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector3i * int", l * r)
   }
 
-  private fun pure278() {
+  private fun pure279() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i / int", l / r)
   }
 
-  private fun pure279() {
+  private fun pure280() {
     val l = Vector3i(ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector3i % int", l % r)
   }
 
-  private fun pure280() {
+  private fun pure281() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i * float", l * r)
   }
 
-  private fun pure281() {
+  private fun pure282() {
     val l = Vector3i(ri(), ri(), ri())
     val r = nv()
     mix("Vector3i / float", l / r)
   }
 
-  private fun pure282() {
+  private fun pure283() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i < Vector3i", l < r)
   }
 
-  private fun pure283() {
+  private fun pure284() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i + Vector3i", l + r)
   }
 
-  private fun pure284() {
+  private fun pure285() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i - Vector3i", l - r)
   }
 
-  private fun pure285() {
+  private fun pure286() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(ri(), ri(), ri())
     mix("Vector3i * Vector3i", l * r)
   }
 
-  private fun pure286() {
+  private fun pure287() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i / Vector3i", l / r)
   }
 
-  private fun pure287() {
+  private fun pure288() {
     val l = Vector3i(ri(), ri(), ri())
     val r = Vector3i(rnz(), rnz(), rnz())
     mix("Vector3i % Vector3i", l % r)
   }
 
-  private fun pure288() {
+  private fun pure289() {
     val b = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure289() {
-    val b = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.max_axis_index", b.maxAxisIndex())
-  }
-
   private fun pure290() {
     val b = Vector3i(ri(), ri(), ri())
-    val a0 = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.distance_to", b.distanceTo(a0))
+    mix("Vector3i.max_axis_index", b.maxAxisIndex())
   }
 
   private fun pure291() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
+    mix("Vector3i.distance_to", b.distanceTo(a0))
   }
 
   private fun pure292() {
     val b = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.length", b.length())
+    val a0 = Vector3i(ri(), ri(), ri())
+    mix("Vector3i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
   private fun pure293() {
     val b = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.length_squared", b.lengthSquared())
+    mix("Vector3i.length", b.length())
   }
 
   private fun pure294() {
     val b = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.sign", b.sign())
+    mix("Vector3i.length_squared", b.lengthSquared())
   }
 
   private fun pure295() {
     val b = Vector3i(ri(), ri(), ri())
-    mix("Vector3i.abs", b.abs())
+    mix("Vector3i.sign", b.sign())
   }
 
   private fun pure296() {
+    val b = Vector3i(ri(), ri(), ri())
+    mix("Vector3i.abs", b.abs())
+  }
+
+  private fun pure297() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     val a1 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure297() {
+  private fun pure298() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector3i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure298() {
+  private fun pure299() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.min", b.min(a0))
   }
 
-  private fun pure299() {
+  private fun pure300() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.mini", b.mini(a0))
   }
 
-  private fun pure300() {
+  private fun pure301() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = Vector3i(ri(), ri(), ri())
     mix("Vector3i.max", b.max(a0))
   }
 
-  private fun pure301() {
+  private fun pure302() {
     val b = Vector3i(ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector3i.maxi", b.maxi(a0))
   }
 
-  private fun pure302() {
+  private fun pure303() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary- Vector4i", -l)
   }
 
-  private fun pure303() {
+  private fun pure304() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     mix("unary+ Vector4i", +l)
   }
 
-  private fun pure304() {
+  private fun pure305() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = ri().toLong()
     mix("Vector4i * int", l * r)
   }
 
-  private fun pure305() {
+  private fun pure306() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i / int", l / r)
   }
 
-  private fun pure306() {
+  private fun pure307() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = rnz().toLong()
     mix("Vector4i % int", l % r)
   }
 
-  private fun pure307() {
+  private fun pure308() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i * float", l * r)
   }
 
-  private fun pure308() {
+  private fun pure309() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = nv()
     mix("Vector4i / float", l / r)
   }
 
-  private fun pure309() {
+  private fun pure310() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i < Vector4i", l < r)
   }
 
-  private fun pure310() {
+  private fun pure311() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i + Vector4i", l + r)
   }
 
-  private fun pure311() {
+  private fun pure312() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i - Vector4i", l - r)
   }
 
-  private fun pure312() {
+  private fun pure313() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i * Vector4i", l * r)
   }
 
-  private fun pure313() {
+  private fun pure314() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i / Vector4i", l / r)
   }
 
-  private fun pure314() {
+  private fun pure315() {
     val l = Vector4i(ri(), ri(), ri(), ri())
     val r = Vector4i(rnz(), rnz(), rnz(), rnz())
     mix("Vector4i % Vector4i", l % r)
   }
 
-  private fun pure315() {
+  private fun pure316() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min_axis_index", b.minAxisIndex())
   }
 
-  private fun pure316() {
+  private fun pure317() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max_axis_index", b.maxAxisIndex())
   }
 
-  private fun pure317() {
+  private fun pure318() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length", b.length())
   }
 
-  private fun pure318() {
+  private fun pure319() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.length_squared", b.lengthSquared())
   }
 
-  private fun pure319() {
+  private fun pure320() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.sign", b.sign())
   }
 
-  private fun pure320() {
+  private fun pure321() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.abs", b.abs())
   }
 
-  private fun pure321() {
+  private fun pure322() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     val a1 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.clamp", b.clamp(a0, a1))
   }
 
-  private fun pure322() {
+  private fun pure323() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
     mix("Vector4i.clampi", b.clampi(a0, a1))
   }
 
-  private fun pure323() {
+  private fun pure324() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.min", b.min(a0))
   }
 
-  private fun pure324() {
+  private fun pure325() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.mini", b.mini(a0))
   }
 
-  private fun pure325() {
+  private fun pure326() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.max", b.max(a0))
   }
 
-  private fun pure326() {
+  private fun pure327() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = ri().toLong()
     mix("Vector4i.maxi", b.maxi(a0))
   }
 
-  private fun pure327() {
+  private fun pure328() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_to", b.distanceTo(a0))
   }
 
-  private fun pure328() {
+  private fun pure329() {
     val b = Vector4i(ri(), ri(), ri(), ri())
     val a0 = Vector4i(ri(), ri(), ri(), ri())
     mix("Vector4i.distance_squared_to", b.distanceSquaredTo(a0))
   }
 
-  private fun pure329() {
+  private fun pure330() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_center", b.getCenter())
   }
 
-  private fun pure330() {
+  private fun pure331() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.get_area", b.area())
   }
 
-  private fun pure331() {
+  private fun pure332() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.has_area", b.hasArea())
   }
 
-  private fun pure332() {
+  private fun pure333() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.has_point", b.hasPoint(a0))
   }
 
-  private fun pure333() {
+  private fun pure334() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersects", b.intersects(a0))
   }
 
-  private fun pure334() {
+  private fun pure335() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.encloses", b.encloses(a0))
   }
 
-  private fun pure335() {
+  private fun pure336() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.intersection", b.intersection(a0))
   }
 
-  private fun pure336() {
+  private fun pure337() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.merge", b.merge(a0))
   }
 
-  private fun pure337() {
+  private fun pure338() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = Vector2i(ri(), ri())
     mix("Rect2i.expand", b.expand(a0))
   }
 
-  private fun pure338() {
+  private fun pure339() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     mix("Rect2i.grow", b.grow(a0))
   }
 
-  private fun pure339() {
+  private fun pure340() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = rs().toLong()
     val a1 = ri().toLong()
     mix("Rect2i.grow_side", b.growSide(a0, a1))
   }
 
-  private fun pure340() {
+  private fun pure341() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     val a0 = ri().toLong()
     val a1 = ri().toLong()
@@ -2922,23 +2923,23 @@ class WebBuiltinParityTest {
     mix("Rect2i.grow_individual", b.growIndividual(a0, a1, a2, a3))
   }
 
-  private fun pure341() {
+  private fun pure342() {
     val b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
     mix("Rect2i.abs", b.abs())
   }
 
-  private fun pure342() {
+  private fun pure343() {
     val l = RID(rl())
     val r = RID(rl())
     mix("RID < RID", l < r)
   }
 
-  private fun pure343() {
+  private fun pure344() {
     val b = RID(rl())
     mix("RID.is_valid", b.isValid())
   }
 
-  private fun pure344() {
+  private fun pure345() {
     val b = RID(rl())
     mix("RID.get_id", b.getId())
   }

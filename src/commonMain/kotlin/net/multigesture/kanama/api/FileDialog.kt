@@ -129,6 +129,24 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         @JvmName("setDeletingEnabledProperty")
         set(value) = setCustomizationFlagEnabled(FileDialog.Customization.DELETE, value)
 
+    var navigationButtonsEnabled: Boolean
+        @JvmName("navigationButtonsEnabledProperty")
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.NAVIGATION_BUTTONS)
+        @JvmName("setNavigationButtonsEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.NAVIGATION_BUTTONS, value)
+
+    var driveSelectorEnabled: Boolean
+        @JvmName("driveSelectorEnabledProperty")
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.DRIVE_SELECTOR)
+        @JvmName("setDriveSelectorEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.DRIVE_SELECTOR, value)
+
+    var filtersEnabled: Boolean
+        @JvmName("filtersEnabledProperty")
+        get() = isCustomizationFlagEnabled(FileDialog.Customization.FILTERS)
+        @JvmName("setFiltersEnabledProperty")
+        set(value) = setCustomizationFlagEnabled(FileDialog.Customization.FILTERS, value)
+
     var currentDir: String
         @JvmName("currentDirProperty")
         get() = getCurrentDir()
@@ -383,26 +401,6 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     }
 
     /**
-     * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
-     * `file_mode` to `FileMode.OPEN_FILE` will change the window title to "Open a File").
-     *
-     * Generated from Godot docs: FileDialog.set_mode_overrides_title
-     */
-    fun setModeOverridesTitle(override: Boolean) {
-        ObjectCalls.ptrcallWithBoolArg(Binds.setModeOverridesTitleBind, segment, override)
-    }
-
-    /**
-     * If `true`, changing the `file_mode` property will set the window title accordingly (e.g. setting
-     * `file_mode` to `FileMode.OPEN_FILE` will change the window title to "Open a File").
-     *
-     * Generated from Godot docs: FileDialog.is_mode_overriding_title
-     */
-    fun isModeOverridingTitle(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModeOverridingTitleBind, segment)
-    }
-
-    /**
      * The dialog's open or save mode, which affects the selection behavior.
      *
      * Generated from Godot docs: FileDialog.set_file_mode
@@ -526,14 +524,15 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
-     * instead of custom one. Note: On Android, it is only supported when using `Access.FILESYSTEM`.
-     * For access mode `Access.RESOURCES` and `Access.USERDATA`, the system will fall back to custom
-     * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
-     * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
-     * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
-     * list of saved bookmarks. Note: Native dialogs are isolated from the base process, file dialog
-     * properties can't be modified once the dialog is shown. Note: This property is ignored in
-     * `EditorFileDialog`.
+     * instead of custom one. Note: Native dialogs can emit the following signals: `dir_selected`,
+     * `file_selected`, `files_selected`, and `AcceptDialog.canceled`. Note: On Android, it is only
+     * supported when using `Access.FILESYSTEM`. For access mode `Access.RESOURCES` and
+     * `Access.USERDATA`, the system will fall back to custom FileDialog. Note: On Linux and macOS,
+     * sandboxed apps always use native dialogs to access the host file system. Note: On macOS,
+     * sandboxed apps will save security-scoped bookmarks to retain access to the opened folders across
+     * multiple sessions. Use `OS.get_granted_permissions` to get a list of saved bookmarks. Note:
+     * Native dialogs are isolated from the base process, file dialog properties can't be modified once
+     * the dialog is shown. Note: This property is ignored in `EditorFileDialog`.
      *
      * Generated from Godot docs: FileDialog.set_use_native_dialog
      */
@@ -543,14 +542,15 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
 
     /**
      * If `true`, and if supported by the current `DisplayServer`, OS native dialog will be used
-     * instead of custom one. Note: On Android, it is only supported when using `Access.FILESYSTEM`.
-     * For access mode `Access.RESOURCES` and `Access.USERDATA`, the system will fall back to custom
-     * FileDialog. Note: On Linux and macOS, sandboxed apps always use native dialogs to access the
-     * host file system. Note: On macOS, sandboxed apps will save security-scoped bookmarks to retain
-     * access to the opened folders across multiple sessions. Use `OS.get_granted_permissions` to get a
-     * list of saved bookmarks. Note: Native dialogs are isolated from the base process, file dialog
-     * properties can't be modified once the dialog is shown. Note: This property is ignored in
-     * `EditorFileDialog`.
+     * instead of custom one. Note: Native dialogs can emit the following signals: `dir_selected`,
+     * `file_selected`, `files_selected`, and `AcceptDialog.canceled`. Note: On Android, it is only
+     * supported when using `Access.FILESYSTEM`. For access mode `Access.RESOURCES` and
+     * `Access.USERDATA`, the system will fall back to custom FileDialog. Note: On Linux and macOS,
+     * sandboxed apps always use native dialogs to access the host file system. Note: On macOS,
+     * sandboxed apps will save security-scoped bookmarks to retain access to the opened folders across
+     * multiple sessions. Use `OS.get_granted_permissions` to get a list of saved bookmarks. Note:
+     * Native dialogs are isolated from the base process, file dialog properties can't be modified once
+     * the dialog is shown. Note: This property is ignored in `EditorFileDialog`.
      *
      * Generated from Godot docs: FileDialog.get_use_native_dialog
      */
@@ -603,6 +603,24 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
      */
     fun invalidate() {
         ObjectCalls.ptrcallNoArgs(Binds.invalidateBind, segment)
+    }
+
+    /**
+     * Has no effect and always equals to `true`.
+     *
+     * Generated from Godot docs: FileDialog.set_mode_overrides_title
+     */
+    fun setModeOverridesTitle(override: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setModeOverridesTitleBind, segment, override)
+    }
+
+    /**
+     * Has no effect and always equals to `true`.
+     *
+     * Generated from Godot docs: FileDialog.is_mode_overriding_title
+     */
+    fun isModeOverridingTitle(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isModeOverridingTitleBind, segment)
     }
 
     /** Signal `file_selected(path: String)`; see [TypedSignal]. */
@@ -738,8 +756,7 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
     value class Customization(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Toggles visibility of the favorite button, and the favorite list on the left side of the dialog.
-             * Equivalent to `hidden_files_toggle_enabled`.
+             * If enabled, shows the toggle hidden files button. Equivalent to `hidden_files_toggle_enabled`.
              *
              * Generated from Godot docs: FileDialog.CUSTOMIZATION_HIDDEN_FILES
              */
@@ -798,6 +815,27 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
              * Generated from Godot docs: FileDialog.CUSTOMIZATION_DELETE
              */
             val DELETE: Customization get() = Customization(8L)
+            /**
+             * If enabled, shows the go back/forward buttons on the toolbar. Equivalent to
+             * `navigation_buttons_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_NAVIGATION_BUTTONS
+             */
+            val NAVIGATION_BUTTONS: Customization get() = Customization(9L)
+            /**
+             * If enabled, shows the drive select dropdown next to the current path. Equivalent to
+             * `drive_selector_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_DRIVE_SELECTOR
+             */
+            val DRIVE_SELECTOR: Customization get() = Customization(10L)
+            /**
+             * If enabled, shows the file extension filter dropdown next to the file name. Equivalent to
+             * `filters_enabled`.
+             *
+             * Generated from Godot docs: FileDialog.CUSTOMIZATION_FILTERS
+             */
+            val FILTERS: Customization get() = Customization(11L)
         }
     }
 
@@ -1005,16 +1043,6 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         val setCurrentPathBind =
             ObjectCalls.getMethodBind("FileDialog", "set_current_path", SET_CURRENT_PATH_HASH)
 
-        private const val SET_MODE_OVERRIDES_TITLE_HASH = 2586408642L
-        @JvmField
-        val setModeOverridesTitleBind =
-            ObjectCalls.getMethodBind("FileDialog", "set_mode_overrides_title", SET_MODE_OVERRIDES_TITLE_HASH)
-
-        private const val IS_MODE_OVERRIDING_TITLE_HASH = 36873697L
-        @JvmField
-        val isModeOverridingTitleBind =
-            ObjectCalls.getMethodBind("FileDialog", "is_mode_overriding_title", IS_MODE_OVERRIDING_TITLE_HASH)
-
         private const val SET_FILE_MODE_HASH = 3654936397L
         @JvmField
         val setFileModeBind =
@@ -1139,5 +1167,15 @@ open class FileDialog(handle: GodotHandle) : ConfirmationDialog(handle) {
         @JvmField
         val invalidateBind =
             ObjectCalls.getMethodBind("FileDialog", "invalidate", INVALIDATE_HASH)
+
+        private const val SET_MODE_OVERRIDES_TITLE_HASH = 2586408642L
+        @JvmField
+        val setModeOverridesTitleBind =
+            ObjectCalls.getMethodBind("FileDialog", "set_mode_overrides_title", SET_MODE_OVERRIDES_TITLE_HASH)
+
+        private const val IS_MODE_OVERRIDING_TITLE_HASH = 36873697L
+        @JvmField
+        val isModeOverridingTitleBind =
+            ObjectCalls.getMethodBind("FileDialog", "is_mode_overriding_title", IS_MODE_OVERRIDING_TITLE_HASH)
     }
 }

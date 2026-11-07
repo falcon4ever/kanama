@@ -54,6 +54,12 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
         @JvmName("setParticleFlagInheritEmitterScaleProperty")
         set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.INHERIT_EMITTER_SCALE, value)
 
+    var particleFlagPreserveColor: Boolean
+        @JvmName("particleFlagPreserveColorProperty")
+        get() = getParticleFlag(ParticleProcessMaterial.ParticleFlags.PRESERVE_COLOR)
+        @JvmName("setParticleFlagPreserveColorProperty")
+        set(value) = setParticleFlag(ParticleProcessMaterial.ParticleFlags.PRESERVE_COLOR, value)
+
     var emissionShapeOffset: Vector3
         @JvmName("emissionShapeOffsetProperty")
         get() = getEmissionShapeOffset()
@@ -2462,14 +2468,30 @@ class ParticleProcessMaterial(handle: GodotHandle) : Material(handle) {
              * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_DISABLE_Z
              */
             val DISABLE_Z: ParticleFlags get() = ParticleFlags(2L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_damping_as_friction`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_DAMPING_AS_FRICTION
+             */
             val DAMPING_AS_FRICTION: ParticleFlags get() = ParticleFlags(3L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_inherit_emitter_scale`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_INHERIT_EMITTER_SCALE
+             */
             val INHERIT_EMITTER_SCALE: ParticleFlags get() = ParticleFlags(4L)
+            /**
+             * Use with `set_particle_flag` to set `particle_flag_preserve_color`.
+             *
+             * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_PRESERVE_COLOR
+             */
+            val PRESERVE_COLOR: ParticleFlags get() = ParticleFlags(5L)
             /**
              * Represents the size of the `ParticleFlags` enum.
              *
              * Generated from Godot docs: ParticleProcessMaterial.PARTICLE_FLAG_MAX
              */
-            val MAX: ParticleFlags get() = ParticleFlags(5L)
+            val MAX: ParticleFlags get() = ParticleFlags(6L)
         }
     }
 

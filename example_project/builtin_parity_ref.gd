@@ -2382,6 +2382,7 @@ func pure_round() -> void:
 	pure342()
 	pure343()
 	pure344()
+	pure345()
 
 
 func edge_round() -> void:
@@ -2419,7 +2420,7 @@ func edge_round() -> void:
 	pure32()
 	pure33()
 	pure34()
-	pure38()
+	pure35()
 	pure39()
 	pure40()
 	pure41()
@@ -2434,11 +2435,11 @@ func edge_round() -> void:
 	pure50()
 	pure51()
 	pure52()
-	pure54()
+	pure53()
 	pure55()
 	pure56()
 	pure57()
-	pure59()
+	pure58()
 	pure60()
 	pure61()
 	pure62()
@@ -2467,7 +2468,7 @@ func edge_round() -> void:
 	pure85()
 	pure86()
 	pure87()
-	pure91()
+	pure88()
 	pure92()
 	pure93()
 	pure94()
@@ -2478,7 +2479,7 @@ func edge_round() -> void:
 	pure99()
 	pure100()
 	pure101()
-	pure103()
+	pure102()
 	pure104()
 	pure105()
 	pure106()
@@ -2516,7 +2517,7 @@ func edge_round() -> void:
 	pure138()
 	pure139()
 	pure140()
-	pure142()
+	pure141()
 	pure143()
 	pure144()
 	pure145()
@@ -2616,8 +2617,8 @@ func edge_round() -> void:
 	pure239()
 	pure240()
 	pure241()
-	edge_finite242()
-	pure243()
+	pure242()
+	edge_finite243()
 	pure244()
 	pure245()
 	pure246()
@@ -2627,7 +2628,7 @@ func edge_round() -> void:
 	pure250()
 	pure251()
 	pure252()
-	pure255()
+	pure253()
 	pure256()
 	pure257()
 	pure258()
@@ -2653,7 +2654,7 @@ func edge_round() -> void:
 	pure278()
 	pure279()
 	pure280()
-	pure283()
+	pure281()
 	pure284()
 	pure285()
 	pure286()
@@ -2678,7 +2679,7 @@ func edge_round() -> void:
 	pure305()
 	pure306()
 	pure307()
-	pure310()
+	pure308()
 	pure311()
 	pure312()
 	pure313()
@@ -2710,8 +2711,9 @@ func edge_round() -> void:
 	pure339()
 	pure340()
 	pure341()
-	pure343()
+	pure342()
 	pure344()
+	pure345()
 
 
 func facade_round() -> void:
@@ -2997,880 +2999,885 @@ func pure21() -> void:
 
 func pure22() -> void:
 	var b = Vector2(nv(), nv())
-	var a0 = nv()
-	mix("Vector2.posmod", b.posmod(a0))
+	mix("Vector2.inverse", b.inverse())
 
 
 func pure23() -> void:
 	var b = Vector2(nv(), nv())
-	var a0 = Vector2(nv(), nv())
-	mix("Vector2.posmodv", b.posmodv(a0))
+	var a0 = nv()
+	mix("Vector2.posmod", b.posmod(a0))
 
 
 func pure24() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
-	mix("Vector2.project", b.project(a0))
+	mix("Vector2.posmodv", b.posmodv(a0))
 
 
 func pure25() -> void:
+	var b = Vector2(nv(), nv())
+	var a0 = Vector2(nv(), nv())
+	mix("Vector2.project", b.project(a0))
+
+
+func pure26() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = nv()
 	mix("Vector2.lerp", b.lerp(a0, a1))
 
 
-func pure26() -> void:
+func pure27() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.max_axis_index", b.max_axis_index())
 
 
-func pure27() -> void:
+func pure28() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.min_axis_index", b.min_axis_index())
 
 
-func pure28() -> void:
+func pure29() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = nv()
 	mix("Vector2.move_toward", b.move_toward(a0, a1))
 
 
-func pure29() -> void:
+func pure30() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.orthogonal", b.orthogonal())
 
 
-func pure30() -> void:
+func pure31() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.floor", b.floor())
 
 
-func pure31() -> void:
+func pure32() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.ceil", b.ceil())
 
 
-func pure32() -> void:
+func pure33() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.round", b.round())
 
 
-func pure33() -> void:
+func pure34() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.aspect", b.aspect())
 
 
-func pure34() -> void:
+func pure35() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.dot", b.dot(a0))
 
 
-func pure35() -> void:
+func pure36() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.slide", b.slide(a0))
 
 
-func pure36() -> void:
+func pure37() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.bounce", b.bounce(a0))
 
 
-func pure37() -> void:
+func pure38() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv()).normalized()
 	mix("Vector2.reflect", b.reflect(a0))
 
 
-func pure38() -> void:
+func pure39() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.cross", b.cross(a0))
 
 
-func pure39() -> void:
+func pure40() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.abs", b.abs())
 
 
-func pure40() -> void:
+func pure41() -> void:
 	var b = Vector2(nv(), nv())
 	mix("Vector2.sign", b.sign())
 
 
-func pure41() -> void:
+func pure42() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	var a1 = Vector2(nv(), nv())
 	mix("Vector2.clamp", b.clamp(a0, a1))
 
 
-func pure42() -> void:
+func pure43() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
 	mix("Vector2.clampf", b.clampf(a0, a1))
 
 
-func pure43() -> void:
+func pure44() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.min", b.min(a0))
 
 
-func pure44() -> void:
+func pure45() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.minf", b.minf(a0))
 
 
-func pure45() -> void:
+func pure46() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = Vector2(nv(), nv())
 	mix("Vector2.max", b.max(a0))
 
 
-func pure46() -> void:
+func pure47() -> void:
 	var b = Vector2(nv(), nv())
 	var a0 = nv()
 	mix("Vector2.maxf", b.maxf(a0))
 
 
-func pure47() -> void:
+func pure48() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	mix("unary- Vector3", -l)
 
 
-func pure48() -> void:
-	var l = Vector3(nv(), nv(), nv())
-	mix("unary+ Vector3", +l)
-
-
 func pure49() -> void:
 	var l = Vector3(nv(), nv(), nv())
-	var r = ri()
-	mix("Vector3 * int", l * r)
+	mix("unary+ Vector3", +l)
 
 
 func pure50() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = ri()
-	mix("Vector3 / int", l / r)
+	mix("Vector3 * int", l * r)
 
 
 func pure51() -> void:
 	var l = Vector3(nv(), nv(), nv())
-	var r = nv()
-	mix("Vector3 * float", l * r)
+	var r = ri()
+	mix("Vector3 / int", l / r)
 
 
 func pure52() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = nv()
-	mix("Vector3 / float", l / r)
+	mix("Vector3 * float", l * r)
 
 
 func pure53() -> void:
 	var l = Vector3(nv(), nv(), nv())
-	var r = Vector3(nv(), nv(), nv())
-	mix("Vector3 < Vector3", l < r)
+	var r = nv()
+	mix("Vector3 / float", l / r)
 
 
 func pure54() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
-	mix("Vector3 + Vector3", l + r)
+	mix("Vector3 < Vector3", l < r)
 
 
 func pure55() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
-	mix("Vector3 - Vector3", l - r)
+	mix("Vector3 + Vector3", l + r)
 
 
 func pure56() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
-	mix("Vector3 * Vector3", l * r)
+	mix("Vector3 - Vector3", l - r)
 
 
 func pure57() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Vector3(nv(), nv(), nv())
-	mix("Vector3 / Vector3", l / r)
+	mix("Vector3 * Vector3", l * r)
 
 
 func pure58() -> void:
+	var l = Vector3(nv(), nv(), nv())
+	var r = Vector3(nv(), nv(), nv())
+	mix("Vector3 / Vector3", l / r)
+
+
+func pure59() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Vector3 * Quaternion", l * r)
 
 
-func pure59() -> void:
+func pure60() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Vector3 * Basis", l * r)
 
 
-func pure60() -> void:
+func pure61() -> void:
 	var l = Vector3(nv(), nv(), nv())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Vector3 * Transform3D", l * r)
 
 
-func pure61() -> void:
+func pure62() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.min_axis_index", b.min_axis_index())
 
 
-func pure62() -> void:
-	var b = Vector3(nv(), nv(), nv())
-	mix("Vector3.max_axis_index", b.max_axis_index())
-
-
 func pure63() -> void:
 	var b = Vector3(nv(), nv(), nv())
-	var a0 = Vector3(nv(), nv(), nv())
-	mix("Vector3.direction_to", b.direction_to(a0))
+	mix("Vector3.max_axis_index", b.max_axis_index())
 
 
 func pure64() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
-	mix("Vector3.distance_to", b.distance_to(a0))
+	mix("Vector3.direction_to", b.direction_to(a0))
 
 
 func pure65() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
-	mix("Vector3.distance_squared_to", b.distance_squared_to(a0))
+	mix("Vector3.distance_to", b.distance_to(a0))
 
 
 func pure66() -> void:
 	var b = Vector3(nv(), nv(), nv())
-	mix("Vector3.length", b.length())
+	var a0 = Vector3(nv(), nv(), nv())
+	mix("Vector3.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure67() -> void:
 	var b = Vector3(nv(), nv(), nv())
-	mix("Vector3.length_squared", b.length_squared())
+	mix("Vector3.length", b.length())
 
 
 func pure68() -> void:
+	var b = Vector3(nv(), nv(), nv())
+	mix("Vector3.length_squared", b.length_squared())
+
+
+func pure69() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.limit_length", b.limit_length(a0))
 
 
-func pure69() -> void:
+func pure70() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.normalized", b.normalized())
 
 
-func pure70() -> void:
+func pure71() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_normalized", b.is_normalized())
 
 
-func pure71() -> void:
+func pure72() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure72() -> void:
+func pure73() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_zero_approx", b.is_zero_approx())
 
 
-func pure73() -> void:
+func pure74() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.is_finite", b.is_finite())
 
 
-func pure74() -> void:
+func pure75() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.inverse", b.inverse())
 
 
-func pure75() -> void:
+func pure76() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = Vector3(nv(), nv(), nv())
 	mix("Vector3.clamp", b.clamp(a0, a1))
 
 
-func pure76() -> void:
+func pure77() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
 	mix("Vector3.clampf", b.clampf(a0, a1))
 
 
-func pure77() -> void:
+func pure78() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
 	mix("Vector3.lerp", b.lerp(a0, a1))
 
 
-func pure78() -> void:
+func pure79() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
 	mix("Vector3.move_toward", b.move_toward(a0, a1))
 
 
-func pure79() -> void:
+func pure80() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.dot", b.dot(a0))
 
 
-func pure80() -> void:
+func pure81() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.cross", b.cross(a0))
 
 
-func pure81() -> void:
+func pure82() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.abs", b.abs())
 
 
-func pure82() -> void:
+func pure83() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.floor", b.floor())
 
 
-func pure83() -> void:
+func pure84() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.ceil", b.ceil())
 
 
-func pure84() -> void:
+func pure85() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.round", b.round())
 
 
-func pure85() -> void:
+func pure86() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.posmod", b.posmod(a0))
 
 
-func pure86() -> void:
+func pure87() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.posmodv", b.posmodv(a0))
 
 
-func pure87() -> void:
+func pure88() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.project", b.project(a0))
 
 
-func pure88() -> void:
+func pure89() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.slide", b.slide(a0))
 
 
-func pure89() -> void:
+func pure90() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.bounce", b.bounce(a0))
 
 
-func pure90() -> void:
+func pure91() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv()).normalized()
 	mix("Vector3.reflect", b.reflect(a0))
 
 
-func pure91() -> void:
+func pure92() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	mix("Vector3.sign", b.sign())
 
 
-func pure92() -> void:
+func pure93() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.min", b.min(a0))
 
 
-func pure93() -> void:
+func pure94() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.minf", b.minf(a0))
 
 
-func pure94() -> void:
+func pure95() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Vector3.max", b.max(a0))
 
 
-func pure95() -> void:
+func pure96() -> void:
 	var b = Vector3(nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector3.maxf", b.maxf(a0))
 
 
-func pure96() -> void:
+func pure97() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	mix("unary- Vector4", -l)
 
 
-func pure97() -> void:
-	var l = Vector4(nv(), nv(), nv(), nv())
-	mix("unary+ Vector4", +l)
-
-
 func pure98() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
-	var r = ri()
-	mix("Vector4 * int", l * r)
+	mix("unary+ Vector4", +l)
 
 
 func pure99() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = ri()
-	mix("Vector4 / int", l / r)
+	mix("Vector4 * int", l * r)
 
 
 func pure100() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
-	var r = nv()
-	mix("Vector4 * float", l * r)
+	var r = ri()
+	mix("Vector4 / int", l / r)
 
 
 func pure101() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = nv()
-	mix("Vector4 / float", l / r)
+	mix("Vector4 * float", l * r)
 
 
 func pure102() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
-	var r = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4 < Vector4", l < r)
+	var r = nv()
+	mix("Vector4 / float", l / r)
 
 
 func pure103() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4 + Vector4", l + r)
+	mix("Vector4 < Vector4", l < r)
 
 
 func pure104() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4 - Vector4", l - r)
+	mix("Vector4 + Vector4", l + r)
 
 
 func pure105() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4 * Vector4", l * r)
+	mix("Vector4 - Vector4", l - r)
 
 
 func pure106() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4 / Vector4", l / r)
+	mix("Vector4 * Vector4", l * r)
 
 
 func pure107() -> void:
+	var l = Vector4(nv(), nv(), nv(), nv())
+	var r = Vector4(nv(), nv(), nv(), nv())
+	mix("Vector4 / Vector4", l / r)
+
+
+func pure108() -> void:
 	var l = Vector4(nv(), nv(), nv(), nv())
 	var r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Vector4 * Projection", l * r)
 
 
-func pure108() -> void:
+func pure109() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.min_axis_index", b.min_axis_index())
 
 
-func pure109() -> void:
+func pure110() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.max_axis_index", b.max_axis_index())
 
 
-func pure110() -> void:
+func pure111() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.length", b.length())
 
 
-func pure111() -> void:
+func pure112() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.length_squared", b.length_squared())
 
 
-func pure112() -> void:
+func pure113() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.abs", b.abs())
 
 
-func pure113() -> void:
+func pure114() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.sign", b.sign())
 
 
-func pure114() -> void:
+func pure115() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.floor", b.floor())
 
 
-func pure115() -> void:
+func pure116() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.ceil", b.ceil())
 
 
-func pure116() -> void:
+func pure117() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.round", b.round())
 
 
-func pure117() -> void:
+func pure118() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = nv()
 	mix("Vector4.lerp", b.lerp(a0, a1))
 
 
-func pure118() -> void:
+func pure119() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.posmod", b.posmod(a0))
 
 
-func pure119() -> void:
+func pure120() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.posmodv", b.posmodv(a0))
 
 
-func pure120() -> void:
+func pure121() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	var a1 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.clamp", b.clamp(a0, a1))
 
 
-func pure121() -> void:
+func pure122() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	var a1 = nv()
 	mix("Vector4.clampf", b.clampf(a0, a1))
 
 
-func pure122() -> void:
-	var b = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.normalized", b.normalized())
-
-
 func pure123() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
-	var a0 = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.direction_to", b.direction_to(a0))
+	mix("Vector4.normalized", b.normalized())
 
 
 func pure124() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.distance_to", b.distance_to(a0))
+	mix("Vector4.direction_to", b.direction_to(a0))
 
 
 func pure125() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.distance_squared_to", b.distance_squared_to(a0))
+	mix("Vector4.distance_to", b.distance_to(a0))
 
 
 func pure126() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.dot", b.dot(a0))
+	mix("Vector4.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure127() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
-	mix("Vector4.inverse", b.inverse())
+	var a0 = Vector4(nv(), nv(), nv(), nv())
+	mix("Vector4.dot", b.dot(a0))
 
 
 func pure128() -> void:
+	var b = Vector4(nv(), nv(), nv(), nv())
+	mix("Vector4.inverse", b.inverse())
+
+
+func pure129() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure129() -> void:
+func pure130() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_zero_approx", b.is_zero_approx())
 
 
-func pure130() -> void:
+func pure131() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.is_finite", b.is_finite())
 
 
-func pure131() -> void:
+func pure132() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.min", b.min(a0))
 
 
-func pure132() -> void:
+func pure133() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.minf", b.minf(a0))
 
 
-func pure133() -> void:
+func pure134() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = Vector4(nv(), nv(), nv(), nv())
 	mix("Vector4.max", b.max(a0))
 
 
-func pure134() -> void:
+func pure135() -> void:
 	var b = Vector4(nv(), nv(), nv(), nv())
 	var a0 = nv()
 	mix("Vector4.maxf", b.maxf(a0))
 
 
-func pure135() -> void:
+func pure136() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("unary- Quaternion", -l)
 
 
-func pure136() -> void:
-	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-	mix("unary+ Quaternion", +l)
-
-
 func pure137() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-	var r = ri()
-	mix("Quaternion * int", l * r)
+	mix("unary+ Quaternion", +l)
 
 
 func pure138() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = ri()
-	mix("Quaternion / int", l / r)
+	mix("Quaternion * int", l * r)
 
 
 func pure139() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
-	var r = nv()
-	mix("Quaternion * float", l * r)
+	var r = ri()
+	mix("Quaternion / int", l / r)
 
 
 func pure140() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = nv()
-	mix("Quaternion / float", l / r)
+	mix("Quaternion * float", l * r)
 
 
 func pure141() -> void:
+	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
+	var r = nv()
+	mix("Quaternion / float", l / r)
+
+
+func pure142() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Vector3(nv(), nv(), nv())
 	mix("Quaternion * Vector3", l * r)
 
 
-func pure142() -> void:
+func pure143() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion + Quaternion", l + r)
 
 
-func pure143() -> void:
+func pure144() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion - Quaternion", l - r)
 
 
-func pure144() -> void:
+func pure145() -> void:
 	var l = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var r = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion * Quaternion", l * r)
 
 
-func pure145() -> void:
+func pure146() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.length", b.length())
 
 
-func pure146() -> void:
+func pure147() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.length_squared", b.length_squared())
 
 
-func pure147() -> void:
+func pure148() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.normalized", b.normalized())
 
 
-func pure148() -> void:
+func pure149() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure149() -> void:
+func pure150() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.is_finite", b.is_finite())
 
 
-func pure150() -> void:
+func pure151() -> void:
 	var b = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	var a0 = Quaternion(nv(), nv(), nv(), nv()).normalized()
 	mix("Quaternion.dot", b.dot(a0))
 
 
-func pure151() -> void:
+func pure152() -> void:
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("unary- Plane", -l)
 
 
-func pure152() -> void:
+func pure153() -> void:
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("unary+ Plane", +l)
 
 
-func pure153() -> void:
+func pure154() -> void:
 	var l = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Plane * Transform3D", l * r)
 
 
-func pure154() -> void:
-	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-	mix("Plane.get_center", b.get_center())
-
-
 func pure155() -> void:
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
-	var a0 = Vector3(nv(), nv(), nv())
-	mix("Plane.is_point_over", b.is_point_over(a0))
+	mix("Plane.get_center", b.get_center())
 
 
 func pure156() -> void:
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
-	mix("Plane.distance_to", b.distance_to(a0))
+	mix("Plane.is_point_over", b.is_point_over(a0))
 
 
 func pure157() -> void:
+	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
+	var a0 = Vector3(nv(), nv(), nv())
+	mix("Plane.distance_to", b.distance_to(a0))
+
+
+func pure158() -> void:
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = nv()
 	mix("Plane.has_point", b.has_point(a0, a1))
 
 
-func pure158() -> void:
+func pure159() -> void:
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Plane.project", b.project(a0))
 
 
-func pure159() -> void:
+func pure160() -> void:
 	var b = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	var a0 = Vector3(nv(), nv(), nv())
 	var a1 = Vector3(nv(), nv(), nv())
 	mix("Plane.intersects_ray", b.intersects_ray(a0, a1))
 
 
-func pure160() -> void:
+func pure161() -> void:
 	var l = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Rect2 * Transform2D", l * r)
 
 
-func pure161() -> void:
+func pure162() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.get_center", b.get_center())
 
 
-func pure162() -> void:
+func pure163() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.get_area", b.get_area())
 
 
-func pure163() -> void:
+func pure164() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.has_area", b.has_area())
 
 
-func pure164() -> void:
+func pure165() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.has_point", b.has_point(a0))
 
 
-func pure165() -> void:
+func pure166() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure166() -> void:
+func pure167() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a1 = rb()
 	mix("Rect2.intersects", b.intersects(a0, a1))
 
 
-func pure167() -> void:
+func pure168() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.encloses", b.encloses(a0))
 
 
-func pure168() -> void:
+func pure169() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.intersection", b.intersection(a0))
 
 
-func pure169() -> void:
+func pure170() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.merge", b.merge(a0))
 
 
-func pure170() -> void:
+func pure171() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.expand", b.expand(a0))
 
 
-func pure171() -> void:
+func pure172() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = Vector2(nv(), nv())
 	mix("Rect2.get_support", b.get_support(a0))
 
 
-func pure172() -> void:
+func pure173() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = nv()
 	mix("Rect2.grow", b.grow(a0))
 
 
-func pure173() -> void:
+func pure174() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = rs()
 	var a1 = nv()
 	mix("Rect2.grow_side", b.grow_side(a0, a1))
 
 
-func pure174() -> void:
+func pure175() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	var a0 = nv()
 	var a1 = nv()
@@ -3879,958 +3886,958 @@ func pure174() -> void:
 	mix("Rect2.grow_individual", b.grow_individual(a0, a1, a2, a3))
 
 
-func pure175() -> void:
+func pure176() -> void:
 	var b = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Rect2.abs", b.abs())
 
 
-func pure176() -> void:
+func pure177() -> void:
 	var l = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("AABB * Transform3D", l * r)
 
 
-func pure177() -> void:
+func pure178() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_center", b.get_center())
 
 
-func pure178() -> void:
+func pure179() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.get_volume", b.get_volume())
 
 
-func pure179() -> void:
+func pure180() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.has_volume", b.has_volume())
 
 
-func pure180() -> void:
+func pure181() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.has_surface", b.has_surface())
 
 
-func pure181() -> void:
+func pure182() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("AABB.has_point", b.has_point(a0))
 
 
-func pure182() -> void:
+func pure183() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure183() -> void:
+func pure184() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.intersects", b.intersects(a0))
 
 
-func pure184() -> void:
+func pure185() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.encloses", b.encloses(a0))
 
 
-func pure185() -> void:
+func pure186() -> void:
 	var b = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	var a0 = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("AABB.merge", b.merge(a0))
 
 
-func pure186() -> void:
+func pure187() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Basis * int", l * r)
 
 
-func pure187() -> void:
+func pure188() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = ri()
 	mix("Basis / int", l / r)
 
 
-func pure188() -> void:
+func pure189() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Basis * float", l * r)
 
 
-func pure189() -> void:
+func pure190() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = nv()
 	mix("Basis / float", l / r)
 
 
-func pure190() -> void:
+func pure191() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = Vector3(nv(), nv(), nv())
 	mix("Basis * Vector3", l * r)
 
 
-func pure191() -> void:
+func pure192() -> void:
 	var l = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var r = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis * Basis", l * r)
 
 
-func pure192() -> void:
+func pure193() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.inverse", b.inverse())
 
 
-func pure193() -> void:
+func pure194() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.transposed", b.transposed())
 
 
-func pure194() -> void:
+func pure195() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.orthonormalized", b.orthonormalized())
 
 
-func pure195() -> void:
+func pure196() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.determinant", b.determinant())
 
 
-func pure196() -> void:
+func pure197() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv())
 	mix("Basis.scaled", b.scaled(a0))
 
 
-func pure197() -> void:
+func pure198() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.get_scale", b.get_scale())
 
 
-func pure198() -> void:
+func pure199() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	var a0 = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure199() -> void:
+func pure200() -> void:
 	var b = Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()))
 	mix("Basis.get_rotation_quaternion", b.get_rotation_quaternion())
-
-
-func pure200() -> void:
-	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
-	var r = ri()
-	mix("Transform3D * int", l * r)
 
 
 func pure201() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = ri()
-	mix("Transform3D / int", l / r)
+	mix("Transform3D * int", l * r)
 
 
 func pure202() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
-	var r = nv()
-	mix("Transform3D * float", l * r)
+	var r = ri()
+	mix("Transform3D / int", l / r)
 
 
 func pure203() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = nv()
-	mix("Transform3D / float", l / r)
+	mix("Transform3D * float", l * r)
 
 
 func pure204() -> void:
+	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
+	var r = nv()
+	mix("Transform3D / float", l / r)
+
+
+func pure205() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Vector3(nv(), nv(), nv())
 	mix("Transform3D * Vector3", l * r)
 
 
-func pure205() -> void:
+func pure206() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Plane(Vector3(nv(), nv(), nv()).normalized(), nv())
 	mix("Transform3D * Plane", l * r)
 
 
-func pure206() -> void:
+func pure207() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = AABB(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()).abs())
 	mix("Transform3D * AABB", l * r)
 
 
-func pure207() -> void:
+func pure208() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D * Transform3D", l * r)
 
 
-func pure208() -> void:
+func pure209() -> void:
 	var l = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var r = PackedVector3Array([Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())])
 	mix("Transform3D * PackedVector3Array", l * r)
 
 
-func pure209() -> void:
+func pure210() -> void:
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.inverse", b.inverse())
 
 
-func pure210() -> void:
+func pure211() -> void:
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.affine_inverse", b.affine_inverse())
 
 
-func pure211() -> void:
-	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
-	mix("Transform3D.orthonormalized", b.orthonormalized())
-
-
 func pure212() -> void:
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
-	var a0 = Vector3(nv(), nv(), nv())
-	mix("Transform3D.translated", b.translated(a0))
+	mix("Transform3D.orthonormalized", b.orthonormalized())
 
 
 func pure213() -> void:
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var a0 = Vector3(nv(), nv(), nv())
-	mix("Transform3D.translated_local", b.translated_local(a0))
+	mix("Transform3D.translated", b.translated(a0))
 
 
 func pure214() -> void:
+	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
+	var a0 = Vector3(nv(), nv(), nv())
+	mix("Transform3D.translated_local", b.translated_local(a0))
+
+
+func pure215() -> void:
 	var b = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	var a0 = Transform3D(Basis(Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv()), Vector3(nv(), nv(), nv())), Vector3(nv(), nv(), nv()))
 	mix("Transform3D.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure215() -> void:
+func pure216() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = ri()
 	mix("Transform2D * int", l * r)
 
 
-func pure216() -> void:
+func pure217() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = ri()
 	mix("Transform2D / int", l / r)
 
 
-func pure217() -> void:
+func pure218() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = nv()
 	mix("Transform2D * float", l * r)
 
 
-func pure218() -> void:
+func pure219() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = nv()
 	mix("Transform2D / float", l / r)
 
 
-func pure219() -> void:
+func pure220() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Vector2(nv(), nv())
 	mix("Transform2D * Vector2", l * r)
 
 
-func pure220() -> void:
+func pure221() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Rect2(Vector2(nv(), nv()), Vector2(nv(), nv()).abs())
 	mix("Transform2D * Rect2", l * r)
 
 
-func pure221() -> void:
+func pure222() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D * Transform2D", l * r)
 
 
-func pure222() -> void:
+func pure223() -> void:
 	var l = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var r = PackedVector2Array([Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv())])
 	mix("Transform2D * PackedVector2Array", l * r)
 
 
-func pure223() -> void:
+func pure224() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D.inverse", b.inverse())
 
 
-func pure224() -> void:
-	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
-	mix("Transform2D.get_origin", b.get_origin())
-
-
 func pure225() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
-	var a0 = Vector2(nv(), nv())
-	mix("Transform2D.translated", b.translated(a0))
+	mix("Transform2D.get_origin", b.get_origin())
 
 
 func pure226() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
-	mix("Transform2D.translated_local", b.translated_local(a0))
+	mix("Transform2D.translated", b.translated(a0))
 
 
 func pure227() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
-	mix("Transform2D.basis_xform", b.basis_xform(a0))
+	mix("Transform2D.translated_local", b.translated_local(a0))
 
 
 func pure228() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Vector2(nv(), nv())
-	mix("Transform2D.basis_xform_inv", b.basis_xform_inv(a0))
+	mix("Transform2D.basis_xform", b.basis_xform(a0))
 
 
 func pure229() -> void:
+	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
+	var a0 = Vector2(nv(), nv())
+	mix("Transform2D.basis_xform_inv", b.basis_xform_inv(a0))
+
+
+func pure230() -> void:
 	var b = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	var a0 = Transform2D(Vector2(nv(), nv()), Vector2(nv(), nv()), Vector2(nv(), nv()))
 	mix("Transform2D.is_equal_approx", b.is_equal_approx(a0))
 
 
-func pure230() -> void:
+func pure231() -> void:
 	var l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var r = Vector4(nv(), nv(), nv(), nv())
 	mix("Projection * Vector4", l * r)
 
 
-func pure231() -> void:
+func pure232() -> void:
 	var l = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	var r = Projection(Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()), Vector4(nv(), nv(), nv(), nv()))
 	mix("Projection * Projection", l * r)
 
 
-func pure232() -> void:
+func pure233() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	mix("unary- Color", -l)
 
 
-func pure233() -> void:
-	var l = Color(nv(), nv(), nv(), nv())
-	mix("unary+ Color", +l)
-
-
 func pure234() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
-	var r = ri()
-	mix("Color * int", l * r)
+	mix("unary+ Color", +l)
 
 
 func pure235() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = ri()
-	mix("Color / int", l / r)
+	mix("Color * int", l * r)
 
 
 func pure236() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
-	var r = nv()
-	mix("Color * float", l * r)
+	var r = ri()
+	mix("Color / int", l / r)
 
 
 func pure237() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = nv()
-	mix("Color / float", l / r)
+	mix("Color * float", l * r)
 
 
 func pure238() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
-	var r = Color(nv(), nv(), nv(), nv())
-	mix("Color + Color", l + r)
+	var r = nv()
+	mix("Color / float", l / r)
 
 
 func pure239() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
-	mix("Color - Color", l - r)
+	mix("Color + Color", l + r)
 
 
 func pure240() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
-	mix("Color * Color", l * r)
+	mix("Color - Color", l - r)
 
 
 func pure241() -> void:
 	var l = Color(nv(), nv(), nv(), nv())
 	var r = Color(nv(), nv(), nv(), nv())
-	mix("Color / Color", l / r)
+	mix("Color * Color", l * r)
 
 
 func pure242() -> void:
+	var l = Color(nv(), nv(), nv(), nv())
+	var r = Color(nv(), nv(), nv(), nv())
+	mix("Color / Color", l / r)
+
+
+func pure243() -> void:
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = rb()
 	mix("Color.to_html", b.to_html(a0))
 
 
-func pure243() -> void:
+func pure244() -> void:
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	var a1 = Color(nv(), nv(), nv(), nv())
 	mix("Color.clamp", b.clamp(a0, a1))
 
 
-func pure244() -> void:
+func pure245() -> void:
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.inverted", b.inverted())
 
 
-func pure245() -> void:
+func pure246() -> void:
 	var b = Color(nv(), nv(), nv(), nv())
 	var a0 = Color(nv(), nv(), nv(), nv())
 	var a1 = nv()
 	mix("Color.lerp", b.lerp(a0, a1))
 
 
-func pure246() -> void:
+func pure247() -> void:
 	var b = Color(nv(), nv(), nv(), nv())
 	mix("Color.get_luminance", b.get_luminance())
 
 
-func pure247() -> void:
+func pure248() -> void:
 	var l = Vector2i(ri(), ri())
 	mix("unary- Vector2i", -l)
 
 
-func pure248() -> void:
+func pure249() -> void:
 	var l = Vector2i(ri(), ri())
 	mix("unary+ Vector2i", +l)
 
 
-func pure249() -> void:
+func pure250() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = ri()
 	mix("Vector2i * int", l * r)
 
 
-func pure250() -> void:
+func pure251() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = rnz()
 	mix("Vector2i / int", l / r)
 
 
-func pure251() -> void:
+func pure252() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = rnz()
 	mix("Vector2i % int", l % r)
 
 
-func pure252() -> void:
+func pure253() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = nv()
 	mix("Vector2i * float", l * r)
 
 
-func pure253() -> void:
+func pure254() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = nv()
 	mix("Vector2i / float", l / r)
 
 
-func pure254() -> void:
+func pure255() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i < Vector2i", l < r)
 
 
-func pure255() -> void:
+func pure256() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i + Vector2i", l + r)
 
 
-func pure256() -> void:
+func pure257() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i - Vector2i", l - r)
 
 
-func pure257() -> void:
+func pure258() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(ri(), ri())
 	mix("Vector2i * Vector2i", l * r)
 
 
-func pure258() -> void:
+func pure259() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(rnz(), rnz())
 	mix("Vector2i / Vector2i", l / r)
 
 
-func pure259() -> void:
+func pure260() -> void:
 	var l = Vector2i(ri(), ri())
 	var r = Vector2i(rnz(), rnz())
 	mix("Vector2i % Vector2i", l % r)
 
 
-func pure260() -> void:
+func pure261() -> void:
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.aspect", b.aspect())
 
 
-func pure261() -> void:
+func pure262() -> void:
 	var b = Vector2i(ri(), ri())
 	mix("Vector2i.max_axis_index", b.max_axis_index())
 
 
-func pure262() -> void:
-	var b = Vector2i(ri(), ri())
-	mix("Vector2i.min_axis_index", b.min_axis_index())
-
-
 func pure263() -> void:
 	var b = Vector2i(ri(), ri())
-	var a0 = Vector2i(ri(), ri())
-	mix("Vector2i.distance_to", b.distance_to(a0))
+	mix("Vector2i.min_axis_index", b.min_axis_index())
 
 
 func pure264() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
-	mix("Vector2i.distance_squared_to", b.distance_squared_to(a0))
+	mix("Vector2i.distance_to", b.distance_to(a0))
 
 
 func pure265() -> void:
 	var b = Vector2i(ri(), ri())
-	mix("Vector2i.length", b.length())
+	var a0 = Vector2i(ri(), ri())
+	mix("Vector2i.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure266() -> void:
 	var b = Vector2i(ri(), ri())
-	mix("Vector2i.length_squared", b.length_squared())
+	mix("Vector2i.length", b.length())
 
 
 func pure267() -> void:
 	var b = Vector2i(ri(), ri())
-	mix("Vector2i.sign", b.sign())
+	mix("Vector2i.length_squared", b.length_squared())
 
 
 func pure268() -> void:
 	var b = Vector2i(ri(), ri())
-	mix("Vector2i.abs", b.abs())
+	mix("Vector2i.sign", b.sign())
 
 
 func pure269() -> void:
+	var b = Vector2i(ri(), ri())
+	mix("Vector2i.abs", b.abs())
+
+
+func pure270() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	var a1 = Vector2i(ri(), ri())
 	mix("Vector2i.clamp", b.clamp(a0, a1))
 
 
-func pure270() -> void:
+func pure271() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
 	mix("Vector2i.clampi", b.clampi(a0, a1))
 
 
-func pure271() -> void:
+func pure272() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.min", b.min(a0))
 
 
-func pure272() -> void:
+func pure273() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	mix("Vector2i.mini", b.mini(a0))
 
 
-func pure273() -> void:
+func pure274() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = Vector2i(ri(), ri())
 	mix("Vector2i.max", b.max(a0))
 
 
-func pure274() -> void:
+func pure275() -> void:
 	var b = Vector2i(ri(), ri())
 	var a0 = ri()
 	mix("Vector2i.maxi", b.maxi(a0))
 
 
-func pure275() -> void:
+func pure276() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	mix("unary- Vector3i", -l)
 
 
-func pure276() -> void:
+func pure277() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	mix("unary+ Vector3i", +l)
 
 
-func pure277() -> void:
+func pure278() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = ri()
 	mix("Vector3i * int", l * r)
 
 
-func pure278() -> void:
+func pure279() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector3i / int", l / r)
 
 
-func pure279() -> void:
+func pure280() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector3i % int", l % r)
 
 
-func pure280() -> void:
+func pure281() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = nv()
 	mix("Vector3i * float", l * r)
 
 
-func pure281() -> void:
+func pure282() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = nv()
 	mix("Vector3i / float", l / r)
 
 
-func pure282() -> void:
+func pure283() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i < Vector3i", l < r)
 
 
-func pure283() -> void:
+func pure284() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i + Vector3i", l + r)
 
 
-func pure284() -> void:
+func pure285() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i - Vector3i", l - r)
 
 
-func pure285() -> void:
+func pure286() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(ri(), ri(), ri())
 	mix("Vector3i * Vector3i", l * r)
 
 
-func pure286() -> void:
+func pure287() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(rnz(), rnz(), rnz())
 	mix("Vector3i / Vector3i", l / r)
 
 
-func pure287() -> void:
+func pure288() -> void:
 	var l = Vector3i(ri(), ri(), ri())
 	var r = Vector3i(rnz(), rnz(), rnz())
 	mix("Vector3i % Vector3i", l % r)
 
 
-func pure288() -> void:
+func pure289() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.min_axis_index", b.min_axis_index())
 
 
-func pure289() -> void:
-	var b = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.max_axis_index", b.max_axis_index())
-
-
 func pure290() -> void:
 	var b = Vector3i(ri(), ri(), ri())
-	var a0 = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.distance_to", b.distance_to(a0))
+	mix("Vector3i.max_axis_index", b.max_axis_index())
 
 
 func pure291() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.distance_squared_to", b.distance_squared_to(a0))
+	mix("Vector3i.distance_to", b.distance_to(a0))
 
 
 func pure292() -> void:
 	var b = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.length", b.length())
+	var a0 = Vector3i(ri(), ri(), ri())
+	mix("Vector3i.distance_squared_to", b.distance_squared_to(a0))
 
 
 func pure293() -> void:
 	var b = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.length_squared", b.length_squared())
+	mix("Vector3i.length", b.length())
 
 
 func pure294() -> void:
 	var b = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.sign", b.sign())
+	mix("Vector3i.length_squared", b.length_squared())
 
 
 func pure295() -> void:
 	var b = Vector3i(ri(), ri(), ri())
-	mix("Vector3i.abs", b.abs())
+	mix("Vector3i.sign", b.sign())
 
 
 func pure296() -> void:
+	var b = Vector3i(ri(), ri(), ri())
+	mix("Vector3i.abs", b.abs())
+
+
+func pure297() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	var a1 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.clamp", b.clamp(a0, a1))
 
 
-func pure297() -> void:
+func pure298() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
 	mix("Vector3i.clampi", b.clampi(a0, a1))
 
 
-func pure298() -> void:
+func pure299() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.min", b.min(a0))
 
 
-func pure299() -> void:
+func pure300() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector3i.mini", b.mini(a0))
 
 
-func pure300() -> void:
+func pure301() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = Vector3i(ri(), ri(), ri())
 	mix("Vector3i.max", b.max(a0))
 
 
-func pure301() -> void:
+func pure302() -> void:
 	var b = Vector3i(ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector3i.maxi", b.maxi(a0))
 
 
-func pure302() -> void:
+func pure303() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	mix("unary- Vector4i", -l)
 
 
-func pure303() -> void:
+func pure304() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	mix("unary+ Vector4i", +l)
 
 
-func pure304() -> void:
+func pure305() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = ri()
 	mix("Vector4i * int", l * r)
 
 
-func pure305() -> void:
+func pure306() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector4i / int", l / r)
 
 
-func pure306() -> void:
+func pure307() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = rnz()
 	mix("Vector4i % int", l % r)
 
 
-func pure307() -> void:
+func pure308() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = nv()
 	mix("Vector4i * float", l * r)
 
 
-func pure308() -> void:
+func pure309() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = nv()
 	mix("Vector4i / float", l / r)
 
 
-func pure309() -> void:
+func pure310() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i < Vector4i", l < r)
 
 
-func pure310() -> void:
+func pure311() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i + Vector4i", l + r)
 
 
-func pure311() -> void:
+func pure312() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i - Vector4i", l - r)
 
 
-func pure312() -> void:
+func pure313() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i * Vector4i", l * r)
 
 
-func pure313() -> void:
+func pure314() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(rnz(), rnz(), rnz(), rnz())
 	mix("Vector4i / Vector4i", l / r)
 
 
-func pure314() -> void:
+func pure315() -> void:
 	var l = Vector4i(ri(), ri(), ri(), ri())
 	var r = Vector4i(rnz(), rnz(), rnz(), rnz())
 	mix("Vector4i % Vector4i", l % r)
 
 
-func pure315() -> void:
+func pure316() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.min_axis_index", b.min_axis_index())
 
 
-func pure316() -> void:
+func pure317() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.max_axis_index", b.max_axis_index())
 
 
-func pure317() -> void:
+func pure318() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.length", b.length())
 
 
-func pure318() -> void:
+func pure319() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.length_squared", b.length_squared())
 
 
-func pure319() -> void:
+func pure320() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.sign", b.sign())
 
 
-func pure320() -> void:
+func pure321() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.abs", b.abs())
 
 
-func pure321() -> void:
+func pure322() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	var a1 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.clamp", b.clamp(a0, a1))
 
 
-func pure322() -> void:
+func pure323() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	var a1 = ri()
 	mix("Vector4i.clampi", b.clampi(a0, a1))
 
 
-func pure323() -> void:
+func pure324() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.min", b.min(a0))
 
 
-func pure324() -> void:
+func pure325() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector4i.mini", b.mini(a0))
 
 
-func pure325() -> void:
+func pure326() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.max", b.max(a0))
 
 
-func pure326() -> void:
+func pure327() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = ri()
 	mix("Vector4i.maxi", b.maxi(a0))
 
 
-func pure327() -> void:
+func pure328() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.distance_to", b.distance_to(a0))
 
 
-func pure328() -> void:
+func pure329() -> void:
 	var b = Vector4i(ri(), ri(), ri(), ri())
 	var a0 = Vector4i(ri(), ri(), ri(), ri())
 	mix("Vector4i.distance_squared_to", b.distance_squared_to(a0))
 
 
-func pure329() -> void:
+func pure330() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.get_center", b.get_center())
 
 
-func pure330() -> void:
+func pure331() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.get_area", b.get_area())
 
 
-func pure331() -> void:
+func pure332() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.has_area", b.has_area())
 
 
-func pure332() -> void:
+func pure333() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Vector2i(ri(), ri())
 	mix("Rect2i.has_point", b.has_point(a0))
 
 
-func pure333() -> void:
+func pure334() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.intersects", b.intersects(a0))
 
 
-func pure334() -> void:
+func pure335() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.encloses", b.encloses(a0))
 
 
-func pure335() -> void:
+func pure336() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.intersection", b.intersection(a0))
 
 
-func pure336() -> void:
+func pure337() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.merge", b.merge(a0))
 
 
-func pure337() -> void:
+func pure338() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = Vector2i(ri(), ri())
 	mix("Rect2i.expand", b.expand(a0))
 
 
-func pure338() -> void:
+func pure339() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = ri()
 	mix("Rect2i.grow", b.grow(a0))
 
 
-func pure339() -> void:
+func pure340() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = rs()
 	var a1 = ri()
 	mix("Rect2i.grow_side", b.grow_side(a0, a1))
 
 
-func pure340() -> void:
+func pure341() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	var a0 = ri()
 	var a1 = ri()
@@ -4839,23 +4846,23 @@ func pure340() -> void:
 	mix("Rect2i.grow_individual", b.grow_individual(a0, a1, a2, a3))
 
 
-func pure341() -> void:
+func pure342() -> void:
 	var b = Rect2i(Vector2i(ri(), ri()), Vector2i(ri(), ri()).abs())
 	mix("Rect2i.abs", b.abs())
 
 
-func pure342() -> void:
+func pure343() -> void:
 	var l = rid_from(rl())
 	var r = rid_from(rl())
 	mix("RID < RID", l < r)
 
 
-func pure343() -> void:
+func pure344() -> void:
 	var b = rid_from(rl())
 	mix("RID.is_valid", b.is_valid())
 
 
-func pure344() -> void:
+func pure345() -> void:
 	var b = rid_from(rl())
 	mix("RID.get_id", b.get_id())
 
@@ -5817,7 +5824,7 @@ func facade152() -> void:
 	mix("Vector4i.snappedi", b.snappedi(a0))
 
 
-func edge_finite242() -> void:
+func edge_finite243() -> void:
 	var b = Color(nvf(), nvf(), nvf(), nvf())
 	var a0 = rb()
 	mix("Color.to_html", b.to_html(a0))

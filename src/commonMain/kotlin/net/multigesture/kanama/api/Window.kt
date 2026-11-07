@@ -175,6 +175,12 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmName("setMaximizeDisabledProperty")
         set(value) = setFlag(Window.Flags.MAXIMIZE_DISABLED, value)
 
+    var fullscreenShortcutEnabled: Boolean
+        @JvmName("fullscreenShortcutEnabledProperty")
+        get() = isFullscreenShortcutEnabled()
+        @JvmName("setFullscreenShortcutEnabledProperty")
+        set(value) = setFullscreenShortcutEnabled(value)
+
     var forceNative: Boolean
         @JvmName("forceNativeProperty")
         get() = getForceNative()
@@ -267,6 +273,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * The window's title. If the `Window` is native, title styles set in `Theme` will have no effect.
+     * If empty, some dialogs may use a default title.
      *
      * Generated from Godot docs: Window.set_title
      */
@@ -276,6 +283,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * The window's title. If the `Window` is native, title styles set in `Theme` will have no effect.
+     * If empty, some dialogs may use a default title.
      *
      * Generated from Godot docs: Window.get_title
      */
@@ -530,6 +538,30 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     /**
+     * If `true`, allows the user to toggle fullscreen mode by pressing the shortcut defined in
+     * `ProjectSettings.input/ui_toggle_fullscreen` (Alt + Enter by default). This is enabled on the
+     * main window according to the
+     * `ProjectSettings.display/window/size/enable_toggle_fullscreen_shortcut` project setting.
+     *
+     * Generated from Godot docs: Window.set_fullscreen_shortcut_enabled
+     */
+    fun setFullscreenShortcutEnabled(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setFullscreenShortcutEnabledBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, allows the user to toggle fullscreen mode by pressing the shortcut defined in
+     * `ProjectSettings.input/ui_toggle_fullscreen` (Alt + Enter by default). This is enabled on the
+     * main window according to the
+     * `ProjectSettings.display/window/size/enable_toggle_fullscreen_shortcut` project setting.
+     *
+     * Generated from Godot docs: Window.is_fullscreen_shortcut_enabled
+     */
+    fun isFullscreenShortcutEnabled(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFullscreenShortcutEnabledBind, segment)
+    }
+
+    /**
      * Returns `true` if the window can be maximized (the maximize button is enabled).
      *
      * Generated from Godot docs: Window.is_maximize_allowed
@@ -764,6 +796,17 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun setImePosition(position: Vector2i) {
         ObjectCalls.ptrcallWithVector2iArg(Binds.setImePositionBind, segment, position)
+    }
+
+    /**
+     * Sets a rectangle which should not be obstructed by the Input Method Editor
+     * (https://en.wikipedia.org/wiki/Input_method) popup. Note: This method is implemented only on
+     * Windows.
+     *
+     * Generated from Godot docs: Window.set_ime_rect
+     */
+    fun setImeRect(rect: Rect2i) {
+        ObjectCalls.ptrcallWithRect2iArg(Binds.setImeRectBind, segment, rect)
     }
 
     /**
@@ -1151,6 +1194,18 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     /**
+     * Creates a local override for a theme sound with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_sound_override`. See also `get_theme_sound`.
+     *
+     * Generated from Godot docs: Window.add_theme_sound_override
+     */
+    fun addThemeSoundOverride(name: String, sound: AudioStream?) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeSoundOverrideBind, segment, name, sound?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(sound)
+    }
+
+    /**
      * Removes a local override for a theme icon with the specified `name` previously added by
      * `add_theme_icon_override` or via the Inspector dock.
      *
@@ -1211,6 +1266,16 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     /**
+     * Removes a local override for a theme sound with the specified `name` previously added by
+     * `add_theme_sound_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Window.remove_theme_sound_override
+     */
+    fun removeThemeSoundOverride(name: String) {
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeSoundOverrideBind, segment, name)
+    }
+
+    /**
      * Returns an icon from the first matching `Theme` in the tree if that `Theme` has an icon item
      * with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
      *
@@ -1252,7 +1317,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * Returns a `Color` from the first matching `Theme` in the tree if that `Theme` has a color item
-     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for more details.
+     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
      *
      * Generated from Godot docs: Window.get_theme_color
      */
@@ -1262,12 +1327,22 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * Returns a constant from the first matching `Theme` in the tree if that `Theme` has a constant
-     * item with the specified `name` and `theme_type`. See `Control.get_theme_color` for more details.
+     * item with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
      *
      * Generated from Godot docs: Window.get_theme_constant
      */
     fun getThemeConstant(name: String, themeType: String = ""): Int {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetInt(Binds.getThemeConstantBind, segment, name, themeType)
+    }
+
+    /**
+     * Returns a sound from the first matching `Theme` in the tree if that `Theme` has a sound item
+     * with the specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     *
+     * Generated from Godot docs: Window.get_theme_sound
+     */
+    fun getThemeSound(name: String, themeType: String = ""): AudioStream? {
+        return AudioStream.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeSoundBind, segment, name, themeType))
     }
 
     /**
@@ -1331,8 +1406,18 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
     }
 
     /**
+     * Returns `true` if there is a local override for a theme sound with the specified `name` in this
+     * `Control` node. See `add_theme_sound_override`.
+     *
+     * Generated from Godot docs: Window.has_theme_sound_override
+     */
+    fun hasThemeSoundOverride(name: String): Boolean {
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeSoundOverrideBind, segment, name)
+    }
+
+    /**
      * Returns `true` if there is a matching `Theme` in the tree that has an icon item with the
-     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     * specified `name` and `theme_type`. See `Control.get_theme_icon` for details.
      *
      * Generated from Godot docs: Window.has_theme_icon
      */
@@ -1342,7 +1427,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * Returns `true` if there is a matching `Theme` in the tree that has a stylebox item with the
-     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     * specified `name` and `theme_type`. See `Control.get_theme_stylebox` for details.
      *
      * Generated from Godot docs: Window.has_theme_stylebox
      */
@@ -1352,7 +1437,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * Returns `true` if there is a matching `Theme` in the tree that has a font item with the
-     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     * specified `name` and `theme_type`. See `Control.get_theme_font` for details.
      *
      * Generated from Godot docs: Window.has_theme_font
      */
@@ -1362,7 +1447,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
 
     /**
      * Returns `true` if there is a matching `Theme` in the tree that has a font size item with the
-     * specified `name` and `theme_type`. See `Control.get_theme_color` for details.
+     * specified `name` and `theme_type`. See `Control.get_theme_font_size` for details.
      *
      * Generated from Godot docs: Window.has_theme_font_size
      */
@@ -1388,6 +1473,16 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
      */
     fun hasThemeConstant(name: String, themeType: String = ""): Boolean {
         return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeConstantBind, segment, name, themeType)
+    }
+
+    /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a sound item with the
+     * specified `name` and `theme_type`. See `Control.get_theme_sound` for details.
+     *
+     * Generated from Godot docs: Window.has_theme_sound
+     */
+    fun hasThemeSound(name: String, themeType: String = ""): Boolean {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeSoundBind, segment, name, themeType)
     }
 
     /**
@@ -1884,7 +1979,7 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
             val EXTEND_TO_TITLE: Flags get() = Flags(6L)
             /**
              * All mouse events are passed to the underlying window of the same application. Note: This flag
-             * has no effect in embedded windows. Note: This flag is implemented on Linux (X11), macOS,
+             * has no effect in embedded windows. Note: This flag is implemented on Linux (X11/Wayland), macOS,
              * Windows.
              *
              * Generated from Godot docs: Window.FLAG_MOUSE_PASSTHROUGH
@@ -2294,6 +2389,16 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         val getOutputMaxLinearValueBind =
             ObjectCalls.getMethodBind("Window", "get_output_max_linear_value", GET_OUTPUT_MAX_LINEAR_VALUE_HASH)
 
+        private const val SET_FULLSCREEN_SHORTCUT_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setFullscreenShortcutEnabledBind =
+            ObjectCalls.getMethodBind("Window", "set_fullscreen_shortcut_enabled", SET_FULLSCREEN_SHORTCUT_ENABLED_HASH)
+
+        private const val IS_FULLSCREEN_SHORTCUT_ENABLED_HASH = 36873697L
+        @JvmField
+        val isFullscreenShortcutEnabledBind =
+            ObjectCalls.getMethodBind("Window", "is_fullscreen_shortcut_enabled", IS_FULLSCREEN_SHORTCUT_ENABLED_HASH)
+
         private const val IS_MAXIMIZE_ALLOWED_HASH = 36873697L
         @JvmField
         val isMaximizeAllowedBind =
@@ -2408,6 +2513,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmField
         val setImePositionBind =
             ObjectCalls.getMethodBind("Window", "set_ime_position", SET_IME_POSITION_HASH)
+
+        private const val SET_IME_RECT_HASH = 1763793166L
+        @JvmField
+        val setImeRectBind =
+            ObjectCalls.getMethodBind("Window", "set_ime_rect", SET_IME_RECT_HASH)
 
         private const val IS_EMBEDDED_HASH = 36873697L
         @JvmField
@@ -2584,6 +2694,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         val addThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "add_theme_constant_override", ADD_THEME_CONSTANT_OVERRIDE_HASH)
 
+        private const val ADD_THEME_SOUND_OVERRIDE_HASH = 3407455952L
+        @JvmField
+        val addThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Window", "add_theme_sound_override", ADD_THEME_SOUND_OVERRIDE_HASH)
+
         private const val REMOVE_THEME_ICON_OVERRIDE_HASH = 3304788590L
         @JvmField
         val removeThemeIconOverrideBind =
@@ -2613,6 +2728,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmField
         val removeThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "remove_theme_constant_override", REMOVE_THEME_CONSTANT_OVERRIDE_HASH)
+
+        private const val REMOVE_THEME_SOUND_OVERRIDE_HASH = 3304788590L
+        @JvmField
+        val removeThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Window", "remove_theme_sound_override", REMOVE_THEME_SOUND_OVERRIDE_HASH)
 
         private const val GET_THEME_ICON_HASH = 3163973443L
         @JvmField
@@ -2644,6 +2764,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         val getThemeConstantBind =
             ObjectCalls.getMethodBind("Window", "get_theme_constant", GET_THEME_CONSTANT_HASH)
 
+        private const val GET_THEME_SOUND_HASH = 1579966710L
+        @JvmField
+        val getThemeSoundBind =
+            ObjectCalls.getMethodBind("Window", "get_theme_sound", GET_THEME_SOUND_HASH)
+
         private const val HAS_THEME_ICON_OVERRIDE_HASH = 2619796661L
         @JvmField
         val hasThemeIconOverrideBind =
@@ -2674,6 +2799,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         val hasThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Window", "has_theme_constant_override", HAS_THEME_CONSTANT_OVERRIDE_HASH)
 
+        private const val HAS_THEME_SOUND_OVERRIDE_HASH = 2619796661L
+        @JvmField
+        val hasThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Window", "has_theme_sound_override", HAS_THEME_SOUND_OVERRIDE_HASH)
+
         private const val HAS_THEME_ICON_HASH = 866386512L
         @JvmField
         val hasThemeIconBind =
@@ -2703,6 +2833,11 @@ open class Window(handle: GodotHandle) : Viewport(handle) {
         @JvmField
         val hasThemeConstantBind =
             ObjectCalls.getMethodBind("Window", "has_theme_constant", HAS_THEME_CONSTANT_HASH)
+
+        private const val HAS_THEME_SOUND_HASH = 866386512L
+        @JvmField
+        val hasThemeSoundBind =
+            ObjectCalls.getMethodBind("Window", "has_theme_sound", HAS_THEME_SOUND_HASH)
 
         private const val GET_THEME_DEFAULT_BASE_SCALE_HASH = 1740695150L
         @JvmField

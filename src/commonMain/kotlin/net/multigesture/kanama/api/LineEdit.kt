@@ -1085,7 +1085,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Define the scaling behavior of the `right_icon`.
+     * Define the scaling behavior of the `right_icon` and the `clear` button.
      *
      * Generated from Godot docs: LineEdit.set_icon_expand_mode
      */
@@ -1094,7 +1094,7 @@ class LineEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Define the scaling behavior of the `right_icon`.
+     * Define the scaling behavior of the `right_icon` and the `clear` button.
      *
      * Generated from Godot docs: LineEdit.get_icon_expand_mode
      */

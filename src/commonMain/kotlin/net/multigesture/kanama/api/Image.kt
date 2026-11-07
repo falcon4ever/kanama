@@ -212,25 +212,6 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image
-     * that are automatically used if the image needs to be scaled down when rendered. They help
-     * improve image quality and performance when rendering. This method returns an error if the image
-     * is compressed, in a custom format, or if the image's width/height is `0`. Enabling `renormalize`
-     * when generating mipmaps for normal map textures will make sure all resulting vector values are
-     * normalized. It is possible to check if the image has mipmaps by calling `has_mipmaps` or
-     * `get_mipmap_count`. Calling `generate_mipmaps` on an image that already has mipmaps will replace
-     * existing mipmaps in the image.
-     *
-     * Generated from Godot docs: Image.generate_mipmaps
-     */
-    fun generateMipmaps(renormalize: Boolean = false): GodotError {
-        checkOpen()
-        val ret = GodotError(ObjectCalls.ptrcallWithBoolArgRetLong(Binds.generateMipmapsBind, segment, renormalize))
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
-    /**
      * Removes the image's mipmaps.
      *
      * Generated from Godot docs: Image.clear_mipmaps
@@ -486,16 +467,16 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * Compresses the image with a VRAM-compressed format to use less memory. Can not directly access
      * pixel data while the image is compressed. Returns error if the chosen compression mode is not
      * available. The `source` parameter helps to pick the best compression method for DXT and ETC2
-     * formats. It is ignored for ASTC compression. The `astc_format` parameter is only taken into
-     * account when using ASTC compression; it is ignored for all other formats. Note: `compress` is
-     * only supported in editor builds. When run in an exported project, this method always returns
-     * `GodotError.ERR_UNAVAILABLE`.
+     * formats. It is ignored for ASTC compression. The `profile` lets the user pick whether the
+     * compression should prioritize quality or a smaller size. Only ASTC compression uses this
+     * currently. Note: `compress` is only supported in editor builds. When run in an exported project,
+     * this method always returns `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress
      */
-    fun compress(mode: Image.CompressMode, source: Image.CompressSource = Image.CompressSource.GENERIC, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
+    fun compress(mode: Image.CompressMode, source: Image.CompressSource = Image.CompressSource.GENERIC, profile: Image.CompressProfile = Image.CompressProfile.AUTOMATIC): GodotError {
         checkOpen()
-        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressBind, segment, mode.value, source.value, astcFormat.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressBind, segment, mode.value, source.value, profile.value))
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -504,17 +485,17 @@ class Image(handle: GodotHandle) : Resource(handle) {
      * Compresses the image with a VRAM-compressed format to use less memory. Can not directly access
      * pixel data while the image is compressed. Returns error if the chosen compression mode is not
      * available. This is an alternative to `compress` that lets the user supply the channels used in
-     * order for the compressor to pick the best DXT and ETC2 formats. For other formats (non DXT or
-     * ETC2), this argument is ignored. The `astc_format` parameter is only taken into account when
-     * using ASTC compression; it is ignored for all other formats. Note: `compress_from_channels` is
-     * only supported in editor builds. When run in an exported project, this method always returns
-     * `GodotError.ERR_UNAVAILABLE`.
+     * order for the compressor to pick the best DXT, ETC2, and ASTC formats. For other formats (non
+     * DXT, ETC2, or ASTC), this argument is ignored. The `profile` lets the user pick whether the
+     * compression should prioritize quality or a smaller size. Only ASTC compression uses this
+     * currently. Note: `compress_from_channels` is only supported in editor builds. When run in an
+     * exported project, this method always returns `GodotError.ERR_UNAVAILABLE`.
      *
      * Generated from Godot docs: Image.compress_from_channels
      */
-    fun compressFromChannels(mode: Image.CompressMode, channels: Image.UsedChannels, astcFormat: Image.ASTCFormat = Image.ASTCFormat.FORMAT_4x4): GodotError {
+    fun compressFromChannels(mode: Image.CompressMode, channels: Image.UsedChannels, profile: Image.CompressProfile = Image.CompressProfile.AUTOMATIC): GodotError {
         checkOpen()
-        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressFromChannelsBind, segment, mode.value, channels.value, astcFormat.value))
+        val ret = GodotError(ObjectCalls.ptrcallWithThreeLongArgsRetLong(Binds.compressFromChannelsBind, segment, mode.value, channels.value, profile.value))
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -595,11 +576,11 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Converts the raw data from nonlinear sRGB encoding to linear encoding using a lookup table. Only
-     * works on images with `Format.RGB8` or `Format.RGBA8` formats. Note: The 8-bit formats required
-     * by this method are not suitable for storing linearly encoded values; a significant amount of
-     * color information will be lost in darker values. To maintain image quality, this method should
-     * not be used.
+     * Converts the raw data from nonlinear sRGB encoding to linear encoding. Only works on images with
+     * `Format.RGB8`, `Format.RGBA8`, `Format.RGBH`, or `Format.RGBAH` format. Note: The 8-bit formats
+     * are not suitable for storing linearly encoded values; a significant amount of color information
+     * will be lost in darker values. Use this function on images that use a floating point format
+     * instead.
      *
      * Generated from Godot docs: Image.srgb_to_linear
      */
@@ -610,8 +591,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Converts the entire image from linear encoding to nonlinear sRGB encoding by using a lookup
-     * table. Only works on images with `Format.RGB8` or `Format.RGBA8` formats.
+     * Converts the entire image from linear encoding to nonlinear sRGB encoding. Only works on images
+     * with `Format.RGB8`, `Format.RGBA8`, `Format.RGBH`, or `Format.RGBAH` format.
      *
      * Generated from Godot docs: Image.linear_to_srgb
      */
@@ -714,7 +695,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
     /**
      * Alpha-blends `src_rect` from `src` image to this image at coordinates `dst`, clipped accordingly
      * to both image bounds. This image and `src` image must have the same format. `src_rect` with
-     * non-positive size is treated as empty.
+     * non-positive size is treated as empty. Note: Simultaneously reading and writing to the same
+     * image reference may lead to unexpected results.
      *
      * Generated from Godot docs: Image.blend_rect
      */
@@ -1365,12 +1347,14 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * Generated from Godot docs: Image.FORMAT_RGBA16I
              */
             val RGBA16I: Format get() = Format(46L)
+            val ASTC_6x6: Format get() = Format(47L)
+            val ASTC_6x6_HDR: Format get() = Format(48L)
             /**
              * Represents the size of the `Format` enum.
              *
              * Generated from Godot docs: Image.FORMAT_MAX
              */
-            val MAX: Format get() = Format(47L)
+            val MAX: Format get() = Format(49L)
         }
     }
 
@@ -1408,8 +1392,8 @@ class Image(handle: GodotHandle) : Resource(handle) {
              * between them. It's slower than `Interpolation.BILINEAR`, but produces higher-quality results
              * with far fewer aliasing artifacts. If the image does not have mipmaps, they will be generated
              * and used internally, but no mipmaps will be generated on the resulting image. Note: If you
-             * intend to scale multiple copies of the original image, it's better to call `generate_mipmaps`]
-             * on it in advance, to avoid wasting processing power in generating them again and again. On the
+             * intend to scale multiple copies of the original image, it's better to call `generate_mipmaps` on
+             * it in advance, to avoid wasting processing power in generating them again and again. On the
              * other hand, if the image already has mipmaps, they will be used, and a new set will be generated
              * for the resulting image.
              *
@@ -1584,6 +1568,52 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
+     * Godot's `Image.CompressProfile` enum as a typed value: `.value` is the raw number Godot uses,
+     * and the companion holds the named values (`Image.CompressProfile.<NAME>`).
+     *
+     * Generated from Godot docs: Image.CompressProfile
+     */
+    @JvmInline
+    value class CompressProfile(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Automatically adjusts the quality level based on the number of unique color channels present in
+             * the image. For ASTC, this corresponds to picking 8×8 when only one channel is detected (R, L),
+             * 6×6 when two channels are detected (RG, LA), and 4×4 in all other cases.
+             *
+             * Generated from Godot docs: Image.COMPRESS_PROFILE_AUTOMATIC
+             */
+            val AUTOMATIC: CompressProfile get() = CompressProfile(0L)
+            /**
+             * Prioritizes highest quality over compression. For ASTC, this corresponds to using a 4×4 block
+             * size.
+             *
+             * Generated from Godot docs: Image.COMPRESS_PROFILE_MAX_QUALITY
+             */
+            val MAX_QUALITY: CompressProfile get() = CompressProfile(1L)
+            /**
+             * Prioritizes some compression over quality. For ASTC, this corresponds to using a 6×6 block size.
+             *
+             * Generated from Godot docs: Image.COMPRESS_PROFILE_COMPRESSED
+             */
+            val COMPRESSED: CompressProfile get() = CompressProfile(2L)
+            /**
+             * Prioritizes highest compression over quality. For ASTC, this corresponds to using an 8×8 block
+             * size.
+             *
+             * Generated from Godot docs: Image.COMPRESS_PROFILE_MAX_COMPRESSION
+             */
+            val MAX_COMPRESSION: CompressProfile get() = CompressProfile(3L)
+            /**
+             * Represents the size of the `CompressProfile` enum.
+             *
+             * Generated from Godot docs: Image.COMPRESS_PROFILE_MAX
+             */
+            val MAX: CompressProfile get() = CompressProfile(4L)
+        }
+    }
+
+    /**
      * Godot's `Image.ASTCFormat` enum as a typed value: `.value` is the raw number Godot uses, and the
      * companion holds the named values (`Image.ASTCFormat.<NAME>`).
      *
@@ -1737,11 +1767,6 @@ class Image(handle: GodotHandle) : Resource(handle) {
         val flipYBind =
             ObjectCalls.getMethodBind("Image", "flip_y", FLIP_Y_HASH)
 
-        private const val GENERATE_MIPMAPS_HASH = 1633102583L
-        @JvmField
-        val generateMipmapsBind =
-            ObjectCalls.getMethodBind("Image", "generate_mipmaps", GENERATE_MIPMAPS_HASH)
-
         private const val CLEAR_MIPMAPS_HASH = 3218959716L
         @JvmField
         val clearMipmapsBind =
@@ -1847,12 +1872,12 @@ class Image(handle: GodotHandle) : Resource(handle) {
         val detectUsedChannelsBind =
             ObjectCalls.getMethodBind("Image", "detect_used_channels", DETECT_USED_CHANNELS_HASH)
 
-        private const val COMPRESS_HASH = 2975424957L
+        private const val COMPRESS_HASH = 3872125418L
         @JvmField
         val compressBind =
             ObjectCalls.getMethodBind("Image", "compress", COMPRESS_HASH)
 
-        private const val COMPRESS_FROM_CHANNELS_HASH = 4212890953L
+        private const val COMPRESS_FROM_CHANNELS_HASH = 2576825933L
         @JvmField
         val compressFromChannelsBind =
             ObjectCalls.getMethodBind("Image", "compress_from_channels", COMPRESS_FROM_CHANNELS_HASH)

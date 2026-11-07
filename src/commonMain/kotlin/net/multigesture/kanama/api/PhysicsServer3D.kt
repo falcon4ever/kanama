@@ -2386,11 +2386,27 @@ object PhysicsServer3D {
             val ANGULAR_SPRING_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(20L)
             val ANGULAR_SPRING_EQUILIBRIUM_POINT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(21L)
             /**
+             * The maximum force the joint can apply along this linear axis. Used by both the spring drive and
+             * the linear motor; supersedes `G6DOFJointAxisParam.LINEAR_MOTOR_FORCE_LIMIT` when set. Note: Only
+             * for Jolt backend. Other 3D physics backends may ignore this value.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_LINEAR_DRIVE_FORCE_LIMIT
+             */
+            val LINEAR_DRIVE_FORCE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(22L)
+            /**
+             * The maximum torque the joint can apply around this angular axis. Used by both the spring drive
+             * and the angular motor; supersedes `G6DOFJointAxisParam.ANGULAR_MOTOR_FORCE_LIMIT` when set.
+             * Note: Only for Jolt backend. Other 3D physics backends may ignore this value.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_ANGULAR_DRIVE_TORQUE_LIMIT
+             */
+            val ANGULAR_DRIVE_TORQUE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(23L)
+            /**
              * Represents the size of the `G6DOFJointAxisParam` enum.
              *
              * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_MAX
              */
-            val MAX: G6DOFJointAxisParam get() = G6DOFJointAxisParam(22L)
+            val MAX: G6DOFJointAxisParam get() = G6DOFJointAxisParam(24L)
         }
     }
 
@@ -2419,7 +2435,13 @@ object PhysicsServer3D {
             val ENABLE_ANGULAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(2L)
             val ENABLE_LINEAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(3L)
             /**
-             * If set, there is a rotational motor across these axes.
+             * If set, there is a rotational or angular motor across these axes.
+             *
+             * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_ANGULAR_MOTOR
+             */
+            val ENABLE_ANGULAR_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(4L)
+            /**
+             * If set, there is a rotational or angular motor across these axes.
              *
              * Generated from Godot docs: PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_MOTOR
              */
@@ -2560,7 +2582,7 @@ object PhysicsServer3D {
              * surface gravity of 4.0 m/s², set the gravity to 4.0 and the unit distance to 100.0. The gravity
              * will have falloff according to the inverse square law, so in the example, at 200 meters from the
              * center the gravity will be 1.0 m/s² (twice the distance, 1/4th the gravity), at 50 meters it
-             * will be 16.0 m/s² (half the distance, 4x the gravity), and so on. The above is true only when
+             * will be 16.0 m/s² (half the distance, 4× the gravity), and so on. The above is true only when
              * the unit distance is a positive number. When this is set to 0.0, the gravity will be constant
              * regardless of distance.
              *

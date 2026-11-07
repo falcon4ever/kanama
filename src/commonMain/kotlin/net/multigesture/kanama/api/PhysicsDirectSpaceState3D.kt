@@ -13,22 +13,6 @@ import net.multigesture.kanama.types.Vector3
  */
 open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) {
     /**
-     * Checks whether a point is inside any solid shape. Position and other parameters are defined
-     * through `PhysicsPointQueryParameters3D`. The shapes the point is inside of are returned in an
-     * array containing dictionaries with the following fields: `collider`: The colliding object.
-     * `collider_id`: The colliding object's ID. `rid`: The intersecting object's `RID`. `shape`: The
-     * shape index of the colliding shape. The number of intersections can be limited with the
-     * `max_results` parameter, to reduce the processing time.
-     *
-     * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point
-     */
-    fun intersectPoint(parameters: PhysicsPointQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
-        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
-        ObjectCalls.keepReachable(parameters)
-        return ret
-    }
-
-    /**
      * Intersects a ray in a given space. Ray position and other parameters are defined through
      * `PhysicsRayQueryParameters3D`. The returned object is a dictionary with the following fields:
      * `collider`: The colliding object. `collider_id`: The colliding object's ID. `normal`: The
@@ -43,6 +27,22 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
      */
     fun intersectRay(parameters: PhysicsRayQueryParameters3D): Map<String, Any?> {
         val ret = ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.intersectRayBind, segment, parameters.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        return ret
+    }
+
+    /**
+     * Checks whether a point is inside any solid shape. Position and other parameters are defined
+     * through `PhysicsPointQueryParameters3D`. The shapes the point is inside of are returned in an
+     * array containing dictionaries with the following fields: `collider`: The colliding object.
+     * `collider_id`: The colliding object's ID. `rid`: The intersecting object's `RID`. `shape`: The
+     * shape index of the colliding shape. The number of intersections can be limited with the
+     * `max_results` parameter, to reduce the processing time.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point
+     */
+    fun intersectPoint(parameters: PhysicsPointQueryParameters3D, maxResults: Int = 32): List<Map<String, Any?>> {
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
         ObjectCalls.keepReachable(parameters)
         return ret
     }
@@ -128,15 +128,15 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
     }
 
     private object Binds {
-        private const val INTERSECT_POINT_HASH = 975173756L
-        @JvmField
-        val intersectPointBind =
-            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_point", INTERSECT_POINT_HASH)
-
         private const val INTERSECT_RAY_HASH = 3957970750L
         @JvmField
         val intersectRayBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray", INTERSECT_RAY_HASH)
+
+        private const val INTERSECT_POINT_HASH = 975173756L
+        @JvmField
+        val intersectPointBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_point", INTERSECT_POINT_HASH)
 
         private const val INTERSECT_SHAPE_HASH = 3762137681L
         @JvmField

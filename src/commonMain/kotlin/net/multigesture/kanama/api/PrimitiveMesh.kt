@@ -163,7 +163,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      * padding values allow making better use of the lightmap texture (resulting in higher texel
      * density), but may introduce visible lightmap bleeding along edges. If the size of the lightmap
      * texture can't be determined when generating the mesh, UV2 is calculated assuming a texture size
-     * of 1024x1024.
+     * of 1024×1024.
      *
      * Generated from Godot docs: PrimitiveMesh.set_uv2_padding
      */
@@ -178,7 +178,7 @@ open class PrimitiveMesh(handle: GodotHandle) : Mesh(handle) {
      * padding values allow making better use of the lightmap texture (resulting in higher texel
      * density), but may introduce visible lightmap bleeding along edges. If the size of the lightmap
      * texture can't be determined when generating the mesh, UV2 is calculated assuming a texture size
-     * of 1024x1024.
+     * of 1024×1024.
      *
      * Generated from Godot docs: PrimitiveMesh.get_uv2_padding
      */

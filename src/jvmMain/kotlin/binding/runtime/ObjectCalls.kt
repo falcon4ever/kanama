@@ -1397,10 +1397,7 @@ actual object ObjectCalls {
   ): List<Plane> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL, BuiltinTypes::readArrayPlanes)
 
-  actual fun ptrcallNoArgsRetRect2List(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-  ): List<Rect2> =
+  fun ptrcallNoArgsRetRect2List(methodBind: MemorySegment, instance: MemorySegment): List<Rect2> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL, BuiltinTypes::readArrayRect2)
 
   actual fun ptrcallNoArgsRetTransform3DList(
@@ -16972,7 +16969,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectVector2AndIntArgs(
+  actual fun ptrcallWithObjectVector2AndIntArgs(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -23548,7 +23545,7 @@ actual object ObjectCalls {
     }
   }
 
-  actual fun ptrcallWithObjectListObjectCallableArgsRetObject(
+  fun ptrcallWithObjectListObjectCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<*>,
@@ -37787,7 +37784,7 @@ actual object ObjectCalls {
     }
   }
 
-  actual fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
+  fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,

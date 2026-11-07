@@ -78,7 +78,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
     /**
      * Accepts a peer connection performing the HTTP handshake as a WebSocket server. The `stream` must
      * be a valid TCP stream retrieved via `TCPServer.take_connection`, or a TLS stream accepted via
-     * `StreamPeerTLS.accept_stream`. Note: Not supported in Web exports due to browsers' restrictions.
+     * `StreamPeerTLS.accept_stream`. Note: Not supported in Web exports due to browser restrictions.
      *
      * Generated from Godot docs: WebSocketPeer.accept_stream
      */
@@ -297,7 +297,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
     /**
      * The extra HTTP headers to be sent during the WebSocket handshake. Note: Not supported in Web
-     * exports due to browsers' restrictions.
+     * exports due to browser restrictions.
      *
      * Generated from Godot docs: WebSocketPeer.get_handshake_headers
      */
@@ -310,7 +310,7 @@ class WebSocketPeer(handle: GodotHandle) : PacketPeer(handle) {
 
     /**
      * The extra HTTP headers to be sent during the WebSocket handshake. Note: Not supported in Web
-     * exports due to browsers' restrictions.
+     * exports due to browser restrictions.
      *
      * Generated from Godot docs: WebSocketPeer.set_handshake_headers
      */

@@ -83,9 +83,15 @@ open class Joint3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The priority used to define which solver is executed first for multiple joints. The lower the
-     * value, the higher the priority. Note: Only supported when using GodotPhysics3D. This property is
-     * ignored when using Jolt Physics.
+     * The priority specifies how accurately a joint is solved. Generally, higher values improve
+     * accuracy. This has very different implementations between Godot Physics and Jolt Physics: Godot
+     * Physics: Values above 1 have a performance impact. Joint is solved `max(1, solver_priority) *
+     * iterations` times. A value of `4` would solve the same joint 4× additional times per physics
+     * step. Jolt Physics: Aside from sorting the joints, there is no performance impact with higher
+     * values. Joints with high priorities are solved later. A value of `4` would solve after
+     * priorities of 0, 1, 2, and 3. Later joints have the final say between the two bodies they
+     * connect. Negative values are not allowed and will be silently `max(0, solver_priority)` when
+     * set.
      *
      * Generated from Godot docs: Joint3D.set_solver_priority
      */
@@ -94,9 +100,15 @@ open class Joint3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The priority used to define which solver is executed first for multiple joints. The lower the
-     * value, the higher the priority. Note: Only supported when using GodotPhysics3D. This property is
-     * ignored when using Jolt Physics.
+     * The priority specifies how accurately a joint is solved. Generally, higher values improve
+     * accuracy. This has very different implementations between Godot Physics and Jolt Physics: Godot
+     * Physics: Values above 1 have a performance impact. Joint is solved `max(1, solver_priority) *
+     * iterations` times. A value of `4` would solve the same joint 4× additional times per physics
+     * step. Jolt Physics: Aside from sorting the joints, there is no performance impact with higher
+     * values. Joints with high priorities are solved later. A value of `4` would solve after
+     * priorities of 0, 1, 2, and 3. Later joints have the final say between the two bodies they
+     * connect. Negative values are not allowed and will be silently `max(0, solver_priority)` when
+     * set.
      *
      * Generated from Godot docs: Joint3D.get_solver_priority
      */

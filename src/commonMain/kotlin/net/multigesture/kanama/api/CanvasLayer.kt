@@ -153,7 +153,7 @@ open class CanvasLayer(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Returns the transform from the `CanvasLayer`s coordinate system to the `Viewport`s coordinate
+     * Returns the transform from the `CanvasLayer`'s coordinate system to the `Viewport`'s coordinate
      * system.
      *
      * Generated from Godot docs: CanvasLayer.get_final_transform

@@ -79,7 +79,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     }
 
     /**
-     * The marker ID for this marker, this is only returned for Aruco and April Tag markers. Call
+     * The marker ID for this marker, this is only returned for ArUco and April Tag markers. Call
      * `get_marker_data` for QRCode markers.
      *
      * Generated from Godot docs: OpenXRMarkerTracker.set_marker_id
@@ -91,7 +91,7 @@ class OpenXRMarkerTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(hand
     }
 
     /**
-     * The marker ID for this marker, this is only returned for Aruco and April Tag markers. Call
+     * The marker ID for this marker, this is only returned for ArUco and April Tag markers. Call
      * `get_marker_data` for QRCode markers.
      *
      * Generated from Godot docs: OpenXRMarkerTracker.get_marker_id

@@ -83,6 +83,10 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
         @JvmName("setRayPickableProperty")
         set(value) = setRayPickable(value)
 
+    val pointCount: Int
+        @JvmName("pointCountProperty")
+        get() = getPointCount()
+
     var disableMode: SoftBody3D.DisableMode
         @JvmName("disableModeProperty")
         get() = getDisableMode()
@@ -468,6 +472,15 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
     }
 
     /**
+     * The number of vertices (points) on the soft body mesh.
+     *
+     * Generated from Godot docs: SoftBody3D.get_point_count
+     */
+    fun getPointCount(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getPointCountBind, segment)
+    }
+
+    /**
      * If `true`, the `SoftBody3D` will respond to `RayCast3D`s.
      *
      * Generated from Godot docs: SoftBody3D.set_ray_pickable
@@ -711,6 +724,11 @@ class SoftBody3D(handle: GodotHandle) : MeshInstance3D(handle) {
         @JvmField
         val isPointPinnedBind =
             ObjectCalls.getMethodBind("SoftBody3D", "is_point_pinned", IS_POINT_PINNED_HASH)
+
+        private const val GET_POINT_COUNT_HASH = 3905245786L
+        @JvmField
+        val getPointCountBind =
+            ObjectCalls.getMethodBind("SoftBody3D", "get_point_count", GET_POINT_COUNT_HASH)
 
         private const val SET_RAY_PICKABLE_HASH = 2586408642L
         @JvmField

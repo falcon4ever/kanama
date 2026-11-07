@@ -246,8 +246,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The way which scroll hints (indicators that show that the content can still be scrolled in a
-     * certain direction) will be shown. Note: Hints won't be shown if the content can be scrolled both
-     * vertically and horizontally.
+     * certain direction) will be shown. Note: Modes with perpendicular hints won't be shown if the
+     * content can be scrolled both vertically and horizontally.
      *
      * Generated from Godot docs: ScrollContainer.set_scroll_hint_mode
      */
@@ -257,8 +257,8 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The way which scroll hints (indicators that show that the content can still be scrolled in a
-     * certain direction) will be shown. Note: Hints won't be shown if the content can be scrolled both
-     * vertically and horizontally.
+     * certain direction) will be shown. Note: Modes with perpendicular hints won't be shown if the
+     * content can be scrolled both vertically and horizontally.
      *
      * Generated from Godot docs: ScrollContainer.get_scroll_hint_mode
      */
@@ -458,6 +458,42 @@ open class ScrollContainer(handle: GodotHandle) : Container(handle) {
              * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_BOTTOM_AND_RIGHT
              */
             val BOTTOM_AND_RIGHT: ScrollHintMode get() = ScrollHintMode(3L)
+            /**
+             * Scroll hints will be shown at the top and bottom.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_TOP_AND_BOTTOM
+             */
+            val TOP_AND_BOTTOM: ScrollHintMode get() = ScrollHintMode(4L)
+            /**
+             * Scroll hints will be shown on the left and right.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_LEFT_AND_RIGHT
+             */
+            val LEFT_AND_RIGHT: ScrollHintMode get() = ScrollHintMode(5L)
+            /**
+             * Scroll hint will be shown at the top.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_TOP
+             */
+            val TOP: ScrollHintMode get() = ScrollHintMode(6L)
+            /**
+             * Scroll hint will be shown at the bottom.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_BOTTOM
+             */
+            val BOTTOM: ScrollHintMode get() = ScrollHintMode(7L)
+            /**
+             * Scroll hint will be shown on the left.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_LEFT
+             */
+            val LEFT: ScrollHintMode get() = ScrollHintMode(8L)
+            /**
+             * Scroll hint will be shown on the right.
+             *
+             * Generated from Godot docs: ScrollContainer.SCROLL_HINT_MODE_RIGHT
+             */
+            val RIGHT: ScrollHintMode get() = ScrollHintMode(9L)
         }
     }
 

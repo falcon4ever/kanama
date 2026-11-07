@@ -127,15 +127,15 @@ Parsed from `.github/workflows/{ci,web,package}.yml`. Scripts are the repo gate 
 | `web.yml` | web matrix (chrome + firefox) (`matrix`) | PR + push to main + nightly (cron) + manual, only when `web` paths changed (docs-only PRs skip; push to main always runs) | `scripts/check_unapplied_annotations.py`, `scripts/web_ci_matrix.sh` |
 | `web.yml` | issue #370 control (plain GDScript notifier) (`visibility-control`) | nightly + manual only | `scripts/web/visibility_probe.py` |
 | `web.yml` | soak (leak gate, chrome) (`soak`) | nightly + manual only | `scripts/web_ci_matrix.sh` |
-| `package.yml` | gdextension-header (`gdextension-header`) | tag `v*` + manual | — |
+| `package.yml` | gdextension-header (`gdextension-header`) | tag `v*` + manual | `scripts/check_godot_version_pin.py` |
 | `package.yml` | android-aar (`android-aar`) | tag `v*` + manual | — |
 | `package.yml` | ${{ matrix.classifier }} (`desktop-kit`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | cross-runtime (${{ matrix.target }} built on macOS) (`cross-runtimes`) | tag `v*` + manual | — |
-| `package.yml` | exported-game (${{ matrix.target }}, macOS-built runtime) (`exported-game`) | tag `v*` + manual | `scripts/check_godot_version_pin.py`, `scripts/export_game_smoke.sh` |
+| `package.yml` | exported-game (${{ matrix.target }}, macOS-built runtime) (`exported-game`) | tag `v*` + manual | `scripts/check_godot_version_pin.py`, `scripts/download_godot_macos.sh`, `scripts/export_game_smoke.sh` |
 | `package.yml` | store-addon (`store-addon`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | store-addon-windows (`store-addon-windows`) | tag `v*` + manual | `scripts/package_install_smoke.sh`, `scripts/store_addon_editor_smoke.sh` |
 | `package.yml` | android-export (${{ matrix.package }}) (`android-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
-| `package.yml` | ios-export (${{ matrix.package }}${{ matrix.mode == '--ios-without-scripts' && ', no scripts' \|\| '' }}) (`ios-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
+| `package.yml` | ios-export (${{ matrix.package }}${{ matrix.mode == '--ios-without-scripts' && ', no scripts' \|\| '' }}) (`ios-export`) | tag `v*` + manual | `scripts/download_godot_macos.sh`, `scripts/package_install_smoke.sh` |
 | `package.yml` | web-export (${{ matrix.package }}) (`web-export`) | tag `v*` + manual | `scripts/package_install_smoke.sh` |
 | `package.yml` | publish-release (`publish-release`) | tag `v*` only | — |
 

@@ -44,7 +44,7 @@ concurrency:
 
 env:
   # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
-  GODOT_VERSION: 4.7.2-stable
+  GODOT_VERSION: 4.8-beta2
   # The kanama-demos commit the matrix runs against. Pinned on purpose: an
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see

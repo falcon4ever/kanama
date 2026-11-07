@@ -442,7 +442,7 @@ object GD {
     /**
      * Cubic interpolates between two rotation values with shortest path by the factor defined in
      * `weight` with `pre` and `post` values. See also `lerp_angle`. It can perform smoother
-     * interpolation than `cubic_interpolate` by the time values.
+     * interpolation than `cubic_interpolate_angle` by the time values.
      *
      * Generated from Godot docs: @GlobalScope.cubic_interpolate_angle_in_time
      */
@@ -1032,12 +1032,14 @@ object GD {
     /**
      * Converts one or more arguments of any type to string in the best way possible and prints them to
      * the console. The following BBCode tags are supported: `b`, `i`, `u`, `s`, `indent`, `code`,
-     * `url`, `center`, `right`, `color`, `bgcolor`, `fgcolor`. URL tags only support URLs wrapped by a
-     * URL tag, not URLs with a different title. When printing to standard output, the supported subset
-     * of BBCode is converted to ANSI escape codes for the terminal emulator to display. Support for
-     * ANSI escape codes varies across terminal emulators, especially for italic and strikethrough. In
-     * standard output, `code` is represented with faint text but without any font change. Unsupported
-     * tags are left as-is in standard output.
+     * `url`, `center`, `right`, `color`, `bgcolor`, `fgcolor`. URL tags support both URLs wrapped by a
+     * URL tag and URLs with a different title (`text (address)`). Support for URLs with a different
+     * title varies across terminal emulators. Most modern terminal emulators support them, but
+     * Terminal.app and conhost (the legacy Windows console) do not. When printing to standard output,
+     * the supported subset of BBCode is converted to ANSI escape codes for the terminal emulator to
+     * display. Support for ANSI escape codes varies across terminal emulators, especially for italic
+     * and strikethrough. In standard output, `code` is represented with faint text but without any
+     * font change. Unsupported tags are left as-is in standard output.
      *
      * Generated from Godot docs: @GlobalScope.print_rich
      */

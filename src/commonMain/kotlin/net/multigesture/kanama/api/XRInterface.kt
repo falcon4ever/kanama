@@ -625,6 +625,14 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
              * Generated from Godot docs: XRInterface.XR_VRS_TEXTURE_FORMAT_FRAGMENT_DENSITY_MAP
              */
             val FRAGMENT_DENSITY_MAP: VRSTextureFormat get() = VRSTextureFormat(2L)
+            /**
+             * The texture contains a Metal `rasterizationRateMap`, used for foveated rendering on Apple
+             * platforms. It's not a real texture, but instead an opaque wrapper for an
+             * `MTLRasterizationRateMap` object.
+             *
+             * Generated from Godot docs: XRInterface.XR_VRS_TEXTURE_FORMAT_RASTERIZATION_RATE_MAP
+             */
+            val RASTERIZATION_RATE_MAP: VRSTextureFormat get() = VRSTextureFormat(3L)
         }
     }
 

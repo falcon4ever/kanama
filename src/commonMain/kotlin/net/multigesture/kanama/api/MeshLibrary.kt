@@ -39,6 +39,18 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
+     * Sets the `category` for a specific item `id` for organization in the `GridMap` editor. A
+     * category can include `/` as a delimiter to create subcategories.
+     *
+     * Generated from Godot docs: MeshLibrary.set_item_category
+     */
+    fun setItemCategory(id: Int, category: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setItemCategoryBind, segment, id, category)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
      * Sets the item's mesh.
      *
      * Generated from Godot docs: MeshLibrary.set_item_mesh
@@ -139,6 +151,18 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
     fun getItemName(id: Int): String {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetString(Binds.getItemNameBind, segment, id)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Returns the category for a specific item `id`. See also `set_item_category`.
+     *
+     * Generated from Godot docs: MeshLibrary.get_item_category
+     */
+    fun getItemCategory(id: Int): String {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getItemCategoryBind, segment, id)
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -341,6 +365,11 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         val setItemNameBind =
             ObjectCalls.getMethodBind("MeshLibrary", "set_item_name", SET_ITEM_NAME_HASH)
 
+        private const val SET_ITEM_CATEGORY_HASH = 3780747571L
+        @JvmField
+        val setItemCategoryBind =
+            ObjectCalls.getMethodBind("MeshLibrary", "set_item_category", SET_ITEM_CATEGORY_HASH)
+
         private const val SET_ITEM_MESH_HASH = 969122797L
         @JvmField
         val setItemMeshBind =
@@ -385,6 +414,11 @@ class MeshLibrary(handle: GodotHandle) : Resource(handle) {
         @JvmField
         val getItemNameBind =
             ObjectCalls.getMethodBind("MeshLibrary", "get_item_name", GET_ITEM_NAME_HASH)
+
+        private const val GET_ITEM_CATEGORY_HASH = 659327637L
+        @JvmField
+        val getItemCategoryBind =
+            ObjectCalls.getMethodBind("MeshLibrary", "get_item_category", GET_ITEM_CATEGORY_HASH)
 
         private const val GET_ITEM_MESH_HASH = 1576363275L
         @JvmField

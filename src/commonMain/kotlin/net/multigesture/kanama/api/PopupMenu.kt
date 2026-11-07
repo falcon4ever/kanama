@@ -431,6 +431,18 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
     }
 
     /**
+     * Sets the indeterminate status of the item at the given `index`. This only applies to checkable
+     * items and is represented visually by a horizontal line instead of a checkmark or radio button.
+     * Note: Indeterminate items just display a horizontal line, but don't have any built-in behavior
+     * and must be set as indeterminate manually.
+     *
+     * Generated from Godot docs: PopupMenu.set_item_indeterminate
+     */
+    fun setItemIndeterminate(index: Int, indeterminate: Boolean) {
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setItemIndeterminateBind, segment, index, indeterminate)
+    }
+
+    /**
      * Sets the `id` of the item at the given `index`. The `id` is used in `id_pressed` and
      * `id_focused` signals.
      *
@@ -681,6 +693,19 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
      */
     fun isItemChecked(index: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemCheckedBind, segment, index)
+    }
+
+    /**
+     * Returns `true` if the item at the given `index` is in an indeterminate state. This only applies
+     * to checkable items and is represented visually by a horizontal line instead of a checkmark or
+     * radio button. See `set_item_indeterminate` for more info on how to set an item as indeterminate.
+     * Note: Indeterminate items just display a horizontal line, but don't have any built-in behavior
+     * and must be set as indeterminate manually.
+     *
+     * Generated from Godot docs: PopupMenu.is_item_indeterminate
+     */
+    fun isItemIndeterminate(index: Int): Boolean {
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isItemIndeterminateBind, segment, index)
     }
 
     /**
@@ -1354,6 +1379,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         val setItemCheckedBind =
             ObjectCalls.getMethodBind("PopupMenu", "set_item_checked", SET_ITEM_CHECKED_HASH)
 
+        private const val SET_ITEM_INDETERMINATE_HASH = 300928843L
+        @JvmField
+        val setItemIndeterminateBind =
+            ObjectCalls.getMethodBind("PopupMenu", "set_item_indeterminate", SET_ITEM_INDETERMINATE_HASH)
+
         private const val SET_ITEM_ID_HASH = 3937882851L
         @JvmField
         val setItemIdBind =
@@ -1483,6 +1513,11 @@ class PopupMenu(handle: GodotHandle) : Popup(handle) {
         @JvmField
         val isItemCheckedBind =
             ObjectCalls.getMethodBind("PopupMenu", "is_item_checked", IS_ITEM_CHECKED_HASH)
+
+        private const val IS_ITEM_INDETERMINATE_HASH = 1116898809L
+        @JvmField
+        val isItemIndeterminateBind =
+            ObjectCalls.getMethodBind("PopupMenu", "is_item_indeterminate", IS_ITEM_INDETERMINATE_HASH)
 
         private const val GET_ITEM_ID_HASH = 923996154L
         @JvmField

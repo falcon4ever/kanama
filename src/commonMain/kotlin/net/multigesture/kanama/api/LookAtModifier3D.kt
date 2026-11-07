@@ -118,6 +118,12 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setUseAngleLimitationProperty")
         set(value) = setUseAngleLimitation(value)
 
+    var useRestForLimitation: Boolean
+        @JvmName("useRestForLimitationProperty")
+        get() = isUsingRestForLimitation()
+        @JvmName("setUseRestForLimitationProperty")
+        set(value) = setUseRestForLimitation(value)
+
     var symmetryLimitation: Boolean
         @JvmName("symmetryLimitationProperty")
         get() = isLimitationSymmetry()
@@ -274,7 +280,9 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * The axis of the first rotation. This `SkeletonModifier3D` works by compositing the rotation by
-     * Euler angles to prevent to rotate the `forward_axis`.
+     * Euler angles to prevent to rotate the `forward_axis`. Note: Since `LookAtModifier3D` never
+     * modifies the twist when `use_secondary_rotation` is `false` and `relative` is `true`, the twist
+     * is not fixed even if `use_rest_for_limitation` is `true`.
      *
      * Generated from Godot docs: LookAtModifier3D.set_primary_rotation_axis
      */
@@ -284,7 +292,9 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * The axis of the first rotation. This `SkeletonModifier3D` works by compositing the rotation by
-     * Euler angles to prevent to rotate the `forward_axis`.
+     * Euler angles to prevent to rotate the `forward_axis`. Note: Since `LookAtModifier3D` never
+     * modifies the twist when `use_secondary_rotation` is `false` and `relative` is `true`, the twist
+     * is not fixed even if `use_rest_for_limitation` is `true`.
      *
      * Generated from Godot docs: LookAtModifier3D.get_primary_rotation_axis
      */
@@ -313,9 +323,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * The relative option. If `true`, the rotation is applied relative to the pose. If `false`, the
      * rotation is applied relative to the rest. It means to replace the current pose with the
-     * `LookAtModifier3D`'s result. Note: This option affects the base angle for
-     * `use_angle_limitation`. Since the `LookAtModifier3D` relies strongly on Euler rotation, the axis
-     * that determines the limitation and the actual rotation are strongly tied together.
+     * `LookAtModifier3D`'s result.
      *
      * Generated from Godot docs: LookAtModifier3D.set_relative
      */
@@ -326,9 +334,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     /**
      * The relative option. If `true`, the rotation is applied relative to the pose. If `false`, the
      * rotation is applied relative to the rest. It means to replace the current pose with the
-     * `LookAtModifier3D`'s result. Note: This option affects the base angle for
-     * `use_angle_limitation`. Since the `LookAtModifier3D` relies strongly on Euler rotation, the axis
-     * that determines the limitation and the actual rotation are strongly tied together.
+     * `LookAtModifier3D`'s result.
      *
      * Generated from Godot docs: LookAtModifier3D.is_relative
      */
@@ -556,7 +562,8 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * If `true`, the limitations are spread from the bone symmetrically. If `false`, the limitation
-     * can be specified separately for each side of the bone rest.
+     * can be specified separately for each side of the reference pose. In here, the reference pose is
+     * the bone pose immediately before processing this modifier.
      *
      * Generated from Godot docs: LookAtModifier3D.set_symmetry_limitation
      */
@@ -566,12 +573,43 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
 
     /**
      * If `true`, the limitations are spread from the bone symmetrically. If `false`, the limitation
-     * can be specified separately for each side of the bone rest.
+     * can be specified separately for each side of the reference pose. In here, the reference pose is
+     * the bone pose immediately before processing this modifier.
      *
      * Generated from Godot docs: LookAtModifier3D.is_limitation_symmetry
      */
     fun isLimitationSymmetry(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isLimitationSymmetryBind, segment)
+    }
+
+    /**
+     * If `true`, the angle limitation and the rotation axes are applied based on the
+     * `Skeleton3D.get_bone_rest`. If `false`, the angle limitation is applied based on the reference
+     * pose. In here, the reference pose is the bone pose immediately before processing this modifier.
+     * Note: The limitation is applied to the rotation computed by this modifier. If the reference pose
+     * is rotated around the same axis, the limitation behaves as if it also limits the rotation of the
+     * reference pose. A rotation that this modifier does not change, such as the twist, is not
+     * limited.
+     *
+     * Generated from Godot docs: LookAtModifier3D.set_use_rest_for_limitation
+     */
+    fun setUseRestForLimitation(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setUseRestForLimitationBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, the angle limitation and the rotation axes are applied based on the
+     * `Skeleton3D.get_bone_rest`. If `false`, the angle limitation is applied based on the reference
+     * pose. In here, the reference pose is the bone pose immediately before processing this modifier.
+     * Note: The limitation is applied to the rotation computed by this modifier. If the reference pose
+     * is rotated around the same axis, the limitation behaves as if it also limits the rotation of the
+     * reference pose. A rotation that this modifier does not change, such as the twist, is not
+     * limited.
+     *
+     * Generated from Godot docs: LookAtModifier3D.is_using_rest_for_limitation
+     */
+    fun isUsingRestForLimitation(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isUsingRestForLimitationBind, segment)
     }
 
     /**
@@ -814,7 +852,7 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns `true` if time-based interpolation is running. If `true`, it is equivalent to
+     * Returns `true` if time-based interpolation is running. If `false`, it is equivalent to
      * `get_interpolation_remaining` returning `0.0`. This is useful to determine whether a
      * `LookAtModifier3D` can be removed safely.
      *
@@ -1066,6 +1104,16 @@ class LookAtModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmField
         val isLimitationSymmetryBind =
             ObjectCalls.getMethodBind("LookAtModifier3D", "is_limitation_symmetry", IS_LIMITATION_SYMMETRY_HASH)
+
+        private const val SET_USE_REST_FOR_LIMITATION_HASH = 2586408642L
+        @JvmField
+        val setUseRestForLimitationBind =
+            ObjectCalls.getMethodBind("LookAtModifier3D", "set_use_rest_for_limitation", SET_USE_REST_FOR_LIMITATION_HASH)
+
+        private const val IS_USING_REST_FOR_LIMITATION_HASH = 36873697L
+        @JvmField
+        val isUsingRestForLimitationBind =
+            ObjectCalls.getMethodBind("LookAtModifier3D", "is_using_rest_for_limitation", IS_USING_REST_FOR_LIMITATION_HASH)
 
         private const val SET_PRIMARY_LIMIT_ANGLE_HASH = 373806689L
         @JvmField

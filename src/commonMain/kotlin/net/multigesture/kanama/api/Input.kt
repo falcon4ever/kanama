@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.Color
+import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
@@ -223,12 +224,12 @@ object Input {
     }
 
     /**
-     * Returns a value between 0 and 1 representing the intensity of the given action. In a joypad, for
-     * example, the further away the axis (analog sticks or L2, R2 triggers) is from the dead zone, the
-     * closer the value will be to 1. If the action is mapped to a control that has no axis such as the
-     * keyboard, the value returned will be 0 or 1. If `exact_match` is `false`, it ignores additional
-     * input modifiers for `InputEventKey` and `InputEventMouseButton` events, and the direction for
-     * `InputEventJoypadMotion` events.
+     * Returns a value between `0.0` and `1.0` representing the intensity of the given action. In a
+     * joypad, for example, the further away the axis (analog sticks or L2, R2 triggers) is from the
+     * dead zone, the closer the value will be to `1.0`. If the action is mapped to a control that has
+     * no axis such as the keyboard, the value returned will be `0.0` or `1.0`. If `exact_match` is
+     * `false`, it ignores additional input modifiers for `InputEventKey` and `InputEventMouseButton`
+     * events, and the direction for `InputEventJoypadMotion` events.
      *
      * Generated from Godot docs: Input.get_action_strength
      */
@@ -238,9 +239,9 @@ object Input {
     }
 
     /**
-     * Returns a value between 0 and 1 representing the raw intensity of the given action, ignoring the
-     * action's deadzone. In most cases, you should use `get_action_strength` instead. If `exact_match`
-     * is `false`, it ignores additional input modifiers for `InputEventKey` and
+     * Returns a value between `0.0` and `1.0` representing the raw intensity of the given action,
+     * ignoring the action's deadzone. In most cases, you should use `get_action_strength` instead. If
+     * `exact_match` is `false`, it ignores additional input modifiers for `InputEventKey` and
      * `InputEventMouseButton` events, and the direction for `InputEventJoypadMotion` events.
      *
      * Generated from Godot docs: Input.get_action_raw_strength
@@ -251,8 +252,8 @@ object Input {
     }
 
     /**
-     * Get axis input by specifying two actions, one negative and one positive. This is a shorthand for
-     * writing `Input.get_action_strength("positive_action") -
+     * Returns axis input value by specifying two actions, one negative and one positive. This is a
+     * shorthand for writing `Input.get_action_strength("positive_action") -
      * Input.get_action_strength("negative_action")`.
      *
      * Generated from Godot docs: Input.get_axis
@@ -263,12 +264,12 @@ object Input {
     }
 
     /**
-     * Gets an input vector by specifying four actions for the positive and negative X and Y axes. This
-     * method is useful when getting vector input, such as from a joystick, directional pad, arrows, or
-     * WASD. The vector has its length limited to 1 and has a circular deadzone, which is useful for
-     * using vector input as movement. By default, the deadzone is automatically calculated from the
-     * average of the action deadzones. However, you can override the deadzone to be whatever you want
-     * (on the range of 0 to 1).
+     * Returns an input vector by specifying four actions for the positive and negative X and Y axes.
+     * This method is useful when getting vector input, such as from a joystick, directional pad,
+     * arrows, or WASD. The vector has its length limited to `1.0` and has a circular deadzone, which
+     * is useful for using vector input as movement. By default, the deadzone is automatically
+     * calculated from the average of the action deadzones. However, you can override the deadzone to
+     * be whatever you want (on the range of `0.0` to `1.0`).
      *
      * Generated from Godot docs: Input.get_vector
      */
@@ -278,8 +279,10 @@ object Input {
     }
 
     /**
-     * Adds a new mapping entry (in SDL2 format) to the mapping database. Optionally update already
-     * connected devices.
+     * Adds a new joypad mapping entry (in SDL format) to the mapping database, and optionally updates
+     * the already connected devices. Note: See SDL documentation
+     * (https://wiki.libsdl.org/SDL3/SDL_AddGamepadMapping#remarks) for more information about the SDL
+     * controller mapping format.
      *
      * Generated from Godot docs: Input.add_joy_mapping
      */
@@ -324,7 +327,7 @@ object Input {
 
     /**
      * Returns the name of the joypad at the specified device index, e.g. `PS4 Controller`. Godot uses
-     * the SDL2 game controller database (https://github.com/gabomdq/SDL_GameControllerDB) to determine
+     * the SDL game controller database (https://github.com/gabomdq/SDL_GameControllerDB) to determine
      * gamepad names.
      *
      * Generated from Godot docs: Input.get_joy_name
@@ -338,8 +341,7 @@ object Input {
      * Returns an SDL-compatible device GUID on platforms that use gamepad remapping, e.g.
      * `030000004c050000c405000000010000`. Returns an empty string if it cannot be found. Godot uses
      * SDL's internal mappings, supplemented by community-contributed mappings, to determine gamepad
-     * names and mappings based on this GUID. On Windows, all XInput joypad GUIDs will be overridden by
-     * Godot to `__XINPUT_DEVICE__`, because their mappings are the same.
+     * names and mappings based on this GUID.
      *
      * Generated from Godot docs: Input.get_joy_guid
      */
@@ -370,11 +372,11 @@ object Input {
 
     /**
      * Queries whether an input device should be ignored or not. Devices can be ignored by setting the
-     * environment variable `SDL_GAMECONTROLLER_IGNORE_DEVICES`. Read the SDL documentation
-     * (https://wiki.libsdl.org/SDL2) for more information. Note: Some 3rd party tools can contribute
-     * to the list of ignored devices. For example, SteamInput creates virtual devices from physical
-     * devices for remapping purposes. To avoid handling the same input device twice, the original
-     * device is added to the ignore list.
+     * environment variable `SDL_GAMECONTROLLER_IGNORE_DEVICES`. See SDL documentation
+     * (https://wiki.libsdl.org/SDL3/SDL_HINT_GAMECONTROLLER_IGNORE_DEVICES) for more information.
+     * Note: Some 3rd party tools can contribute to the list of ignored devices. For example,
+     * SteamInput creates virtual devices from physical devices for remapping purposes. To avoid
+     * handling the same input device twice, the original device is added to the ignore list.
      *
      * Generated from Godot docs: Input.should_ignore_device
      */
@@ -459,7 +461,7 @@ object Input {
     }
 
     /**
-     * Starts to vibrate the joypad. See also `has_joy_vibration` and `is_joy_vibrating`. Joypads
+     * Starts vibrating the joypad. See also `has_joy_vibration` and `is_joy_vibrating`. Joypads
      * usually come with two rumble motors, a strong and a weak one. `weak_magnitude` is the strength
      * of the weak motor (between `0.0` and `1.0`). `strong_magnitude` is the strength of the strong
      * motor (between `0.0` and `1.0`). `duration` is the duration of the effect in seconds (a duration
@@ -488,8 +490,8 @@ object Input {
     }
 
     /**
-     * Vibrate the handheld device for the specified duration in milliseconds. `amplitude` is the
-     * strength of the vibration, as a value between `0.0` and `1.0`. If set to `-1.0`, the default
+     * Starts vibrating the handheld device for the specified duration in milliseconds. `amplitude` is
+     * the strength of the vibration, as a value between `0.0` and `1.0`. If set to `-1.0`, the default
      * vibration strength of the device is used. Note: This method is implemented on Android, iOS, and
      * Web. It has no effect on other platforms. Note: For Android, `vibrate_handheld` requires
      * enabling the `VIBRATE` permission in the export preset. Otherwise, `vibrate_handheld` will have
@@ -582,14 +584,29 @@ object Input {
     }
 
     /**
+     * Returns the device's orientation as a `Quaternion`, using hardware-level sensor fusion for
+     * stable, drift-free results. If the device does not support orientation sensing, the method
+     * returns `Quaternion.IDENTITY`. The returned quaternion represents the rotation from the device
+     * coordinate frame to the world coordinate frame. In portrait mode, the device's coordinate system
+     * is: X right, Y up, Z towards viewer. Note: This method only works on Android and iOS. On other
+     * platforms, it always returns `Quaternion.IDENTITY`. Note: For Android,
+     * `ProjectSettings.input_devices/sensors/enable_device_orientation` must be enabled.
+     *
+     * Generated from Godot docs: Input.get_device_orientation
+     */
+    @JvmStatic
+    fun getDeviceOrientation(): Quaternion {
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getDeviceOrientationBind, singleton)
+    }
+
+    /**
      * Returns the acceleration, including the force of gravity, in m/s² of the joypad's accelerometer
      * sensor, if the joypad has one and it's currently enabled. Otherwise, the method returns
      * `Vector3.ZERO`. See also `get_joy_gravity` and `set_joy_motion_sensors_enabled`. For a joypad
      * held in front of you, the returned axes are defined as follows: +X ... -X: left ... right; +Y
      * ... -Y: bottom ... top; +Z ... -Z: farther ... closer. The gravity part value is measured as a
      * vector with length of `9.8` away from the center of the Earth, which is a negative Y value.
-     * Note: This feature is only supported on Windows, Linux, and macOS. On iOS, joypad accelerometer
-     * sensor reading is not supported due to OS limitations.
+     * Note: This feature is only supported on Windows, Linux, macOS, and iOS.
      *
      * Generated from Godot docs: Input.get_joy_accelerometer
      */
@@ -605,8 +622,7 @@ object Input {
      * the returned axes are defined as follows: +X ... -X: left ... right; +Y ... -Y: bottom ... top;
      * +Z ... -Z: farther ... closer. The gravity part value is measured as a vector with length of
      * `9.8` away from the center of the Earth, which is a negative Y value. Note: This feature is only
-     * supported on Windows, Linux, and macOS. On iOS, joypad accelerometer sensor reading is not
-     * supported due to OS limitations.
+     * supported on Windows, Linux, macOS, and iOS.
      *
      * Generated from Godot docs: Input.get_joy_gravity
      */
@@ -645,11 +661,11 @@ object Input {
     }
 
     /**
-     * Returns `true` if the requested joypad has motion sensors (accelerometer and gyroscope) and they
-     * are currently enabled. See also `set_joy_motion_sensors_enabled` and `has_joy_motion_sensors`.
-     * See `start_joy_motion_sensors_calibration` for an example on how to use joypad motion sensors
-     * and calibration in your games. Note: This feature is only supported on Windows, Linux, macOS,
-     * and iOS.
+     * Returns `true` if the requested joypad has motion sensors (gyroscope and/or accelerometer) and
+     * they are currently enabled. See also `set_joy_motion_sensors_enabled` and
+     * `has_joy_motion_sensors`. See `start_joy_motion_sensors_calibration` for an example on how to
+     * use joypad motion sensors and calibration in your games. Note: This feature is only supported on
+     * Windows, Linux, macOS, and iOS.
      *
      * Generated from Godot docs: Input.is_joy_motion_sensors_enabled
      */
@@ -659,11 +675,13 @@ object Input {
     }
 
     /**
-     * Enables or disables the motion sensors (accelerometer and gyroscope), if available, on the
-     * specified joypad. See `start_joy_motion_sensors_calibration` for an example on how to use joypad
-     * motion sensors and calibration in your games. It's recommended to disable the motion sensors
-     * when they're no longer being used, because otherwise it might drain the controller battery
-     * faster. Note: This feature is only supported on Windows, Linux, macOS, and iOS.
+     * Enables or disables the motion sensors (gyroscope and/or accelerometer), if available, on the
+     * specified joypad. While the motion sensors are enabled, the gyroscope is calibrated
+     * automatically by default; see `set_joy_motion_sensors_auto_calibration_enabled`. See
+     * `start_joy_motion_sensors_calibration` for an example on how to use joypad motion sensors and
+     * calibration in your games. It's recommended to disable the motion sensors when they're no longer
+     * being used, because otherwise it might drain the controller battery faster. Note: This feature
+     * is only supported on Windows, Linux, macOS, and iOS.
      *
      * Generated from Godot docs: Input.set_joy_motion_sensors_enabled
      */
@@ -673,9 +691,8 @@ object Input {
     }
 
     /**
-     * Returns `true` if the joypad has motion sensors (accelerometer and gyroscope). Note: On iOS,
-     * joypad accelerometer sensor reading is not supported due to OS limitations. Note: This feature
-     * is only supported on Windows, Linux, macOS, and iOS.
+     * Returns `true` if the joypad has motion sensors (gyroscope and/or accelerometer). Note: This
+     * feature is only supported on Windows, Linux, macOS, and iOS.
      *
      * Generated from Godot docs: Input.has_joy_motion_sensors
      */
@@ -685,10 +702,13 @@ object Input {
     }
 
     /**
-     * Starts the process of calibrating the specified joypad's gyroscope, if it has one. Once a
-     * joypad's gyroscope has been calibrated correctly (e.g. laying still on a table without being
+     * Starts the process of manually calibrating the specified joypad's gyroscope, if it has one. Once
+     * a joypad's gyroscope has been calibrated correctly (e.g. laying still on a table without being
      * rotated), `get_joy_gyroscope` will return values close or equal to `Vector3.ZERO` when the
-     * joypad is not being rotated.
+     * joypad is not being rotated. Since the gyroscope is calibrated automatically by default (see
+     * `set_joy_motion_sensors_auto_calibration_enabled`), most games don't need to calibrate manually.
+     * If automatic calibration is enabled, it's paused while the manual calibration is in progress,
+     * and resumes when `stop_joy_motion_sensors_calibration` is called.
      *
      * Generated from Godot docs: Input.start_joy_motion_sensors_calibration
      */
@@ -698,7 +718,7 @@ object Input {
     }
 
     /**
-     * Stops the calibration process of the specified joypad's motion sensors. See
+     * Stops the manual calibration process of the specified joypad's motion sensors. See
      * `start_joy_motion_sensors_calibration` for an example on how to use joypad motion sensors and
      * calibration in your games. Note: This feature is only supported on Windows, Linux, macOS, and
      * iOS.
@@ -765,7 +785,7 @@ object Input {
     }
 
     /**
-     * Returns `true` if the joypad's motion sensors are currently being calibrated. See
+     * Returns `true` if the joypad's motion sensors are currently being manually calibrated. See
      * `start_joy_motion_sensors_calibration` for an example on how to use joypad motion sensors and
      * calibration in your games. Note: This feature is only supported on Windows, Linux, macOS, and
      * iOS.
@@ -775,6 +795,74 @@ object Input {
     @JvmStatic
     fun isJoyMotionSensorsCalibrating(device: Int): Boolean {
         return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyMotionSensorsCalibratingBind, singleton, device)
+    }
+
+    /**
+     * Enables or disables automatic calibration of the joypad's gyroscope. Automatic calibration is
+     * enabled by default, so most games don't need to call this or perform any calibration. While
+     * enabled, the gyroscope calibration is continuously refined whenever the joypad is detected to be
+     * held still, easing corrections in gradually. This removes the need for a dedicated calibration
+     * step in most games and keeps up with calibration drift, e.g. from the controller warming up
+     * during play. When automatic calibration is disabled, the last calibrated values remain in
+     * effect. Note: This feature is only supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.set_joy_motion_sensors_auto_calibration_enabled
+     */
+    @JvmStatic
+    fun setJoyMotionSensorsAutoCalibrationEnabled(device: Int, enable: Boolean) {
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setJoyMotionSensorsAutoCalibrationEnabledBind, singleton, device, enable)
+    }
+
+    /**
+     * Returns `true` if automatic calibration is enabled on the joypad's motion sensors. Automatic
+     * calibration is enabled by default. See also `set_joy_motion_sensors_auto_calibration_enabled`.
+     * Note: This feature is only supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.is_joy_motion_sensors_auto_calibration_enabled
+     */
+    @JvmStatic
+    fun isJoyMotionSensorsAutoCalibrationEnabled(device: Int): Boolean {
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isJoyMotionSensorsAutoCalibrationEnabledBind, singleton, device)
+    }
+
+    /**
+     * Returns the position of the specified finger on the specified touchpad on the joypad. The X and
+     * Y values, if the specified finger is touching the specified touchpad, are in the range from
+     * `0.0` to `1.0`, with `(0.0, 0.0)` representing the top-left corner of the touchpad and `(1.0,
+     * 1.0)` representing the bottom-right corner. If the joypad doesn't have the specified touchpad or
+     * the specified finger is not currently touching the touchpad, this method returns `Vector2(-1.0,
+     * -1.0)`. Note: This feature is only supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.get_joy_touchpad_finger_position
+     */
+    @JvmStatic
+    fun getJoyTouchpadFingerPosition(device: Int, finger: Int, touchpad: Int = 0): Vector2 {
+        return ObjectCalls.ptrcallWithThreeIntArgsRetVector2(Binds.getJoyTouchpadFingerPositionBind, singleton, device, finger, touchpad)
+    }
+
+    /**
+     * Returns an array of finger IDs that are currently touching the specified touchpad on the joypad.
+     * If the joypad doesn't have the specified touchpad or no fingers are currently touching this
+     * touchpad, this method returns an empty array. Note: To retrieve the positions of the touchpad
+     * fingers, use `get_joy_touchpad_finger_position`. Note: This feature is only supported on
+     * Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.get_joy_touchpad_fingers
+     */
+    @JvmStatic
+    fun getJoyTouchpadFingers(device: Int, touchpad: Int = 0): List<Int> {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetPackedInt32List(Binds.getJoyTouchpadFingersBind, singleton, device, touchpad)
+    }
+
+    /**
+     * Returns the number of touchpads on the specified joypad, if it has any. Otherwise, the method
+     * returns `0`. Note: This feature is only supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.get_joy_num_touchpads
+     */
+    @JvmStatic
+    fun getJoyNumTouchpads(device: Int): Int {
+        return ObjectCalls.ptrcallWithIntArgRetInt(Binds.getJoyNumTouchpadsBind, singleton, device)
     }
 
     /**
@@ -823,6 +911,18 @@ object Input {
     @JvmStatic
     fun setGyroscope(value: Vector3) {
         ObjectCalls.ptrcallWithVector3Arg(Binds.setGyroscopeBind, singleton, value)
+    }
+
+    /**
+     * Sets the device orientation quaternion. Can be used for debugging on devices without a hardware
+     * sensor, for example in an editor on a PC. Note: This value can be immediately overwritten by the
+     * hardware sensor value on Android and iOS.
+     *
+     * Generated from Godot docs: Input.set_device_orientation
+     */
+    @JvmStatic
+    fun setDeviceOrientation(value: Quaternion) {
+        ObjectCalls.ptrcallWithQuaternionArg(Binds.setDeviceOrientationBind, singleton, value)
     }
 
     /**
@@ -918,9 +1018,9 @@ object Input {
     }
 
     /**
-     * This will simulate pressing the specified action. The strength can be used for non-boolean
-     * actions, it's ranged between 0 and 1 representing the intensity of the given action. Note: This
-     * method will not cause any `Node._input` calls. It is intended to be used with
+     * Simulates pressing the specified input action. The `strength` can be used for non-boolean
+     * actions, it's ranged between `0.0` and `1.0` representing the intensity of the given action.
+     * Note: This method will not cause any `Node._input` calls. It is intended to be used with
      * `is_action_pressed` and `is_action_just_pressed`. If you want to simulate `_input`, use
      * `parse_input_event` instead.
      *
@@ -932,7 +1032,7 @@ object Input {
     }
 
     /**
-     * If the specified action is already pressed, this will release it.
+     * Releases the specified input action, if the action is currently pressed.
      *
      * Generated from Godot docs: Input.action_release
      */
@@ -1033,8 +1133,8 @@ object Input {
     }
 
     /**
-     * Sends all input events which are in the current buffer to the game loop. These events may have
-     * been buffered as a result of accumulated input (`use_accumulated_input`) or agile input flushing
+     * Sends all buffered input events to the game loop. These events may have been buffered as a
+     * result of accumulated input (`use_accumulated_input`) or agile input flushing
      * (`ProjectSettings.input_devices/buffering/agile_event_flushing`). The engine will already do
      * this itself at key execution points (at least once per frame). However, this can be useful in
      * advanced cases where you want precise control over the timing of event handling.
@@ -1123,7 +1223,9 @@ object Input {
             /**
              * Captures the mouse. The mouse will be hidden and its position locked at the center of the window
              * manager's window. Note: If you want to process the mouse's movement in this mode, you need to
-             * use `InputEventMouseMotion.relative`.
+             * use `InputEventMouseMotion.relative` or `InputEventMouseMotion.screen_relative`. Note: Even when
+             * captured, the mouse cursor is still able to press buttons if they overlap with the center of the
+             * window.
              *
              * Generated from Godot docs: Input.MOUSE_MODE_CAPTURED
              */
@@ -1477,6 +1579,11 @@ object Input {
         val getGyroscopeBind =
             ObjectCalls.getMethodBind("Input", "get_gyroscope", GET_GYROSCOPE_HASH)
 
+        private const val GET_DEVICE_ORIENTATION_HASH = 1222331677L
+        @JvmField
+        val getDeviceOrientationBind =
+            ObjectCalls.getMethodBind("Input", "get_device_orientation", GET_DEVICE_ORIENTATION_HASH)
+
         private const val GET_JOY_ACCELEROMETER_HASH = 711720468L
         @JvmField
         val getJoyAccelerometerBind =
@@ -1547,6 +1654,31 @@ object Input {
         val isJoyMotionSensorsCalibratingBind =
             ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_calibrating", IS_JOY_MOTION_SENSORS_CALIBRATING_HASH)
 
+        private const val SET_JOY_MOTION_SENSORS_AUTO_CALIBRATION_ENABLED_HASH = 300928843L
+        @JvmField
+        val setJoyMotionSensorsAutoCalibrationEnabledBind =
+            ObjectCalls.getMethodBind("Input", "set_joy_motion_sensors_auto_calibration_enabled", SET_JOY_MOTION_SENSORS_AUTO_CALIBRATION_ENABLED_HASH)
+
+        private const val IS_JOY_MOTION_SENSORS_AUTO_CALIBRATION_ENABLED_HASH = 1116898809L
+        @JvmField
+        val isJoyMotionSensorsAutoCalibrationEnabledBind =
+            ObjectCalls.getMethodBind("Input", "is_joy_motion_sensors_auto_calibration_enabled", IS_JOY_MOTION_SENSORS_AUTO_CALIBRATION_ENABLED_HASH)
+
+        private const val GET_JOY_TOUCHPAD_FINGER_POSITION_HASH = 4135671252L
+        @JvmField
+        val getJoyTouchpadFingerPositionBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_touchpad_finger_position", GET_JOY_TOUCHPAD_FINGER_POSITION_HASH)
+
+        private const val GET_JOY_TOUCHPAD_FINGERS_HASH = 3923454890L
+        @JvmField
+        val getJoyTouchpadFingersBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_touchpad_fingers", GET_JOY_TOUCHPAD_FINGERS_HASH)
+
+        private const val GET_JOY_NUM_TOUCHPADS_HASH = 923996154L
+        @JvmField
+        val getJoyNumTouchpadsBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_num_touchpads", GET_JOY_NUM_TOUCHPADS_HASH)
+
         private const val SET_GRAVITY_HASH = 3460891852L
         @JvmField
         val setGravityBind =
@@ -1566,6 +1698,11 @@ object Input {
         @JvmField
         val setGyroscopeBind =
             ObjectCalls.getMethodBind("Input", "set_gyroscope", SET_GYROSCOPE_HASH)
+
+        private const val SET_DEVICE_ORIENTATION_HASH = 1727505552L
+        @JvmField
+        val setDeviceOrientationBind =
+            ObjectCalls.getMethodBind("Input", "set_device_orientation", SET_DEVICE_ORIENTATION_HASH)
 
         private const val SET_JOY_LIGHT_HASH = 2878471219L
         @JvmField

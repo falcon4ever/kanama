@@ -54,8 +54,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of
-     * 32 different layers. See also `collision_mask`. Note: Object A can detect a contact with object
-     * B only if object B is in any of the layers that object A scans. See Collision layers and masks
+     * 32 different layers. See also `collision_mask`. For an easier way to change this value from a
+     * script, see `set_collision_layer_value`. Note: Object A can detect a contact with object B only
+     * if object B is in any of the layers that object A scans. See Collision layers and masks
      * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
      * documentation for more information.
      *
@@ -67,8 +68,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * The physics layers this CollisionObject3D is in. Collision objects can exist in one or more of
-     * 32 different layers. See also `collision_mask`. Note: Object A can detect a contact with object
-     * B only if object B is in any of the layers that object A scans. See Collision layers and masks
+     * 32 different layers. See also `collision_mask`. For an easier way to change this value from a
+     * script, see `set_collision_layer_value`. Note: Object A can detect a contact with object B only
+     * if object B is in any of the layers that object A scans. See Collision layers and masks
      * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
      * documentation for more information.
      *
@@ -80,8 +82,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32
-     * different layers. See also `collision_layer`. Note: Object A can detect a contact with object B
-     * only if object B is in any of the layers that object A scans. See Collision layers and masks
+     * different layers. See also `collision_layer`. For an easier way to change this value from a
+     * script, see `set_collision_mask_value`. Note: Object A can detect a contact with object B only
+     * if object B is in any of the layers that object A scans. See Collision layers and masks
      * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
      * documentation for more information.
      *
@@ -93,8 +96,9 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * The physics layers this CollisionObject3D scans. Collision objects can scan one or more of 32
-     * different layers. See also `collision_layer`. Note: Object A can detect a contact with object B
-     * only if object B is in any of the layers that object A scans. See Collision layers and masks
+     * different layers. See also `collision_layer`. For an easier way to change this value from a
+     * script, see `set_collision_mask_value`. Note: Object A can detect a contact with object B only
+     * if object B is in any of the layers that object A scans. See Collision layers and masks
      * ($DOCS_URL/tutorials/physics/physics_introduction.html#collision-layers-and-masks) in the
      * documentation for more information.
      *
@@ -106,7 +110,8 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * Based on `value`, enables or disables the specified layer in the `collision_layer`, given a
-     * `layer_number` between 1 and 32.
+     * `layer_number` between 1 and 32. This simplifies editing this `CollisionObject3D`'s collision
+     * layer compared to assigning the `collision_layer` property directly.
      *
      * Generated from Godot docs: CollisionObject3D.set_collision_layer_value
      */
@@ -126,7 +131,8 @@ open class CollisionObject3D(handle: GodotHandle) : Node3D(handle) {
 
     /**
      * Based on `value`, enables or disables the specified layer in the `collision_mask`, given a
-     * `layer_number` between 1 and 32.
+     * `layer_number` between 1 and 32. This simplifies editing this `CollisionObject3D`'s collision
+     * mask compared to assigning the `collision_mask` property directly.
      *
      * Generated from Godot docs: CollisionObject3D.set_collision_mask_value
      */

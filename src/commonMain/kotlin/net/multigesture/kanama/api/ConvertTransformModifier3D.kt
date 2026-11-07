@@ -159,9 +159,31 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
     }
 
     /**
-     * Sets relative option in the setting at `index` to `enabled`. If sets `enabled` to `true`, the
-     * extracted and applying transform is relative to the rest. If sets `enabled` to `false`, the
-     * extracted transform is absolute.
+     * Sets the global option in the setting at `index` to `enabled`. If `enabled` is `true`, the
+     * global pose of the reference bone is used as the remapping source. If `enabled` is `false`, the
+     * local pose of the reference bone is used as the remapping source. Note: If the parent of the
+     * reference bone has a non-uniform scale, the reference bone is sheared as seen from global space.
+     * Since the local pose cannot bring in the shear, the scale may not be applied as intended.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.set_global
+     */
+    fun setGlobal(index: Int, enabled: Boolean) {
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.setGlobalBind, segment, index, enabled)
+    }
+
+    /**
+     * Returns `true` if the global option is enabled in the setting at `index`.
+     *
+     * Generated from Godot docs: ConvertTransformModifier3D.is_global
+     */
+    fun isGlobal(index: Int): Boolean {
+        return ObjectCalls.ptrcallWithIntArgRetBool(Binds.isGlobalBind, segment, index)
+    }
+
+    /**
+     * Sets relative option in the setting at `index` to `enabled`. If `enabled` is `true`, the
+     * extracted and applying transform is relative to the rest. If `enabled` is `false`, the extracted
+     * transform is absolute.
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_relative
      */
@@ -180,10 +202,10 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
 
     /**
      * Sets additive option in the setting at `index` to `enabled`. This mainly affects the process of
-     * applying transform to the `BoneConstraint3D.set_apply_bone`. If sets `enabled` to `true`, the
-     * processed transform is added to the pose of the current apply bone. If sets `enabled` to
-     * `false`, the pose of the current apply bone is replaced with the processed transform. However,
-     * if set `set_relative` to `true`, the transform is relative to rest.
+     * applying transform to the `BoneConstraint3D.set_apply_bone`. If `enabled` is `true`, the
+     * processed transform is added to the pose of the current apply bone. If `enabled` is `false`, the
+     * pose of the current apply bone is replaced with the processed transform. However, if set
+     * `set_relative` to `true`, the transform is relative to rest.
      *
      * Generated from Godot docs: ConvertTransformModifier3D.set_additive
      */
@@ -325,6 +347,16 @@ class ConvertTransformModifier3D(handle: GodotHandle) : BoneConstraint3D(handle)
         @JvmField
         val getReferenceRangeMaxBind =
             ObjectCalls.getMethodBind("ConvertTransformModifier3D", "get_reference_range_max", GET_REFERENCE_RANGE_MAX_HASH)
+
+        private const val SET_GLOBAL_HASH = 300928843L
+        @JvmField
+        val setGlobalBind =
+            ObjectCalls.getMethodBind("ConvertTransformModifier3D", "set_global", SET_GLOBAL_HASH)
+
+        private const val IS_GLOBAL_HASH = 1116898809L
+        @JvmField
+        val isGlobalBind =
+            ObjectCalls.getMethodBind("ConvertTransformModifier3D", "is_global", IS_GLOBAL_HASH)
 
         private const val SET_RELATIVE_HASH = 300928843L
         @JvmField

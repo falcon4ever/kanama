@@ -207,7 +207,7 @@ class UndoRedo(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Gets the version. Every time a new action is committed, the `UndoRedo`'s version number is
      * increased automatically. This is useful mostly to check if something changed from a saved
-     * version.
+     * version. The initial version is `1`.
      *
      * Generated from Godot docs: UndoRedo.get_version
      */

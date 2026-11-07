@@ -64,7 +64,7 @@ class WebRTCMultiplayerPeer(handle: GodotHandle) : MultiplayerPeer(handle) {
      * Add a new peer to the mesh with the given `peer_id`. The `WebRTCPeerConnection` must be in state
      * `WebRTCPeerConnection.ConnectionState.NEW`. Three channels will be created for reliable,
      * unreliable, and ordered transport. The value of `unreliable_lifetime` will be passed to the
-     * `"maxPacketLifetime"` option when creating unreliable and ordered channels (see
+     * `"maxPacketLifeTime"` option when creating unreliable and ordered channels (see
      * `WebRTCPeerConnection.create_data_channel`).
      *
      * Generated from Godot docs: WebRTCMultiplayerPeer.add_peer

@@ -115,6 +115,12 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmName("setTabInputModeProperty")
         set(value) = setTabInputMode(value)
 
+    var selectionHandleEnabled: Boolean
+        @JvmName("selectionHandleEnabledProperty")
+        get() = isSelectionHandleEnabled()
+        @JvmName("setSelectionHandleEnabledProperty")
+        set(value) = setSelectionHandleEnabled(value)
+
     var virtualKeyboardEnabled: Boolean
         @JvmName("virtualKeyboardEnabledProperty")
         get() = isVirtualKeyboardEnabled()
@@ -433,7 +439,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the `TextEdit`'s' tab size.
+     * Returns the `TextEdit`'s tab size.
      *
      * Generated from Godot docs: TextEdit.get_tab_size
      */
@@ -652,7 +658,9 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Performs a full reset of `TextEdit`, including undo history.
+     * Clears all text and related state. This clears the text content, selections, carets, and gutter
+     * line data. If `editable` is `false`, clears the undo history, otherwise preserves it. Does not
+     * reset other values (such as `placeholder_text`, font, colors) to their defaults.
      *
      * Generated from Godot docs: TextEdit.clear
      */
@@ -872,7 +880,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Cut's the current selection. Can be overridden with `_cut`.
+     * Cuts the current selection. Can be overridden with `_cut`.
      *
      * Generated from Godot docs: TextEdit.cut
      */
@@ -1071,7 +1079,7 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the word at `position`.
+     * Returns the word at `position` (in pixels).
      *
      * Generated from Godot docs: TextEdit.get_word_at_pos
      */
@@ -1863,6 +1871,26 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
      */
     fun deleteSelection(caretIndex: Int = -1) {
         ObjectCalls.ptrcallWithIntArg(Binds.deleteSelectionBind, segment, caretIndex)
+    }
+
+    /**
+     * If `true`, enables the handles used for text selection. These handles are only visible on
+     * touchscreen and can be dragged to adjust the selected text range.
+     *
+     * Generated from Godot docs: TextEdit.set_selection_handle_enabled
+     */
+    fun setSelectionHandleEnabled(enable: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setSelectionHandleEnabledBind, segment, enable)
+    }
+
+    /**
+     * If `true`, enables the handles used for text selection. These handles are only visible on
+     * touchscreen and can be dragged to adjust the selected text range.
+     *
+     * Generated from Godot docs: TextEdit.is_selection_handle_enabled
+     */
+    fun isSelectionHandleEnabled(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectionHandleEnabledBind, segment)
     }
 
     /**
@@ -3975,6 +4003,16 @@ open class TextEdit(handle: GodotHandle) : Control(handle) {
         @JvmField
         val deleteSelectionBind =
             ObjectCalls.getMethodBind("TextEdit", "delete_selection", DELETE_SELECTION_HASH)
+
+        private const val SET_SELECTION_HANDLE_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setSelectionHandleEnabledBind =
+            ObjectCalls.getMethodBind("TextEdit", "set_selection_handle_enabled", SET_SELECTION_HANDLE_ENABLED_HASH)
+
+        private const val IS_SELECTION_HANDLE_ENABLED_HASH = 36873697L
+        @JvmField
+        val isSelectionHandleEnabledBind =
+            ObjectCalls.getMethodBind("TextEdit", "is_selection_handle_enabled", IS_SELECTION_HANDLE_ENABLED_HASH)
 
         private const val SET_LINE_WRAPPING_MODE_HASH = 2525115309L
         @JvmField

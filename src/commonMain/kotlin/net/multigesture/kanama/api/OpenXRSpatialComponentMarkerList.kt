@@ -27,7 +27,7 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
     }
 
     /**
-     * Returns the marker ID for the marker at this `index`. Only applicable for Aruco or April Tag
+     * Returns the marker ID for the marker at this `index`. Only applicable for ArUco or April Tag
      * markers.
      *
      * Generated from Godot docs: OpenXRSpatialComponentMarkerList.get_marker_id
@@ -81,7 +81,7 @@ class OpenXRSpatialComponentMarkerList(handle: GodotHandle) : OpenXRSpatialCompo
              */
             val MICRO_QRCODE: MarkerType get() = MarkerType(2L)
             /**
-             * Marker based on an Aruco code.
+             * Marker based on an ArUco code.
              *
              * Generated from Godot docs: OpenXRSpatialComponentMarkerList.MARKER_TYPE_ARUCO
              */

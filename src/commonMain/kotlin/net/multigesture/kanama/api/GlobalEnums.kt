@@ -1466,7 +1466,7 @@ value class Key(override val value: Long) : GodotEnumValue {
          */
         val Z: Key get() = Key(90L)
         /**
-         * Left bracket (``lb``) key.
+         * Left bracket (`[`) key.
          *
          * Generated from Godot docs: @GlobalScope.KEY_BRACKETLEFT
          */
@@ -1478,7 +1478,7 @@ value class Key(override val value: Long) : GodotEnumValue {
          */
         val BACKSLASH: Key get() = Key(92L)
         /**
-         * Right bracket (``rb``) key.
+         * Right bracket (`]`) key.
          *
          * Generated from Godot docs: @GlobalScope.KEY_BRACKETRIGHT
          */
@@ -2826,11 +2826,18 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
          */
         val FILE_PATH: GodotPropertyHint get() = GodotPropertyHint(44L)
         /**
+         * Hints that a `String` or `StringName` property is the name of an audio bus. This allows the
+         * selection of predefined bus names registered with the audio server.
+         *
+         * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_AUDIO_BUS
+         */
+        val AUDIO_BUS: GodotPropertyHint get() = GodotPropertyHint(45L)
+        /**
          * Represents the size of the `PropertyHint` enum.
          *
          * Generated from Godot docs: @GlobalScope.PROPERTY_HINT_MAX
          */
-        val MAX: GodotPropertyHint get() = GodotPropertyHint(45L)
+        val MAX: GodotPropertyHint get() = GodotPropertyHint(46L)
     }
 }
 

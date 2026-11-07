@@ -82,6 +82,12 @@ class BlitMaterial(handle: GodotHandle) : Material(handle) {
              * Generated from Godot docs: BlitMaterial.BLEND_MODE_DISABLED
              */
             val DISABLED: BlendMode get() = BlendMode(4L)
+            /**
+             * Mix blending mode. Colors are assumed to be premultiplied by the alpha (opacity) value.
+             *
+             * Generated from Godot docs: BlitMaterial.BLEND_MODE_PREMULTIPLIED_ALPHA
+             */
+            val PREMULTIPLIED_ALPHA: BlendMode get() = BlendMode(5L)
         }
     }
 

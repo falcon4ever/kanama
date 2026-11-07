@@ -172,7 +172,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     /**
      * The amount of bones in retargeting section's `BoneMap` editor. For example,
      * `SkeletonProfileHumanoid` has 56 bones. The size of elements in `BoneMap` updates when changing
-     * this property in it's assigned `SkeletonProfile`.
+     * this property in its assigned `SkeletonProfile`.
      *
      * Generated from Godot docs: SkeletonProfile.set_bone_size
      */
@@ -185,7 +185,7 @@ open class SkeletonProfile(handle: GodotHandle) : Resource(handle) {
     /**
      * The amount of bones in retargeting section's `BoneMap` editor. For example,
      * `SkeletonProfileHumanoid` has 56 bones. The size of elements in `BoneMap` updates when changing
-     * this property in it's assigned `SkeletonProfile`.
+     * this property in its assigned `SkeletonProfile`.
      *
      * Generated from Godot docs: SkeletonProfile.get_bone_size
      */

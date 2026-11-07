@@ -50,23 +50,6 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Creates a shared texture using the specified `view` and the texture information from
-     * `with_texture`'s `layer` and `mipmap`. The number of included mipmaps from the original texture
-     * can be controlled using the `mipmaps` parameter. Only relevant for textures with multiple
-     * layers, such as 3D textures, texture arrays and cubemaps. For single-layer textures, use
-     * `texture_create_shared`. For 2D textures (which only have one layer), `layer` must be `0`. Note:
-     * Layer slicing is only supported for 2D texture arrays, not 3D textures or cubemaps. This will be
-     * freed automatically when the `with_texture` is freed.
-     *
-     * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
-     */
-    fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: RenderingDevice.TextureSliceType = RenderingDevice.TextureSliceType.SLICE_2D): RID {
-        val ret = ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(Binds.textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value)
-        ObjectCalls.keepReachable(view)
-        return ret
-    }
-
-    /**
      * Returns an RID for an existing `image` (`VkImage`) with the given `type`, `format`, `samples`,
      * `usage_flags`, `width`, `height`, `depth`, `layers`, and `mipmaps`. This can be used to allow
      * Godot to render onto foreign images.
@@ -1215,7 +1198,7 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
-     * Returns the timestamp in GPU time for the rendering step specified by `index` (in microseconds
+     * Returns the timestamp in GPU time for the rendering step specified by `index` (in nanoseconds
      * since the engine started). See also `get_captured_timestamp_cpu_time` and `capture_timestamp`.
      *
      * Generated from Godot docs: RenderingDevice.get_captured_timestamp_gpu_time
@@ -3609,6 +3592,12 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              * Generated from Godot docs: RenderingDevice.TEXTURE_SLICE_3D
              */
             val SLICE_3D: TextureSliceType get() = TextureSliceType(2L)
+            /**
+             * 2-dimensional texture array slice.
+             *
+             * Generated from Godot docs: RenderingDevice.TEXTURE_SLICE_2D_ARRAY
+             */
+            val SLICE_2D_ARRAY: TextureSliceType get() = TextureSliceType(3L)
         }
     }
 
@@ -5080,6 +5069,13 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
              * Generated from Godot docs: RenderingDevice.SUPPORTS_HDR_OUTPUT
              */
             val HDR_OUTPUT: Features get() = Features(13L)
+            /**
+             * Support for rasterization rate maps. The current implementation targets Metal on Apple
+             * platforms. This allows for foveated rendering, which is used by the visionOS XR module.
+             *
+             * Generated from Godot docs: RenderingDevice.SUPPORTS_RASTERIZATION_RATE_MAP
+             */
+            val RASTERIZATION_RATE_MAP: Features get() = Features(14L)
         }
     }
 
@@ -5679,11 +5675,6 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         @JvmField
         val textureCreateSharedBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared", TEXTURE_CREATE_SHARED_HASH)
-
-        private const val TEXTURE_CREATE_SHARED_FROM_SLICE_HASH = 1808971279L
-        @JvmField
-        val textureCreateSharedFromSliceBind =
-            ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared_from_slice", TEXTURE_CREATE_SHARED_FROM_SLICE_HASH)
 
         private const val TEXTURE_CREATE_FROM_EXTENSION_HASH = 3732868568L
         @JvmField

@@ -16,9 +16,9 @@ import net.multigesture.kanama.binding.runtime.requireConstructed
 class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     /**
      * Registers a shortcut associated with the plugin's context menu. This method should be called
-     * once (e.g. in plugin's `Object._init`). `callback` will be called when user presses the
+     * once (e.g. in the plugin's `Object._init`). `callback` will be called when user presses the
      * specified `shortcut` while the menu's context is in effect (e.g. FileSystem dock is focused).
-     * Callback should take single `Array` argument; array contents depend on context menu slot.
+     * Callback should take single data `Dictionary`, same as in `add_context_menu_item`.
      *
      * Generated from Godot docs: EditorContextMenuPlugin.add_menu_shortcut
      */
@@ -31,9 +31,9 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Add custom option to the context menu of the plugin's specified slot. When the option is
-     * activated, `callback` will be called. Callback should take single `Array` argument; array
-     * contents depend on context menu slot.
+     * Add custom option to the context menu of the plugin's specified slot. `callback` should be a
+     * method that takes a single argument of type `Dictionary`. It will be called when the option is
+     * activated and the data received in the callback is the same as in `_get_menu_options`.
      *
      * Generated from Godot docs: EditorContextMenuPlugin.add_context_menu_item
      */
@@ -86,62 +86,66 @@ class EditorContextMenuPlugin(handle: GodotHandle) : RefCounted(handle) {
     value class ContextMenuSlot(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Context menu of Scene dock. `_popup_menu` will be called with a list of paths to currently
-             * selected nodes, while option callback will receive the list of currently selected nodes.
+             * Context menu of Scene dock. The data `Dictionary` contains: `&"selected_nodes": Array`Node`` -
+             * The list of currently selected nodes (same as `EditorSelection.get_top_selected_nodes`).
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_SCENE_TREE
              */
             val SCENE_TREE: ContextMenuSlot get() = ContextMenuSlot(0L)
             /**
-             * Context menu of FileSystem dock. `_popup_menu` and option callback will be called with list of
-             * paths of the currently selected files.
+             * Context menu of FileSystem dock. The data `Dictionary` contains: `&"selected_files":
+             * PackedStringArray` - The list of selected files.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_FILESYSTEM
              */
             val FILESYSTEM: ContextMenuSlot get() = ContextMenuSlot(1L)
             /**
-             * Context menu of Script editor's script tabs. `_popup_menu` will be called with the path to the
-             * currently edited script, while option callback will receive reference to that script.
+             * Context menu of Script editor's script tabs and Shader editor's shader tabs. The data
+             * `Dictionary` contains: `&"selected_resource": Resource` - The currently selected resource. Can
+             * be a `Script`, a `Shader`, a text file, or `null` in case of help pages. `&"path": String` - The
+             * path of the selected file. If a help page is selected, the path will be the name of the opened
+             * class, prefixed with `help:`.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_SCRIPT_EDITOR
              */
             val SCRIPT_EDITOR: ContextMenuSlot get() = ContextMenuSlot(2L)
             /**
              * The "Create..." submenu of FileSystem dock's context menu, or the "New" section of the main
-             * context menu when empty space is clicked. `_popup_menu` and option callback will be called with
-             * the path of the currently selected folder. When clicking the empty space, the list of paths for
-             * popup method will be empty.
+             * context menu when empty space is clicked. The data `Dictionary` contains: `&"base_directory":
+             * String` - Path to the base directory where a file should be created. `&"needs_prefix": bool` -
+             * Whether the option needs a "New" prefix (for consistency with native options).
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_FILESYSTEM_CREATE
              */
             val FILESYSTEM_CREATE: ContextMenuSlot get() = ContextMenuSlot(3L)
             /**
-             * Context menu of Script editor's code editor. `_popup_menu` will be called with the path to the
-             * `CodeEdit` node.
+             * Context menu of Script editor's code editor. The data `Dictionary` contains: `&"code_edit":
+             * CodeEdit` - The code editor instance. `&"file_path": String` - Path to the currently edited
+             * file.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_SCRIPT_EDITOR_CODE
              */
             val SCRIPT_EDITOR_CODE: ContextMenuSlot get() = ContextMenuSlot(4L)
             /**
-             * Context menu of scene tabs. `_popup_menu` will be called with the path of the clicked scene, or
-             * empty `PackedStringArray` if the menu was opened on empty space. The option callback will
-             * receive the path of the clicked scene, or empty `String` if none was clicked.
+             * Context menu of scene tabs. The data `Dictionary` contains: `&"selected_scene": String` - Scene
+             * path of the selected/clicked scene tab. Empty if empty space was clicked.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_SCENE_TABS
              */
             val SCENE_TABS: ContextMenuSlot get() = ContextMenuSlot(5L)
             /**
-             * Context menu of 2D editor's basic right-click menu. `_popup_menu` will be called with paths to
-             * all `CanvasItem` nodes under the cursor.
+             * Context menu of the 2D editor's viewport. The data `Dictionary` contains: `&"hovered_nodes":
+             * Array`CanvasItem`` - The `CanvasItem` nodes under the cursor. `&"mouse_position": Vector2` - The
+             * local mouse position in the 2D scene.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_2D_EDITOR
              */
             val SLOT_2D_EDITOR: ContextMenuSlot get() = ContextMenuSlot(6L)
             /**
-             * Context menu of the inspectors right-click menu. `_popup_menu` will be called with an array of
-             * two items: The first will be the object's ID, the second will be the property name. An object
-             * can be retrieved from it's ID via `@GlobalScope.instance_from_id` after converting it to an int.
-             * The option callback will receive the EditorProperty directly.
+             * Context menu of an editor property in the inspector. The data `Dictionary` contains:
+             * `&"property": EditorProperty` - The clicked `EditorProperty` object. `&"object": Object` - The
+             * object edited by the inspector. `&"property_name": StringName` - The name of the object's
+             * property that was clicked.
              *
              * Generated from Godot docs: EditorContextMenuPlugin.CONTEXT_SLOT_INSPECTOR_PROPERTY
              */

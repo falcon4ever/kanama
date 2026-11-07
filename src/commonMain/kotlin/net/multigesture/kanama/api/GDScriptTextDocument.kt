@@ -83,30 +83,9 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
         return ret
     }
 
-    fun foldingRange(params: Map<String, Any?>): List<Any?> {
-        checkOpen()
-        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.foldingRangeBind, segment, params)
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
-    fun codeLens(params: Map<String, Any?>): List<Any?> {
-        checkOpen()
-        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.codeLensBind, segment, params)
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
     fun documentLink(params: Map<String, Any?>): List<Any?> {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.documentLinkBind, segment, params)
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
-    fun colorPresentation(params: Map<String, Any?>): List<Any?> {
-        checkOpen()
-        val ret = ObjectCalls.ptrcallWithDictionaryArgRetArray(Binds.colorPresentationBind, segment, params)
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -212,25 +191,10 @@ class GDScriptTextDocument(handle: GodotHandle) : RefCounted(handle) {
         val referencesBind =
             ObjectCalls.getMethodBind("GDScriptTextDocument", "references", REFERENCES_HASH)
 
-        private const val FOLDINGRANGE_HASH = 3877611628L
-        @JvmField
-        val foldingRangeBind =
-            ObjectCalls.getMethodBind("GDScriptTextDocument", "foldingRange", FOLDINGRANGE_HASH)
-
-        private const val CODELENS_HASH = 3877611628L
-        @JvmField
-        val codeLensBind =
-            ObjectCalls.getMethodBind("GDScriptTextDocument", "codeLens", CODELENS_HASH)
-
         private const val DOCUMENTLINK_HASH = 3877611628L
         @JvmField
         val documentLinkBind =
             ObjectCalls.getMethodBind("GDScriptTextDocument", "documentLink", DOCUMENTLINK_HASH)
-
-        private const val COLORPRESENTATION_HASH = 3877611628L
-        @JvmField
-        val colorPresentationBind =
-            ObjectCalls.getMethodBind("GDScriptTextDocument", "colorPresentation", COLORPRESENTATION_HASH)
 
         private const val HOVER_HASH = 3762224011L
         @JvmField

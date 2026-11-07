@@ -52,6 +52,12 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setDirectionalProperty")
         set(value) = setDirectional(value)
 
+    var specularIntensity: Double
+        @JvmName("specularIntensityProperty")
+        get() = getSpecularIntensity()
+        @JvmName("setSpecularIntensityProperty")
+        set(value) = setSpecularIntensity(value)
+
     var shadowmaskMode: LightmapGIData.ShadowmaskMode
         @JvmName("shadowmaskModeProperty")
         get() = getShadowmaskMode()
@@ -403,7 +409,10 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * The maximum texture size for the generated texture atlas. Higher values will result in fewer
      * slices being generated, but may not work on all hardware as a result of hardware limitations on
-     * texture sizes. Leave `max_texture_size` at its default value of `16384` if unsure.
+     * texture sizes. Leave `max_texture_size` at its default value of `16384` if unsure. Note: If
+     * `supersampling` is enabled, the texture atlas used while baking may be up to
+     * `supersampling_factor` times larger than `max_texture_size`, since it's downsampled before
+     * saving.
      *
      * Generated from Godot docs: LightmapGI.set_max_texture_size
      */
@@ -414,7 +423,10 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     /**
      * The maximum texture size for the generated texture atlas. Higher values will result in fewer
      * slices being generated, but may not work on all hardware as a result of hardware limitations on
-     * texture sizes. Leave `max_texture_size` at its default value of `16384` if unsure.
+     * texture sizes. Leave `max_texture_size` at its default value of `16384` if unsure. Note: If
+     * `supersampling` is enabled, the texture atlas used while baking may be up to
+     * `supersampling_factor` times larger than `max_texture_size`, since it's downsampled before
+     * saving.
      *
      * Generated from Godot docs: LightmapGI.get_max_texture_size
      */
@@ -682,6 +694,34 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
+     * The strength of the lightmap's approximated specular lobe. This helps make lightmapped scenes
+     * look closer to real-time lighting, which is particularly noticeable for lights that use the
+     * `Light3D.BakeMode.STATIC` bake mode. Only effective if `directional` is `true`. Note: The
+     * lightmap is only able to represent one light direction per texel, which means that the specular
+     * direction may appear to be incorrect in certain cases. This can manifest as specular lobes
+     * appearing to warp around as the camera moves.
+     *
+     * Generated from Godot docs: LightmapGI.set_specular_intensity
+     */
+    fun setSpecularIntensity(specularIntensity: Double) {
+        ObjectCalls.ptrcallWithDoubleArg(Binds.setSpecularIntensityBind, segment, specularIntensity)
+    }
+
+    /**
+     * The strength of the lightmap's approximated specular lobe. This helps make lightmapped scenes
+     * look closer to real-time lighting, which is particularly noticeable for lights that use the
+     * `Light3D.BakeMode.STATIC` bake mode. Only effective if `directional` is `true`. Note: The
+     * lightmap is only able to represent one light direction per texel, which means that the specular
+     * direction may appear to be incorrect in certain cases. This can manifest as specular lobes
+     * appearing to warp around as the camera moves.
+     *
+     * Generated from Godot docs: LightmapGI.get_specular_intensity
+     */
+    fun getSpecularIntensity(): Double {
+        return ObjectCalls.ptrcallNoArgsRetDouble(Binds.getSpecularIntensityBind, segment)
+    }
+
+    /**
      * Godot's `LightmapGI.BakeQuality` enum as a typed value: `.value` is the raw number Godot uses,
      * and the companion holds the named values (`LightmapGI.BakeQuality.<NAME>`).
      *
@@ -735,7 +775,9 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
     value class GenerateProbes(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Don't generate lightmap probes for lighting dynamic objects.
+             * Don't generate additional lightmap probes for lighting dynamic objects. Probes will still be
+             * generated on each corner of the LightmapGI's bounds (8 probes total), so that interpolation
+             * works correctly when using additional `LightmapProbe` nodes.
              *
              * Generated from Godot docs: LightmapGI.GENERATE_PROBES_DISABLED
              */
@@ -854,6 +896,14 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
              * Generated from Godot docs: LightmapGI.BAKE_ERROR_ATLAS_TOO_SMALL
              */
             val ATLAS_TOO_SMALL: BakeError get() = BakeError(11L)
+            /**
+             * Lightmap baking failed as the baking process requires a texture larger than the maximum texture
+             * size supported by the rendering device. This can happen when `supersampling` is enabled with a
+             * high `supersampling_factor`.
+             *
+             * Generated from Godot docs: LightmapGI.BAKE_ERROR_TEXTURE_EXCEEDS_DEVICE_LIMIT
+             */
+            val TEXTURE_EXCEEDS_DEVICE_LIMIT: BakeError get() = BakeError(12L)
         }
     }
 
@@ -1130,5 +1180,15 @@ class LightmapGI(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmField
         val getCameraAttributesBind =
             ObjectCalls.getMethodBind("LightmapGI", "get_camera_attributes", GET_CAMERA_ATTRIBUTES_HASH)
+
+        private const val SET_SPECULAR_INTENSITY_HASH = 373806689L
+        @JvmField
+        val setSpecularIntensityBind =
+            ObjectCalls.getMethodBind("LightmapGI", "set_specular_intensity", SET_SPECULAR_INTENSITY_HASH)
+
+        private const val GET_SPECULAR_INTENSITY_HASH = 1740695150L
+        @JvmField
+        val getSpecularIntensityBind =
+            ObjectCalls.getMethodBind("LightmapGI", "get_specular_intensity", GET_SPECULAR_INTENSITY_HASH)
     }
 }

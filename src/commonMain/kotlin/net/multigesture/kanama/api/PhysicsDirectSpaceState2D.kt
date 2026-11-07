@@ -13,24 +13,6 @@ import net.multigesture.kanama.types.Vector2
  */
 open class PhysicsDirectSpaceState2D(handle: GodotHandle) : GodotObject(handle) {
     /**
-     * Checks whether a point is inside any solid shape. Position and other parameters are defined
-     * through `PhysicsPointQueryParameters2D`. The shapes the point is inside of are returned in an
-     * array containing dictionaries with the following fields: `collider`: The colliding object.
-     * `collider_id`: The colliding object's ID. `rid`: The intersecting object's `RID`. `shape`: The
-     * shape index of the colliding shape. The number of intersections can be limited with the
-     * `max_results` parameter, to reduce the processing time. Note: `ConcavePolygonShape2D`s and
-     * `CollisionPolygon2D`s in `Segments` build mode are not solid shapes. Therefore, they will not be
-     * detected.
-     *
-     * Generated from Godot docs: PhysicsDirectSpaceState2D.intersect_point
-     */
-    fun intersectPoint(parameters: PhysicsPointQueryParameters2D, maxResults: Int = 32): List<Map<String, Any?>> {
-        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
-        ObjectCalls.keepReachable(parameters)
-        return ret
-    }
-
-    /**
      * Intersects a ray in a given space. Ray position and other parameters are defined through
      * `PhysicsRayQueryParameters2D`. The returned object is a dictionary with the following fields:
      * `collider`: The colliding object. `collider_id`: The colliding object's ID. `normal`: The
@@ -44,6 +26,24 @@ open class PhysicsDirectSpaceState2D(handle: GodotHandle) : GodotObject(handle) 
      */
     fun intersectRay(parameters: PhysicsRayQueryParameters2D): Map<String, Any?> {
         val ret = ObjectCalls.ptrcallWithObjectArgRetDictionary(Binds.intersectRayBind, segment, parameters.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        return ret
+    }
+
+    /**
+     * Checks whether a point is inside any solid shape. Position and other parameters are defined
+     * through `PhysicsPointQueryParameters2D`. The shapes the point is inside of are returned in an
+     * array containing dictionaries with the following fields: `collider`: The colliding object.
+     * `collider_id`: The colliding object's ID. `rid`: The intersecting object's `RID`. `shape`: The
+     * shape index of the colliding shape. The number of intersections can be limited with the
+     * `max_results` parameter, to reduce the processing time. Note: `ConcavePolygonShape2D`s and
+     * `CollisionPolygon2D`s in `Segments` build mode are not solid shapes. Therefore, they will not be
+     * detected.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState2D.intersect_point
+     */
+    fun intersectPoint(parameters: PhysicsPointQueryParameters2D, maxResults: Int = 32): List<Map<String, Any?>> {
+        val ret = ObjectCalls.ptrcallWithObjectAndIntArgRetDictionaryList(Binds.intersectPointBind, segment, parameters.requireOpenHandle(), maxResults)
         ObjectCalls.keepReachable(parameters)
         return ret
     }
@@ -126,15 +126,15 @@ open class PhysicsDirectSpaceState2D(handle: GodotHandle) : GodotObject(handle) 
     }
 
     private object Binds {
-        private const val INTERSECT_POINT_HASH = 2118456068L
-        @JvmField
-        val intersectPointBind =
-            ObjectCalls.getMethodBind("PhysicsDirectSpaceState2D", "intersect_point", INTERSECT_POINT_HASH)
-
         private const val INTERSECT_RAY_HASH = 1590275562L
         @JvmField
         val intersectRayBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState2D", "intersect_ray", INTERSECT_RAY_HASH)
+
+        private const val INTERSECT_POINT_HASH = 2118456068L
+        @JvmField
+        val intersectPointBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState2D", "intersect_point", INTERSECT_POINT_HASH)
 
         private const val INTERSECT_SHAPE_HASH = 2488867228L
         @JvmField

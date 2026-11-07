@@ -55,6 +55,7 @@ class LightmapGI(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
       val TEXTURE_SIZE_TOO_SMALL: BakeError get() = BakeError(9L)
       val LIGHTMAP_TOO_SMALL: BakeError get() = BakeError(10L)
       val ATLAS_TOO_SMALL: BakeError get() = BakeError(11L)
+      val TEXTURE_EXCEEDS_DEVICE_LIMIT: BakeError get() = BakeError(12L)
     }
   }
 

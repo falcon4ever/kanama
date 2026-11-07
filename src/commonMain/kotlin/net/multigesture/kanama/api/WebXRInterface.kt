@@ -37,6 +37,12 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
         @JvmName("setRequestedReferenceSpaceTypesProperty")
         set(value) = setRequestedReferenceSpaceTypes(value)
 
+    var disableWebxrLayers: Boolean
+        @JvmName("disableWebxrLayersProperty")
+        get() = getDisableWebxrLayers()
+        @JvmName("setDisableWebxrLayersProperty")
+        set(value) = setDisableWebxrLayers(value)
+
     val referenceSpaceType: String
         @JvmName("referenceSpaceTypeProperty")
         get() = getReferenceSpaceType()
@@ -226,6 +232,33 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     fun getRequestedReferenceSpaceTypes(): String {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getRequestedReferenceSpaceTypesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * If `true`, the WebXR Layers API won't be used even when the browser supports it. Godot falls
+     * back to this mode automatically when the browser doesn't support WebXR Layers and the polyfill
+     * isn't in use. This doesn't have any effect on the interface when already initialized.
+     *
+     * Generated from Godot docs: WebXRInterface.set_disable_webxr_layers
+     */
+    fun setDisableWebxrLayers(disable: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDisableWebxrLayersBind, segment, disable)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
+     * If `true`, the WebXR Layers API won't be used even when the browser supports it. Godot falls
+     * back to this mode automatically when the browser doesn't support WebXR Layers and the polyfill
+     * isn't in use. This doesn't have any effect on the interface when already initialized.
+     *
+     * Generated from Godot docs: WebXRInterface.get_disable_webxr_layers
+     */
+    fun getDisableWebxrLayers(): Boolean {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.getDisableWebxrLayersBind, segment)
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -511,6 +544,16 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
         @JvmField
         val getRequestedReferenceSpaceTypesBind =
             ObjectCalls.getMethodBind("WebXRInterface", "get_requested_reference_space_types", GET_REQUESTED_REFERENCE_SPACE_TYPES_HASH)
+
+        private const val SET_DISABLE_WEBXR_LAYERS_HASH = 2586408642L
+        @JvmField
+        val setDisableWebxrLayersBind =
+            ObjectCalls.getMethodBind("WebXRInterface", "set_disable_webxr_layers", SET_DISABLE_WEBXR_LAYERS_HASH)
+
+        private const val GET_DISABLE_WEBXR_LAYERS_HASH = 36873697L
+        @JvmField
+        val getDisableWebxrLayersBind =
+            ObjectCalls.getMethodBind("WebXRInterface", "get_disable_webxr_layers", GET_DISABLE_WEBXR_LAYERS_HASH)
 
         private const val IS_INPUT_SOURCE_ACTIVE_HASH = 1116898809L
         @JvmField

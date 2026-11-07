@@ -192,7 +192,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * meters in radius with a surface gravity of 4.0 m/s², set the `gravity` to 4.0 and the unit
      * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
      * example, at 200 meters from the center the gravity will be 1.0 m/s² (twice the distance, 1/4th
-     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4x the gravity), and so on.
+     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4× the gravity), and so on.
      * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
      * gravity will be constant regardless of distance.
      *
@@ -207,7 +207,7 @@ class Area3D(handle: GodotHandle) : CollisionObject3D(handle) {
      * meters in radius with a surface gravity of 4.0 m/s², set the `gravity` to 4.0 and the unit
      * distance to 100.0. The gravity will have falloff according to the inverse square law, so in the
      * example, at 200 meters from the center the gravity will be 1.0 m/s² (twice the distance, 1/4th
-     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4x the gravity), and so on.
+     * the gravity), at 50 meters it will be 16.0 m/s² (half the distance, 4× the gravity), and so on.
      * The above is true only when the unit distance is a positive number. When this is set to 0.0, the
      * gravity will be constant regardless of distance.
      *

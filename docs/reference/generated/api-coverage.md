@@ -10,13 +10,13 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 
 | Metric | Count | Coverage |
 | --- | ---: | --- |
-| API classes | 1036 |  |
-| Classes with generated output | 845 | `██████████░░` 81.6% |
-| Classes with complete method generation | 761 | `█████████░░░` 73.5% |
-| Methods generated | 15332/16822 (91.1%) | `███████████░` 91.1% |
-| Methods skipped | 1490 |  |
-| Properties generated | 4090/4162 (98.3%) | `████████████` 98.3% |
-| Signals generated | 503/503 (100.0%) | `████████████` 100.0% |
+| API classes | 1069 |  |
+| Classes with generated output | 874 | `██████████░░` 81.8% |
+| Classes with complete method generation | 774 | `█████████░░░` 72.4% |
+| Methods generated | 15669/17203 (91.1%) | `███████████░` 91.1% |
+| Methods skipped | 1534 |  |
+| Properties generated | 4199/4270 (98.3%) | `████████████` 98.3% |
+| Signals generated | 518/518 (100.0%) | `████████████` 100.0% |
 
 **Reading the numbers above:** "Methods generated" counts against *all* methods in `extension_api.json`, including the 1437 engine virtuals — which are deliberately not emitted as callable wrappers (a script overrides them via `@OverrideVirtual`) — and the documented by-design skips (root-`Object` policy methods, `RefCounted` lifetime, the Dictionary passthrough revert). Callable-method coverage is the **Promoted Source Summary** below; a sub-100% figure here is not unfinished work.
 
@@ -27,36 +27,36 @@ See [Wrapper Generator Report](wrapper-generator-report.md) for skip categories,
 These numbers count only checked-in Kotlin API wrappers. Class coverage may include shell wrappers for Godot extension points whose public callable surface is virtual-only; method coverage counts promoted callable wrappers.
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
-- Classes: 1036 / 1036 `████████████` 100.0%
-- Methods: 15382 / 15385 `████████████` 100.0% (callable methods; engine virtuals excluded — see below)
+- Classes: 1069 / 1069 `████████████` 100.0%
+- Methods: 15719 / 15755 `████████████` 99.8% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
 One generated tree, held to the single-tree drift gate (`check_single_tree`: committed == fresh regen for every generated file; see wrapper-maintenance.md).
 
-- Shared tree (`src/commonMain/kotlin/.../api`, common code): 1035 classes compiled by desktop, Android and iOS. 2 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
+- Shared tree (`src/commonMain/kotlin/.../api`, common code): 1068 classes compiled by desktop, Android and iOS. 2 of them carry a desktop-only companion (`<Class>.jvm.kt`) for members whose ptrcall shape is not audited on iOS yet; the [iOS Shape Gap](ios-shape-gap.md) page lists them.
 - Per-platform (`PER_PLATFORM_WRAPPERS`, 0 classes): desktop generates 0 and hand-shapes 0; iOS generates 0, hand-shapes 0, hand-writes 0 collision classes, and does not host: none. Android reuses the desktop sources (no separate tree). Per-method iOS skips remain conservative (un-audited marshalling shapes become desktop companions with report entries, never stubs).
 
 ## Virtual Methods
 
-`extension_api.json` declares **1437** engine virtual methods (the `_*` callbacks). These are not wrapped as callable methods — a script overrides them with `@OverrideVirtual` (Phase 5), where the Kotlin function name is the virtual name (GDScript-style `fun _draw()`). The processor validates each override against a generated signature table (`scripts/generate_virtual_signature_table.py`, all virtuals) and dispatches it on both targets. They are reported here separately so they neither dilute callable-method coverage nor count as wrapper gaps. Practical marshalling bounds (tasks 13 + 29): desktop/Android cover **every** Variant-expressible return family — the audited scalar/POD shapes, String, all Packed* arrays, Dictionary (`Map<String, Any?>`), generic/typed Array (`List<Any?>`), RID, Rect2, AABB, Transform2D, Transform3D, Projection, and Variant (`Any?`); the only excluded returns are the 6 raw-pointer virtuals (`void*`, `const Glyph*`), which are not Variant-expressible by design (see wrapper-maintenance.md). iOS value-returns cover Bool/Int/Float/Vector2/Vector2i/Vector3/String/RID, all fixed-element Packed* arrays, PackedStringArray, Dictionary, generic Array, and Variant returns over that audited inner-type set (unaudited inner types serialize as nil on iOS); the Rect2/AABB/Transform2D/Transform3D/Projection returns stay desktop/Android-only for now (by design, wrapper-maintenance.md).
+`extension_api.json` declares **1448** engine virtual methods (the `_*` callbacks). These are not wrapped as callable methods — a script overrides them with `@OverrideVirtual` (Phase 5), where the Kotlin function name is the virtual name (GDScript-style `fun _draw()`). The processor validates each override against a generated signature table (`scripts/generate_virtual_signature_table.py`, all virtuals) and dispatches it on both targets. They are reported here separately so they neither dilute callable-method coverage nor count as wrapper gaps. Practical marshalling bounds (tasks 13 + 29): desktop/Android cover **every** Variant-expressible return family — the audited scalar/POD shapes, String, all Packed* arrays, Dictionary (`Map<String, Any?>`), generic/typed Array (`List<Any?>`), RID, Rect2, AABB, Transform2D, Transform3D, Projection, and Variant (`Any?`); the only excluded returns are the 6 raw-pointer virtuals (`void*`, `const Glyph*`), which are not Variant-expressible by design (see wrapper-maintenance.md). iOS value-returns cover Bool/Int/Float/Vector2/Vector2i/Vector3/String/RID, all fixed-element Packed* arrays, PackedStringArray, Dictionary, generic Array, and Variant returns over that audited inner-type set (unaudited inner types serialize as nil on iOS); the Rect2/AABB/Transform2D/Transform3D/Projection returns stay desktop/Android-only for now (by design, wrapper-maintenance.md).
 
 ## Promoted Source By Area
 
 | Area | Classes | Class Coverage | Methods | Method Coverage |
 | --- | ---: | --- | ---: | --- |
-| Core | 226/226 | `████████████` 100.0% | 2967/2970 | `████████████` 99.9% |
-| Scene | 26/26 | `████████████` 100.0% | 923/923 | `████████████` 100.0% |
-| Resources | 306/306 | `████████████` 100.0% | 2891/2891 | `████████████` 100.0% |
-| Input | 20/20 | `████████████` 100.0% | 238/238 | `████████████` 100.0% |
-| UI | 69/69 | `████████████` 100.0% | 1741/1741 | `████████████` 100.0% |
-| 2D | 112/112 | `████████████` 100.0% | 2030/2030 | `████████████` 100.0% |
-| 3D | 171/171 | `████████████` 100.0% | 3000/3000 | `████████████` 100.0% |
+| Core | 230/230 | `████████████` 100.0% | 3018/3031 | `████████████` 99.6% |
+| Scene | 27/27 | `████████████` 100.0% | 941/941 | `████████████` 100.0% |
+| Resources | 314/314 | `████████████` 100.0% | 2934/2939 | `████████████` 99.8% |
+| Input | 20/20 | `████████████` 100.0% | 247/248 | `████████████` 99.6% |
+| UI | 70/70 | `████████████` 100.0% | 1784/1784 | `████████████` 100.0% |
+| 2D | 119/119 | `████████████` 100.0% | 2071/2077 | `████████████` 99.7% |
+| 3D | 180/180 | `████████████` 100.0% | 3109/3117 | `████████████` 99.7% |
 | Physics | 6/6 | `████████████` 100.0% | 55/55 | `████████████` 100.0% |
-| Rendering | 24/24 | `████████████` 100.0% | 794/794 | `████████████` 100.0% |
+| Rendering | 27/27 | `████████████` 100.0% | 808/810 | `████████████` 99.8% |
 | Audio | 14/14 | `████████████` 100.0% | 232/232 | `████████████` 100.0% |
 | Multiplayer | 8/8 | `████████████` 100.0% | 66/66 | `████████████` 100.0% |
-| Editor | 54/54 | `████████████` 100.0% | 445/445 | `████████████` 100.0% |
+| Editor | 54/54 | `████████████` 100.0% | 454/455 | `████████████` 99.8% |
 
 ## Demo Port Signals
 
@@ -95,6 +95,10 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `AnimationNodeBlendSpace2D` | 2D | 35/35 | `████████` 100.0% |
 | `AnimationNodeBlendTree` | Resources | 12/12 | `████████` 100.0% |
 | `AnimationNodeExtension` | Resources | 2/2 | `████████` 100.0% |
+| `AnimationNodeObserver` | Resources | 0/0 | inherited only |
+| `AnimationNodeObserverBlendSpace` | Resources | 0/0 | inherited only |
+| `AnimationNodeObserverOneShot` | Resources | 0/0 | inherited only |
+| `AnimationNodeObserverTransition` | Resources | 0/0 | inherited only |
 | `AnimationNodeOneShot` | Resources | 20/20 | `████████` 100.0% |
 | `AnimationNodeOutput` | Resources | 0/0 | inherited only |
 | `AnimationNodeStateMachine` | Resources | 26/26 | `████████` 100.0% |
@@ -105,7 +109,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `AnimationNodeTimeScale` | Resources | 0/0 | inherited only |
 | `AnimationNodeTimeSeek` | Resources | 2/2 | `████████` 100.0% |
 | `AnimationNodeTransition` | Resources | 13/13 | `████████` 100.0% |
-| `AnimationPlayer` | Scene | 54/54 | `████████` 100.0% |
+| `AnimationPlayer` | Scene | 56/56 | `████████` 100.0% |
 | `AnimationRootNode` | Resources | 0/0 | inherited only |
 | `AnimationTree` | Scene | 8/8 | `████████` 100.0% |
 | `Area2D` | 2D | 36/36 | `████████` 100.0% |
@@ -175,7 +179,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `AudioStreamWAV` | Audio | 19/19 | `████████` 100.0% |
 | `AwaitTweener` | Core | 1/1 | `████████` 100.0% |
 | `BackBufferCopy` | 2D | 4/4 | `████████` 100.0% |
-| `BaseButton` | UI | 23/23 | `████████` 100.0% |
+| `BaseButton` | UI | 24/24 | `████████` 100.0% |
 | `BaseMaterial3D` | 3D | 154/154 | `████████` 100.0% |
 | `BitMap` | Resources | 13/13 | `████████` 100.0% |
 | `BlitMaterial` | Resources | 2/2 | `████████` 100.0% |
@@ -183,8 +187,9 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `BoneAttachment3D` | 3D | 12/12 | `████████` 100.0% |
 | `BoneConstraint3D` | 3D | 17/17 | `████████` 100.0% |
 | `BoneMap` | Resources | 5/5 | `████████` 100.0% |
+| `BoneSpaceAdjuster3D` | 3D | 13/13 | `████████` 100.0% |
 | `BoneTwistDisperser3D` | 3D | 34/34 | `████████` 100.0% |
-| `BoxContainer` | UI | 5/5 | `████████` 100.0% |
+| `BoxContainer` | UI | 7/7 | `████████` 100.0% |
 | `BoxMesh` | Resources | 8/8 | `████████` 100.0% |
 | `BoxOccluder3D` | 3D | 2/2 | `████████` 100.0% |
 | `BoxShape3D` | 3D | 2/2 | `████████` 100.0% |
@@ -228,7 +233,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `CheckBox` | UI | 0/0 | inherited only |
 | `CheckButton` | UI | 0/0 | inherited only |
 | `CircleShape2D` | 2D | 2/2 | `████████` 100.0% |
-| `ClassDB` | Core | 30/30 | `████████` 100.0% |
+| `ClassDB` | Core | 31/31 | `████████` 100.0% |
 | `CodeEdit` | UI | 114/114 | `████████` 100.0% |
 | `CodeHighlighter` | Resources | 28/28 | `████████` 100.0% |
 | `CollisionObject2D` | 2D | 36/36 | `████████` 100.0% |
@@ -255,11 +260,11 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `ConfigFile` | Core | 17/17 | `████████` 100.0% |
 | `ConfirmationDialog` | Scene | 3/3 | `████████` 100.0% |
 | `Container` | UI | 4/4 | `████████` 100.0% |
-| `Control` | UI | 181/181 | `████████` 100.0% |
-| `ConvertTransformModifier3D` | 3D | 20/20 | `████████` 100.0% |
+| `Control` | UI | 187/187 | `████████` 100.0% |
+| `ConvertTransformModifier3D` | 3D | 22/22 | `████████` 100.0% |
 | `ConvexPolygonShape2D` | 2D | 3/3 | `████████` 100.0% |
 | `ConvexPolygonShape3D` | 3D | 2/2 | `████████` 100.0% |
-| `CopyTransformModifier3D` | 3D | 28/28 | `████████` 100.0% |
+| `CopyTransformModifier3D` | 3D | 30/30 | `████████` 100.0% |
 | `Crypto` | Core | 9/9 | `████████` 100.0% |
 | `CryptoKey` | Resources | 5/5 | `████████` 100.0% |
 | `Cubemap` | Resources | 1/1 | `████████` 100.0% |
@@ -278,7 +283,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `DirAccess` | Core | 42/42 | `████████` 100.0% |
 | `DirectionalLight2D` | 2D | 2/2 | `████████` 100.0% |
 | `DirectionalLight3D` | 3D | 6/6 | `████████` 100.0% |
-| `DisplayServer` | Core | 287/287 | `████████` 100.0% |
+| `DisplayServer` | Core | 287/290 | `████████` 99.0% |
 | `DrawableTexture2D` | 2D | 7/7 | `████████` 100.0% |
 | `ENetConnection` | Core | 18/18 | `████████` 100.0% |
 | `ENetMultiplayerPeer` | Multiplayer | 7/7 | `████████` 100.0% |
@@ -287,7 +292,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `EditorContextMenuPlugin` | Editor | 4/4 | `████████` 100.0% |
 | `EditorDebuggerPlugin` | Editor | 2/2 | `████████` 100.0% |
 | `EditorDebuggerSession` | Editor | 8/8 | `████████` 100.0% |
-| `EditorDock` | Editor | 27/27 | `████████` 100.0% |
+| `EditorDock` | Editor | 29/29 | `████████` 100.0% |
 | `EditorExportPlatform` | Editor | 27/27 | `████████` 100.0% |
 | `EditorExportPlatformAndroid` | Editor | 0/0 | inherited only |
 | `EditorExportPlatformAppleEmbedded` | Editor | 0/0 | inherited only |
@@ -299,18 +304,18 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `EditorExportPlatformVisionOS` | Editor | 0/0 | inherited only |
 | `EditorExportPlatformWeb` | Editor | 0/0 | inherited only |
 | `EditorExportPlatformWindows` | Editor | 0/0 | inherited only |
-| `EditorExportPlugin` | Editor | 21/21 | `████████` 100.0% |
-| `EditorExportPreset` | Editor | 25/25 | `████████` 100.0% |
+| `EditorExportPlugin` | Editor | 21/22 | `████████` 95.5% |
+| `EditorExportPreset` | Editor | 26/26 | `████████` 100.0% |
 | `EditorFeatureProfile` | Editor | 11/11 | `████████` 100.0% |
 | `EditorFileDialog` | Editor | 3/3 | `████████` 100.0% |
 | `EditorFileSystem` | Editor | 10/10 | `████████` 100.0% |
 | `EditorFileSystemDirectory` | Editor | 14/14 | `████████` 100.0% |
 | `EditorFileSystemImportFormatSupportQuery` | Editor | 0/0 | inherited only |
 | `EditorImportPlugin` | Editor | 1/1 | `████████` 100.0% |
-| `EditorInspector` | Editor | 8/8 | `████████` 100.0% |
+| `EditorInspector` | Editor | 10/10 | `████████` 100.0% |
 | `EditorInspectorPlugin` | Editor | 3/3 | `████████` 100.0% |
-| `EditorInterface` | Editor | 71/71 | `████████` 100.0% |
-| `EditorNode3DGizmo` | Editor | 13/13 | `████████` 100.0% |
+| `EditorInterface` | Editor | 74/74 | `████████` 100.0% |
+| `EditorNode3DGizmo` | Editor | 14/14 | `████████` 100.0% |
 | `EditorNode3DGizmoPlugin` | Editor | 5/5 | `████████` 100.0% |
 | `EditorPaths` | Editor | 6/6 | `████████` 100.0% |
 | `EditorPlugin` | Editor | 51/51 | `████████` 100.0% |
@@ -354,18 +359,20 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `FlowContainer` | UI | 9/9 | `████████` 100.0% |
 | `FogMaterial` | Resources | 12/12 | `████████` 100.0% |
 | `FogVolume` | 3D | 6/6 | `████████` 100.0% |
-| `FoldableContainer` | UI | 20/20 | `████████` 100.0% |
+| `FoldableContainer` | UI | 22/22 | `████████` 100.0% |
 | `FoldableGroup` | Resources | 4/4 | `████████` 100.0% |
 | `Font` | Resources | 37/37 | `████████` 100.0% |
 | `FontFile` | Resources | 106/106 | `████████` 100.0% |
 | `FontVariation` | Resources | 18/18 | `████████` 100.0% |
 | `FramebufferCacheRD` | Core | 1/1 | `████████` 100.0% |
+| `FuzzySearch` | Core | 16/18 | `███████░` 88.9% |
+| `FuzzySearchMatch` | Core | 7/7 | `████████` 100.0% |
 | `GDExtension` | Resources | 2/2 | `████████` 100.0% |
 | `GDExtensionManager` | Core | 7/7 | `████████` 100.0% |
 | `GDScript` | Resources | 1/1 | `████████` 100.0% |
 | `GDScriptLanguageProtocol` | Core | 9/9 | `████████` 100.0% |
 | `GDScriptSyntaxHighlighter` | Resources | 0/0 | inherited only |
-| `GDScriptTextDocument` | Core | 19/21 | `███████░` 90.5% |
+| `GDScriptTextDocument` | Core | 16/18 | `███████░` 88.9% |
 | `GDScriptWorkspace` | Core | 8/8 | `████████` 100.0% |
 | `GLTFAccessor` | Resources | 32/32 | `████████` 100.0% |
 | `GLTFAnimation` | Resources | 6/6 | `████████` 100.0% |
@@ -397,7 +404,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `GPUParticlesCollisionHeightField3D` | 3D | 12/12 | `████████` 100.0% |
 | `GPUParticlesCollisionSDF3D` | 3D | 12/12 | `████████` 100.0% |
 | `GPUParticlesCollisionSphere3D` | 3D | 2/2 | `████████` 100.0% |
-| `Generic6DOFJoint3D` | 3D | 12/12 | `████████` 100.0% |
+| `Generic6DOFJoint3D` | 3D | 16/16 | `████████` 100.0% |
 | `Geometry2D` | 2D | 24/24 | `████████` 100.0% |
 | `Geometry3D` | 3D | 15/15 | `████████` 100.0% |
 | `GeometryInstance3D` | 3D | 34/34 | `████████` 100.0% |
@@ -410,7 +417,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `GraphFrame` | UI | 13/13 | `████████` 100.0% |
 | `GraphNode` | UI | 42/42 | `████████` 100.0% |
 | `GridContainer` | UI | 2/2 | `████████` 100.0% |
-| `GridMap` | 3D | 56/56 | `████████` 100.0% |
+| `GridMap` | 3D | 60/60 | `████████` 100.0% |
 | `GridMapEditorPlugin` | Scene | 8/8 | `████████` 100.0% |
 | `GrooveJoint2D` | 2D | 4/4 | `████████` 100.0% |
 | `HBoxContainer` | UI | 0/0 | inherited only |
@@ -421,13 +428,13 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `HSlider` | UI | 0/0 | inherited only |
 | `HSplitContainer` | UI | 0/0 | inherited only |
 | `HTTPClient` | Core | 22/22 | `████████` 100.0% |
-| `HTTPRequest` | Scene | 23/23 | `████████` 100.0% |
+| `HTTPRequest` | Scene | 27/27 | `████████` 100.0% |
 | `HashingContext` | Core | 3/3 | `████████` 100.0% |
 | `HeightMapShape3D` | 3D | 9/9 | `████████` 100.0% |
 | `HingeJoint3D` | 3D | 4/4 | `████████` 100.0% |
 | `IKModifier3D` | 3D | 6/6 | `████████` 100.0% |
 | `IP` | Core | 10/10 | `████████` 100.0% |
-| `Image` | Resources | 76/76 | `████████` 100.0% |
+| `Image` | Resources | 75/76 | `████████` 98.7% |
 | `ImageFormatLoader` | Rendering | 0/0 | inherited only |
 | `ImageFormatLoaderExtension` | Rendering | 2/2 | `████████` 100.0% |
 | `ImageTexture` | 2D | 4/4 | `████████` 100.0% |
@@ -436,7 +443,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `ImmediateMesh` | Resources | 10/10 | `████████` 100.0% |
 | `ImporterMesh` | Resources | 25/25 | `████████` 100.0% |
 | `ImporterMeshInstance3D` | 3D | 20/20 | `████████` 100.0% |
-| `Input` | Input | 77/77 | `████████` 100.0% |
+| `Input` | Input | 84/85 | `████████` 98.8% |
 | `InputEvent` | Input | 15/15 | `████████` 100.0% |
 | `InputEventAction` | Input | 7/7 | `████████` 100.0% |
 | `InputEventFromWindow` | Input | 2/2 | `████████` 100.0% |
@@ -451,14 +458,14 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `InputEventMouseMotion` | Input | 14/14 | `████████` 100.0% |
 | `InputEventPanGesture` | Input | 2/2 | `████████` 100.0% |
 | `InputEventScreenDrag` | Input | 18/18 | `████████` 100.0% |
-| `InputEventScreenTouch` | Input | 8/8 | `████████` 100.0% |
+| `InputEventScreenTouch` | Input | 10/10 | `████████` 100.0% |
 | `InputEventShortcut` | Input | 2/2 | `████████` 100.0% |
 | `InputEventWithModifiers` | Input | 12/12 | `████████` 100.0% |
 | `InputMap` | Input | 14/14 | `████████` 100.0% |
 | `InstancePlaceholder` | Scene | 3/3 | `████████` 100.0% |
 | `IntervalTweener` | Core | 0/0 | inherited only |
 | `ItemList` | UI | 85/85 | `████████` 100.0% |
-| `IterateIK3D` | 3D | 22/22 | `████████` 100.0% |
+| `IterateIK3D` | 3D | 24/24 | `████████` 100.0% |
 | `JNISingleton` | Core | 1/1 | `████████` 100.0% |
 | `JSON` | Resources | 10/10 | `████████` 100.0% |
 | `JSONRPC` | Core | 7/7 | `████████` 100.0% |
@@ -474,23 +481,24 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `JointLimitationCone3D` | 3D | 2/2 | `████████` 100.0% |
 | `KinematicCollision2D` | 2D | 13/13 | `████████` 100.0% |
 | `KinematicCollision3D` | 3D | 14/14 | `████████` 100.0% |
-| `Label` | UI | 49/49 | `████████` 100.0% |
+| `Label` | UI | 56/56 | `████████` 100.0% |
 | `Label3D` | 3D | 61/61 | `████████` 100.0% |
 | `LabelSettings` | Resources | 40/40 | `████████` 100.0% |
 | `Light2D` | 2D | 32/32 | `████████` 100.0% |
-| `Light3D` | 3D | 31/31 | `████████` 100.0% |
+| `Light3D` | 3D | 33/33 | `████████` 100.0% |
 | `LightOccluder2D` | 2D | 6/6 | `████████` 100.0% |
-| `LightmapGI` | 3D | 44/44 | `████████` 100.0% |
+| `LightmapGI` | 3D | 46/46 | `████████` 100.0% |
 | `LightmapGIData` | Resources | 12/12 | `████████` 100.0% |
 | `LightmapProbe` | 3D | 0/0 | inherited only |
 | `Lightmapper` | Rendering | 0/0 | inherited only |
 | `LightmapperRD` | Rendering | 0/0 | inherited only |
 | `LimitAngularVelocityModifier3D` | 3D | 16/16 | `████████` 100.0% |
 | `Line2D` | 2D | 34/34 | `████████` 100.0% |
+| `Line3D` | 3D | 0/0 | inherited only |
 | `LineEdit` | UI | 97/97 | `████████` 100.0% |
 | `LinkButton` | UI | 18/18 | `████████` 100.0% |
 | `Logger` | Core | 0/0 | inherited only |
-| `LookAtModifier3D` | 3D | 63/63 | `████████` 100.0% |
+| `LookAtModifier3D` | 3D | 65/65 | `████████` 100.0% |
 | `MainLoop` | Core | 0/0 | inherited only |
 | `MarginContainer` | UI | 0/0 | inherited only |
 | `Marker2D` | 2D | 2/2 | `████████` 100.0% |
@@ -504,7 +512,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `MeshDataTool` | Rendering | 38/38 | `████████` 100.0% |
 | `MeshInstance2D` | 2D | 4/4 | `████████` 100.0% |
 | `MeshInstance3D` | 3D | 21/21 | `████████` 100.0% |
-| `MeshLibrary` | Resources | 25/25 | `████████` 100.0% |
+| `MeshLibrary` | Resources | 27/27 | `████████` 100.0% |
 | `MeshTexture` | 2D | 6/6 | `████████` 100.0% |
 | `MethodTweener` | Core | 3/3 | `████████` 100.0% |
 | `MissingNode` | Scene | 8/8 | `████████` 100.0% |
@@ -522,7 +530,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `MultiplayerSpawner` | Multiplayer | 11/11 | `████████` 100.0% |
 | `MultiplayerSynchronizer` | Multiplayer | 17/17 | `████████` 100.0% |
 | `Mutex` | Core | 3/3 | `████████` 100.0% |
-| `NativeMenu` | Core | 69/69 | `████████` 100.0% |
+| `NativeMenu` | Core | 71/71 | `████████` 100.0% |
 | `NavigationAgent2D` | 2D | 80/80 | `████████` 100.0% |
 | `NavigationAgent3D` | 3D | 86/86 | `████████` 100.0% |
 | `NavigationLink2D` | 2D | 23/23 | `████████` 100.0% |
@@ -553,7 +561,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `NoiseTexture2D` | 2D | 22/22 | `████████` 100.0% |
 | `NoiseTexture3D` | 3D | 15/15 | `████████` 100.0% |
 | `ORMMaterial3D` | 3D | 0/0 | inherited only |
-| `OS` | Core | 83/83 | `████████` 100.0% |
+| `OS` | Core | 84/84 | `████████` 100.0% |
 | `Object` | Core | 49/49 | `████████` 100.0% |
 | `Occluder3D` | 3D | 2/2 | `████████` 100.0% |
 | `OccluderInstance3D` | 3D | 8/8 | `████████` 100.0% |
@@ -562,7 +570,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OggPacketSequence` | Resources | 7/7 | `████████` 100.0% |
 | `OggPacketSequencePlayback` | Core | 0/0 | inherited only |
 | `OmniLight3D` | 3D | 2/2 | `████████` 100.0% |
-| `OpenXRAPIExtension` | Core | 51/51 | `████████` 100.0% |
+| `OpenXRAPIExtension` | Core | 52/52 | `████████` 100.0% |
 | `OpenXRAction` | Resources | 6/6 | `████████` 100.0% |
 | `OpenXRActionBindingModifier` | Resources | 0/0 | inherited only |
 | `OpenXRActionMap` | Resources | 15/15 | `████████` 100.0% |
@@ -579,6 +587,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OpenXRDpadBindingModifier` | Resources | 18/18 | `████████` 100.0% |
 | `OpenXRExtensionWrapper` | Core | 2/2 | `████████` 100.0% |
 | `OpenXRExtensionWrapperExtension` | Core | 0/0 | inherited only |
+| `OpenXRFoveatedInsetViewport` | Scene | 2/2 | `████████` 100.0% |
 | `OpenXRFrameSynthesisExtension` | Core | 6/6 | `████████` 100.0% |
 | `OpenXRFutureExtension` | Core | 3/3 | `████████` 100.0% |
 | `OpenXRFutureResult` | Core | 5/5 | `████████` 100.0% |
@@ -591,9 +600,9 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OpenXRInteractionProfileEditor` | UI | 0/0 | inherited only |
 | `OpenXRInteractionProfileEditorBase` | UI | 1/1 | `████████` 100.0% |
 | `OpenXRInteractionProfileMetadata` | Core | 5/5 | `████████` 100.0% |
-| `OpenXRInterface` | Core | 36/36 | `████████` 100.0% |
+| `OpenXRInterface` | Core | 38/38 | `████████` 100.0% |
 | `OpenXRMarkerTracker` | Core | 8/8 | `████████` 100.0% |
-| `OpenXRPlaneTracker` | Core | 11/11 | `████████` 100.0% |
+| `OpenXRPlaneTracker` | Core | 13/13 | `████████` 100.0% |
 | `OpenXRRenderModel` | 3D | 3/3 | `████████` 100.0% |
 | `OpenXRRenderModelExtension` | Core | 13/13 | `████████` 100.0% |
 | `OpenXRRenderModelManager` | 3D | 4/4 | `████████` 100.0% |
@@ -617,13 +626,16 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `OpenXRSpatialComponentPlaneAlignmentList` | Core | 1/1 | `████████` 100.0% |
 | `OpenXRSpatialComponentPlaneSemanticLabelList` | Core | 1/1 | `████████` 100.0% |
 | `OpenXRSpatialComponentPolygon2DList` | Core | 2/2 | `████████` 100.0% |
+| `OpenXRSpatialContainerExtension` | Core | 7/7 | `████████` 100.0% |
+| `OpenXRSpatialContainerSelfRenderingExtension` | Rendering | 1/1 | `████████` 100.0% |
+| `OpenXRSpatialContainerState` | Core | 3/3 | `████████` 100.0% |
 | `OpenXRSpatialContextPersistenceConfig` | Core | 3/3 | `████████` 100.0% |
-| `OpenXRSpatialEntityExtension` | Core | 26/26 | `████████` 100.0% |
+| `OpenXRSpatialEntityExtension` | Core | 25/26 | `████████` 96.2% |
 | `OpenXRSpatialEntityTracker` | Core | 9/9 | `████████` 100.0% |
-| `OpenXRSpatialMarkerTrackingCapability` | Core | 6/6 | `████████` 100.0% |
-| `OpenXRSpatialPlaneTrackingCapability` | Core | 2/2 | `████████` 100.0% |
+| `OpenXRSpatialMarkerTrackingCapability` | Core | 9/9 | `████████` 100.0% |
+| `OpenXRSpatialPlaneTrackingCapability` | Core | 5/5 | `████████` 100.0% |
 | `OpenXRSpatialQueryResultData` | Core | 3/3 | `████████` 100.0% |
-| `OpenXRStructureBase` | Core | 3/3 | `████████` 100.0% |
+| `OpenXRStructureBase` | Core | 4/4 | `████████` 100.0% |
 | `OpenXRVisibilityMask` | 3D | 0/0 | inherited only |
 | `OptimizedTranslation` | Resources | 1/1 | `████████` 100.0% |
 | `OptionButton` | UI | 44/44 | `████████` 100.0% |
@@ -649,19 +661,31 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `PathFollow3D` | 3D | 19/19 | `████████` 100.0% |
 | `Performance` | Core | 8/8 | `████████` 100.0% |
 | `PhysicalBone2D` | 2D | 12/12 | `████████` 100.0% |
-| `PhysicalBone3D` | 3D | 37/37 | `████████` 100.0% |
+| `PhysicalBone3D` | 3D | 38/38 | `████████` 100.0% |
 | `PhysicalBoneSimulator3D` | 3D | 5/5 | `████████` 100.0% |
 | `PhysicalSkyMaterial` | Resources | 22/22 | `████████` 100.0% |
 | `PhysicsBody2D` | 2D | 6/6 | `████████` 100.0% |
 | `PhysicsBody3D` | 3D | 8/8 | `████████` 100.0% |
+| `PhysicsCastMotionResult2D` | 2D | 2/2 | `████████` 100.0% |
+| `PhysicsCastMotionResult3D` | 3D | 2/2 | `████████` 100.0% |
+| `PhysicsCollideShapeResult2D` | 2D | 5/5 | `████████` 100.0% |
+| `PhysicsCollideShapeResult3D` | 3D | 5/5 | `████████` 100.0% |
 | `PhysicsDirectBodyState2D` | 2D | 48/48 | `████████` 100.0% |
 | `PhysicsDirectBodyState2DExtension` | 2D | 0/0 | inherited only |
 | `PhysicsDirectBodyState3D` | 3D | 50/50 | `████████` 100.0% |
 | `PhysicsDirectBodyState3DExtension` | 3D | 0/0 | inherited only |
-| `PhysicsDirectSpaceState2D` | 2D | 6/6 | `████████` 100.0% |
+| `PhysicsDirectSpaceState2D` | 2D | 6/12 | `████░░░░` 50.0% |
 | `PhysicsDirectSpaceState2DExtension` | 2D | 1/1 | `████████` 100.0% |
-| `PhysicsDirectSpaceState3D` | 3D | 6/6 | `████████` 100.0% |
+| `PhysicsDirectSpaceState3D` | 3D | 6/12 | `████░░░░` 50.0% |
 | `PhysicsDirectSpaceState3DExtension` | 3D | 1/1 | `████████` 100.0% |
+| `PhysicsGetRestInfoResult2D` | 2D | 6/6 | `████████` 100.0% |
+| `PhysicsGetRestInfoResult3D` | 3D | 6/6 | `████████` 100.0% |
+| `PhysicsIntersectPointResult2D` | 2D | 7/7 | `████████` 100.0% |
+| `PhysicsIntersectPointResult3D` | 3D | 7/7 | `████████` 100.0% |
+| `PhysicsIntersectRayResult2D` | 2D | 6/6 | `████████` 100.0% |
+| `PhysicsIntersectRayResult3D` | 3D | 7/7 | `████████` 100.0% |
+| `PhysicsIntersectShapeResult2D` | 2D | 7/7 | `████████` 100.0% |
+| `PhysicsIntersectShapeResult3D` | 3D | 7/7 | `████████` 100.0% |
 | `PhysicsMaterial` | Physics | 8/8 | `████████` 100.0% |
 | `PhysicsPointQueryParameters2D` | 2D | 12/12 | `████████` 100.0% |
 | `PhysicsPointQueryParameters3D` | 3D | 10/10 | `████████` 100.0% |
@@ -670,7 +694,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `PhysicsServer2D` | 2D | 119/119 | `████████` 100.0% |
 | `PhysicsServer2DExtension` | 2D | 2/2 | `████████` 100.0% |
 | `PhysicsServer2DManager` | Physics | 2/2 | `████████` 100.0% |
-| `PhysicsServer3D` | 3D | 175/175 | `████████` 100.0% |
+| `PhysicsServer3D` | 3D | 175/177 | `████████` 98.9% |
 | `PhysicsServer3DExtension` | 3D | 2/2 | `████████` 100.0% |
 | `PhysicsServer3DManager` | Physics | 2/2 | `████████` 100.0% |
 | `PhysicsServer3DRenderingServerHandler` | Physics | 3/3 | `████████` 100.0% |
@@ -697,7 +721,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `PolygonOccluder3D` | 3D | 2/2 | `████████` 100.0% |
 | `PolygonPathFinder` | Resources | 8/8 | `████████` 100.0% |
 | `Popup` | Scene | 0/0 | inherited only |
-| `PopupMenu` | Scene | 102/102 | `████████` 100.0% |
+| `PopupMenu` | Scene | 104/104 | `████████` 100.0% |
 | `PopupPanel` | Scene | 0/0 | inherited only |
 | `PortableCompressedTexture2D` | 2D | 9/9 | `████████` 100.0% |
 | `PrimitiveMesh` | Resources | 12/12 | `████████` 100.0% |
@@ -750,8 +774,8 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `RenderSceneData` | Core | 6/6 | `████████` 100.0% |
 | `RenderSceneDataExtension` | Core | 0/0 | inherited only |
 | `RenderSceneDataRD` | Core | 0/0 | inherited only |
-| `RenderingDevice` | Rendering | 135/135 | `████████` 100.0% |
-| `RenderingServer` | Rendering | 535/535 | `████████` 100.0% |
+| `RenderingDevice` | Rendering | 134/135 | `████████` 99.3% |
+| `RenderingServer` | Rendering | 541/542 | `████████` 99.8% |
 | `Resource` | Resources | 22/22 | `████████` 100.0% |
 | `ResourceFormatLoader` | Core | 0/0 | inherited only |
 | `ResourceFormatSaver` | Core | 0/0 | inherited only |
@@ -769,21 +793,23 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `ResourceImporterSVG` | Core | 0/0 | inherited only |
 | `ResourceImporterScene` | Core | 0/0 | inherited only |
 | `ResourceImporterShaderFile` | Rendering | 0/0 | inherited only |
+| `ResourceImporterStreamedTexture` | Rendering | 0/0 | inherited only |
 | `ResourceImporterTexture` | Rendering | 0/0 | inherited only |
 | `ResourceImporterTextureAtlas` | Rendering | 0/0 | inherited only |
 | `ResourceImporterWAV` | Core | 0/0 | inherited only |
-| `ResourceLoader` | Core | 14/14 | `████████` 100.0% |
+| `ResourceLoader` | Core | 15/15 | `████████` 100.0% |
 | `ResourcePreloader` | Scene | 6/6 | `████████` 100.0% |
 | `ResourceSaver` | Core | 6/6 | `████████` 100.0% |
 | `ResourceUID` | Core | 12/12 | `████████` 100.0% |
-| `RetargetModifier3D` | 3D | 12/12 | `████████` 100.0% |
+| `RetargetModifier3D` | 3D | 14/14 | `████████` 100.0% |
 | `RibbonTrailMesh` | Resources | 12/12 | `████████` 100.0% |
 | `RichTextEffect` | Resources | 0/0 | inherited only |
-| `RichTextLabel` | UI | 138/138 | `████████` 100.0% |
-| `RigidBody2D` | 2D | 58/58 | `████████` 100.0% |
-| `RigidBody3D` | 3D | 59/59 | `████████` 100.0% |
+| `RichTextLabel` | UI | 147/147 | `████████` 100.0% |
+| `RigidBody2D` | 2D | 60/60 | `████████` 100.0% |
+| `RigidBody3D` | 3D | 61/61 | `████████` 100.0% |
 | `RootMotionView` | 3D | 10/10 | `████████` 100.0% |
 | `SceneMultiplayer` | Core | 22/22 | `████████` 100.0% |
+| `ScenePaint2DEditor` | UI | 4/4 | `████████` 100.0% |
 | `SceneReplicationConfig` | Resources | 13/13 | `████████` 100.0% |
 | `SceneState` | Core | 23/23 | `████████` 100.0% |
 | `SceneTree` | Scene | 47/47 | `████████` 100.0% |
@@ -803,7 +829,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `SeparationRayShape2D` | 2D | 4/4 | `████████` 100.0% |
 | `SeparationRayShape3D` | 3D | 4/4 | `████████` 100.0% |
 | `Separator` | UI | 0/0 | inherited only |
-| `Shader` | Resources | 7/7 | `████████` 100.0% |
+| `Shader` | Resources | 8/8 | `████████` 100.0% |
 | `ShaderGlobalsOverride` | Rendering | 0/0 | inherited only |
 | `ShaderInclude` | Resources | 2/2 | `████████` 100.0% |
 | `ShaderIncludeDB` | Rendering | 3/3 | `████████` 100.0% |
@@ -814,7 +840,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `ShapeCast3D` | 3D | 39/39 | `████████` 100.0% |
 | `Shortcut` | Input | 5/5 | `████████` 100.0% |
 | `Skeleton2D` | 2D | 8/8 | `████████` 100.0% |
-| `Skeleton3D` | 3D | 56/56 | `████████` 100.0% |
+| `Skeleton3D` | 3D | 58/58 | `████████` 100.0% |
 | `SkeletonIK3D` | 3D | 24/24 | `████████` 100.0% |
 | `SkeletonModification2D` | 2D | 10/10 | `████████` 100.0% |
 | `SkeletonModification2DCCDIK` | 2D | 20/20 | `████████` 100.0% |
@@ -834,11 +860,11 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `Slider` | UI | 10/10 | `████████` 100.0% |
 | `SliderJoint3D` | 3D | 2/2 | `████████` 100.0% |
 | `SocketServer` | Core | 4/4 | `████████` 100.0% |
-| `SoftBody3D` | 3D | 39/39 | `████████` 100.0% |
+| `SoftBody3D` | 3D | 40/40 | `████████` 100.0% |
 | `SphereMesh` | Resources | 10/10 | `████████` 100.0% |
 | `SphereOccluder3D` | 3D | 2/2 | `████████` 100.0% |
 | `SphereShape3D` | 3D | 2/2 | `████████` 100.0% |
-| `SpinBox` | UI | 18/18 | `████████` 100.0% |
+| `SpinBox` | UI | 24/24 | `████████` 100.0% |
 | `SplineIK3D` | 3D | 8/8 | `████████` 100.0% |
 | `SplitContainer` | UI | 27/27 | `████████` 100.0% |
 | `SpotLight3D` | 3D | 0/0 | inherited only |
@@ -864,6 +890,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `StreamPeerTCP` | Core | 6/6 | `████████` 100.0% |
 | `StreamPeerTLS` | Core | 6/6 | `████████` 100.0% |
 | `StreamPeerUDS` | Core | 3/3 | `████████` 100.0% |
+| `StreamedTexture2D` | 2D | 6/6 | `████████` 100.0% |
 | `StyleBox` | Resources | 9/9 | `████████` 100.0% |
 | `StyleBoxEmpty` | Resources | 0/0 | inherited only |
 | `StyleBoxFlat` | Resources | 32/32 | `████████` 100.0% |
@@ -877,13 +904,13 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `SystemFont` | Resources | 32/32 | `████████` 100.0% |
 | `TCPServer` | Core | 3/3 | `████████` 100.0% |
 | `TLSOptions` | Core | 9/9 | `████████` 100.0% |
-| `TabBar` | UI | 60/60 | `████████` 100.0% |
-| `TabContainer` | UI | 51/51 | `████████` 100.0% |
-| `TextEdit` | UI | 249/249 | `████████` 100.0% |
+| `TabBar` | UI | 62/62 | `████████` 100.0% |
+| `TabContainer` | UI | 53/53 | `████████` 100.0% |
+| `TextEdit` | UI | 251/251 | `████████` 100.0% |
 | `TextLine` | Core | 39/39 | `████████` 100.0% |
 | `TextMesh` | Resources | 36/36 | `████████` 100.0% |
 | `TextParagraph` | Core | 62/62 | `████████` 100.0% |
-| `TextServer` | Core | 244/244 | `████████` 100.0% |
+| `TextServer` | Core | 245/245 | `████████` 100.0% |
 | `TextServerAdvanced` | Core | 0/0 | inherited only |
 | `TextServerDummy` | Core | 0/0 | inherited only |
 | `TextServerExtension` | Core | 0/0 | inherited only |
@@ -902,8 +929,9 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `TextureLayeredRD` | Resources | 2/2 | `████████` 100.0% |
 | `TextureProgressBar` | UI | 26/26 | `████████` 100.0% |
 | `TextureRect` | UI | 10/10 | `████████` 100.0% |
-| `Theme` | Resources | 69/69 | `████████` 100.0% |
-| `ThemeDB` | Core | 12/12 | `████████` 100.0% |
+| `TextureStreaming` | Rendering | 8/8 | `████████` 100.0% |
+| `Theme` | Resources | 76/76 | `████████` 100.0% |
+| `ThemeDB` | Core | 14/14 | `████████` 100.0% |
 | `Thread` | Core | 7/7 | `████████` 100.0% |
 | `TileData` | Core | 54/54 | `████████` 100.0% |
 | `TileMap` | 2D | 61/61 | `████████` 100.0% |
@@ -917,6 +945,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `Timer` | Scene | 16/16 | `████████` 100.0% |
 | `TorusMesh` | Resources | 8/8 | `████████` 100.0% |
 | `TouchScreenButton` | 2D | 19/19 | `████████` 100.0% |
+| `Trail3D` | 3D | 32/32 | `████████` 100.0% |
 | `Translation` | Resources | 12/12 | `████████` 100.0% |
 | `TranslationDomain` | Core | 33/33 | `████████` 100.0% |
 | `TranslationServer` | Core | 34/34 | `████████` 100.0% |
@@ -954,6 +983,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `VisibleOnScreenNotifier3D` | 3D | 2/2 | `████████` 100.0% |
 | `VisualInstance3D` | 3D | 12/12 | `████████` 100.0% |
 | `VisualShader` | Resources | 22/22 | `████████` 100.0% |
+| `VisualShaderGroup` | Resources | 32/36 | `███████░` 88.9% |
 | `VisualShaderNode` | Resources | 11/11 | `████████` 100.0% |
 | `VisualShaderNodeBillboard` | Resources | 4/4 | `████████` 100.0% |
 | `VisualShaderNodeBooleanConstant` | Resources | 2/2 | `████████` 100.0% |
@@ -984,7 +1014,10 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `VisualShaderNodeFrame` | Resources | 12/12 | `████████` 100.0% |
 | `VisualShaderNodeFresnel` | Resources | 0/0 | inherited only |
 | `VisualShaderNodeGlobalExpression` | Resources | 0/0 | inherited only |
+| `VisualShaderNodeGroup` | Resources | 2/2 | `████████` 100.0% |
 | `VisualShaderNodeGroupBase` | Resources | 21/21 | `████████` 100.0% |
+| `VisualShaderNodeGroupInput` | Resources | 0/0 | inherited only |
+| `VisualShaderNodeGroupOutput` | Resources | 0/0 | inherited only |
 | `VisualShaderNodeIf` | Resources | 0/0 | inherited only |
 | `VisualShaderNodeInput` | Resources | 3/3 | `████████` 100.0% |
 | `VisualShaderNodeIntConstant` | Resources | 2/2 | `████████` 100.0% |
@@ -1075,8 +1108,8 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `WebRTCPeerConnectionExtension` | Core | 0/0 | inherited only |
 | `WebSocketMultiplayerPeer` | Core | 17/17 | `████████` 100.0% |
 | `WebSocketPeer` | Core | 28/28 | `████████` 100.0% |
-| `WebXRInterface` | Core | 18/18 | `████████` 100.0% |
-| `Window` | Scene | 133/133 | `████████` 100.0% |
+| `WebXRInterface` | Core | 20/20 | `████████` 100.0% |
+| `Window` | Scene | 141/141 | `████████` 100.0% |
 | `WorkerThreadPool` | Core | 9/9 | `████████` 100.0% |
 | `World2D` | 2D | 4/4 | `████████` 100.0% |
 | `World3D` | 3D | 10/10 | `████████` 100.0% |
@@ -1088,20 +1121,20 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `XRAnchor3D` | 3D | 2/2 | `████████` 100.0% |
 | `XRBodyModifier3D` | 3D | 6/6 | `████████` 100.0% |
 | `XRBodyTracker` | Core | 8/8 | `████████` 100.0% |
-| `XRCamera3D` | 3D | 0/0 | inherited only |
+| `XRCamera3D` | 3D | 2/2 | `████████` 100.0% |
 | `XRController3D` | 3D | 5/5 | `████████` 100.0% |
 | `XRControllerTracker` | Core | 0/0 | inherited only |
 | `XRFaceModifier3D` | 3D | 4/4 | `████████` 100.0% |
 | `XRFaceTracker` | Core | 4/4 | `████████` 100.0% |
 | `XRHandModifier3D` | 3D | 4/4 | `████████` 100.0% |
 | `XRHandTracker` | Core | 14/14 | `████████` 100.0% |
-| `XRInterface` | Core | 28/28 | `████████` 100.0% |
+| `XRInterface` | Core | 28/30 | `███████░` 93.3% |
 | `XRInterfaceExtension` | Core | 5/5 | `████████` 100.0% |
 | `XRNode3D` | 3D | 10/10 | `████████` 100.0% |
 | `XROrigin3D` | 3D | 4/4 | `████████` 100.0% |
 | `XRPose` | Core | 13/13 | `████████` 100.0% |
 | `XRPositionalTracker` | Core | 10/10 | `████████` 100.0% |
-| `XRServer` | Core | 22/22 | `████████` 100.0% |
+| `XRServer` | Core | 22/24 | `███████░` 91.7% |
 | `XRTracker` | Core | 6/6 | `████████` 100.0% |
 | `XRVRS` | Core | 7/7 | `████████` 100.0% |
 | `ZIPPacker` | Core | 8/8 | `████████` 100.0% |

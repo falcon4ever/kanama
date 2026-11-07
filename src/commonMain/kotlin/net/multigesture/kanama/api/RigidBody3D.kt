@@ -541,6 +541,27 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
     }
 
     /**
+     * Returns the body's velocity at the given relative position. `local_position` is the offset from
+     * the body origin in global coordinates. See also `get_velocity_at_position`.
+     *
+     * Generated from Godot docs: RigidBody3D.get_velocity_at_local_position
+     */
+    fun getVelocityAtLocalPosition(localPosition: Vector3): Vector3 {
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getVelocityAtLocalPositionBind, segment, localPosition)
+    }
+
+    /**
+     * Returns the body's velocity at the given global position. This is equivalent to
+     * `get_velocity_at_local_position(global_point - global_position)`. See also
+     * `get_velocity_at_local_position`.
+     *
+     * Generated from Godot docs: RigidBody3D.get_velocity_at_position
+     */
+    fun getVelocityAtPosition(globalPoint: Vector3): Vector3 {
+        return ObjectCalls.ptrcallWithVector3ArgRetVector3(Binds.getVelocityAtPositionBind, segment, globalPoint)
+    }
+
+    /**
      * Sets an axis velocity. The velocity in the given vector axis will be set as the given vector
      * length. This is useful for jumping behavior.
      *
@@ -1094,6 +1115,16 @@ open class RigidBody3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmField
         val isUsingContinuousCollisionDetectionBind =
             ObjectCalls.getMethodBind("RigidBody3D", "is_using_continuous_collision_detection", IS_USING_CONTINUOUS_COLLISION_DETECTION_HASH)
+
+        private const val GET_VELOCITY_AT_LOCAL_POSITION_HASH = 192990374L
+        @JvmField
+        val getVelocityAtLocalPositionBind =
+            ObjectCalls.getMethodBind("RigidBody3D", "get_velocity_at_local_position", GET_VELOCITY_AT_LOCAL_POSITION_HASH)
+
+        private const val GET_VELOCITY_AT_POSITION_HASH = 192990374L
+        @JvmField
+        val getVelocityAtPositionBind =
+            ObjectCalls.getMethodBind("RigidBody3D", "get_velocity_at_position", GET_VELOCITY_AT_POSITION_HASH)
 
         private const val SET_AXIS_VELOCITY_HASH = 3460891852L
         @JvmField

@@ -299,7 +299,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     }
 
     /**
-     * The path simplification amount in worlds units.
+     * The path simplification amount in world units.
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.set_simplify_epsilon
      */
@@ -310,7 +310,7 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
     }
 
     /**
-     * The path simplification amount in worlds units.
+     * The path simplification amount in world units.
      *
      * Generated from Godot docs: NavigationPathQueryParameters3D.get_simplify_epsilon
      */
@@ -547,9 +547,9 @@ class NavigationPathQueryParameters3D(handle: GodotHandle) : RefCounted(handle) 
              */
             val CORRIDORFUNNEL: PathPostProcessing get() = PathPostProcessing(0L)
             /**
-             * Centers every path position in the middle of the traveled navigation mesh polygon edge. This
-             * creates better paths for tile- or gridbased layouts that restrict the movement to the cells
-             * center.
+             * Centers every position in the middle of the traveled navigation mesh's polygon edge. This
+             * creates better paths for tile- or grid-based layouts that restrict the movement to the cells'
+             * centers.
              *
              * Generated from Godot docs: NavigationPathQueryParameters3D.PATH_POSTPROCESSING_EDGECENTERED
              */

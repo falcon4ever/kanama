@@ -21,6 +21,12 @@ import net.multigesture.kanama.types.Vector2i
  * Generated from Godot docs: RichTextLabel
  */
 class RichTextLabel(handle: GodotHandle) : Control(handle) {
+    var resourceAccessFlags: RichTextLabel.ResourceAccessFlag
+        @JvmName("resourceAccessFlagsProperty")
+        get() = getResourceAccessFlags()
+        @JvmName("setResourceAccessFlagsProperty")
+        set(value) = setResourceAccessFlags(value)
+
     var bbcodeEnabled: Boolean
         @JvmName("bbcodeEnabledProperty")
         get() = isUsingBbcode()
@@ -159,6 +165,24 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmName("setDragAndDropSelectionEnabledProperty")
         set(value) = setDragAndDropSelectionEnabled(value)
 
+    var resizeFontToFit: Boolean
+        @JvmName("resizeFontToFitProperty")
+        get() = isResizeFontToFitEnabled()
+        @JvmName("setResizeFontToFitProperty")
+        set(value) = setResizeFontToFit(value)
+
+    var minimumFontSize: Int
+        @JvmName("minimumFontSizeProperty")
+        get() = getMinimumFontSize()
+        @JvmName("setMinimumFontSizeProperty")
+        set(value) = setMinimumFontSize(value)
+
+    var maximumFontSize: Int
+        @JvmName("maximumFontSizeProperty")
+        get() = getMaximumFontSize()
+        @JvmName("setMaximumFontSizeProperty")
+        set(value) = setMaximumFontSize(value)
+
     var visibleCharacters: Int
         @JvmName("visibleCharactersProperty")
         get() = getVisibleCharacters()
@@ -222,10 +246,10 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * The label's text in BBCode format. Is not representative of manual modifications to the internal
      * tag stack. Erases changes made by other methods when edited. Note: If `bbcode_enabled` is
-     * `true`, it is unadvised to use the `+=` operator with `text` (e.g. `text += "some string"`) as
-     * it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added
-     * to stack using `push_*` methods. Use `append_text` for adding text instead, unless you
-     * absolutely need to close a tag that was opened in an earlier method call.
+     * `true`, it is recommended not to use the `+=` operator with `text` (e.g., `text += "some
+     * string"`) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode
+     * that was added to the stack using the `push_*` methods. Use `append_text` for adding text
+     * instead, unless you absolutely need to close a tag that was opened in an earlier method call.
      *
      * Generated from Godot docs: RichTextLabel.set_text
      */
@@ -285,10 +309,10 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Removes a paragraph of content from the label. Returns `true` if the paragraph exists. The
      * `paragraph` argument is the index of the paragraph to remove, it can take values in the interval
-     * `[0, get_paragraph_count() - 1]`. If `no_invalidate` is set to `true`, cache for the subsequent
-     * paragraphs is not invalidated. Use it for faster updates if deleted paragraph is fully
-     * self-contained (have no unclosed tags), or this call is part of the complex edit operation and
-     * `invalidate_paragraph` will be called at the end of operation.
+     * `[0, get_paragraph_count() - 1]`. If `no_invalidate` is set to `true`, the cache for the
+     * subsequent paragraphs is not invalidated. Use it for faster updates if the deleted paragraph is
+     * fully self-contained (has no unclosed tags), or this call is part of a complex edit operation
+     * and `invalidate_paragraph` will be called at the end of the operation.
      *
      * Generated from Godot docs: RichTextLabel.remove_paragraph
      */
@@ -524,7 +548,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Sets color of a table cell. Separate colors for alternating rows can be specified.
+     * Sets the color of a table cell. Separate colors for alternating rows can be specified.
      *
      * Generated from Godot docs: RichTextLabel.set_cell_row_background_color
      */
@@ -533,7 +557,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Sets color of a table cell border.
+     * Sets the color of a table cell's border.
      *
      * Generated from Godot docs: RichTextLabel.set_cell_border_color
      */
@@ -966,7 +990,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Scrolls the window's top line to match first line of the `paragraph`.
+     * Scrolls the window's top line to match the first line of the `paragraph`.
      *
      * Generated from Godot docs: RichTextLabel.scroll_to_paragraph
      */
@@ -1027,6 +1051,87 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      */
     fun isFitContentEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isFitContentEnabledBind, segment)
+    }
+
+    /**
+     * If `true`, the text size will automatically shrink or grow to fit within the node's bounding
+     * rectangle. It will pick the largest font size between `minimum_font_size` and
+     * `maximum_font_size` that doesn't cause the text to be truncated. Font sizes that are overridden
+     * with the ``font_size`` tag are scaled relative to the theme font size. For example, if the theme
+     * font size is `16` and `[font_size=24]` is used with an automatic font size determined to be
+     * `32`, text in the overridden block will be in size `48`.
+     *
+     * Generated from Godot docs: RichTextLabel.set_resize_font_to_fit
+     */
+    fun setResizeFontToFit(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResizeFontToFitBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, the text size will automatically shrink or grow to fit within the node's bounding
+     * rectangle. It will pick the largest font size between `minimum_font_size` and
+     * `maximum_font_size` that doesn't cause the text to be truncated. Font sizes that are overridden
+     * with the ``font_size`` tag are scaled relative to the theme font size. For example, if the theme
+     * font size is `16` and `[font_size=24]` is used with an automatic font size determined to be
+     * `32`, text in the overridden block will be in size `48`.
+     *
+     * Generated from Godot docs: RichTextLabel.is_resize_font_to_fit_enabled
+     */
+    fun isResizeFontToFitEnabled(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResizeFontToFitEnabledBind, segment)
+    }
+
+    /**
+     * The minimum font size used when `resize_font_to_fit` is enabled. Also determines the minimum
+     * vertical size of this `RichTextLabel`, potentially used by a parent `Container`. If
+     * `minimum_font_size` is greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: RichTextLabel.set_minimum_font_size
+     */
+    fun setMinimumFontSize(size: Int) {
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinimumFontSizeBind, segment, size)
+    }
+
+    /**
+     * The minimum font size used when `resize_font_to_fit` is enabled. Also determines the minimum
+     * vertical size of this `RichTextLabel`, potentially used by a parent `Container`. If
+     * `minimum_font_size` is greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: RichTextLabel.get_minimum_font_size
+     */
+    fun getMinimumFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinimumFontSizeBind, segment)
+    }
+
+    /**
+     * The maximum font size used when `resize_font_to_fit` is enabled. If `minimum_font_size` is
+     * greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: RichTextLabel.set_maximum_font_size
+     */
+    fun setMaximumFontSize(size: Int) {
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaximumFontSizeBind, segment, size)
+    }
+
+    /**
+     * The maximum font size used when `resize_font_to_fit` is enabled. If `minimum_font_size` is
+     * greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: RichTextLabel.get_maximum_font_size
+     */
+    fun getMaximumFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaximumFontSizeBind, segment)
+    }
+
+    /**
+     * Returns the font size that is currently used for rendering. When `resize_font_to_fit` is
+     * enabled, this returns the automatically calculated font size. Otherwise, it returns the theme
+     * font size.
+     *
+     * Generated from Godot docs: RichTextLabel.get_rendered_font_size
+     */
+    fun getRenderedFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderedFontSizeBind, segment)
     }
 
     /**
@@ -1122,7 +1227,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the current selection first character index if a selection is active, `-1` otherwise.
+     * Returns the current selection's first character index if a selection is active, `-1` otherwise.
      * Does not include BBCodes.
      *
      * Generated from Godot docs: RichTextLabel.get_selection_from
@@ -1132,7 +1237,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the current selection last character index if a selection is active, `-1` otherwise.
+     * Returns the current selection's last character index if a selection is active, `-1` otherwise.
      * Does not include BBCodes.
      *
      * Generated from Godot docs: RichTextLabel.get_selection_to
@@ -1142,7 +1247,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the current selection vertical line offset if a selection is active, `-1.0` otherwise.
+     * Returns the current selection's vertical line offset if a selection is active, `-1.0` otherwise.
      *
      * Generated from Godot docs: RichTextLabel.get_selection_line_offset
      */
@@ -1151,7 +1256,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Select all the text. If `selection_enabled` is `false`, no selection will occur.
+     * Selects all the text. If `selection_enabled` is `false`, no selection occurs.
      *
      * Generated from Godot docs: RichTextLabel.select_all
      */
@@ -1202,10 +1307,10 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * The label's text in BBCode format. Is not representative of manual modifications to the internal
      * tag stack. Erases changes made by other methods when edited. Note: If `bbcode_enabled` is
-     * `true`, it is unadvised to use the `+=` operator with `text` (e.g. `text += "some string"`) as
-     * it replaces the whole text and can cause slowdowns. It will also erase all BBCode that was added
-     * to stack using `push_*` methods. Use `append_text` for adding text instead, unless you
-     * absolutely need to close a tag that was opened in an earlier method call.
+     * `true`, it is recommended not to use the `+=` operator with `text` (e.g., `text += "some
+     * string"`) as it replaces the whole text and can cause slowdowns. It will also erase all BBCode
+     * that was added to the stack using the `push_*` methods. Use `append_text` for adding text
+     * instead, unless you absolutely need to close a tag that was opened in an earlier method call.
      *
      * Generated from Godot docs: RichTextLabel.get_text
      */
@@ -1215,7 +1320,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
     /**
      * If `threaded` is enabled, returns `true` if the background thread has finished text processing,
-     * otherwise always return `true`.
+     * otherwise always returns `true`.
      *
      * Generated from Godot docs: RichTextLabel.is_ready
      */
@@ -1225,7 +1330,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
     /**
      * If `threaded` is enabled, returns `true` if the background thread has finished text processing,
-     * otherwise always return `true`.
+     * otherwise always returns `true`.
      *
      * Generated from Godot docs: RichTextLabel.is_finished
      */
@@ -1253,7 +1358,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
     /**
      * The delay after which the loading progress bar is displayed, in milliseconds. Set to `-1` to
-     * disable progress bar entirely. Note: Progress bar is displayed only if `threaded` is enabled.
+     * disable the progress bar entirely. Note: The progress bar is displayed only if `threaded` is
+     * enabled.
      *
      * Generated from Godot docs: RichTextLabel.set_progress_bar_delay
      */
@@ -1263,7 +1369,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
 
     /**
      * The delay after which the loading progress bar is displayed, in milliseconds. Set to `-1` to
-     * disable progress bar entirely. Note: Progress bar is displayed only if `threaded` is enabled.
+     * disable the progress bar entirely. Note: The progress bar is displayed only if `threaded` is
+     * enabled.
      *
      * Generated from Godot docs: RichTextLabel.get_progress_bar_delay
      */
@@ -1318,8 +1425,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * The fraction of characters to display, relative to the total number of characters (see
      * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
-     * only half of the characters will be displayed. This can be useful when animating the text
-     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
+     * only half of the characters are displayed. This can be useful when animating the text appearing
+     * in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
      *
      * Generated from Godot docs: RichTextLabel.set_visible_ratio
      */
@@ -1330,8 +1437,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * The fraction of characters to display, relative to the total number of characters (see
      * `get_total_character_count`). If set to `1.0`, all characters are displayed. If set to `0.5`,
-     * only half of the characters will be displayed. This can be useful when animating the text
-     * appearing in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
+     * only half of the characters are displayed. This can be useful when animating the text appearing
+     * in a dialog box. Note: Setting this property updates `visible_characters` accordingly.
      *
      * Generated from Godot docs: RichTextLabel.get_visible_ratio
      */
@@ -1342,7 +1449,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the line number of the character position provided. Line and character numbers are both
      * zero-indexed. Note: If `threaded` is enabled, this method returns a value for the loaded part of
-     * the document. Use `is_finished` or `finished` to determine whether document is fully loaded.
+     * the document. Use `is_finished` or `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_character_line
      */
@@ -1353,8 +1460,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the paragraph number of the character position provided. Paragraph and character numbers
      * are both zero-indexed. Note: If `threaded` is enabled, this method returns a value for the
-     * loaded part of the document. Use `is_finished` or `finished` to determine whether document is
-     * fully loaded.
+     * loaded part of the document. Use `is_finished` or `finished` to determine whether the document
+     * is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_character_paragraph
      */
@@ -1394,7 +1501,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the total number of lines in the text. Wrapped text is counted as multiple lines. Note:
      * If `threaded` is enabled, this method returns a value for the loaded part of the document. Use
-     * `is_finished` or `finished` to determine whether document is fully loaded.
+     * `is_finished` or `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_line_count
      */
@@ -1407,7 +1514,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * `Vector2i`. Note: If `visible_characters_behavior` is set to
      * `TextServer.VisibleCharactersBehavior.CHARS_BEFORE_SHAPING` only visible wrapped lines are
      * counted. Note: If `threaded` is enabled, this method returns a value for the loaded part of the
-     * document. Use `is_finished` or `finished` to determine whether document is fully loaded.
+     * document. Use `is_finished` or `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_line_range
      */
@@ -1418,7 +1525,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the number of visible lines. Note: This method returns a correct value only after the
      * label has been drawn. Note: If `threaded` is enabled, this method returns a value for the loaded
-     * part of the document. Use `is_finished` or `finished` to determine whether document is fully
+     * part of the document. Use `is_finished` or `finished` to determine whether the document is fully
      * loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_visible_line_count
@@ -1441,7 +1548,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Returns the number of visible paragraphs. A paragraph is considered visible if at least one of
      * its lines is visible. Note: This method returns a correct value only after the label has been
      * drawn. Note: If `threaded` is enabled, this method returns a value for the loaded part of the
-     * document. Use `is_finished` or `finished` to determine whether document is fully loaded.
+     * document. Use `is_finished` or `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_visible_paragraph_count
      */
@@ -1453,8 +1560,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Returns the height of the content. Note: This method always returns the full content size, and
      * is not affected by `visible_ratio` and `visible_characters`. To get the visible content size,
      * use `get_visible_content_rect`. Note: If `threaded` is enabled, this method returns a value for
-     * the loaded part of the document. Use `is_finished` or `finished` to determine whether document
-     * is fully loaded.
+     * the loaded part of the document. Use `is_finished` or `finished` to determine whether the
+     * document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_content_height
      */
@@ -1466,8 +1573,8 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
      * Returns the width of the content. Note: This method always returns the full content size, and is
      * not affected by `visible_ratio` and `visible_characters`. To get the visible content size, use
      * `get_visible_content_rect`. Note: If `threaded` is enabled, this method returns a value for the
-     * loaded part of the document. Use `is_finished` or `finished` to determine whether document is
-     * fully loaded.
+     * loaded part of the document. Use `is_finished` or `finished` to determine whether the document
+     * is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_content_width
      */
@@ -1510,7 +1617,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the vertical offset of the line found at the provided index. Note: If `threaded` is
      * enabled, this method returns a value for the loaded part of the document. Use `is_finished` or
-     * `finished` to determine whether document is fully loaded.
+     * `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_line_offset
      */
@@ -1521,7 +1628,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     /**
      * Returns the vertical offset of the paragraph found at the provided index. Note: If `threaded` is
      * enabled, this method returns a value for the loaded part of the document. Use `is_finished` or
-     * `finished` to determine whether document is fully loaded.
+     * `finished` to determine whether the document is fully loaded.
      *
      * Generated from Godot docs: RichTextLabel.get_paragraph_offset
      */
@@ -1607,6 +1714,24 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         ObjectCalls.ptrcallWithIntArg(Binds.menuOptionBind, segment, option)
     }
 
+    /**
+     * The set of locations BBCode is allowed to load resource files from.
+     *
+     * Generated from Godot docs: RichTextLabel.get_resource_access_flags
+     */
+    fun getResourceAccessFlags(): RichTextLabel.ResourceAccessFlag {
+        return RichTextLabel.ResourceAccessFlag(ObjectCalls.ptrcallNoArgsRetLong(Binds.getResourceAccessFlagsBind, segment))
+    }
+
+    /**
+     * The set of locations BBCode is allowed to load resource files from.
+     *
+     * Generated from Godot docs: RichTextLabel.set_resource_access_flags
+     */
+    fun setResourceAccessFlags(flags: RichTextLabel.ResourceAccessFlag) {
+        ObjectCalls.ptrcallWithLongArg(Binds.setResourceAccessFlagsBind, segment, flags.value)
+    }
+
     /** Signal `meta_clicked(meta: Variant)`; see [TypedSignal]. */
     val metaClicked: Signal1<Any?>
         @JvmName("metaClickedTypedSignal")
@@ -1656,7 +1781,7 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
              */
             val LETTERS: ListType get() = ListType(1L)
             /**
-             * Each list item has a roman number marker.
+             * Each list item has a Roman numeral marker.
              *
              * Generated from Godot docs: RichTextLabel.LIST_ROMAN
              */
@@ -1710,19 +1835,20 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     value class MetaUnderline(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Meta tag does not display an underline, even if `meta_underlined` is `true`.
+             * The meta tag does not display an underline, even if `meta_underlined` is `true`.
              *
              * Generated from Godot docs: RichTextLabel.META_UNDERLINE_NEVER
              */
             val NEVER: MetaUnderline get() = MetaUnderline(0L)
             /**
-             * If `meta_underlined` is `true`, meta tag always display an underline.
+             * If `meta_underlined` is `true`, the meta tag always displays an underline.
              *
              * Generated from Godot docs: RichTextLabel.META_UNDERLINE_ALWAYS
              */
             val ALWAYS: MetaUnderline get() = MetaUnderline(1L)
             /**
-             * If `meta_underlined` is `true`, meta tag display an underline when the mouse cursor is over it.
+             * If `meta_underlined` is `true`, the meta tag displays an underline when hovered by the mouse
+             * cursor.
              *
              * Generated from Godot docs: RichTextLabel.META_UNDERLINE_ON_HOVER
              */
@@ -1801,6 +1927,59 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     }
 
     /**
+     * Godot's `RichTextLabel.ResourceAccessFlag` bitfield as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`RichTextLabel.ResourceAccessFlag.<NAME>`).
+     *
+     * Generated from Godot docs: RichTextLabel.ResourceAccessFlag
+     */
+    @JvmInline
+    value class ResourceAccessFlag(override val value: Long) : GodotEnumValue {
+        infix fun or(other: ResourceAccessFlag): ResourceAccessFlag = ResourceAccessFlag(value or other.value)
+
+        infix fun and(other: ResourceAccessFlag): ResourceAccessFlag = ResourceAccessFlag(value and other.value)
+
+        infix fun xor(other: ResourceAccessFlag): ResourceAccessFlag = ResourceAccessFlag(value xor other.value)
+
+        fun inv(): ResourceAccessFlag = ResourceAccessFlag(value.inv())
+
+        operator fun contains(other: ResourceAccessFlag): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * Allows accessing files under the `Resource` path (`res://`).
+             *
+             * Generated from Godot docs: RichTextLabel.RESOURCE_ACCESS_RESOURCES
+             */
+            val RESOURCES: ResourceAccessFlag get() = ResourceAccessFlag(1L)
+            /**
+             * Allows accessing files under the user data path (`user://`).
+             *
+             * Generated from Godot docs: RichTextLabel.RESOURCE_ACCESS_USERDATA
+             */
+            val USERDATA: ResourceAccessFlag get() = ResourceAccessFlag(2L)
+            /**
+             * Allows accessing files on the whole local file system.
+             *
+             * Generated from Godot docs: RichTextLabel.RESOURCE_ACCESS_FILESYSTEM
+             */
+            val FILESYSTEM: ResourceAccessFlag get() = ResourceAccessFlag(4L)
+            /**
+             * Allows accessing named pipes (`pipe://`).
+             *
+             * Generated from Godot docs: RichTextLabel.RESOURCE_ACCESS_PIPE
+             */
+            val PIPE: ResourceAccessFlag get() = ResourceAccessFlag(8L)
+            /**
+             * Allows accessing files on network shares.
+             *
+             * Generated from Godot docs: RichTextLabel.RESOURCE_ACCESS_NETWORK
+             */
+            val NETWORK: ResourceAccessFlag get() = ResourceAccessFlag(16L)
+        }
+    }
+
+    /**
      * Godot's `RichTextLabel.ImageUnit` enum as a typed value: `.value` is the raw number Godot uses,
      * and the companion holds the named values (`RichTextLabel.ImageUnit.<NAME>`).
      *
@@ -1810,19 +1989,19 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
     value class ImageUnit(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * Images drawn with this unit will be in pixels.
+             * Image size is given in pixels.
              *
              * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_PIXEL
              */
             val PIXEL: ImageUnit get() = ImageUnit(0L)
             /**
-             * Images drawn with this unit will be in percentages of the control width.
+             * Image size is given as a percentage of the `RichTextLabel`'s width.
              *
              * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_PERCENT
              */
             val PERCENT: ImageUnit get() = ImageUnit(1L)
             /**
-             * Images drawn with this unit will be in percentages of the surrounding font size.
+             * Image size is given as a multiplier of the surrounding font size.
              *
              * Generated from Godot docs: RichTextLabel.IMAGE_UNIT_EM
              */
@@ -2255,6 +2434,41 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         val isFitContentEnabledBind =
             ObjectCalls.getMethodBind("RichTextLabel", "is_fit_content_enabled", IS_FIT_CONTENT_ENABLED_HASH)
 
+        private const val SET_RESIZE_FONT_TO_FIT_HASH = 2586408642L
+        @JvmField
+        val setResizeFontToFitBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "set_resize_font_to_fit", SET_RESIZE_FONT_TO_FIT_HASH)
+
+        private const val IS_RESIZE_FONT_TO_FIT_ENABLED_HASH = 36873697L
+        @JvmField
+        val isResizeFontToFitEnabledBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "is_resize_font_to_fit_enabled", IS_RESIZE_FONT_TO_FIT_ENABLED_HASH)
+
+        private const val SET_MINIMUM_FONT_SIZE_HASH = 1286410249L
+        @JvmField
+        val setMinimumFontSizeBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "set_minimum_font_size", SET_MINIMUM_FONT_SIZE_HASH)
+
+        private const val GET_MINIMUM_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getMinimumFontSizeBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "get_minimum_font_size", GET_MINIMUM_FONT_SIZE_HASH)
+
+        private const val SET_MAXIMUM_FONT_SIZE_HASH = 1286410249L
+        @JvmField
+        val setMaximumFontSizeBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "set_maximum_font_size", SET_MAXIMUM_FONT_SIZE_HASH)
+
+        private const val GET_MAXIMUM_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getMaximumFontSizeBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "get_maximum_font_size", GET_MAXIMUM_FONT_SIZE_HASH)
+
+        private const val GET_RENDERED_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getRenderedFontSizeBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "get_rendered_font_size", GET_RENDERED_FONT_SIZE_HASH)
+
         private const val SET_SELECTION_ENABLED_HASH = 2586408642L
         @JvmField
         val setSelectionEnabledBind =
@@ -2534,5 +2748,15 @@ class RichTextLabel(handle: GodotHandle) : Control(handle) {
         @JvmField
         val menuOptionBind =
             ObjectCalls.getMethodBind("RichTextLabel", "menu_option", MENU_OPTION_HASH)
+
+        private const val GET_RESOURCE_ACCESS_FLAGS_HASH = 2228477831L
+        @JvmField
+        val getResourceAccessFlagsBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "get_resource_access_flags", GET_RESOURCE_ACCESS_FLAGS_HASH)
+
+        private const val SET_RESOURCE_ACCESS_FLAGS_HASH = 4127961739L
+        @JvmField
+        val setResourceAccessFlagsBind =
+            ObjectCalls.getMethodBind("RichTextLabel", "set_resource_access_flags", SET_RESOURCE_ACCESS_FLAGS_HASH)
     }
 }

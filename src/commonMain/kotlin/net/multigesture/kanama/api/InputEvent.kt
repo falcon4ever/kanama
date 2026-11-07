@@ -96,10 +96,10 @@ open class InputEvent(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Returns a value between 0.0 and 1.0 depending on the given actions' state. Useful for getting
-     * the value of events of type `InputEventJoypadMotion`. If `exact_match` is `false`, it ignores
-     * additional input modifiers for `InputEventKey` and `InputEventMouseButton` events, and the
-     * direction for `InputEventJoypadMotion` events.
+     * Returns a value between `0.0` and `1.0` depending on the given action's state. Useful for
+     * getting the value of events of type `InputEventJoypadMotion`. If `exact_match` is `false`, it
+     * ignores additional input modifiers for `InputEventKey` and `InputEventMouseButton` events, and
+     * the direction for `InputEventJoypadMotion` events.
      *
      * Generated from Godot docs: InputEvent.get_action_strength
      */

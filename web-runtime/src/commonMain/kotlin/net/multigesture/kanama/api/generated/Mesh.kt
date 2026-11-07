@@ -108,6 +108,7 @@ class Mesh(godotObject: GodotHandle) : Resource(godotObject) {
       val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
       val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
       val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+      val FLAG_USE_STORAGE_BUFFER: ArrayFormat get() = ArrayFormat(1073741824L)
     }
   }
 

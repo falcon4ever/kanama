@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.requireConstructed
+import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
 
@@ -152,6 +153,15 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
      */
     fun getJointType(): PhysicalBone3D.JointType {
         return PhysicalBone3D.JointType(ObjectCalls.ptrcallNoArgsRetLong(Binds.getJointTypeBind, segment))
+    }
+
+    /**
+     * Returns the joint's internal `RID` from the `PhysicsServer3D`.
+     *
+     * Generated from Godot docs: PhysicalBone3D.get_joint_rid
+     */
+    fun getJointRid(): RID {
+        return ObjectCalls.ptrcallNoArgsRetRID(Binds.getJointRidBind, segment)
     }
 
     /**
@@ -597,6 +607,11 @@ class PhysicalBone3D(handle: GodotHandle) : PhysicsBody3D(handle) {
         @JvmField
         val getJointTypeBind =
             ObjectCalls.getMethodBind("PhysicalBone3D", "get_joint_type", GET_JOINT_TYPE_HASH)
+
+        private const val GET_JOINT_RID_HASH = 2944877500L
+        @JvmField
+        val getJointRidBind =
+            ObjectCalls.getMethodBind("PhysicalBone3D", "get_joint_rid", GET_JOINT_RID_HASH)
 
         private const val SET_JOINT_OFFSET_HASH = 2952846383L
         @JvmField

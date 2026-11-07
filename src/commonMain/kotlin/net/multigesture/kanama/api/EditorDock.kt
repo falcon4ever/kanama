@@ -46,6 +46,12 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         @JvmName("setClosableProperty")
         set(value) = setClosable(value)
 
+    var allowSwitchScreen: Boolean
+        @JvmName("allowSwitchScreenProperty")
+        get() = isAllowSwitchScreen()
+        @JvmName("setAllowSwitchScreenProperty")
+        set(value) = setAllowSwitchScreen(value)
+
     var iconName: String
         @JvmName("iconNameProperty")
         get() = getIconName()
@@ -218,6 +224,28 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
      */
     fun isClosable(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClosableBind, segment)
+    }
+
+    /**
+     * If `true` and this dock is docked in the main screen, selecting a node in the scene tree can
+     * switch away from this dock. The selected node needs to be handled by another main screen dock
+     * (2D, 3D) for the switch to happen.
+     *
+     * Generated from Godot docs: EditorDock.set_allow_switch_screen
+     */
+    fun setAllowSwitchScreen(allow: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowSwitchScreenBind, segment, allow)
+    }
+
+    /**
+     * If `true` and this dock is docked in the main screen, selecting a node in the scene tree can
+     * switch away from this dock. The selected node needs to be handled by another main screen dock
+     * (2D, 3D) for the switch to happen.
+     *
+     * Generated from Godot docs: EditorDock.is_allow_switch_screen
+     */
+    fun isAllowSwitchScreen(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAllowSwitchScreenBind, segment)
     }
 
     /**
@@ -413,7 +441,13 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
              */
             val FLOATING: DockLayout get() = DockLayout(4L)
             /**
-             * Allows placing the dock in all available slots.
+             * Allows using the dock as main screen.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_LAYOUT_MAIN_SCREEN
+             */
+            val MAIN_SCREEN: DockLayout get() = DockLayout(8L)
+            /**
+             * Allows placing the dock in all available slots, except in main screen.
              *
              * Generated from Godot docs: EditorDock.DOCK_LAYOUT_ALL
              */
@@ -504,11 +538,17 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
              */
             val BOTTOM_R: DockSlot get() = DockSlot(10L)
             /**
+             * The editor's main screen.
+             *
+             * Generated from Godot docs: EditorDock.DOCK_SLOT_MAIN_SCREEN
+             */
+            val MAIN_SCREEN: DockSlot get() = DockSlot(11L)
+            /**
              * Represents the size of the `DockSlot` enum.
              *
              * Generated from Godot docs: EditorDock.DOCK_SLOT_MAX
              */
-            val MAX: DockSlot get() = DockSlot(11L)
+            val MAX: DockSlot get() = DockSlot(12L)
         }
     }
 
@@ -591,6 +631,16 @@ open class EditorDock(handle: GodotHandle) : MarginContainer(handle) {
         @JvmField
         val isClosableBind =
             ObjectCalls.getMethodBind("EditorDock", "is_closable", IS_CLOSABLE_HASH)
+
+        private const val SET_ALLOW_SWITCH_SCREEN_HASH = 2586408642L
+        @JvmField
+        val setAllowSwitchScreenBind =
+            ObjectCalls.getMethodBind("EditorDock", "set_allow_switch_screen", SET_ALLOW_SWITCH_SCREEN_HASH)
+
+        private const val IS_ALLOW_SWITCH_SCREEN_HASH = 36873697L
+        @JvmField
+        val isAllowSwitchScreenBind =
+            ObjectCalls.getMethodBind("EditorDock", "is_allow_switch_screen", IS_ALLOW_SWITCH_SCREEN_HASH)
 
         private const val SET_ICON_NAME_HASH = 3304788590L
         @JvmField

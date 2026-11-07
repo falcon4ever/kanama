@@ -6,6 +6,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.requireConstructed
+import net.multigesture.kanama.types.Quaternion
 
 /**
  * A physics joint that allows for complex movement and rotation between two 3D physics bodies.
@@ -128,6 +129,51 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
     }
 
     /**
+     * Sets the target angular orientation as a body-space quaternion describing the desired
+     * orientation of body B relative to body A. Replaces any previously set target and supersedes
+     * `Param.ANGULAR_SPRING_EQUILIBRIUM_POINT` until `clear_angular_target_rotation` is called. Note:
+     * Only for Jolt backend. Other 3D physics backends may ignore this value.
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.set_angular_target_rotation
+     */
+    fun setAngularTargetRotation(targetRotation: Quaternion) {
+        ObjectCalls.ptrcallWithQuaternionArg(Binds.setAngularTargetRotationBind, segment, targetRotation)
+    }
+
+    /**
+     * Returns the joint's current angular target as a body-space quaternion. If no explicit target was
+     * set via `set_angular_target_rotation`, the value is derived from
+     * `Param.ANGULAR_SPRING_EQUILIBRIUM_POINT` on backends that support it; other backends return the
+     * identity quaternion.
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.get_angular_target_rotation
+     */
+    fun getAngularTargetRotation(): Quaternion {
+        return ObjectCalls.ptrcallNoArgsRetQuaternion(Binds.getAngularTargetRotationBind, segment)
+    }
+
+    /**
+     * Returns `true` if a quaternion angular target was explicitly set via
+     * `set_angular_target_rotation` and has not been cleared. Returns `false` when the joint is driven
+     * by `Param.ANGULAR_SPRING_EQUILIBRIUM_POINT` only.
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.has_target_rotation
+     */
+    fun hasTargetRotation(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.hasTargetRotationBind, segment)
+    }
+
+    /**
+     * Clears the quaternion angular target. After clearing, the joint is driven by
+     * `Param.ANGULAR_SPRING_EQUILIBRIUM_POINT` on each axis as configured.
+     *
+     * Generated from Godot docs: Generic6DOFJoint3D.clear_angular_target_rotation
+     */
+    fun clearAngularTargetRotation() {
+        ObjectCalls.ptrcallNoArgs(Binds.clearAngularTargetRotationBind, segment)
+    }
+
+    /**
      * Godot's `Generic6DOFJoint3D.Param` enum as a typed value: `.value` is the raw number Godot uses,
      * and the companion holds the named values (`Generic6DOFJoint3D.Param.<NAME>`).
      *
@@ -240,11 +286,27 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
             val ANGULAR_SPRING_DAMPING: Param get() = Param(20L)
             val ANGULAR_SPRING_EQUILIBRIUM_POINT: Param get() = Param(21L)
             /**
+             * The maximum force the joint can apply along this linear axis. Used by both the spring drive and
+             * the linear motor; supersedes `Param.LINEAR_MOTOR_FORCE_LIMIT` when set. Note: Only for Jolt
+             * backend. Other 3D physics backends may ignore this value.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_LINEAR_DRIVE_FORCE_LIMIT
+             */
+            val LINEAR_DRIVE_FORCE_LIMIT: Param get() = Param(22L)
+            /**
+             * The maximum torque the joint can apply around this angular axis. Used by both the spring drive
+             * and the angular motor; supersedes `Param.ANGULAR_MOTOR_FORCE_LIMIT` when set. Note: Only for
+             * Jolt backend. Other 3D physics backends may ignore this value.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.PARAM_ANGULAR_DRIVE_TORQUE_LIMIT
+             */
+            val ANGULAR_DRIVE_TORQUE_LIMIT: Param get() = Param(23L)
+            /**
              * Represents the size of the `Param` enum.
              *
              * Generated from Godot docs: Generic6DOFJoint3D.PARAM_MAX
              */
-            val MAX: Param get() = Param(22L)
+            val MAX: Param get() = Param(24L)
         }
     }
 
@@ -272,7 +334,13 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
             val ENABLE_LINEAR_SPRING: Flag get() = Flag(3L)
             val ENABLE_ANGULAR_SPRING: Flag get() = Flag(2L)
             /**
-             * If enabled, there is a rotational motor across these axes.
+             * If enabled, there is a rotational or angular motor across these axes.
+             *
+             * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_ANGULAR_MOTOR
+             */
+            val ENABLE_ANGULAR_MOTOR: Flag get() = Flag(4L)
+            /**
+             * If enabled, there is a rotational or angular motor across these axes.
              *
              * Generated from Godot docs: Generic6DOFJoint3D.FLAG_ENABLE_MOTOR
              */
@@ -366,5 +434,25 @@ class Generic6DOFJoint3D(handle: GodotHandle) : Joint3D(handle) {
         @JvmField
         val getFlagZBind =
             ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_flag_z", GET_FLAG_Z_HASH)
+
+        private const val SET_ANGULAR_TARGET_ROTATION_HASH = 1727505552L
+        @JvmField
+        val setAngularTargetRotationBind =
+            ObjectCalls.getMethodBind("Generic6DOFJoint3D", "set_angular_target_rotation", SET_ANGULAR_TARGET_ROTATION_HASH)
+
+        private const val GET_ANGULAR_TARGET_ROTATION_HASH = 1222331677L
+        @JvmField
+        val getAngularTargetRotationBind =
+            ObjectCalls.getMethodBind("Generic6DOFJoint3D", "get_angular_target_rotation", GET_ANGULAR_TARGET_ROTATION_HASH)
+
+        private const val HAS_TARGET_ROTATION_HASH = 36873697L
+        @JvmField
+        val hasTargetRotationBind =
+            ObjectCalls.getMethodBind("Generic6DOFJoint3D", "has_target_rotation", HAS_TARGET_ROTATION_HASH)
+
+        private const val CLEAR_ANGULAR_TARGET_ROTATION_HASH = 3218959716L
+        @JvmField
+        val clearAngularTargetRotationBind =
+            ObjectCalls.getMethodBind("Generic6DOFJoint3D", "clear_angular_target_rotation", CLEAR_ANGULAR_TARGET_ROTATION_HASH)
     }
 }

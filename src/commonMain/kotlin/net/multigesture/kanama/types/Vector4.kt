@@ -360,8 +360,8 @@ private constructor(
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
-   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
-   * representing the amount of interpolation.
+   * handles, and returns the result at position `weight`. `weight` is on the range of `0.0` to
+   * `1.0`, representing the amount of interpolation.
    *
    * Generated from Godot docs: Vector4.cubic_interpolate
    */
@@ -378,8 +378,8 @@ private constructor(
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
-   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
-   * representing the amount of interpolation. It can perform smoother interpolation than
+   * handles, and returns the result at position `weight`. `weight` is on the range of `0.0` to
+   * `1.0`, representing the amount of interpolation. It can perform smoother interpolation than
    * `cubic_interpolate` by the time values.
    *
    * Generated from Godot docs: Vector4.cubic_interpolate_in_time
@@ -523,8 +523,8 @@ private constructor(
   }
 
   /**
-   * Returns the normalized vector pointing from this vector to `to`. This is equivalent to using
-   * `(b - a).normalized()`.
+   * Returns the normalized vector pointing from this vector to `to`. `a.direction_to(b)` is
+   * equivalent to `(b - a).normalized()`. See also `normalized`.
    *
    * Generated from Godot docs: Vector4.direction_to
    */

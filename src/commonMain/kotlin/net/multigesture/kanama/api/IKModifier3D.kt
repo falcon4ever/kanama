@@ -49,7 +49,8 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
      * solver retrieves the bone axis from the bone rest and caches it, which increases performance
      * slightly, but position changes in the bone pose made before processing this `IKModifier3D` are
-     * ignored.
+     * ignored. Note: The rendered gizmo's forward vector (a line between parent and child joints) will
+     * only respect the bone pose when this modifier is active.
      *
      * Generated from Godot docs: IKModifier3D.set_mutable_bone_axes
      */
@@ -61,7 +62,8 @@ open class IKModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * If `true`, the solver retrieves the bone axis from the bone pose every frame. If `false`, the
      * solver retrieves the bone axis from the bone rest and caches it, which increases performance
      * slightly, but position changes in the bone pose made before processing this `IKModifier3D` are
-     * ignored.
+     * ignored. Note: The rendered gizmo's forward vector (a line between parent and child joints) will
+     * only respect the bone pose when this modifier is active.
      *
      * Generated from Godot docs: IKModifier3D.are_bone_axes_mutable
      */

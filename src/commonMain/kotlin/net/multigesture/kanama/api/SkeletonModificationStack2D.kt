@@ -152,7 +152,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * If `true`, the modification's in the stack will be called. This is handled automatically through
+     * If `true`, the modifications in the stack will be called. This is handled automatically through
      * the `Skeleton2D` node.
      *
      * Generated from Godot docs: SkeletonModificationStack2D.set_enabled
@@ -164,7 +164,7 @@ class SkeletonModificationStack2D(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * If `true`, the modification's in the stack will be called. This is handled automatically through
+     * If `true`, the modifications in the stack will be called. This is handled automatically through
      * the `Skeleton2D` node.
      *
      * Generated from Godot docs: SkeletonModificationStack2D.get_enabled

@@ -852,7 +852,7 @@ class SpringBoneSimulator3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      * Resets a simulating state with respect to the current bone pose. It is useful to prevent the
      * simulation result getting violent. For example, calling this immediately after a call to
      * `AnimationPlayer.play` without a fading, or within the previous
-     * `SkeletonModifier3D.modification_processed` signal if it's condition changes significantly.
+     * `SkeletonModifier3D.modification_processed` signal if its condition changes significantly.
      *
      * Generated from Godot docs: SpringBoneSimulator3D.reset
      */

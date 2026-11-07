@@ -582,6 +582,97 @@ class Theme(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
+     * Creates or changes the value of the sound property defined by `name` and `theme_type`. Use
+     * `clear_sound` to remove the property.
+     *
+     * Generated from Godot docs: Theme.set_sound
+     */
+    fun setSound(name: String, themeType: String, sound: AudioStream?) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringNameAndObjectArg(Binds.setSoundBind, segment, name, themeType, sound?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(this)
+        ObjectCalls.keepReachable(sound)
+    }
+
+    /**
+     * Returns the sound property defined by `name` and `theme_type`, if it exists. Returns the engine
+     * fallback sound value if the property doesn't exist (see `ThemeDB.fallback_sound`). Use
+     * `has_sound` to check for existence.
+     *
+     * Generated from Godot docs: Theme.get_sound
+     */
+    fun getSound(name: String, themeType: String): AudioStream? {
+        checkOpen()
+        val ret = AudioStream.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getSoundBind, segment, name, themeType))
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Returns `true` if the sound property defined by `name` and `theme_type` exists. Returns `false`
+     * if it doesn't exist. Use `set_sound` to define it.
+     *
+     * Generated from Godot docs: Theme.has_sound
+     */
+    fun hasSound(name: String, themeType: String): Boolean {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasSoundBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Renames the sound property defined by `old_name` and `theme_type` to `name`, if it exists. Fails
+     * if it doesn't exist, or if a similar property with the new name already exists. Use `has_sound`
+     * to check for existence, and `clear_sound` to remove the existing property.
+     *
+     * Generated from Godot docs: Theme.rename_sound
+     */
+    fun renameSound(oldName: String, name: String, themeType: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithThreeStringNameArgs(Binds.renameSoundBind, segment, oldName, name, themeType)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
+     * Removes the sound property defined by `name` and `theme_type`, if it exists. Fails if it doesn't
+     * exist. Use `has_sound` to check for existence.
+     *
+     * Generated from Godot docs: Theme.clear_sound
+     */
+    fun clearSound(name: String, themeType: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringNameArgs(Binds.clearSoundBind, segment, name, themeType)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
+     * Returns a list of names for sound properties defined with `theme_type`. Use
+     * `get_sound_type_list` to get a list of possible theme type names.
+     *
+     * Generated from Godot docs: Theme.get_sound_list
+     */
+    fun getSoundList(themeType: String): List<String> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithStringArgRetPackedStringList(Binds.getSoundListBind, segment, themeType)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Returns a list of all unique theme type names for sound properties. Use `get_type_list` to get a
+     * list of all unique theme types.
+     *
+     * Generated from Godot docs: Theme.get_sound_type_list
+     */
+    fun getSoundTypeList(): List<String> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getSoundTypeListBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * The default base scale factor of this theme resource. Used by some controls to scale their
      * visual properties based on the global scale factor. If this value is set to `0.0`, the global
      * scale factor is used (see `ThemeDB.fallback_base_scale`). Use `has_default_base_scale` to check
@@ -1000,11 +1091,17 @@ class Theme(handle: GodotHandle) : Resource(handle) {
              */
             val STYLEBOX: DataType get() = DataType(5L)
             /**
+             * Theme's `AudioStream` item type.
+             *
+             * Generated from Godot docs: Theme.DATA_TYPE_SOUND
+             */
+            val SOUND: DataType get() = DataType(6L)
+            /**
              * Maximum value for the DataType enum.
              *
              * Generated from Godot docs: Theme.DATA_TYPE_MAX
              */
-            val MAX: DataType get() = DataType(6L)
+            val MAX: DataType get() = DataType(7L)
         }
     }
 
@@ -1235,6 +1332,41 @@ class Theme(handle: GodotHandle) : Resource(handle) {
         @JvmField
         val getConstantTypeListBind =
             ObjectCalls.getMethodBind("Theme", "get_constant_type_list", GET_CONSTANT_TYPE_LIST_HASH)
+
+        private const val SET_SOUND_HASH = 2577918927L
+        @JvmField
+        val setSoundBind =
+            ObjectCalls.getMethodBind("Theme", "set_sound", SET_SOUND_HASH)
+
+        private const val GET_SOUND_HASH = 1175136407L
+        @JvmField
+        val getSoundBind =
+            ObjectCalls.getMethodBind("Theme", "get_sound", GET_SOUND_HASH)
+
+        private const val HAS_SOUND_HASH = 471820014L
+        @JvmField
+        val hasSoundBind =
+            ObjectCalls.getMethodBind("Theme", "has_sound", HAS_SOUND_HASH)
+
+        private const val RENAME_SOUND_HASH = 642128662L
+        @JvmField
+        val renameSoundBind =
+            ObjectCalls.getMethodBind("Theme", "rename_sound", RENAME_SOUND_HASH)
+
+        private const val CLEAR_SOUND_HASH = 3740211285L
+        @JvmField
+        val clearSoundBind =
+            ObjectCalls.getMethodBind("Theme", "clear_sound", CLEAR_SOUND_HASH)
+
+        private const val GET_SOUND_LIST_HASH = 4291131558L
+        @JvmField
+        val getSoundListBind =
+            ObjectCalls.getMethodBind("Theme", "get_sound_list", GET_SOUND_LIST_HASH)
+
+        private const val GET_SOUND_TYPE_LIST_HASH = 1139954409L
+        @JvmField
+        val getSoundTypeListBind =
+            ObjectCalls.getMethodBind("Theme", "get_sound_type_list", GET_SOUND_TYPE_LIST_HASH)
 
         private const val SET_DEFAULT_BASE_SCALE_HASH = 373806689L
         @JvmField

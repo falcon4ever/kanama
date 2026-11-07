@@ -767,8 +767,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * If `true`, the objects rendered by viewport become subjects of mouse picking process. Note: The
-     * number of simultaneously pickable objects is limited to 64 and they are selected in a
-     * non-deterministic order, which can be different in each picking process.
+     * number of `CanvasItem`s pickable by a single input is limited to 64 and they are selected in a
+     * non-deterministic order. The number of pickable 3D objects is not limited.
      *
      * Generated from Godot docs: Viewport.set_physics_object_picking
      */
@@ -778,8 +778,8 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * If `true`, the objects rendered by viewport become subjects of mouse picking process. Note: The
-     * number of simultaneously pickable objects is limited to 64 and they are selected in a
-     * non-deterministic order, which can be different in each picking process.
+     * number of `CanvasItem`s pickable by a single input is limited to 64 and they are selected in a
+     * non-deterministic order. The number of pickable 3D objects is not limited.
      *
      * Generated from Godot docs: Viewport.get_physics_object_picking
      */
@@ -789,10 +789,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * If `true`, objects receive mouse picking events sorted primarily by their `CanvasItem.z_index`
-     * and secondarily by their position in the scene tree. If `false`, the order is undetermined.
+     * and secondarily by their position in the scene tree. If `false`, the order is non-deterministic.
      * Note: This setting is disabled by default because of its potential expensive computational cost.
-     * Note: Sorting happens after selecting the pickable objects. Because of the limitation of 64
-     * simultaneously pickable objects, it is not guaranteed that the object with the highest
+     * Note: Sorting happens after selecting the pickable objects. If surpassing the maximum of 64
+     * `CanvasItem`s pickable by a single input, it is not guaranteed that the object with the highest
      * `CanvasItem.z_index` receives the picking event.
      *
      * Generated from Godot docs: Viewport.set_physics_object_picking_sort
@@ -803,10 +803,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
 
     /**
      * If `true`, objects receive mouse picking events sorted primarily by their `CanvasItem.z_index`
-     * and secondarily by their position in the scene tree. If `false`, the order is undetermined.
+     * and secondarily by their position in the scene tree. If `false`, the order is non-deterministic.
      * Note: This setting is disabled by default because of its potential expensive computational cost.
-     * Note: Sorting happens after selecting the pickable objects. Because of the limitation of 64
-     * simultaneously pickable objects, it is not guaranteed that the object with the highest
+     * Note: Sorting happens after selecting the pickable objects. If surpassing the maximum of 64
+     * `CanvasItem`s pickable by a single input, it is not guaranteed that the object with the highest
      * `CanvasItem.z_index` receives the picking event.
      *
      * Generated from Godot docs: Viewport.get_physics_object_picking_sort
@@ -819,7 +819,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * If `true`, the input_event signal will only be sent to one physics object in the mouse picking
      * process. If you want to get the top object only, you must also enable
      * `physics_object_picking_sort`. If `false`, an input_event signal will be sent to all physics
-     * objects in the mouse picking process. This applies to 2D CanvasItem object picking only.
+     * objects in the mouse picking process. This applies to `CanvasItem` picking only.
      *
      * Generated from Godot docs: Viewport.set_physics_object_picking_first_only
      */
@@ -831,7 +831,7 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
      * If `true`, the input_event signal will only be sent to one physics object in the mouse picking
      * process. If you want to get the top object only, you must also enable
      * `physics_object_picking_sort`. If `false`, an input_event signal will be sent to all physics
-     * objects in the mouse picking process. This applies to 2D CanvasItem object picking only.
+     * objects in the mouse picking process. This applies to `CanvasItem` picking only.
      *
      * Generated from Godot docs: Viewport.get_physics_object_picking_first_only
      */
@@ -1068,10 +1068,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * The shadow atlas' resolution (used for omni and spot lights). The value is rounded up to the
-     * nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at all.
-     * This can improve performance significantly on low-end systems by reducing both the CPU and GPU
-     * load (as fewer draw calls are needed to draw the scene without shadows).
+     * The shadow atlas's resolution (used for omni and spot lights). The final value is rounded up to
+     * the nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at
+     * all. This can improve performance significantly on low-end systems by reducing both the CPU and
+     * GPU load (as fewer draw calls are needed to draw the scene without shadows).
      *
      * Generated from Godot docs: Viewport.set_positional_shadow_atlas_size
      */
@@ -1080,10 +1080,10 @@ open class Viewport(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * The shadow atlas' resolution (used for omni and spot lights). The value is rounded up to the
-     * nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at all.
-     * This can improve performance significantly on low-end systems by reducing both the CPU and GPU
-     * load (as fewer draw calls are needed to draw the scene without shadows).
+     * The shadow atlas's resolution (used for omni and spot lights). The final value is rounded up to
+     * the nearest power of 2. Note: If this is set to `0`, no positional shadows will be visible at
+     * all. This can improve performance significantly on low-end systems by reducing both the CPU and
+     * GPU load (as fewer draw calls are needed to draw the scene without shadows).
      *
      * Generated from Godot docs: Viewport.get_positional_shadow_atlas_size
      */

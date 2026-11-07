@@ -8,6 +8,7 @@ import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Quaternion
+import net.multigesture.kanama.types.Vector2
 import net.multigesture.kanama.types.Vector3
 
 /**
@@ -96,6 +97,19 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
+     * Gets the active view configuration. Note: This will only return a valid value after OpenXR is
+     * initialized.
+     *
+     * Generated from Godot docs: OpenXRInterface.get_active_view_configuration
+     */
+    fun getActiveViewConfiguration(): OpenXRInterface.ViewConfiguration {
+        checkOpen()
+        val ret = OpenXRInterface.ViewConfiguration(ObjectCalls.ptrcallNoArgsRetLong(Binds.getActiveViewConfigurationBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * The display refresh rate for the current HMD. Only functional if this feature is supported by
      * the OpenXR runtime and after the interface has been initialized.
      *
@@ -118,6 +132,19 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         checkOpen()
         ObjectCalls.ptrcallWithDoubleArg(Binds.setDisplayRefreshRateBind, segment, refreshRate)
         ObjectCalls.keepReachable(this)
+    }
+
+    /**
+     * Returns the recommended render target size from the OpenXR runtime. This may not match the
+     * current render target size returned by `XRInterface.get_render_target_size`.
+     *
+     * Generated from Godot docs: OpenXRInterface.get_recommended_target_size
+     */
+    fun getRecommendedTargetSize(): Vector2 {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetVector2(Binds.getRecommendedTargetSizeBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
     }
 
     /**
@@ -663,6 +690,49 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
+     * Godot's `OpenXRInterface.ViewConfiguration` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`OpenXRInterface.ViewConfiguration.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRInterface.ViewConfiguration
+     */
+    @JvmInline
+    value class ViewConfiguration(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Our XR output configuration is monoscopic.
+             *
+             * Generated from Godot docs: OpenXRInterface.VIEW_CONFIGURATION_MONO
+             */
+            val MONO: ViewConfiguration get() = ViewConfiguration(0L)
+            /**
+             * Our XR output configuration is stereoscopic.
+             *
+             * Generated from Godot docs: OpenXRInterface.VIEW_CONFIGURATION_STEREO
+             */
+            val STEREO: ViewConfiguration get() = ViewConfiguration(1L)
+            /**
+             * Our XR output configuration is stereoscopic with an additional foveated inset render.
+             *
+             * Generated from Godot docs: OpenXRInterface.VIEW_CONFIGURATION_STEREO_WITH_INSET
+             */
+            val STEREO_WITH_INSET: ViewConfiguration get() = ViewConfiguration(2L)
+            /**
+             * Our XR output configuration has not yet been determined.
+             *
+             * Generated from Godot docs: OpenXRInterface.VIEW_CONFIGURATION_UNSET
+             */
+            val UNSET: ViewConfiguration get() = ViewConfiguration(254L)
+            /**
+             * Our XR output configuration is unknown.
+             *
+             * Generated from Godot docs: OpenXRInterface.VIEW_CONFIGURATION_UNKNOWN
+             */
+            val UNKNOWN: ViewConfiguration get() = ViewConfiguration(255L)
+        }
+    }
+
+    /**
      * Godot's `OpenXRInterface.Hand` enum as a typed value: `.value` is the raw number Godot uses, and
      * the companion holds the named values (`OpenXRInterface.Hand.<NAME>`).
      *
@@ -1144,6 +1214,11 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         val isUserPresentBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "is_user_present", IS_USER_PRESENT_HASH)
 
+        private const val GET_ACTIVE_VIEW_CONFIGURATION_HASH = 3905272016L
+        @JvmField
+        val getActiveViewConfigurationBind =
+            ObjectCalls.getMethodBind("OpenXRInterface", "get_active_view_configuration", GET_ACTIVE_VIEW_CONFIGURATION_HASH)
+
         private const val GET_DISPLAY_REFRESH_RATE_HASH = 1740695150L
         @JvmField
         val getDisplayRefreshRateBind =
@@ -1153,6 +1228,11 @@ class OpenXRInterface(handle: GodotHandle) : XRInterface(handle) {
         @JvmField
         val setDisplayRefreshRateBind =
             ObjectCalls.getMethodBind("OpenXRInterface", "set_display_refresh_rate", SET_DISPLAY_REFRESH_RATE_HASH)
+
+        private const val GET_RECOMMENDED_TARGET_SIZE_HASH = 3341600327L
+        @JvmField
+        val getRecommendedTargetSizeBind =
+            ObjectCalls.getMethodBind("OpenXRInterface", "get_recommended_target_size", GET_RECOMMENDED_TARGET_SIZE_HASH)
 
         private const val GET_RENDER_TARGET_SIZE_MULTIPLIER_HASH = 1740695150L
         @JvmField

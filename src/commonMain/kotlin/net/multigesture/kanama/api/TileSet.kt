@@ -1018,8 +1018,8 @@ class TileSet(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the alternative-level proxy for the given identifiers. The returned array contains the
-     * three proxie's target identifiers (source ID, atlas coords ID and alternative tile ID). If the
-     * TileSet has no proxy for the given identifiers, returns an empty Array.
+     * three proxies' target identifiers (source ID, atlas coordinate ID, and alternative tile ID). If
+     * the TileSet has no proxy for the given identifiers, returns an empty Array.
      *
      * Generated from Godot docs: TileSet.get_alternative_level_tile_proxy
      */

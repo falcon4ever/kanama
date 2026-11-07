@@ -300,7 +300,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * The order in which this node is drawn. A node with a higher Z index will display in front of
      * others. Must be between `RenderingServer.CANVAS_ITEM_Z_MIN` and
      * `RenderingServer.CANVAS_ITEM_Z_MAX` (inclusive). Note: The Z index does not affect the order in
-     * which `CanvasItem` nodes are processed or the way input events are handled. This is especially
+     * which `CanvasItem` nodes are processed, or the way input events are handled. This is especially
      * important to keep in mind for `Control` nodes.
      *
      * Generated from Godot docs: CanvasItem.set_z_index
@@ -313,7 +313,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * The order in which this node is drawn. A node with a higher Z index will display in front of
      * others. Must be between `RenderingServer.CANVAS_ITEM_Z_MIN` and
      * `RenderingServer.CANVAS_ITEM_Z_MAX` (inclusive). Note: The Z index does not affect the order in
-     * which `CanvasItem` nodes are processed or the way input events are handled. This is especially
+     * which `CanvasItem` nodes are processed, or the way input events are handled. This is especially
      * important to keep in mind for `Control` nodes.
      *
      * Generated from Godot docs: CanvasItem.get_z_index
@@ -351,7 +351,9 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * child node ('B'), the child node ('B') is sorted but its children ('C1', 'C2', etc.) render
      * together on the same Y position as the child node ('B'). This allows you to organize the render
      * order of a scene without changing the scene tree. Nodes sort relative to each other only if they
-     * are on the same `z_index`.
+     * are on the same `z_index`. Note: Y-sorting does not affect the order in which `CanvasItem` nodes
+     * are processed, or the way input events are handled. This is especially important to keep in mind
+     * for `Control` nodes.
      *
      * Generated from Godot docs: CanvasItem.set_y_sort_enabled
      */
@@ -366,7 +368,9 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * child node ('B'), the child node ('B') is sorted but its children ('C1', 'C2', etc.) render
      * together on the same Y position as the child node ('B'). This allows you to organize the render
      * order of a scene without changing the scene tree. Nodes sort relative to each other only if they
-     * are on the same `z_index`.
+     * are on the same `z_index`. Note: Y-sorting does not affect the order in which `CanvasItem` nodes
+     * are processed, or the way input events are handled. This is especially important to keep in mind
+     * for `Control` nodes.
      *
      * Generated from Godot docs: CanvasItem.is_y_sort_enabled
      */
@@ -409,7 +413,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     /**
      * Draws a dashed line from a 2D point to another, with a given color and width. The `from` and
      * `to` positions are defined in local space. See also `draw_line`, `draw_multiline`, and
-     * `draw_polyline`. If `width` is negative, then a two-point primitives will be drawn instead of a
+     * `draw_polyline`. If `width` is negative, then two-point primitives will be drawn instead of
      * four-point ones. This means that when the CanvasItem is scaled, the line parts will remain thin.
      * If this behavior is not desired, then pass a positive `width` like `1.0`. `dash` is the length
      * of each dash in pixels, with the gap between each dash being the same length. If `aligned` is
@@ -504,7 +508,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * `points[2 * i]`, `points[2 * i + 1]` endpoints. When drawing large amounts of lines, this is
      * faster than using individual `draw_line` calls. To draw interconnected lines, use
      * `draw_polyline` instead. If `width` is negative, then two-point primitives will be drawn instead
-     * of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin.
+     * of four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin.
      * If this behavior is not desired, then pass a positive `width` like `1.0`. Note: `antialiased` is
      * only effective if `width` is greater than `0.0`.
      *
@@ -521,8 +525,8 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * `points[2 * i + 1]` endpoints and has `colors` color. When drawing large amounts of lines, this
      * is faster than using individual `draw_line` calls. To draw interconnected lines, use
      * `draw_polyline_colors` instead. If `width` is negative, then two-point primitives will be drawn
-     * instead of a four-point ones. This means that when the CanvasItem is scaled, the lines will
-     * remain thin. If this behavior is not desired, then pass a positive `width` like `1.0`. Note:
+     * instead of four-point ones. This means that when the CanvasItem is scaled, the lines will remain
+     * thin. If this behavior is not desired, then pass a positive `width` like `1.0`. Note:
      * `antialiased` is only effective if `width` is greater than `0.0`.
      *
      * Generated from Godot docs: CanvasItem.draw_multiline_colors
@@ -535,7 +539,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * Draws a rectangle. If `filled` is `true`, the rectangle will be filled with the `color`
      * specified. If `filled` is `false`, the rectangle will be drawn as a stroke with the `color` and
      * `width` specified. The `rect` is specified in local space. See also `draw_texture_rect`. If
-     * `width` is negative, then two-point primitives will be drawn instead of a four-point ones. This
+     * `width` is negative, then two-point primitives will be drawn instead of four-point ones. This
      * means that when the CanvasItem is scaled, the lines will remain thin. If this behavior is not
      * desired, then pass a positive `width` like `1.0`. If `antialiased` is `true`, half transparent
      * "feathers" will be attached to the boundary, making outlines smooth. Note: `width` is only
@@ -554,7 +558,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
      * `draw_polyline`, and `draw_polygon`. If `filled` is `true`, the circle will be filled with the
      * `color` specified. If `filled` is `false`, the circle will be drawn as a stroke with the `color`
      * and `width` specified. If `width` is negative, then two-point primitives will be drawn instead
-     * of a four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin.
+     * of four-point ones. This means that when the CanvasItem is scaled, the lines will remain thin.
      * If this behavior is not desired, then pass a positive `width` like `1.0`. If `antialiased` is
      * `true`, half transparent "feathers" will be attached to the boundary, making outlines smooth.
      * Note: `width` is only effective if `filled` is `false`.
@@ -909,7 +913,7 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Returns the transform from the local coordinate system of this `CanvasItem` to the `Viewport`s
+     * Returns the transform from the local coordinate system of this `CanvasItem` to the `Viewport`'s
      * coordinate system.
      *
      * Generated from Godot docs: CanvasItem.get_global_transform_with_canvas
@@ -1152,12 +1156,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     /**
      * The rendering layer in which this `CanvasItem` is rendered by `Viewport` nodes. A `Viewport`
      * will render a `CanvasItem` if it and all its parents share a layer with the `Viewport`'s canvas
-     * cull mask. Note: A `CanvasItem` does not inherit its parents' visibility layers. This means that
-     * if a parent `CanvasItem` does not have all the same layers as its child, the child may not be
-     * visible even if both the parent and child have `visible` set to `true`. For example, if a parent
-     * has layer 1 and a child has layer 2, the child will not be visible in a `Viewport` with the
-     * canvas cull mask set to layer 1 or 2 (see `Viewport.canvas_cull_mask`). To ensure that both the
-     * parent and child are visible, the parent must have both layers 1 and 2, or the child must have
+     * cull mask. For an easier way to change this value from a script, see `set_visibility_layer_bit`.
+     * Note: A `CanvasItem` does not inherit its parents' visibility layers. This means that if a
+     * parent `CanvasItem` does not have all the same layers as its child, the child may not be visible
+     * even if both the parent and child have `visible` set to `true`. For example, if a parent has
+     * layer 1 and a child has layer 2, the child will not be visible in a `Viewport` with the canvas
+     * cull mask set to layer 1 or 2 (see `Viewport.canvas_cull_mask`). To ensure that both the parent
+     * and child are visible, the parent must have both layers 1 and 2, or the child must have
      * `top_level` set to `true`.
      *
      * Generated from Godot docs: CanvasItem.set_visibility_layer
@@ -1169,12 +1174,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     /**
      * The rendering layer in which this `CanvasItem` is rendered by `Viewport` nodes. A `Viewport`
      * will render a `CanvasItem` if it and all its parents share a layer with the `Viewport`'s canvas
-     * cull mask. Note: A `CanvasItem` does not inherit its parents' visibility layers. This means that
-     * if a parent `CanvasItem` does not have all the same layers as its child, the child may not be
-     * visible even if both the parent and child have `visible` set to `true`. For example, if a parent
-     * has layer 1 and a child has layer 2, the child will not be visible in a `Viewport` with the
-     * canvas cull mask set to layer 1 or 2 (see `Viewport.canvas_cull_mask`). To ensure that both the
-     * parent and child are visible, the parent must have both layers 1 and 2, or the child must have
+     * cull mask. For an easier way to change this value from a script, see `set_visibility_layer_bit`.
+     * Note: A `CanvasItem` does not inherit its parents' visibility layers. This means that if a
+     * parent `CanvasItem` does not have all the same layers as its child, the child may not be visible
+     * even if both the parent and child have `visible` set to `true`. For example, if a parent has
+     * layer 1 and a child has layer 2, the child will not be visible in a `Viewport` with the canvas
+     * cull mask set to layer 1 or 2 (see `Viewport.canvas_cull_mask`). To ensure that both the parent
+     * and child are visible, the parent must have both layers 1 and 2, or the child must have
      * `top_level` set to `true`.
      *
      * Generated from Godot docs: CanvasItem.get_visibility_layer
@@ -1184,8 +1190,9 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Set/clear individual bits on the rendering visibility layer. This simplifies editing this
-     * `CanvasItem`'s visibility layer.
+     * Set/clear individual bits on the rendering visibility layer (`layer` is between `0` and `31`).
+     * This simplifies editing this `CanvasItem`'s visibility layer compared to assigning the
+     * `visibility_layer` property directly.
      *
      * Generated from Godot docs: CanvasItem.set_visibility_layer_bit
      */
@@ -1271,7 +1278,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * If enabled, oversampling for this `CanvasItem` is automatically adjusted with scale.
+     * If enabled, oversampling for this `CanvasItem` is automatically adjusted with scale. This makes
+     * fonts and `DPITexture` images automatically re-render to match the actual scale they are drawn
+     * at, for crisper visuals. This has a performance impact on the CPU every time the node's scale
+     * changes, so it is disabled by default. Note: For `Control` nodes with
+     * `Control.offset_transform_enabled` set to `true`, scale-based oversampling is only effective if
+     * `Control.offset_transform_visual_only` is `false`. This ensures there is no performance overhead
+     * when using visual-only offset transforms (as often used in animations).
      *
      * Generated from Godot docs: CanvasItem.set_oversampling_with_scale
      */
@@ -1280,7 +1293,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * If enabled, oversampling for this `CanvasItem` is automatically adjusted with scale.
+     * If enabled, oversampling for this `CanvasItem` is automatically adjusted with scale. This makes
+     * fonts and `DPITexture` images automatically re-render to match the actual scale they are drawn
+     * at, for crisper visuals. This has a performance impact on the CPU every time the node's scale
+     * changes, so it is disabled by default. Note: For `Control` nodes with
+     * `Control.offset_transform_enabled` set to `true`, scale-based oversampling is only effective if
+     * `Control.offset_transform_visual_only` is `false`. This ensures there is no performance overhead
+     * when using visual-only offset transforms (as often used in animations).
      *
      * Generated from Godot docs: CanvasItem.get_oversampling_with_scale
      */

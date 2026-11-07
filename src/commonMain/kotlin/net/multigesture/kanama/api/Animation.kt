@@ -267,7 +267,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the interpolated position value at the given time (in seconds). The `track_idx` must be
-     * the index of a 3D position track.
+     * the index of a 3D position track. Note: If `backward` is `true`, the keys are retrieved on the
+     * reversed timeline. See also `value_track_interpolate`.
      *
      * Generated from Godot docs: Animation.position_track_interpolate
      */
@@ -280,7 +281,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the interpolated rotation value at the given time (in seconds). The `track_idx` must be
-     * the index of a 3D rotation track.
+     * the index of a 3D rotation track. Note: If `backward` is `true`, the keys are retrieved on the
+     * reversed timeline. See also `value_track_interpolate`.
      *
      * Generated from Godot docs: Animation.rotation_track_interpolate
      */
@@ -293,7 +295,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the interpolated scale value at the given time (in seconds). The `track_idx` must be the
-     * index of a 3D scale track.
+     * index of a 3D scale track. Note: If `backward` is `true`, the keys are retrieved on the reversed
+     * timeline. See also `value_track_interpolate`.
      *
      * Generated from Godot docs: Animation.scale_track_interpolate
      */
@@ -306,7 +309,8 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the interpolated blend shape value at the given time (in seconds). The `track_idx` must
-     * be the index of a blend shape track.
+     * be the index of a blend shape track. Note: If `backward` is `true`, the keys are retrieved on
+     * the reversed timeline. See also `value_track_interpolate`.
      *
      * Generated from Godot docs: Animation.blend_shape_track_interpolate
      */
@@ -535,10 +539,10 @@ class Animation(handle: GodotHandle) : Resource(handle) {
 
     /**
      * Returns the interpolated value at the given time (in seconds). The `track_idx` must be the index
-     * of a value track. A `backward` mainly affects the direction of key retrieval of the track with
-     * `UpdateMode.DISCRETE` converted by
-     * `AnimationMixer.AnimationCallbackModeDiscrete.FORCE_CONTINUOUS` to match the result with
-     * `track_find_key`.
+     * of a value track. If `backward` is `true`, the keys are retrieved on the reversed timeline, so
+     * the base key is the key after `time_sec`. This changes the result only for `UpdateMode.DISCRETE`
+     * and `InterpolationType.NEAREST`; the other interpolation types give the same result as forward.
+     * Note: `AnimationMixer` always passes `false` for continuous tracks with playback API.
      *
      * Generated from Godot docs: Animation.value_track_interpolate
      */
@@ -1205,6 +1209,22 @@ class Animation(handle: GodotHandle) : Resource(handle) {
              * Generated from Godot docs: Animation.INTERPOLATION_CUBIC_ANGLE
              */
             val CUBIC_ANGLE: InterpolationType get() = InterpolationType(4L)
+            /**
+             * Modified Akima interpolation. Like `InterpolationType.CUBIC`, this produces a smooth curve
+             * through the keys, but it overshoots less and stays flat where three or more adjacent keys have
+             * the same value. It uses two keys on each side of the current segment, so it is slightly more
+             * expensive than cubic interpolation.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_MAKIMA
+             */
+            val MAKIMA: InterpolationType get() = InterpolationType(5L)
+            /**
+             * Modified Akima interpolation with shortest path rotation. Note: The result value is always
+             * normalized and may not match the key value.
+             *
+             * Generated from Godot docs: Animation.INTERPOLATION_MAKIMA_ANGLE
+             */
+            val MAKIMA_ANGLE: InterpolationType get() = InterpolationType(6L)
         }
     }
 

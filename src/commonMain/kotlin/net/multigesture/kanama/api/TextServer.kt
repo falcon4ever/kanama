@@ -45,6 +45,21 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
+     * Returns the short name of the server interface. This short name can be used as a value for the
+     * `--text-driver` command line argument ($DOCS_URL/tutorials/editor/command_line_tutorial.html)
+     * (the full name is also supported for compatibility, but it must be quoted if it contains
+     * spaces).
+     *
+     * Generated from Godot docs: TextServer.get_short_name
+     */
+    fun getShortName(): String {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getShortNameBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * Returns text server features, see `Feature`.
      *
      * Generated from Godot docs: TextServer.get_features
@@ -4047,6 +4062,11 @@ open class TextServer(handle: GodotHandle) : RefCounted(handle) {
         @JvmField
         val getNameBind =
             ObjectCalls.getMethodBind("TextServer", "get_name", GET_NAME_HASH)
+
+        private const val GET_SHORT_NAME_HASH = 201670096L
+        @JvmField
+        val getShortNameBind =
+            ObjectCalls.getMethodBind("TextServer", "get_short_name", GET_SHORT_NAME_HASH)
 
         private const val GET_FEATURES_HASH = 3905245786L
         @JvmField

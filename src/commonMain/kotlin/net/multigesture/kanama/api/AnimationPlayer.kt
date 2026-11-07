@@ -83,6 +83,12 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         @JvmName("setMovieQuitOnFinishProperty")
         set(value) = setMovieQuitOnFinishEnabled(value)
 
+    var clearCacheOnStop: Boolean
+        @JvmName("clearCacheOnStopProperty")
+        get() = isClearCacheOnStopEnabled()
+        @JvmName("setClearCacheOnStopProperty")
+        set(value) = setClearCacheOnStopEnabled(value)
+
     /**
      * Triggers the `animation_to` animation when the `animation_from` animation completes.
      *
@@ -264,7 +270,11 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
 
     /**
      * Plays the animation with key `name` in reverse. This method is a shorthand for `play` with
-     * `custom_speed = -1.0` and `from_end = true`, so see its description for more information.
+     * `custom_speed = -1.0` and `from_end = true`, so see its description for more information. Note:
+     * Continuous tracks, including value tracks with `Animation.UpdateMode.CONTINUOUS`, are simply
+     * interpolated on the reversed timeline, while value tracks with `Animation.UpdateMode.DISCRETE`
+     * apply a key only in the frame it is passed, so the value held between two keys can differ from
+     * forward playback.
      *
      * Generated from Godot docs: AnimationPlayer.play_backwards
      */
@@ -504,6 +514,28 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
      */
     fun isMovieQuitOnFinishEnabled(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isMovieQuitOnFinishEnabledBind, segment)
+    }
+
+    /**
+     * If `true`, the animation track cache is cleared when the animation is stopped or the playback
+     * queue becomes empty. If `false`, the track cache is preserved, which can improve performance
+     * when animations are frequently started and stopped.
+     *
+     * Generated from Godot docs: AnimationPlayer.set_clear_cache_on_stop_enabled
+     */
+    fun setClearCacheOnStopEnabled(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setClearCacheOnStopEnabledBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, the animation track cache is cleared when the animation is stopped or the playback
+     * queue becomes empty. If `false`, the track cache is preserved, which can improve performance
+     * when animations are frequently started and stopped.
+     *
+     * Generated from Godot docs: AnimationPlayer.is_clear_cache_on_stop_enabled
+     */
+    fun isClearCacheOnStopEnabled(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isClearCacheOnStopEnabledBind, segment)
     }
 
     /**
@@ -905,6 +937,16 @@ class AnimationPlayer(handle: GodotHandle) : AnimationMixer(handle) {
         @JvmField
         val isMovieQuitOnFinishEnabledBind =
             ObjectCalls.getMethodBind("AnimationPlayer", "is_movie_quit_on_finish_enabled", IS_MOVIE_QUIT_ON_FINISH_ENABLED_HASH)
+
+        private const val SET_CLEAR_CACHE_ON_STOP_ENABLED_HASH = 2586408642L
+        @JvmField
+        val setClearCacheOnStopEnabledBind =
+            ObjectCalls.getMethodBind("AnimationPlayer", "set_clear_cache_on_stop_enabled", SET_CLEAR_CACHE_ON_STOP_ENABLED_HASH)
+
+        private const val IS_CLEAR_CACHE_ON_STOP_ENABLED_HASH = 36873697L
+        @JvmField
+        val isClearCacheOnStopEnabledBind =
+            ObjectCalls.getMethodBind("AnimationPlayer", "is_clear_cache_on_stop_enabled", IS_CLEAR_CACHE_ON_STOP_ENABLED_HASH)
 
         private const val GET_CURRENT_ANIMATION_POSITION_HASH = 1740695150L
         @JvmField

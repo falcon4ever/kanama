@@ -53,7 +53,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
      * reduce the performance impact of switching textures at runtime, make sure each dimension of an
      * area texture is either a multiple of 128 pixels, or a power of two. This removes the need for a
      * scaling pass, which slows down texture changes. The textures don't necessarily have to be square
-     * to be optimal. Examples of optimal texture sizes include 32x64, 128x128, and 256x384.
+     * to be optimal. Examples of optimal texture sizes include 32×64, 128×128, and 256×384.
      *
      * Generated from Godot docs: AreaLight3D.set_area_texture
      */
@@ -70,7 +70,7 @@ class AreaLight3D(handle: GodotHandle) : Light3D(handle) {
      * reduce the performance impact of switching textures at runtime, make sure each dimension of an
      * area texture is either a multiple of 128 pixels, or a power of two. This removes the need for a
      * scaling pass, which slows down texture changes. The textures don't necessarily have to be square
-     * to be optimal. Examples of optimal texture sizes include 32x64, 128x128, and 256x384.
+     * to be optimal. Examples of optimal texture sizes include 32×64, 128×128, and 256×384.
      *
      * Generated from Godot docs: AreaLight3D.get_area_texture
      */

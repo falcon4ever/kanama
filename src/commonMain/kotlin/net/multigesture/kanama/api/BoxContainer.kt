@@ -26,6 +26,12 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setVerticalProperty")
         set(value) = setVertical(value)
 
+    var reverseSort: Boolean
+        @JvmName("reverseSortProperty")
+        get() = isReverseSort()
+        @JvmName("setReverseSortProperty")
+        set(value) = setReverseSort(value)
+
     /**
      * Adds a `Control` node to the box as a spacer. If `begin` is `true`, it will insert the `Control`
      * node in front of all other children.
@@ -74,6 +80,24 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
      */
     fun isVertical(): Boolean {
         return ObjectCalls.ptrcallNoArgsRetBool(Binds.isVerticalBind, segment)
+    }
+
+    /**
+     * If `true`, the `BoxContainer` will arrange its children in reverse order.
+     *
+     * Generated from Godot docs: BoxContainer.set_reverse_sort
+     */
+    fun setReverseSort(reverseSort: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setReverseSortBind, segment, reverseSort)
+    }
+
+    /**
+     * If `true`, the `BoxContainer` will arrange its children in reverse order.
+     *
+     * Generated from Godot docs: BoxContainer.is_reverse_sort
+     */
+    fun isReverseSort(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isReverseSortBind, segment)
     }
 
     /**
@@ -147,5 +171,15 @@ open class BoxContainer(handle: GodotHandle) : Container(handle) {
         @JvmField
         val isVerticalBind =
             ObjectCalls.getMethodBind("BoxContainer", "is_vertical", IS_VERTICAL_HASH)
+
+        private const val SET_REVERSE_SORT_HASH = 2586408642L
+        @JvmField
+        val setReverseSortBind =
+            ObjectCalls.getMethodBind("BoxContainer", "set_reverse_sort", SET_REVERSE_SORT_HASH)
+
+        private const val IS_REVERSE_SORT_HASH = 36873697L
+        @JvmField
+        val isReverseSortBind =
+            ObjectCalls.getMethodBind("BoxContainer", "is_reverse_sort", IS_REVERSE_SORT_HASH)
     }
 }

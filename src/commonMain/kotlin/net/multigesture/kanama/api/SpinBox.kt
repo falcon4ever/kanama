@@ -31,18 +31,6 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
         @JvmName("setUpdateOnTextChangedProperty")
         set(value) = setUpdateOnTextChanged(value)
 
-    var prefix: String
-        @JvmName("prefixProperty")
-        get() = getPrefix()
-        @JvmName("setPrefixProperty")
-        set(value) = setPrefix(value)
-
-    var suffix: String
-        @JvmName("suffixProperty")
-        get() = getSuffix()
-        @JvmName("setSuffixProperty")
-        set(value) = setSuffix(value)
-
     var customArrowStep: Double
         @JvmName("customArrowStepProperty")
         get() = getCustomArrowStep()
@@ -60,6 +48,36 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
         get() = isSelectAllOnFocus()
         @JvmName("setSelectAllOnFocusProperty")
         set(value) = setSelectAllOnFocus(value)
+
+    var format: String
+        @JvmName("formatProperty")
+        get() = getFormat()
+        @JvmName("setFormatProperty")
+        set(value) = setFormat(value)
+
+    var pluralFormat: String
+        @JvmName("pluralFormatProperty")
+        get() = getPluralFormat()
+        @JvmName("setPluralFormatProperty")
+        set(value) = setPluralFormat(value)
+
+    var formatAutoTranslateMode: Node.AutoTranslateMode
+        @JvmName("formatAutoTranslateModeProperty")
+        get() = getFormatAutoTranslateMode()
+        @JvmName("setFormatAutoTranslateModeProperty")
+        set(value) = setFormatAutoTranslateMode(value)
+
+    var prefix: String
+        @JvmName("prefixProperty")
+        get() = getPrefix()
+        @JvmName("setPrefixProperty")
+        set(value) = setPrefix(value)
+
+    var suffix: String
+        @JvmName("suffixProperty")
+        get() = getSuffix()
+        @JvmName("setSuffixProperty")
+        set(value) = setSuffix(value)
 
     /**
      * Changes the alignment of the underlying `LineEdit`.
@@ -80,7 +98,80 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Adds the specified suffix string after the numerical value of the `SpinBox`.
+     * The formatting of the displayed numeric value, using the same rules as `String`'s `%` operator
+     * (see GDScript format strings
+     * ($DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html)). If empty, the value is
+     * displayed with no special formatting. If the format string is invalid, the `SpinBox` will
+     * display `"ERROR"`, with the error message available as a configuration warning. The following
+     * format strings can be used as examples: - `"(%s)"` displays as a number in parentheses (e.g.
+     * `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
+     * `"%0.2f%%"` displays as a percentage, with 2 decimal places of precision (e.g. `21.37%`).
+     *
+     * Generated from Godot docs: SpinBox.set_format
+     */
+    fun setFormat(format: String) {
+        ObjectCalls.ptrcallWithStringArg(Binds.setFormatBind, segment, format)
+    }
+
+    /**
+     * The formatting of the displayed numeric value, using the same rules as `String`'s `%` operator
+     * (see GDScript format strings
+     * ($DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html)). If empty, the value is
+     * displayed with no special formatting. If the format string is invalid, the `SpinBox` will
+     * display `"ERROR"`, with the error message available as a configuration warning. The following
+     * format strings can be used as examples: - `"(%s)"` displays as a number in parentheses (e.g.
+     * `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
+     * `"%0.2f%%"` displays as a percentage, with 2 decimal places of precision (e.g. `21.37%`).
+     *
+     * Generated from Godot docs: SpinBox.get_format
+     */
+    fun getFormat(): String {
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getFormatBind, segment)
+    }
+
+    /**
+     * Plural version of `format`. Used only if `format` is not empty and `format_auto_translate_mode`
+     * is not disabled. See also `Object.tr_n`.
+     *
+     * Generated from Godot docs: SpinBox.set_plural_format
+     */
+    fun setPluralFormat(format: String) {
+        ObjectCalls.ptrcallWithStringArg(Binds.setPluralFormatBind, segment, format)
+    }
+
+    /**
+     * Plural version of `format`. Used only if `format` is not empty and `format_auto_translate_mode`
+     * is not disabled. See also `Object.tr_n`.
+     *
+     * Generated from Godot docs: SpinBox.get_plural_format
+     */
+    fun getPluralFormat(): String {
+        return ObjectCalls.ptrcallNoArgsRetString(Binds.getPluralFormatBind, segment)
+    }
+
+    /**
+     * Auto-translation mode for the `format`. Useful when the format has a word that can be
+     * translated.
+     *
+     * Generated from Godot docs: SpinBox.set_format_auto_translate_mode
+     */
+    fun setFormatAutoTranslateMode(mode: Node.AutoTranslateMode) {
+        ObjectCalls.ptrcallWithLongArg(Binds.setFormatAutoTranslateModeBind, segment, mode.value)
+    }
+
+    /**
+     * Auto-translation mode for the `format`. Useful when the format has a word that can be
+     * translated.
+     *
+     * Generated from Godot docs: SpinBox.get_format_auto_translate_mode
+     */
+    fun getFormatAutoTranslateMode(): Node.AutoTranslateMode {
+        return Node.AutoTranslateMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getFormatAutoTranslateModeBind, segment))
+    }
+
+    /**
+     * Adds the specified suffix string after the numerical value of the `SpinBox`. This is used only
+     * if `format` is empty.
      *
      * Generated from Godot docs: SpinBox.set_suffix
      */
@@ -89,7 +180,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Adds the specified suffix string after the numerical value of the `SpinBox`.
+     * Adds the specified suffix string after the numerical value of the `SpinBox`. This is used only
+     * if `format` is empty.
      *
      * Generated from Godot docs: SpinBox.get_suffix
      */
@@ -98,7 +190,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Adds the specified prefix string before the numerical value of the `SpinBox`.
+     * Adds the specified prefix string before the numerical value of the `SpinBox`. This is used only
+     * if `format` is empty.
      *
      * Generated from Godot docs: SpinBox.set_prefix
      */
@@ -107,7 +200,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
     }
 
     /**
-     * Adds the specified prefix string before the numerical value of the `SpinBox`.
+     * Adds the specified prefix string before the numerical value of the `SpinBox`. This is used only
+     * if `format` is empty.
      *
      * Generated from Godot docs: SpinBox.get_prefix
      */
@@ -268,6 +362,36 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
         @JvmField
         val getHorizontalAlignmentBind =
             ObjectCalls.getMethodBind("SpinBox", "get_horizontal_alignment", GET_HORIZONTAL_ALIGNMENT_HASH)
+
+        private const val SET_FORMAT_HASH = 83702148L
+        @JvmField
+        val setFormatBind =
+            ObjectCalls.getMethodBind("SpinBox", "set_format", SET_FORMAT_HASH)
+
+        private const val GET_FORMAT_HASH = 201670096L
+        @JvmField
+        val getFormatBind =
+            ObjectCalls.getMethodBind("SpinBox", "get_format", GET_FORMAT_HASH)
+
+        private const val SET_PLURAL_FORMAT_HASH = 83702148L
+        @JvmField
+        val setPluralFormatBind =
+            ObjectCalls.getMethodBind("SpinBox", "set_plural_format", SET_PLURAL_FORMAT_HASH)
+
+        private const val GET_PLURAL_FORMAT_HASH = 201670096L
+        @JvmField
+        val getPluralFormatBind =
+            ObjectCalls.getMethodBind("SpinBox", "get_plural_format", GET_PLURAL_FORMAT_HASH)
+
+        private const val SET_FORMAT_AUTO_TRANSLATE_MODE_HASH = 776149714L
+        @JvmField
+        val setFormatAutoTranslateModeBind =
+            ObjectCalls.getMethodBind("SpinBox", "set_format_auto_translate_mode", SET_FORMAT_AUTO_TRANSLATE_MODE_HASH)
+
+        private const val GET_FORMAT_AUTO_TRANSLATE_MODE_HASH = 2498906432L
+        @JvmField
+        val getFormatAutoTranslateModeBind =
+            ObjectCalls.getMethodBind("SpinBox", "get_format_auto_translate_mode", GET_FORMAT_AUTO_TRANSLATE_MODE_HASH)
 
         private const val SET_SUFFIX_HASH = 83702148L
         @JvmField

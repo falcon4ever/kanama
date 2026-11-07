@@ -154,6 +154,24 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
             return ret
         }
 
+        /**
+         * Sets the property clipboard's content to the given value.
+         *
+         * Generated from Godot docs: EditorInspector.set_property_clipboard
+         */
+        fun setPropertyClipboard(value: Any?) {
+            ObjectCalls.ptrcallWithVariantArg(Binds.setPropertyClipboardBind, NULL_SEGMENT, value)
+        }
+
+        /**
+         * Gets the value currently in the property clipboard.
+         *
+         * Generated from Godot docs: EditorInspector.get_property_clipboard
+         */
+        fun getPropertyClipboard(): Any? {
+            return ObjectCalls.ptrcallNoArgsRetVariantScalar(Binds.getPropertyClipboardBind, NULL_SEGMENT)
+        }
+
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorInspector? =
             wrap(handle.segment)
@@ -207,5 +225,15 @@ class EditorInspector(handle: GodotHandle) : ScrollContainer(handle) {
         @JvmField
         val createDefaultInspectorBind =
             ObjectCalls.getMethodBind("EditorInspector", "create_default_inspector", CREATE_DEFAULT_INSPECTOR_HASH)
+
+        private const val SET_PROPERTY_CLIPBOARD_HASH = 1114965689L
+        @JvmField
+        val setPropertyClipboardBind =
+            ObjectCalls.getMethodBind("EditorInspector", "set_property_clipboard", SET_PROPERTY_CLIPBOARD_HASH)
+
+        private const val GET_PROPERTY_CLIPBOARD_HASH = 1460262497L
+        @JvmField
+        val getPropertyClipboardBind =
+            ObjectCalls.getMethodBind("EditorInspector", "get_property_clipboard", GET_PROPERTY_CLIPBOARD_HASH)
     }
 }

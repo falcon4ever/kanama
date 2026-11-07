@@ -163,6 +163,7 @@ object DisplayServer {
       val ACCESSIBILITY_SCREEN_READER: Feature get() = Feature(34L)
       val HDR_OUTPUT: Feature get() = Feature(35L)
       val PIP_MODE: Feature get() = Feature(36L)
+      val EMBEDDED: Feature get() = Feature(37L)
     }
   }
 
@@ -320,6 +321,14 @@ object DisplayServer {
     }
   }
 
+  value class SensorOrientation(override val value: Long) : GodotEnumValue {
+    companion object {
+      val UNDEFINED: SensorOrientation get() = SensorOrientation(0L)
+      val PORTRAIT: SensorOrientation get() = SensorOrientation(1L)
+      val LANDSCAPE: SensorOrientation get() = SensorOrientation(2L)
+    }
+  }
+
   value class VirtualKeyboardType(override val value: Long) : GodotEnumValue {
     companion object {
       val DEFAULT: VirtualKeyboardType get() = VirtualKeyboardType(0L)
@@ -431,6 +440,14 @@ object DisplayServer {
       val BOTTOM: WindowResizeEdge get() = WindowResizeEdge(6L)
       val BOTTOM_RIGHT: WindowResizeEdge get() = WindowResizeEdge(7L)
       val MAX: WindowResizeEdge get() = WindowResizeEdge(8L)
+    }
+  }
+
+  value class NotificationStatus(override val value: Long) : GodotEnumValue {
+    companion object {
+      val ACTIVATED: NotificationStatus get() = NotificationStatus(0L)
+      val DISMISSED: NotificationStatus get() = NotificationStatus(1L)
+      val FAILED: NotificationStatus get() = NotificationStatus(2L)
     }
   }
 

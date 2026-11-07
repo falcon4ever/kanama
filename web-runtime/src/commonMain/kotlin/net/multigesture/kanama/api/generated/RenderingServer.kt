@@ -192,6 +192,7 @@ object RenderingServer {
       val FLAG_USE_8_BONE_WEIGHTS: ArrayFormat get() = ArrayFormat(134217728L)
       val FLAG_USES_EMPTY_VERTEX_ARRAY: ArrayFormat get() = ArrayFormat(268435456L)
       val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+      val FLAG_USE_STORAGE_BUFFER: ArrayFormat get() = ArrayFormat(1073741824L)
       val FLAG_FORMAT_VERSION_BASE: ArrayFormat get() = ArrayFormat(35L)
       val FLAG_FORMAT_VERSION_SHIFT: ArrayFormat get() = ArrayFormat(35L)
       val FLAG_FORMAT_VERSION_1: ArrayFormat get() = ArrayFormat(0L)
@@ -276,7 +277,8 @@ object RenderingServer {
       val SHADOW_BLUR: LightParam get() = LightParam(18L)
       val TRANSMITTANCE_BIAS: LightParam get() = LightParam(19L)
       val INTENSITY: LightParam get() = LightParam(20L)
-      val MAX: LightParam get() = LightParam(21L)
+      val CONTACT_SHADOW_BLUR: LightParam get() = LightParam(21L)
+      val MAX: LightParam get() = LightParam(22L)
     }
   }
 

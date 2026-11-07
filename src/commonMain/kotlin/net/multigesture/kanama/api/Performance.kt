@@ -499,11 +499,18 @@ object Performance {
              */
             val NAVIGATION_3D_OBSTACLE_COUNT: Monitor get() = Monitor(58L)
             /**
+             * The amount of memory used by texture streaming (in bytes). This represents the current VRAM
+             * usage of streamed textures at their currently loaded mipmap levels.
+             *
+             * Generated from Godot docs: Performance.RENDER_STREAMING_TEXTURE_MEM_USED
+             */
+            val RENDER_STREAMING_TEXTURE_MEM_USED: Monitor get() = Monitor(59L)
+            /**
              * Represents the size of the `Monitor` enum.
              *
              * Generated from Godot docs: Performance.MONITOR_MAX
              */
-            val MONITOR_MAX: Monitor get() = Monitor(59L)
+            val MONITOR_MAX: Monitor get() = Monitor(60L)
         }
     }
 
