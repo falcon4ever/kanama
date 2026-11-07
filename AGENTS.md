@@ -19,12 +19,11 @@ wording.
 
 ## First Stop for Implementation Work
 
-If you're working on a specific roadmap task, read the matching file in the
-sibling `kanama-tasks/` checkout first (it sits beside this repo like
-`kanama-demos/`; `scripts/audit_stale_blockers.py` resolves it the same way, or
-through `KANAMA_TASKS_DIR`). Each task is standalone and points to the smallest
-doc set and exact files to edit. The index is `kanama-tasks/README.md`. For
-ad-hoc work not covered by a task file, use "Read First By Task" below.
+Open work is on the public tracker: the issues in the
+[`0.5.0` milestone](https://github.com/falcon4ever/kanama/milestone/1) of
+`falcon4ever/kanama`. For work on an issue, or ad-hoc work, use "Read First By
+Task" below. A sibling `kanama-tasks/` checkout holds optional private maintainer
+notes; you do not need it, and nothing here depends on it.
 
 ## Read First By Task
 
