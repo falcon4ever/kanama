@@ -724,6 +724,15 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
+# A new trailing parameter with a default is compatible, except where a caller or an override would notice.
+case("check_public_signature_changes.py (trailing default, overridable)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: open class ZzRedRun\nZzRedRun: open fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nopen class ZzRedRun {\n  open fun redRun(a: Int, b: Int = 0) {}\n}\n")],
+     "unannounced source break", "an open function gains a trailing defaulted parameter: an override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, after a lambda)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: class ZzRedRun\nZzRedRun: fun redRun(block: () -> Unit)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n  fun redRun(block: () -> Unit, b: Int = 0) {}\n}\n")],
+     "unannounced source break", "a function whose last parameter is a lambda gains a defaulted one: a trailing lambda stops reaching it")
 case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
      [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
      "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")

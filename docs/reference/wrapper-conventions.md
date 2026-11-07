@@ -488,6 +488,10 @@ also has a `Float` overload that computes in `Double`.
   Expressed" in the
   [generator report](generated/wrapper-generator-report.md#godot-defaults-not-expressed).
   When a later Kanama gives one a default, your code still compiles.
+- When Godot adds a parameter with a default at the end of a method, Kanama adds
+  it the same way and your calls still compile, so it is not listed as a source
+  break. An `open` method is the exception, because your override would stop
+  matching, and so is a method that ended in a lambda or a `vararg`.
 - `GodotSignal.connect` and the other members Kanama writes by hand per
   platform have overloads instead of default arguments:
   `signal.connect(target, method)` and `connect(target, method, flags)`.

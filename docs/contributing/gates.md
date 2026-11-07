@@ -344,6 +344,12 @@ The gate compares lines, so it also stops changes that still compile, such as a
 return that becomes non-null or a parameter that becomes nullable: those are
 announced the same way.
 
+A new parameter with a default at the end of a function is source-compatible:
+every call still compiles, so Godot's habit of adding one needs only `--write`.
+Two cases stay breaks. An `open` function, because an override stops matching,
+and a function whose last parameter was a lambda or a `vararg`, because a trailing
+lambda or a spread stops reaching it.
+
 | What changed | Gate result | What to do |
 |---|---|---|
 | nothing | PASS | — |
