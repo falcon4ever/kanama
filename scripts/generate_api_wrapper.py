@@ -182,6 +182,16 @@ BY_DESIGN_METHOD_SKIPS = {
         "by design: Dictionary->Dictionary passthrough via the generic Map<String, Any?> helper "
         "silently drops non-String keys; shape reverted in 27b06fe6 (editor-LSP only)"
     ),
+    # Godot 4.8. A Callable argument is ownership-sensitive: the engine keeps these callbacks past
+    # the call, and a shape for them is a feature, not a table row (issue 402).
+    ("DisplayServer", "send_toast_notification"): (
+        "by design: keeps a Callable past the call, and a Callable argument is ownership-sensitive; "
+        "a new Callable shape is a feature, not a helper row"
+    ),
+    ("OpenXRSpatialEntityExtension", "create_spatial_context"): (
+        "by design: keeps two Callables past the call, and a Callable argument is ownership-sensitive; "
+        "a new Callable shape is a feature, not a helper row"
+    ),
 }
 
 # Members desktop deliberately keeps desktop-only (task 100 close-out): their argument types have no
@@ -255,6 +265,7 @@ SCALAR_KOTLIN_TYPES = {
     "TypedPackedStringArray": "List<List<String>>",
     "TypedPackedVector2Array": "List<List<Vector2>>",
     "TypedPlaneArray": "List<Plane>",
+    "TypedProjectionArray": "List<Projection>",
     "TypedRect2Array": "List<Rect2>",
     "TypedTransform3DArray": "List<Transform3D>",
     "TypedVector2Array": "List<Vector2>",
@@ -624,6 +635,7 @@ IOS_ARG_KINDS = {
     "TypedStringNameArray",
     "TypedNodePathArray",
     "TypedVector2iArray",
+    "TypedProjectionArray",
     "TypedTransform3DArray",
     "TypedPlaneArray",
     "TypedPackedVector2Array",
@@ -1912,6 +1924,8 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
         # An Object parameter Godot defaults to null is nullable (object_param_is_nullable rule 3).
         return "null"
     if logical_kind in {"Array", "PackedStringArray"} and default_value == "[]":
+        return "emptyList()"
+    if logical_kind == "TypedTransform3DArray" and default_value == "Array[Transform3D]([])":
         return "emptyList()"
     if logical_kind == "Dictionary" and default_value == "{}":
         return "emptyMap()"
@@ -5963,6 +5977,7 @@ IOS_TYPED_ARRAY_ARGS = {
     "TypedStringNameArray": ("List<String>", "packTypedStringNameArrayDesc"),
     "TypedNodePathArray": ("List<NodePath>", "packTypedNodePathArrayDesc"),
     "TypedVector2iArray": ("List<Vector2i>", "packTypedVector2iArrayDesc"),
+    "TypedProjectionArray": ("List<Projection>", "packTypedProjectionArrayDesc"),
     "TypedTransform3DArray": ("List<Transform3D>", "packTypedTransform3DArrayDesc"),
     "TypedPlaneArray": ("List<Plane>", "packTypedPlaneArrayDesc"),
     "TypedPackedVector2Array": ("List<List<Vector2>>", "packTypedPackedVector2ListArrayDesc"),
@@ -6381,6 +6396,7 @@ IOS_ARRAY_BLOB_RETURNS = {
     "typedarray::Vector2": ("ptrcallRetTypedVector2List", "List<Vector2>"),
     "typedarray::Vector3": ("ptrcallRetTypedVector3List", "List<Vector3>"),
     "typedarray::Rect2": ("ptrcallRetTypedRect2List", "List<Rect2>"),
+    "typedarray::Projection": ("ptrcallRetTypedProjectionList", "List<Projection>"),
     "typedarray::Transform3D": ("ptrcallRetTypedTransform3DList", "List<Transform3D>"),
     "typedarray::PackedVector2Array": ("ptrcallRetTypedPackedVector2ListList", "List<List<Vector2>>"),
     "typedarray::PackedByteArray": ("ptrcallRetTypedByteArrayList", "List<ByteArray>"),

@@ -7,6 +7,7 @@ import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
+import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.Transform3D
 
 /**
@@ -271,6 +272,30 @@ object XRServer {
     @JvmStatic
     fun getTracker(trackerName: String): XRTracker? {
         return XRTracker.wrapOwned(ObjectCalls.ptrcallWithStringNameArgRetObject(Binds.getTrackerBind, singleton, trackerName))
+    }
+
+    /**
+     * Gets an array of projection matrices for each view for tracker `tracker_name`. `tracker_name`
+     * must refer to an `XRPositionalTracker` used as a camera. Will check our primary interface first,
+     * then check each active interface. Returns empty if no interfaces manage this tracker.
+     *
+     * Generated from Godot docs: XRServer.get_camera_projections
+     */
+    @JvmStatic
+    fun getCameraProjections(trackerName: String, aspect: Double, near: Double, far: Double): List<Projection> {
+        return ObjectCalls.ptrcallWithStringNameThreeDoubleArgsRetProjectionList(Binds.getCameraProjectionsBind, singleton, trackerName, aspect, near, far)
+    }
+
+    /**
+     * Gets an array of offset transforms for each view for tracker `tracker_name`. `tracker_name` must
+     * refer to an `XRPositionalTracker` used as a camera. Will check our primary interface first, then
+     * check each active interface. Returns empty if no interfaces manage this tracker.
+     *
+     * Generated from Godot docs: XRServer.get_camera_offsets
+     */
+    @JvmStatic
+    fun getCameraOffsets(trackerName: String): List<Transform3D> {
+        return ObjectCalls.ptrcallWithStringNameArgRetTransform3DList(Binds.getCameraOffsetsBind, singleton, trackerName)
     }
 
     /**
@@ -562,6 +587,16 @@ object XRServer {
         @JvmField
         val getTrackerBind =
             ObjectCalls.getMethodBind("XRServer", "get_tracker", GET_TRACKER_HASH)
+
+        private const val GET_CAMERA_PROJECTIONS_HASH = 2969235509L
+        @JvmField
+        val getCameraProjectionsBind =
+            ObjectCalls.getMethodBind("XRServer", "get_camera_projections", GET_CAMERA_PROJECTIONS_HASH)
+
+        private const val GET_CAMERA_OFFSETS_HASH = 689397652L
+        @JvmField
+        val getCameraOffsetsBind =
+            ObjectCalls.getMethodBind("XRServer", "get_camera_offsets", GET_CAMERA_OFFSETS_HASH)
 
         private const val GET_PRIMARY_INTERFACE_HASH = 2143545064L
         @JvmField

@@ -49,6 +49,7 @@ ARRAY_KINDS = {
     "typed_packed_string_array",
     "typed_packed_vector2_array",
     "typed_plane_array",
+    "typed_projection_array",
     "typed_rect2_array",
     "typed_transform3d_array",
     "typed_vector2_array",

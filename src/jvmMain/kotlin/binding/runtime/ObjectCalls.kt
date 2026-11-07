@@ -908,6 +908,31 @@ actual object ObjectCalls {
     }
   }
 
+  /**
+   * Two Object args, bool return: the physics `*_into` queries (Godot 4.8). Both objects are
+   * borrowed: the engine fills the result object in place and keeps no reference to either, so the
+   * caller's wrappers keep owning them.
+   */
+  actual fun ptrcallWithTwoObjectArgsRetBool(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: MemorySegment,
+    second: MemorySegment,
+  ): Boolean {
+    Arena.ofConfined().use { arena ->
+      val obj0 = arena.allocate(ADDRESS)
+      val obj1 = arena.allocate(ADDRESS)
+      obj0.set(ADDRESS, 0, first)
+      obj1.set(ADDRESS, 0, second)
+      val arr = arena.allocate(ADDRESS, 2)
+      arr.setAtIndex(ADDRESS, 0, obj0)
+      arr.setAtIndex(ADDRESS, 1, obj1)
+      val ret = arena.allocate(JAVA_BYTE)
+      bindPtrcall(methodBind, instance, arr, ret)
+      return ret.get(JAVA_BYTE, 0) != 0.toByte()
+    }
+  }
+
   actual fun ptrcallWithTwoObjectUInt32ArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -1405,6 +1430,56 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<Transform3D> =
     callArrayReturn(methodBind, instance, MemorySegment.NULL, BuiltinTypes::readArrayTransform3D)
+
+  actual fun ptrcallWithIntArgRetRect2List(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Int,
+  ): List<Rect2> {
+    Arena.ofConfined().use { arena ->
+      val arg = arena.allocate(JAVA_INT)
+      arg.set(JAVA_INT, 0, value)
+      val args = arena.allocate(ADDRESS, 1)
+      args.setAtIndex(ADDRESS, 0, arg)
+      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayRect2)
+    }
+  }
+
+  actual fun ptrcallWithStringNameArgRetTransform3DList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+  ): List<Transform3D> {
+    Arena.ofConfined().use { arena ->
+      val args = arena.allocate(ADDRESS, 1)
+      args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
+      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayTransform3D)
+    }
+  }
+
+  actual fun ptrcallWithStringNameThreeDoubleArgsRetProjectionList(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    name: String,
+    first: Double,
+    second: Double,
+    third: Double,
+  ): List<Projection> {
+    Arena.ofConfined().use { arena ->
+      val firstCell = arena.allocate(JAVA_DOUBLE)
+      val secondCell = arena.allocate(JAVA_DOUBLE)
+      val thirdCell = arena.allocate(JAVA_DOUBLE)
+      firstCell.set(JAVA_DOUBLE, 0, first)
+      secondCell.set(JAVA_DOUBLE, 0, second)
+      thirdCell.set(JAVA_DOUBLE, 0, third)
+      val args = arena.allocate(ADDRESS, 4)
+      args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
+      args.setAtIndex(ADDRESS, 1, firstCell)
+      args.setAtIndex(ADDRESS, 2, secondCell)
+      args.setAtIndex(ADDRESS, 3, thirdCell)
+      return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayProjection)
+    }
+  }
 
   fun ptrcallNoArgsRetVector2List(
     methodBind: MemorySegment,
@@ -10852,6 +10927,34 @@ actual object ObjectCalls {
     }
   }
 
+  actual fun ptrcallWithTwoStringPackedStringListArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: String,
+    second: String,
+    values: List<String>,
+  ) {
+    Arena.ofConfined().use { arena ->
+      val firstCell = arena.allocate(8L, 8L)
+      val secondCell = arena.allocate(8L, 8L)
+      val packedCell = BuiltinTypes.allocatePackedArray(arena)
+      try {
+        GodotStrings.initString(firstCell, first)
+        GodotStrings.initString(secondCell, second)
+        BuiltinTypes.initPackedStringArray(packedCell, values)
+        val args = arena.allocate(ADDRESS, 3)
+        args.setAtIndex(ADDRESS, 0, firstCell)
+        args.setAtIndex(ADDRESS, 1, secondCell)
+        args.setAtIndex(ADDRESS, 2, packedCell)
+        bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
+      } finally {
+        BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedCell)
+        GodotStrings.destroyString(secondCell)
+        GodotStrings.destroyString(firstCell)
+      }
+    }
+  }
+
   /** Calls [methodBind] with one PackedStringArray arg and no return value. */
   actual fun ptrcallWithPackedStringListArg(
     methodBind: MemorySegment,
@@ -15094,6 +15197,27 @@ actual object ObjectCalls {
     }
   }
 
+  actual fun ptrcallWithRect2iAndIntArg(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: Rect2i,
+    number: Int,
+  ) {
+    Arena.ofConfined().use { arena ->
+      val rect = arena.allocate(16L, 4L)
+      rect.set(JAVA_INT, 0, value.position.x)
+      rect.set(JAVA_INT, 4, value.position.y)
+      rect.set(JAVA_INT, 8, value.size.x)
+      rect.set(JAVA_INT, 12, value.size.y)
+      val intCell = arena.allocate(JAVA_INT)
+      intCell.set(JAVA_INT, 0, number)
+      val arr = arena.allocate(ADDRESS, 2)
+      arr.setAtIndex(ADDRESS, 0, rect)
+      arr.setAtIndex(ADDRESS, 1, intCell)
+      bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
+    }
+  }
+
   actual fun ptrcallWithRect2iAndDoubleArg(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -15709,6 +15833,30 @@ actual object ObjectCalls {
       val ret = arena.allocate(JAVA_INT)
       bindPtrcall(methodBind, instance, arr, ret)
       return ret.get(JAVA_INT, 0)
+    }
+  }
+
+  actual fun ptrcallWithThreeIntArgsRetDouble(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: Int,
+    second: Int,
+    third: Int,
+  ): Double {
+    Arena.ofConfined().use { arena ->
+      val arg0 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_INT)
+      arg0.set(JAVA_INT, 0, first)
+      arg1.set(JAVA_INT, 0, second)
+      arg2.set(JAVA_INT, 0, third)
+      val arr = arena.allocate(ADDRESS, 3)
+      arr.setAtIndex(ADDRESS, 0, arg0)
+      arr.setAtIndex(ADDRESS, 1, arg1)
+      arr.setAtIndex(ADDRESS, 2, arg2)
+      val ret = arena.allocate(JAVA_DOUBLE)
+      bindPtrcall(methodBind, instance, arr, ret)
+      return ret.get(JAVA_DOUBLE, 0)
     }
   }
 
@@ -17599,6 +17747,30 @@ actual object ObjectCalls {
   }
 
   /** Calls [methodBind] with (bool, bool) and String return value. */
+  actual fun ptrcallWithTwoBoolDoubleArgsRetLong(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    first: Boolean,
+    second: Boolean,
+    third: Double,
+  ): Long {
+    Arena.ofConfined().use { arena ->
+      val bool0 = arena.allocate(JAVA_BYTE)
+      val bool1 = arena.allocate(JAVA_BYTE)
+      val doubleCell = arena.allocate(JAVA_DOUBLE)
+      bool0.set(JAVA_BYTE, 0, if (first) 1.toByte() else 0.toByte())
+      bool1.set(JAVA_BYTE, 0, if (second) 1.toByte() else 0.toByte())
+      doubleCell.set(JAVA_DOUBLE, 0, third)
+      val args = arena.allocate(ADDRESS, 3)
+      args.setAtIndex(ADDRESS, 0, bool0)
+      args.setAtIndex(ADDRESS, 1, bool1)
+      args.setAtIndex(ADDRESS, 2, doubleCell)
+      val ret = arena.allocate(JAVA_LONG)
+      bindPtrcall(methodBind, instance, args, ret)
+      return ret.get(JAVA_LONG, 0)
+    }
+  }
+
   actual fun ptrcallWithTwoBoolArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -25461,6 +25633,48 @@ actual object ObjectCalls {
     }
   }
 
+  actual fun ptrcallWithRIDArgRetQuaternion(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    value: RID,
+  ): Quaternion {
+    Arena.ofConfined().use { arena ->
+      val ridCell = arena.allocate(JAVA_LONG)
+      ridCell.set(JAVA_LONG, 0, value.value)
+      val args = arena.allocate(ADDRESS, 1)
+      args.setAtIndex(ADDRESS, 0, ridCell)
+      val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
+      bindPtrcall(methodBind, instance, args, ret)
+      return Quaternion.raw(
+        x = GodotRealSegment.readRaw(ret, 0),
+        y = GodotRealSegment.readRaw(ret, 1),
+        z = GodotRealSegment.readRaw(ret, 2),
+        w = GodotRealSegment.readRaw(ret, 3),
+      )
+    }
+  }
+
+  actual fun ptrcallWithRIDAndQuaternionArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    rid: RID,
+    value: Quaternion,
+  ) {
+    Arena.ofConfined().use { arena ->
+      val ridCell = arena.allocate(JAVA_LONG)
+      ridCell.set(JAVA_LONG, 0, rid.value)
+      val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
+      GodotRealSegment.writeRaw(q, 0, value.rawX)
+      GodotRealSegment.writeRaw(q, 1, value.rawY)
+      GodotRealSegment.writeRaw(q, 2, value.rawZ)
+      GodotRealSegment.writeRaw(q, 3, value.rawW)
+      val args = arena.allocate(ADDRESS, 2)
+      args.setAtIndex(ADDRESS, 0, ridCell)
+      args.setAtIndex(ADDRESS, 1, q)
+      bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
+    }
+  }
+
   /** Calls [methodBind] with one Quaternion arg and no return value. */
   actual fun ptrcallWithQuaternionArg(
     methodBind: MemorySegment,
@@ -28439,6 +28653,40 @@ actual object ObjectCalls {
         bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, array)
+      }
+    }
+  }
+
+  /**
+   * RID, Array[Projection], Array[Transform3D]. Both arrays go as untyped Arrays and the engine
+   * converts them into its typed parameter, as for [ptrcallWithRIDAndTransform3DListArgs].
+   */
+  actual fun ptrcallWithRIDProjectionListTransform3DListArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    rid: RID,
+    projections: List<Projection>,
+    transforms: List<Transform3D>,
+  ) {
+    Arena.ofConfined().use { arena ->
+      val ridCell = arena.allocate(JAVA_LONG)
+      val projectionArray = arena.allocate(8L, 8L)
+      val transformArray = arena.allocate(8L, 8L)
+      ridCell.set(JAVA_LONG, 0, rid.value)
+      try {
+        BuiltinTypes.initArray(projectionArray, projections.map { it as Any? })
+        try {
+          BuiltinTypes.initArray(transformArray, transforms.map { it as Any? })
+          val args = arena.allocate(ADDRESS, 3)
+          args.setAtIndex(ADDRESS, 0, ridCell)
+          args.setAtIndex(ADDRESS, 1, projectionArray)
+          args.setAtIndex(ADDRESS, 2, transformArray)
+          bindPtrcall(methodBind, instance, args, MemorySegment.NULL)
+        } finally {
+          BuiltinTypes.destroyTyped(VariantType.ARRAY, transformArray)
+        }
+      } finally {
+        BuiltinTypes.destroyTyped(VariantType.ARRAY, projectionArray)
       }
     }
   }
@@ -37784,7 +38032,7 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
+  actual fun ptrcallWithObjectRIDThreeUInt32LongUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
     objectArg: MemorySegment,
@@ -37793,10 +38041,12 @@ actual object ObjectCalls {
     second: Long,
     third: Long,
     mode: Long,
+    fourth: Long,
   ): RID {
     val checkedFirst = BuiltinTypes.requireUInt32(first)
     val checkedSecond = BuiltinTypes.requireUInt32(second)
     val checkedThird = BuiltinTypes.requireUInt32(third)
+    val checkedFourth = BuiltinTypes.requireUInt32(fourth)
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
       val ridCell = arena.allocate(JAVA_LONG)
@@ -37804,19 +38054,22 @@ actual object ObjectCalls {
       val secondCell = arena.allocate(JAVA_INT)
       val thirdCell = arena.allocate(JAVA_INT)
       val modeCell = arena.allocate(JAVA_LONG)
+      val fourthCell = arena.allocate(JAVA_INT)
       objectCell.set(ADDRESS, 0, objectArg)
       ridCell.set(JAVA_LONG, 0, rid.value)
       firstCell.set(JAVA_INT, 0, checkedFirst)
       secondCell.set(JAVA_INT, 0, checkedSecond)
       thirdCell.set(JAVA_INT, 0, checkedThird)
       modeCell.set(JAVA_LONG, 0, mode)
-      val args = arena.allocate(ADDRESS, 6)
+      fourthCell.set(JAVA_INT, 0, checkedFourth)
+      val args = arena.allocate(ADDRESS, 7)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, ridCell)
       args.setAtIndex(ADDRESS, 2, firstCell)
       args.setAtIndex(ADDRESS, 3, secondCell)
       args.setAtIndex(ADDRESS, 4, thirdCell)
       args.setAtIndex(ADDRESS, 5, modeCell)
+      args.setAtIndex(ADDRESS, 6, fourthCell)
       val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
       return RID(ret.get(JAVA_LONG, 0))

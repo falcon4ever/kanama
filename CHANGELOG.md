@@ -67,6 +67,17 @@ scripts rewrite your old annotations, export hints and enum constants.
 
 ### Details
 
+#### Added — the Godot 4.8 methods the API was missing
+
+Godot 4.8's new methods on classes Kanama already wraps are now in the Kotlin API on desktop, Android and iOS: the
+`PhysicsDirectSpaceState2D` and `PhysicsDirectSpaceState3D` queries that fill a result object instead of building a
+dictionary (`intersectRayInto`, `intersectPointInto`, `intersectShapeInto`, `castMotionInto`, `collideShapeInto`,
+`getRestInfoInto`), `DisplayServer.windowSetImeRect`, `EditorExportPlugin.addAppleEmbeddedPlatformSpmPackage`,
+`Input.getJoyTouchpadFingerPressure`, `PhysicsServer3D.generic6dofJointGetAngularTargetRotation` and its setter,
+`RenderingServer.cameraSetXrProjections`, and `getCameraProjections` and `getCameraOffsets` on `XRInterface` and
+`XRServer`. `DisplayServer.sendToastNotification` and `OpenXRSpatialEntityExtension.createSpatialContext` stay out on
+purpose: they keep a `Callable` past the call, and the API has no shape for that.
+
 #### Changed — Godot 4.8 beta 2
 
 `main` now builds against Godot 4.8 beta 2, and 0.5.0 ships on 4.8 stable. The 0.4.0 release stays on Godot 4.7.2. The API
@@ -86,8 +97,8 @@ Godot's own changes to the API make these source breaks:
 - **Source break:** `PropertyName.triangles` is gone: Godot removed the `AnimationNodeBlendSpace2D.triangles` property.
 - **Source break:** `ScriptEditor` extends `EditorDock` instead of `PanelContainer`. Calls through `Control` still compile.
 - **Source break:** `DisplayServer.getDisplayCutouts` `Image.generateMipmaps` `RenderingDevice.textureCreateSharedFromSlice`:
-  these gained parameters in Godot and are not generated yet, because Kanama has no call helper for the new shapes. They
-  come back before 0.5.0.
+  these gained parameters in Godot, at the end and with defaults. A call compiles as before; a function reference
+  (`Image::generateMipmaps`) names the new signature.
 - **Source break:** `OpenXRSpatialEntityExtension.createSpatialContext` now takes a second `Callable`, a shape the API
   does not generate.
 - **Source break:** `Node.replaceBy` has a `keepOwnedChildren` parameter on 4.8 beta 2 only. Godot has reverted the change

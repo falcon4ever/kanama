@@ -1023,6 +1023,23 @@ object DisplayServer {
     }
 
     /**
+     * Returns an `Array` of `Rect2`, each of which is the bounding rectangle for a display cutout or
+     * notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors.
+     * Returns an empty array if the device does not have cutouts. See also `get_display_safe_area`.
+     * Note: The returned rectangles are relative to the physical screen and not the virtual desktop.
+     * Note: One of the following constants can be used as `screen`: `SCREEN_OF_MAIN_WINDOW`,
+     * `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or `SCREEN_WITH_KEYBOARD_FOCUS`. Note: Currently
+     * only implemented on Android and macOS. Other platforms will return an empty array even if they
+     * do have display cutouts or notches.
+     *
+     * Generated from Godot docs: DisplayServer.get_display_cutouts
+     */
+    @JvmStatic
+    fun getDisplayCutouts(screen: Int = -1): List<Rect2> {
+        return ObjectCalls.ptrcallWithIntArgRetRect2List(Binds.getDisplayCutoutsBind, singleton, screen)
+    }
+
+    /**
      * Returns the unobscured area of the display where interactive controls should be rendered. See
      * also `get_display_cutouts`. Note: The returned rectangle is relative to the physical screen and
      * not the virtual desktop. Note: One of the following constants can be used as `screen`:
@@ -1806,6 +1823,19 @@ object DisplayServer {
     @JvmStatic
     fun windowSetImePosition(position: Vector2i, windowId: Int = 0) {
         ObjectCalls.ptrcallWithVector2iAndIntArg(Binds.windowSetImePositionBind, singleton, position, windowId)
+    }
+
+    /**
+     * Sets a rectangle which should not be obstructed by the Input Method Editor
+     * (https://en.wikipedia.org/wiki/Input_method) popup for the specified `window_id`. Only effective
+     * if `window_set_ime_active` was set to `true` for the specified `window_id`. Note: This method is
+     * implemented only on Windows.
+     *
+     * Generated from Godot docs: DisplayServer.window_set_ime_rect
+     */
+    @JvmStatic
+    fun windowSetImeRect(rect: Rect2i, windowId: Int = 0) {
+        ObjectCalls.ptrcallWithRect2iAndIntArg(Binds.windowSetImeRectBind, singleton, rect, windowId)
     }
 
     /**
@@ -5798,6 +5828,11 @@ object DisplayServer {
         val clipboardGetPrimaryBind =
             ObjectCalls.getMethodBind("DisplayServer", "clipboard_get_primary", CLIPBOARD_GET_PRIMARY_HASH)
 
+        private const val GET_DISPLAY_CUTOUTS_HASH = 1388654637L
+        @JvmField
+        val getDisplayCutoutsBind =
+            ObjectCalls.getMethodBind("DisplayServer", "get_display_cutouts", GET_DISPLAY_CUTOUTS_HASH)
+
         private const val GET_DISPLAY_SAFE_AREA_HASH = 2439012528L
         @JvmField
         val getDisplaySafeAreaBind =
@@ -6117,6 +6152,11 @@ object DisplayServer {
         @JvmField
         val windowSetImePositionBind =
             ObjectCalls.getMethodBind("DisplayServer", "window_set_ime_position", WINDOW_SET_IME_POSITION_HASH)
+
+        private const val WINDOW_SET_IME_RECT_HASH = 2829673102L
+        @JvmField
+        val windowSetImeRectBind =
+            ObjectCalls.getMethodBind("DisplayServer", "window_set_ime_rect", WINDOW_SET_IME_RECT_HASH)
 
         private const val WINDOW_SET_VSYNC_MODE_HASH = 2179333492L
         @JvmField

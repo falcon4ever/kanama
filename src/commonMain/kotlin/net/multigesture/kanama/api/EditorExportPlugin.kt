@@ -124,6 +124,20 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
+     * Adds a Swift Package Manager package to the Apple embedded platform's Xcode project. The `url`
+     * is the URL of the package, `version` is the version requirement (e.g. "1.0.0"), and `products`
+     * is an array of product names to include from the package. Note: Only supported on iOS and
+     * visionOS.
+     *
+     * Generated from Godot docs: EditorExportPlugin.add_apple_embedded_platform_spm_package
+     */
+    fun addAppleEmbeddedPlatformSpmPackage(url: String, version: String, products: List<String>) {
+        checkOpen()
+        ObjectCalls.ptrcallWithTwoStringPackedStringListArgs(Binds.addAppleEmbeddedPlatformSpmPackageBind, segment, url, version, products)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
      * Adds a static library from the given `path` to the iOS project.
      *
      * Generated from Godot docs: EditorExportPlugin.add_ios_project_static_lib
@@ -326,6 +340,11 @@ class EditorExportPlugin(handle: GodotHandle) : RefCounted(handle) {
         @JvmField
         val addAppleEmbeddedPlatformCppCodeBind =
             ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_cpp_code", ADD_APPLE_EMBEDDED_PLATFORM_CPP_CODE_HASH)
+
+        private const val ADD_APPLE_EMBEDDED_PLATFORM_SPM_PACKAGE_HASH = 3533781844L
+        @JvmField
+        val addAppleEmbeddedPlatformSpmPackageBind =
+            ObjectCalls.getMethodBind("EditorExportPlugin", "add_apple_embedded_platform_spm_package", ADD_APPLE_EMBEDDED_PLATFORM_SPM_PACKAGE_HASH)
 
         private const val ADD_IOS_PROJECT_STATIC_LIB_HASH = 83702148L
         @JvmField
