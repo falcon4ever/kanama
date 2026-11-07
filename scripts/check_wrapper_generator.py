@@ -252,7 +252,9 @@ VIRTUAL_SKIP_REASON = "internal/virtual callback methods are not emitted as publ
 # "issue 370"), since the ISO date the row was added. A row whose method generates again, that names
 # no listed class, or that has no owner fails as stale; a row older than PENDING_WARN_DAYS warns on
 # every run, like an old KANAMA-BLOCKED marker.
-PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {}
+PENDING_HELPER_SKIPS: dict[tuple[str, str], tuple[str, str, str]] = {
+    ("EditorExportPlugin", "add_apple_embedded_platform_spm_package"): ("unsupported helper shape args=('String', 'String', 'PackedStringArray') return=void", "task 139", "2026-11-07"),
+}
 PENDING_WARN_DAYS = 60
 _PENDING_OWNER_RE = re.compile(r"^(task|issue) \d+\b")
 _SKIP_METHOD_RE = re.compile(r"(\w+)\(")

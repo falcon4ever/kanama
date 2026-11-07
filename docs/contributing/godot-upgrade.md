@@ -281,6 +281,23 @@ failure included, it lists what it changed and restores it. It installs no
 export templates. Run it after a toolchain or generator change, so the next
 real bump starts from a proven pipeline.
 
+## Re-check at the Next Bump
+
+Behaviour of the pinned Godot that is not expected to last. Read this list at
+every bump, confirm each item, and delete it once it is settled.
+
+- **`Node.replace_by` on 4.8 beta 2.** On this build `Node.replace_by` also moves
+  internal children and takes `keep_owned_children`. Upstream reverted that change
+  on `master` (`06e0b37ce`). At the next bump, confirm that:
+    - the parameter is gone from `extension_api.json` and from `Node.replaceBy`;
+    - the API changes since 4.7.2 drop from 19 signatures to 18. The signature gate
+      counts 15 of the 19 as breaks and 4 as compatible; `Node.replaceBy` is one of
+      the 4. Losing the parameter is a change against the snapshot, so keep its
+      `Source break` line in `CHANGELOG.md` until `--write` has recorded it, then
+      remove the line: no release ever had the parameter;
+    - internal children stay put: a node with an `INTERNAL_MODE_FRONT` child keeps
+      that child after `replace_by`.
+
 ## Pinning a Prerelease
 
 To put `main` on a beta or rc, or to see what one would break on a throwaway

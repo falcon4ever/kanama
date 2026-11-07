@@ -23,8 +23,9 @@ declaration of the API (the shared native tree, the native and Web value types, 
 classes, and the Web wrappers and facades) with the snapshots in `api-snapshots/`. It fails when a
 signature was removed or changed and no marker line names its owner; once one does, it fails until
 the snapshots are regenerated with `--write`, so the pull request shows every changed signature.
-Additions and source-compatible changes (a parameter gains a default, a declaration becomes `open`,
-a class gains a supertype) need only `--write`. Every public declaration must state its type.
+Additions and source-compatible changes (a parameter gains a default, a function that cannot be
+overridden gains trailing parameters with defaults, a declaration becomes `open`, a class gains a
+supertype) need only `--write`. Every public declaration must state its type.
 
 New entries go under `### Details` as `#### Added|Changed|Fixed — <title>`, newest first, without task ids.
 A change users will notice also gets a line in the summary.
@@ -62,9 +63,35 @@ scripts rewrite your old annotations, export hints and enum constants.
   See [Edit, Build, Run](docs/getting-started/editor-workflow.md).
 - **Exports are safe to ship.** The editor stops an export whose Kotlin scripts do not bind, and a desktop game carries
   its own trimmed Java runtime, which you can build for another desktop platform.
-- **Toolchain:** Kotlin 2.4.21, KSP 2.3.12 and Godot 4.7.2. <!-- the Godot upgrade updates this line -->
+- **Toolchain:** Kotlin 2.4.21, KSP 2.3.12 and Godot 4.8 (`main` builds on 4.8 beta 2 until 4.8 stable ships). <!-- the Godot upgrade updates this line -->
 
 ### Details
+
+#### Changed — Godot 4.8 beta 2
+
+`main` now builds against Godot 4.8 beta 2, and 0.5.0 ships on 4.8 stable. The 0.4.0 release stays on Godot 4.7.2. The API
+gains 33 classes, among them `Line3D`, `Trail3D`, `StreamedTexture2D` and the `Physics*Result` classes. New defaulted
+parameters at the end of `DisplayServer.getDisplaySafeArea`, `Skeleton3D.resetBonePose` and `Skeleton3D.resetBonePoses`
+change no call. `GodotPropertyHint.AUDIO_BUS` is new, and no export annotation sets it yet.
+
+Godot's own changes to the API make these source breaks:
+
+- **Source break:** `DisplayServer.orientationChanged` emits a `DisplayServer.SensorOrientation` instead of a `Long`:
+  compare with `DisplayServer.SensorOrientation.PORTRAIT` and the other values.
+- **Source break:** `Image.compress` `Image.compressFromChannels`: `astcFormat: Image.ASTCFormat` is replaced by
+  `profile: Image.CompressProfile`. `ASTC_4x4` becomes `Image.CompressProfile.MAX_QUALITY`, `ASTC_8x8` becomes
+  `Image.CompressProfile.MAX_COMPRESSION`.
+- **Source break:** `GDScriptTextDocument.codeLens` `GDScriptTextDocument.colorPresentation` `GDScriptTextDocument.foldingRange` `MethodName.codeLens` `MethodName.colorPresentation` `MethodName.foldingRange`:
+  Godot removed these three methods of its language server, and their name constants go with them.
+- **Source break:** `PropertyName.triangles` is gone: Godot removed the `AnimationNodeBlendSpace2D.triangles` property.
+- **Source break:** `ScriptEditor` extends `EditorDock` instead of `PanelContainer`. Calls through `Control` still compile.
+- **Source break:** `DisplayServer.getDisplayCutouts` `Image.generateMipmaps` `RenderingDevice.textureCreateSharedFromSlice`:
+  these gained parameters in Godot and are not generated yet, because Kanama has no call helper for the new shapes. They
+  come back before 0.5.0.
+- **Source break:** `OpenXRSpatialEntityExtension.createSpatialContext` now takes a second `Callable`, a shape the API
+  does not generate.
+- **Source break:** `Node.replaceBy` has a `keepOwnedChildren` parameter on 4.8 beta 2 only. Godot has reverted the change
+  on its master branch, so expect the parameter to be gone at the next bump. Do not pass it.
 
 #### Added — Android export from the release kit and the store addon
 
