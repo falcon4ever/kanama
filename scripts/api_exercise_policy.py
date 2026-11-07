@@ -260,6 +260,7 @@ PAIR_OVERRIDES: dict[tuple[str, str], tuple[str | None, str]] = {
     ("CompressedTexture2D", "load_path"): (None, _LOADED_PATH),
     ("CompressedTexture3D", "load_path"): (None, _LOADED_PATH),
     ("CompressedTextureLayered", "load_path"): (None, _LOADED_PATH),
+    ("StreamedTexture2D", "load_path"): (None, _LOADED_PATH),
     (
         "GraphEdit",
         "connections",

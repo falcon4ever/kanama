@@ -313,6 +313,7 @@ object), which hands its setter and getter back to their method's own case.
 | `CompressedTexture2D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `CompressedTexture3D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `CompressedTextureLayered.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
+| `StreamedTexture2D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `GraphEdit.connections` | `[{"from_node": "kanama_a", "from_port": 1, "to_node": "kanama_b", "to_port": 2, "keep_alive": true}]` | the setter reads the five connection keys and fills the missing ones with defaults |
 | `OggPacketSequence.packet_data` | `[[PackedByteArray(1, 2, 3)]]` | each packet is a PackedByteArray |
 
@@ -501,6 +502,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `GLTFDocument.append_from_buffer` | F | `base_path` |
 | `GLTFDocument.append_from_file` | F | `path`, `base_path` |
 | `GLTFDocument.write_to_filesystem` | F | `path` |
+| `Image.save_dds` | B | `path` |
 | `Image.save_exr` | B | `path` |
 | `Image.save_jpg` | B | `path` |
 | `Image.save_webp` | B | `path` |
@@ -510,7 +512,6 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ResourceLoader.load` | F | `path` |
 | `ResourceLoader.load_threaded_get_status` | F | `path` |
 | `ResourceLoader.load_threaded_request` | F | `path` |
-| `StreamedTexture2D.load` | A | `path` |
 | `ZIPPacker.add_directory` | F | `path` |
 | `ZIPPacker.open` | F | `path` |
 | `ZIPReader.get_compression_level` | F | `path` |
@@ -1484,7 +1485,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringArgRetColor` | B | `CodeHighlighter.get_keyword_color` (const non-void method) | 2 | PT_COLOR PT_STRING |
 | `ptrcallWithStringArgRetDictionary` | E | `EditorExportPlatform.find_export_template` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetInt` | B | `AnimationNode.find_input` (const non-void method) | 10 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then A `StreamedTexture2D.load` (setter of `load_path`) | 53 | PT_INT64 PT_STRING |
+| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then B `Image.save_dds` (const non-void method) | 53 | PT_INT64 PT_STRING |
 | `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value); then B `Node.find_parent` (const non-void method) | 22 | PT_OBJECT PT_STRING |
 | `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value); then B `ConfigFile.get_section_keys` (const non-void method) | 16 | PT_STRING |
 | `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value); then B `CodeEdit.get_auto_brace_completion_close_key` (const non-void method) | 30 | hand |

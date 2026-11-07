@@ -13,7 +13,7 @@ internal object ApiExerciseRows {
   /** Referenced helpers the inventory excludes (case E): reported, never run. */
   const val EXCLUDED: Int = 339
 
-  /** Rows in this file: 45 static (C), 61 pair (A), 320 const (B), 168 singleton (D), 141 Variant type (T), 605 reach (F). */
+  /** Rows in this file: 45 static (C), 60 pair (A), 321 const (B), 168 singleton (D), 141 Variant type (T), 605 reach (F). */
   const val ROWS: Int = 1340
 
   fun runStatic(r: ApiExerciseRunner) {
@@ -125,7 +125,6 @@ internal object ApiExerciseRows {
     a057(r)
     a058(r)
     a059(r)
-    a060(r)
   }
 
   fun runConst(r: ApiExerciseRunner) {
@@ -449,6 +448,7 @@ internal object ApiExerciseRows {
     b317(r)
     b318(r)
     b319(r)
+    b320(r)
   }
 
   fun runSingletons(r: ApiExerciseRunner) {
@@ -2908,23 +2908,8 @@ internal object ApiExerciseRows {
     r.end()
   }
 
-  // setter of `load_path`
-  private fun a050(r: ApiExerciseRunner) {
-    r.begin('A', "ptrcallWithStringArgRetLong", "StreamedTexture2D.load_path")
-    try {
-      val o = r.ref(StreamedTexture2D(r.construct("StreamedTexture2D")))
-      val before = r.track(o.getLoadPath())
-      val v = r.pick(before, "kanama125", "kanama7")
-      o.load(v)
-      r.pair(v, before, r.track(o.getLoadPath()), r.track(o.get("load_path")))
-    } catch (t: Throwable) {
-      r.threw(t)
-    }
-    r.end()
-  }
-
   // setter of `instance_materials`
-  private fun a051(r: ApiExerciseRunner) {
+  private fun a050(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallWithTypedMaterialListArg", "GLTFMesh.instance_materials")
     try {
       val o = r.ref(GLTFMesh(r.construct("GLTFMesh")))
@@ -2941,7 +2926,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `bus_count`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a052(r: ApiExerciseRunner) {
+  private fun a051(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "AudioServer.bus_count")
     try {
       val s = r.singleton("AudioServer")
@@ -2962,7 +2947,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `playback_speed_scale`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a053(r: ApiExerciseRunner) {
+  private fun a052(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "AudioServer.playback_speed_scale")
     try {
       val s = r.singleton("AudioServer")
@@ -2983,7 +2968,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `max_fps`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a054(r: ApiExerciseRunner) {
+  private fun a053(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.max_fps")
     try {
       val s = r.singleton("Engine")
@@ -3004,7 +2989,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `max_physics_steps_per_frame`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a055(r: ApiExerciseRunner) {
+  private fun a054(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.max_physics_steps_per_frame")
     try {
       val s = r.singleton("Engine")
@@ -3025,7 +3010,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `physics_jitter_fix`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a056(r: ApiExerciseRunner) {
+  private fun a055(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "Engine.physics_jitter_fix")
     try {
       val s = r.singleton("Engine")
@@ -3046,7 +3031,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `physics_ticks_per_second`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a057(r: ApiExerciseRunner) {
+  private fun a056(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetInt ptrcallWithIntArg", "Engine.physics_ticks_per_second")
     try {
       val s = r.singleton("Engine")
@@ -3067,7 +3052,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `time_scale`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a058(r: ApiExerciseRunner) {
+  private fun a057(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetDouble ptrcallWithDoubleArg", "Engine.time_scale")
     try {
       val s = r.singleton("Engine")
@@ -3088,7 +3073,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `print_error_messages`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a059(r: ApiExerciseRunner) {
+  private fun a058(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetBool ptrcallWithBoolArg", "Engine.print_error_messages")
     try {
       val s = r.singleton("Engine")
@@ -3109,7 +3094,7 @@ internal object ApiExerciseRows {
   }
 
   // getter of `print_to_stdout`, set and restored on the singleton (SINGLETON_PAIRS)
-  private fun a060(r: ApiExerciseRunner) {
+  private fun a059(r: ApiExerciseRunner) {
     r.begin('A', "ptrcallNoArgsRetBool ptrcallWithBoolArg", "Engine.print_to_stdout")
     try {
       val s = r.singleton("Engine")
@@ -6459,6 +6444,22 @@ internal object ApiExerciseRows {
 
   // const non-void method
   private fun b185(r: ApiExerciseRunner) {
+    r.begin('B', "ptrcallWithStringArgRetLong", "Image.save_dds")
+    try {
+      val o = r.ref(Image(r.construct("Image")))
+      val a0: String = r.scratch("Image.save_dds.path")
+      val got = r.track(o.saveDds(a0))
+      r.oracle()
+      val oracle = r.track(o.call("save_dds", a0))
+      r.sameAsCall(got, oracle)
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // const non-void method
+  private fun b186(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringArgRetObject", "Node.find_parent")
     try {
       val o = r.obj(Node(r.construct("Node")))
@@ -6474,7 +6475,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b186(r: ApiExerciseRunner) {
+  private fun b187(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringArgRetPackedStringList", "ConfigFile.get_section_keys")
     try {
       val o = r.ref(ConfigFile(r.construct("ConfigFile")))
@@ -6490,7 +6491,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b187(r: ApiExerciseRunner) {
+  private fun b188(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringArgRetString", "CodeEdit.get_auto_brace_completion_close_key")
     try {
       val o = r.obj(CodeEdit(r.construct("CodeEdit")))
@@ -6506,7 +6507,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b188(r: ApiExerciseRunner) {
+  private fun b189(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringArgRetVariantScalar", "TileData.get_custom_data")
     try {
       val o = r.obj(TileData(r.construct("TileData")))
@@ -6522,7 +6523,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b189(r: ApiExerciseRunner) {
+  private fun b190(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringBoolDoubleArgsRetLong", "Image.save_webp")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -6538,7 +6539,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b190(r: ApiExerciseRunner) {
+  private fun b191(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringLongDoubleIntThreeLongArgsRetVector2", "Font.get_string_size on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -6554,7 +6555,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b191(r: ApiExerciseRunner) {
+  private fun b192(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringLongDoubleTwoIntFourLongArgsRetVector2", "Font.get_multiline_string_size on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -6570,7 +6571,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b192(r: ApiExerciseRunner) {
+  private fun b193(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndBoolArgRetBool", "InputEvent.is_action on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
@@ -6588,7 +6589,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b193(r: ApiExerciseRunner) {
+  private fun b194(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndBoolArgRetDouble", "InputEvent.get_action_strength on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
@@ -6606,7 +6607,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b194(r: ApiExerciseRunner) {
+  private fun b195(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndIntArgRetDouble", "SpriteFrames.get_frame_duration")
     try {
       val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
@@ -6623,7 +6624,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b195(r: ApiExerciseRunner) {
+  private fun b196(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndIntArgRetObject", "Shader.get_default_texture_parameter")
     try {
       val o = r.ref(Shader(r.construct("Shader")))
@@ -6639,7 +6640,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b196(r: ApiExerciseRunner) {
+  private fun b197(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndTwoBoolArgsRetBool", "InputEvent.is_action_pressed on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
@@ -6657,7 +6658,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b197(r: ApiExerciseRunner) {
+  private fun b198(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameAndVariantArgRetVariantScalar", "Object.get_meta")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -6673,7 +6674,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b198(r: ApiExerciseRunner) {
+  private fun b199(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetBool", "Animation.has_marker")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -6689,7 +6690,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b199(r: ApiExerciseRunner) {
+  private fun b200(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetColor", "Animation.get_marker_color")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -6705,7 +6706,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b200(r: ApiExerciseRunner) {
+  private fun b201(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetDictionaryList", "GraphEdit.get_connection_list_from_node")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -6721,7 +6722,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b201(r: ApiExerciseRunner) {
+  private fun b202(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetDouble", "Animation.get_marker_time")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -6737,7 +6738,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b202(r: ApiExerciseRunner) {
+  private fun b203(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetInt", "AnimationNodeBlendSpace1D.find_blend_point_by_name")
     try {
       val o = r.ref(AnimationNodeBlendSpace1D(r.construct("AnimationNodeBlendSpace1D")))
@@ -6753,7 +6754,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b203(r: ApiExerciseRunner) {
+  private fun b204(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetLong", "SpriteFrames.get_animation_loop_mode")
     try {
       val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
@@ -6769,7 +6770,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b204(r: ApiExerciseRunner) {
+  private fun b205(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetObject", "AnimationLibrary.get_animation")
     try {
       val o = r.ref(AnimationLibrary(r.construct("AnimationLibrary")))
@@ -6785,7 +6786,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b205(r: ApiExerciseRunner) {
+  private fun b206(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetPackedStringList", "Theme.get_type_variation_list")
     try {
       val o = r.ref(Theme(r.construct("Theme")))
@@ -6801,7 +6802,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b206(r: ApiExerciseRunner) {
+  private fun b207(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetStringName", "AnimationPlayer.animation_get_next")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -6817,7 +6818,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b207(r: ApiExerciseRunner) {
+  private fun b208(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetVariantScalar", "AnimationNode.get_parameter")
     try {
       val o = r.ref(AnimationNode(r.construct("AnimationNode")))
@@ -6833,7 +6834,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b208(r: ApiExerciseRunner) {
+  private fun b209(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringNameArgRetVector2", "AnimationNodeBlendTree.get_node_position")
     try {
       val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
@@ -6849,7 +6850,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b209(r: ApiExerciseRunner) {
+  private fun b210(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringStringNameIntStringNameArgsRetString", "Node.atr_n")
     try {
       val o = r.obj(Node(r.construct("Node")))
@@ -6867,7 +6868,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b210(r: ApiExerciseRunner) {
+  private fun b211(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringTwoBoolAndDoubleArgRetLong", "Image.save_exr")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -6883,7 +6884,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b211(r: ApiExerciseRunner) {
+  private fun b212(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringTwoIntArgsRetTypedObjectList", "RegEx.search_all")
     try {
       val o = r.ref(RegEx(r.construct("RegEx")))
@@ -6899,7 +6900,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b212(r: ApiExerciseRunner) {
+  private fun b213(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithStringUInt32TwoIntArgsRetVector2i", "TextEdit.search")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -6918,7 +6919,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b213(r: ApiExerciseRunner) {
+  private fun b214(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithThreeDoubleArgsRetDouble", "Noise.get_noise_3d on FastNoiseLite")
     try {
       val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
@@ -6936,7 +6937,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b214(r: ApiExerciseRunner) {
+  private fun b215(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithThreeIntArgsRetInt", "FontFile.get_glyph_index")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -6954,7 +6955,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b215(r: ApiExerciseRunner) {
+  private fun b216(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithThreeIntArgsRetVector2", "FontFile.get_glyph_advance")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -6972,7 +6973,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b216(r: ApiExerciseRunner) {
+  private fun b217(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithThreeIntArgsRetVector2i", "TextEdit.get_next_visible_line_index_offset_from")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -6990,7 +6991,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b217(r: ApiExerciseRunner) {
+  private fun b218(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoBoolAndDoubleArgRetByteArray", "Image.save_exr_to_buffer")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -7005,7 +7006,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b218(r: ApiExerciseRunner) {
+  private fun b219(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoBoolArgsRetVector2iList", "TextEdit.get_line_ranges_from_carets")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -7020,7 +7021,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b219(r: ApiExerciseRunner) {
+  private fun b220(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoDoubleArgsRetDouble", "Noise.get_noise_2d on FastNoiseLite")
     try {
       val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
@@ -7037,7 +7038,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b220(r: ApiExerciseRunner) {
+  private fun b221(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntAndThreeBoolArgsRetObject", "TileData.get_occluder_polygon")
     try {
       val o = r.obj(TileData(r.construct("TileData")))
@@ -7054,7 +7055,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b221(r: ApiExerciseRunner) {
+  private fun b222(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetArray", "Animation.method_track_get_params")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7071,7 +7072,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b222(r: ApiExerciseRunner) {
+  private fun b223(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetBool", "AStarGrid2D.is_in_bounds")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -7089,7 +7090,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b223(r: ApiExerciseRunner) {
+  private fun b224(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetColor", "Image.get_pixel")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -7106,7 +7107,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b224(r: ApiExerciseRunner) {
+  private fun b225(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetDouble", "Animation.audio_track_get_key_end_offset")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7123,7 +7124,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b225(r: ApiExerciseRunner) {
+  private fun b226(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetInt", "AudioStreamInteractive.get_transition_filler_clip")
     try {
       val o = r.ref(AudioStreamInteractive(r.construct("AudioStreamInteractive")))
@@ -7140,7 +7141,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b226(r: ApiExerciseRunner) {
+  private fun b227(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetLong", "AudioStreamInteractive.get_transition_fade_mode")
     try {
       val o = r.ref(AudioStreamInteractive(r.construct("AudioStreamInteractive")))
@@ -7157,7 +7158,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b227(r: ApiExerciseRunner) {
+  private fun b228(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetNodePath", "SpringBoneSimulator3D.get_collision_path")
     try {
       val o = r.obj(SpringBoneSimulator3D(r.construct("SpringBoneSimulator3D")))
@@ -7174,7 +7175,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b228(r: ApiExerciseRunner) {
+  private fun b229(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetObject", "Animation.audio_track_get_key_stream")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7191,7 +7192,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b229(r: ApiExerciseRunner) {
+  private fun b230(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetPackedInt32List", "ImporterMesh.get_surface_lod_indices")
     try {
       val o = r.ref(ImporterMesh(r.construct("ImporterMesh")))
@@ -7208,7 +7209,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b230(r: ApiExerciseRunner) {
+  private fun b231(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetPackedVector2List", "TileData.get_collision_polygon_points")
     try {
       val o = r.obj(TileData(r.construct("TileData")))
@@ -7225,7 +7226,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b231(r: ApiExerciseRunner) {
+  private fun b232(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetQuaternion", "IterateIK3D.get_joint_limitation_rotation_offset on CCDIK3D")
     try {
       val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
@@ -7242,7 +7243,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b232(r: ApiExerciseRunner) {
+  private fun b233(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetRect2i", "TextEdit.get_rect_at_line_column")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -7259,7 +7260,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b233(r: ApiExerciseRunner) {
+  private fun b234(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetString", "BoneTwistDisperser3D.get_joint_bone_name")
     try {
       val o = r.obj(BoneTwistDisperser3D(r.construct("BoneTwistDisperser3D")))
@@ -7276,7 +7277,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b234(r: ApiExerciseRunner) {
+  private fun b235(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetStringName", "Animation.animation_track_get_key_animation")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7293,7 +7294,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b235(r: ApiExerciseRunner) {
+  private fun b236(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetVariantScalar", "Animation.track_get_key_value")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7310,7 +7311,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b236(r: ApiExerciseRunner) {
+  private fun b237(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetVector2", "Animation.bezier_track_get_key_in_handle")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -7327,7 +7328,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b237(r: ApiExerciseRunner) {
+  private fun b238(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetVector2i", "TextEdit.get_pos_at_line_column")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -7344,7 +7345,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b238(r: ApiExerciseRunner) {
+  private fun b239(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetVector2iList", "FontFile.get_kerning_list")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -7361,7 +7362,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b239(r: ApiExerciseRunner) {
+  private fun b240(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntArgsRetVector3", "IterateIK3D.get_joint_limitation_right_axis_vector on CCDIK3D")
     try {
       val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
@@ -7378,7 +7379,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b240(r: ApiExerciseRunner) {
+  private fun b241(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntTwoBoolArgsRetInt", "TextEdit.get_selection_at_line_column")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -7395,7 +7396,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b241(r: ApiExerciseRunner) {
+  private fun b242(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntVector2iAndIntArgsRetVector2iList", "TileMap.get_used_cells_by_id")
     try {
       val o = r.obj(TileMap(r.construct("TileMap")))
@@ -7413,7 +7414,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b242(r: ApiExerciseRunner) {
+  private fun b243(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoIntVector2iArgRetVector2", "FontFile.get_kerning")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -7431,7 +7432,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b243(r: ApiExerciseRunner) {
+  private fun b244(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoLongAndBoolArgsRetBool", "AStar2D.are_points_connected")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -7448,7 +7449,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b244(r: ApiExerciseRunner) {
+  private fun b245(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoLongArgsRetVector2", "TextServer.get_hex_code_box_size on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -7465,7 +7466,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b245(r: ApiExerciseRunner) {
+  private fun b246(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringAndLongArgRetPackedInt32List", "TextServer.string_get_word_breaks on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -7481,7 +7482,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b246(r: ApiExerciseRunner) {
+  private fun b247(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringAndTwoBoolArgsRetTypedObjectList", "Node.find_children")
     try {
       val o = r.obj(Node(r.construct("Node")))
@@ -7497,7 +7498,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b247(r: ApiExerciseRunner) {
+  private fun b248(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringAndVariantArgRetVariantScalar", "ConfigFile.get_value")
     try {
       val o = r.ref(ConfigFile(r.construct("ConfigFile")))
@@ -7514,7 +7515,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b248(r: ApiExerciseRunner) {
+  private fun b249(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringArgsRetBool", "ConfigFile.has_section_key")
     try {
       val o = r.ref(ConfigFile(r.construct("ConfigFile")))
@@ -7531,7 +7532,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b249(r: ApiExerciseRunner) {
+  private fun b250(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringArgsRetPackedInt32List", "TextServer.string_get_character_breaks on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -7547,7 +7548,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b250(r: ApiExerciseRunner) {
+  private fun b251(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringArgsRetString", "TextServer.format_number on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -7563,7 +7564,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b251(r: ApiExerciseRunner) {
+  private fun b252(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringBoolTwoIntArgsRetString", "RegEx.sub")
     try {
       val o = r.ref(RegEx(r.construct("RegEx")))
@@ -7580,7 +7581,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b252(r: ApiExerciseRunner) {
+  private fun b253(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetBool", "AnimationNodeStateMachine.has_transition")
     try {
       val o = r.ref(AnimationNodeStateMachine(r.construct("AnimationNodeStateMachine")))
@@ -7597,7 +7598,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b253(r: ApiExerciseRunner) {
+  private fun b254(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetColor", "Control.get_theme_color")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -7613,7 +7614,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b254(r: ApiExerciseRunner) {
+  private fun b255(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetDouble", "AnimationPlayer.get_blend_time")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -7630,7 +7631,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b255(r: ApiExerciseRunner) {
+  private fun b256(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetInt", "Control.get_theme_constant")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -7646,7 +7647,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b256(r: ApiExerciseRunner) {
+  private fun b257(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetObject", "Control.get_theme_font")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -7662,7 +7663,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b257(r: ApiExerciseRunner) {
+  private fun b258(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetString", "Object.tr")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -7678,7 +7679,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b258(r: ApiExerciseRunner) {
+  private fun b259(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameArgsRetStringName", "Translation.get_message")
     try {
       val o = r.ref(Translation(r.construct("Translation")))
@@ -7695,7 +7696,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b259(r: ApiExerciseRunner) {
+  private fun b260(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameIntStringNameArgsRetString", "Object.tr_n")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -7713,7 +7714,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b260(r: ApiExerciseRunner) {
+  private fun b261(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoStringNameIntStringNameArgsRetStringName", "Translation.get_plural_message")
     try {
       val o = r.ref(Translation(r.construct("Translation")))
@@ -7731,7 +7732,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b261(r: ApiExerciseRunner) {
+  private fun b262(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoVector2ArgsRetPackedVector2List", "GraphEdit.get_connection_line")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -7748,7 +7749,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b262(r: ApiExerciseRunner) {
+  private fun b263(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoVector2iIntVector2iIntVector2iArgsRetBool", "TileSetAtlasSource.has_room_for_tile")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -7769,7 +7770,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b263(r: ApiExerciseRunner) {
+  private fun b264(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoVector3ArgsRetDictionary", "TriangleMesh.intersect_ray")
     try {
       val o = r.ref(TriangleMesh(r.construct("TriangleMesh")))
@@ -7786,7 +7787,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b264(r: ApiExerciseRunner) {
+  private fun b265(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32AndIntArgRetInt", "CollisionObject2D.shape_owner_get_shape_index on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7803,7 +7804,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b265(r: ApiExerciseRunner) {
+  private fun b266(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32AndIntArgRetObject", "CollisionObject2D.shape_owner_get_shape on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7820,7 +7821,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b266(r: ApiExerciseRunner) {
+  private fun b267(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetBool", "CanvasItem.get_visibility_layer_bit on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -7837,7 +7838,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b267(r: ApiExerciseRunner) {
+  private fun b268(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetDouble", "CollisionObject2D.get_shape_owner_one_way_collision_margin on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7853,7 +7854,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b268(r: ApiExerciseRunner) {
+  private fun b269(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetInt", "CollisionObject2D.shape_owner_get_shape_count on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7869,7 +7870,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b269(r: ApiExerciseRunner) {
+  private fun b270(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetObject", "CollisionObject2D.shape_owner_get_owner on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7885,7 +7886,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b270(r: ApiExerciseRunner) {
+  private fun b271(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetTransform2D", "CollisionObject2D.shape_owner_get_transform on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7901,7 +7902,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b271(r: ApiExerciseRunner) {
+  private fun b272(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetTransform3D", "CollisionObject3D.shape_owner_get_transform on Area3D")
     try {
       val o = r.obj(Area3D(r.construct("Area3D")))
@@ -7917,7 +7918,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b272(r: ApiExerciseRunner) {
+  private fun b273(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithUInt32ArgRetVector2", "CollisionObject2D.get_shape_owner_one_way_collision_direction on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -7933,7 +7934,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b273(r: ApiExerciseRunner) {
+  private fun b274(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVariantArgRetBool", "TextLine.has_object")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -7949,7 +7950,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b274(r: ApiExerciseRunner) {
+  private fun b275(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVariantArgRetInt", "RegExMatch.get_end")
     try {
       val o = r.ref(RegExMatch(r.construct("RegExMatch")))
@@ -7965,7 +7966,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b275(r: ApiExerciseRunner) {
+  private fun b276(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVariantArgRetRect2", "TextLine.get_object_rect")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -7981,7 +7982,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b276(r: ApiExerciseRunner) {
+  private fun b277(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVariantArgRetString", "RegExMatch.get_string")
     try {
       val o = r.ref(RegExMatch(r.construct("RegExMatch")))
@@ -7997,7 +7998,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b277(r: ApiExerciseRunner) {
+  private fun b278(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2AndBoolArgRetInt", "ItemList.get_item_at_position")
     try {
       val o = r.obj(ItemList(r.construct("ItemList")))
@@ -8013,7 +8014,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b278(r: ApiExerciseRunner) {
+  private fun b279(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2AndBoolArgRetLong", "AStar2D.get_closest_point")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -8029,7 +8030,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b279(r: ApiExerciseRunner) {
+  private fun b280(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2AndDoubleArgRetDictionary", "GraphEdit.get_closest_connection_at_point")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -8045,7 +8046,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b280(r: ApiExerciseRunner) {
+  private fun b281(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2AndDoubleArgRetVector3", "Camera3D.project_position")
     try {
       val o = r.obj(Camera3D(r.construct("Camera3D")))
@@ -8062,7 +8063,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b281(r: ApiExerciseRunner) {
+  private fun b282(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetBool", "PolygonPathFinder.is_point_inside")
     try {
       val o = r.ref(PolygonPathFinder(r.construct("PolygonPathFinder")))
@@ -8078,7 +8079,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b282(r: ApiExerciseRunner) {
+  private fun b283(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetDouble", "CharacterBody2D.get_floor_angle")
     try {
       val o = r.obj(CharacterBody2D(r.construct("CharacterBody2D")))
@@ -8094,7 +8095,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b283(r: ApiExerciseRunner) {
+  private fun b284(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetInt", "TabBar.get_tab_idx_at_point")
     try {
       val o = r.obj(TabBar(r.construct("TabBar")))
@@ -8110,7 +8111,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b284(r: ApiExerciseRunner) {
+  private fun b285(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetLong", "Control.get_cursor_shape")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -8126,7 +8127,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b285(r: ApiExerciseRunner) {
+  private fun b286(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetObject", "Tree.get_item_at_position")
     try {
       val o = r.obj(Tree(r.construct("Tree")))
@@ -8142,7 +8143,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b286(r: ApiExerciseRunner) {
+  private fun b287(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetString", "Control.get_tooltip")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -8158,7 +8159,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b287(r: ApiExerciseRunner) {
+  private fun b288(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetVector2", "AStar2D.get_closest_position_in_segment")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -8174,7 +8175,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b288(r: ApiExerciseRunner) {
+  private fun b289(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetVector2i", "TileMap.local_to_map")
     try {
       val o = r.obj(TileMap(r.construct("TileMap")))
@@ -8190,7 +8191,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b289(r: ApiExerciseRunner) {
+  private fun b290(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2ArgRetVector3", "Camera3D.project_local_ray_normal")
     try {
       val o = r.obj(Camera3D(r.construct("Camera3D")))
@@ -8206,7 +8207,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b290(r: ApiExerciseRunner) {
+  private fun b291(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2Rect2ArgsRetBool", "StyleBox.test_mask")
     try {
       val o = r.ref(StyleBox(r.construct("StyleBox")))
@@ -8223,7 +8224,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b291(r: ApiExerciseRunner) {
+  private fun b292(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndIntArgRetBool", "TileSetSource.has_alternative_tile on TileSetAtlasSource")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8240,7 +8241,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b292(r: ApiExerciseRunner) {
+  private fun b293(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndIntArgRetDouble", "TileSetAtlasSource.get_tile_animation_frame_duration")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8257,7 +8258,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b293(r: ApiExerciseRunner) {
+  private fun b294(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndIntArgRetInt", "TileSetSource.get_alternative_tile_id on TileSetAtlasSource")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8274,7 +8275,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b294(r: ApiExerciseRunner) {
+  private fun b295(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndIntArgRetObject", "TileSetAtlasSource.get_tile_data")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8291,7 +8292,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b295(r: ApiExerciseRunner) {
+  private fun b296(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndIntArgRetRect2i", "TileSetAtlasSource.get_runtime_tile_texture_region")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8308,7 +8309,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b296(r: ApiExerciseRunner) {
+  private fun b297(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndLongArgRetVector2i", "TileMap.get_neighbor_cell")
     try {
       val o = r.obj(TileMap(r.construct("TileMap")))
@@ -8325,7 +8326,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b297(r: ApiExerciseRunner) {
+  private fun b298(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iAndTwoBoolArgsRetVector2i", "TextEdit.get_line_column_at_pos")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -8341,7 +8342,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b298(r: ApiExerciseRunner) {
+  private fun b299(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetBool", "AStarGrid2D.is_in_boundsv")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -8358,7 +8359,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b299(r: ApiExerciseRunner) {
+  private fun b300(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetColor", "Image.get_pixelv")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -8374,7 +8375,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b300(r: ApiExerciseRunner) {
+  private fun b301(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetDouble", "AStarGrid2D.get_point_weight_scale")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -8390,7 +8391,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b301(r: ApiExerciseRunner) {
+  private fun b302(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetInt", "TextEdit.get_minimap_line_at_pos")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -8406,7 +8407,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b302(r: ApiExerciseRunner) {
+  private fun b303(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetLong", "TileSetAtlasSource.get_tile_animation_mode")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -8422,7 +8423,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b303(r: ApiExerciseRunner) {
+  private fun b304(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetObject", "TileMapLayer.get_cell_tile_data")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -8438,7 +8439,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b304(r: ApiExerciseRunner) {
+  private fun b305(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetVector2", "AStarGrid2D.get_point_position")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -8454,7 +8455,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b305(r: ApiExerciseRunner) {
+  private fun b306(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector2iArgRetVector2i", "TileMapLayer.get_cell_atlas_coords")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -8470,7 +8471,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b306(r: ApiExerciseRunner) {
+  private fun b307(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3AndBoolArgRetLong", "AStar3D.get_closest_point")
     try {
       val o = r.ref(AStar3D(r.construct("AStar3D")))
@@ -8486,7 +8487,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b307(r: ApiExerciseRunner) {
+  private fun b308(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3ArgRetBool", "Camera3D.is_position_behind")
     try {
       val o = r.obj(Camera3D(r.construct("Camera3D")))
@@ -8502,7 +8503,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b308(r: ApiExerciseRunner) {
+  private fun b309(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3ArgRetDouble", "CharacterBody3D.get_floor_angle")
     try {
       val o = r.obj(CharacterBody3D(r.construct("CharacterBody3D")))
@@ -8518,7 +8519,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b309(r: ApiExerciseRunner) {
+  private fun b310(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3ArgRetVector2", "Camera3D.unproject_position")
     try {
       val o = r.obj(Camera3D(r.construct("Camera3D")))
@@ -8534,7 +8535,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b310(r: ApiExerciseRunner) {
+  private fun b311(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3ArgRetVector3", "AStar3D.get_closest_position_in_segment")
     try {
       val o = r.ref(AStar3D(r.construct("AStar3D")))
@@ -8550,7 +8551,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b311(r: ApiExerciseRunner) {
+  private fun b312(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3ArgRetVector3i", "GridMap.local_to_map")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8566,7 +8567,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b312(r: ApiExerciseRunner) {
+  private fun b313(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iAndIntArgRetVector3iList", "GridMap.get_used_cells_in_octant_by_item")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8583,7 +8584,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b313(r: ApiExerciseRunner) {
+  private fun b314(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iArgRetBasis", "GridMap.get_cell_item_basis")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8599,7 +8600,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b314(r: ApiExerciseRunner) {
+  private fun b315(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iArgRetInt", "GridMap.get_cell_item")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8615,7 +8616,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b315(r: ApiExerciseRunner) {
+  private fun b316(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iArgRetVector3", "GridMap.map_to_local")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8631,7 +8632,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b316(r: ApiExerciseRunner) {
+  private fun b317(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iArgRetVector3i", "GridMap.get_octant_coords_from_cell_coords")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8647,7 +8648,7 @@ internal object ApiExerciseRows {
   }
 
   // const non-void method
-  private fun b317(r: ApiExerciseRunner) {
+  private fun b318(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithVector3iArgRetVector3iList", "GridMap.get_used_cells_in_octant")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -8663,7 +8664,7 @@ internal object ApiExerciseRows {
   }
 
   // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
-  private fun b318(r: ApiExerciseRunner) {
+  private fun b319(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallNoArgsRetRID", "TextServer.create_font on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -8690,7 +8691,7 @@ internal object ApiExerciseRows {
   }
 
   // RID factory: a valid RID, one read of it, freed (RID_FACTORIES)
-  private fun b319(r: ApiExerciseRunner) {
+  private fun b320(r: ApiExerciseRunner) {
     r.begin('B', "ptrcallWithTwoLongArgsRetRID", "TextServer.create_shaped_text on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
