@@ -406,6 +406,9 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_godot_version_pin.py (release guard wired)", py("check_godot_version_pin.py"),
      [Edit(".github/workflows/package.yml", "run: python3 scripts/check_godot_version_pin.py --release", "run: echo no guard")],
      "lost its release guard", "package.yml no longer runs the release guard on a tag")
+case("check_godot_version_pin.py (release guard needed by every job)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "    runs-on: macos-15\n    needs: gdextension-header\n", "    runs-on: macos-15\n")],
+     "job `cross-runtimes` has no `needs` path to `gdextension-header`", "a package job stops waiting for the release guard job: a tag on a prerelease pin would still build it")
 # The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
 case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
      [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],

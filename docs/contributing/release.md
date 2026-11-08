@@ -157,8 +157,8 @@ the processor generates (`verifyKanamaWebPackageProtocol`).
 
 The package workflow (`.github/workflows/package.yml`) runs only on manual
 dispatch and `v*` tags. It does not run on pull requests. On a tag, its first job
-refuses a Godot pin that is not stable, so a tag on a beta or rc builds and
-publishes nothing. Its jobs:
+refuses a Godot pin that is not stable, and every other job waits for that one,
+so a tag on a beta or rc builds and publishes nothing. Its jobs:
 
 - `desktop-kit` builds and smokes a desktop kit per platform, and the store
   native library for each.

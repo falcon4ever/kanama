@@ -15,7 +15,9 @@ bump can't land a partial upgrade.
 
 A prerelease pin (`4.8.beta2`) may live on main; a release may not. `--release` fails unless the pin is
 a stable Godot, and `package.yml` runs it first on every `v*` tag, in the job every package job needs, so
-a tag on a prerelease pin publishes nothing. The plain gate fails when that step is gone from the workflow.
+a tag on a prerelease pin publishes nothing. The plain gate fails when that step is gone from the workflow,
+when a package job has no `needs` path to that job (it would start, and build, on a refused tag), or when a
+job overrides that path with a job-level `always()`, `failure()` or `cancelled()` condition.
 
 `--list-files` is what `scripts/upgrade_godot.sh` allows to be dirty when a bump starts (the human
 pin edit), so the preflight and this gate cannot disagree about which files a bump edits.
@@ -49,15 +51,58 @@ def read_canonical(properties: pathlib.Path) -> str:
     return m.group(1).strip()
 
 
+def workflow_jobs(workflow: str) -> dict[str, str]:
+    """The jobs of a workflow file: job id -> the job's body (its lines below the `  <id>:` line)."""
+    jobs_block = re.search(r"^jobs:\n(.*)", workflow, re.MULTILINE | re.DOTALL)
+    if jobs_block is None:
+        return {}
+    return {
+        m.group(1): m.group(2)
+        for m in re.finditer(r"^  ([A-Za-z0-9_-]+):[ \t]*\n(.*?)(?=^  \S|\Z)", jobs_block.group(1), re.MULTILINE | re.DOTALL)
+    }
+
+
+def job_needs(body: str) -> list[str]:
+    """The `needs:` of one job body: `needs: a`, `needs: [a, b]` or a block list of `- a` lines."""
+    m = re.search(r"^    needs:[ \t]*(.*)$", body, re.MULTILINE)
+    if m is None:
+        return []
+    value = m.group(1).split("#", 1)[0].strip()
+    if value.startswith("["):
+        return [n.strip().strip("'\"") for n in value.strip("[]").split(",") if n.strip()]
+    if value:
+        return [value.strip("'\"")]
+    block = re.match(r"((?:^      - .*\n?)+)", body[m.end() + 1 :], re.MULTILINE)
+    return [line.strip()[2:].split("#", 1)[0].strip().strip("'\"") for line in block.group(1).splitlines()] if block else []
+
+
 def release_guard_problem(package_yml: str) -> str | None:
     """Why package.yml would let a tag through on a prerelease pin, or None."""
-    job = re.search(rf"^  {RELEASE_GUARD_JOB}:\n(.*?)(?=^  \S|\Z)", package_yml, re.MULTILINE | re.DOTALL)
-    if job is None:
+    jobs = workflow_jobs(package_yml)
+    if RELEASE_GUARD_JOB not in jobs:
         return f"no job `{RELEASE_GUARD_JOB}`, which holds the release guard"
-    body = job.group(1)
+    body = jobs[RELEASE_GUARD_JOB]
     if RELEASE_GUARD_RUN not in body or RELEASE_GUARD_IF not in body:
         return f"job `{RELEASE_GUARD_JOB}` lost its release guard: a step with `{RELEASE_GUARD_IF}` running `{RELEASE_GUARD_RUN}`"
-    return None
+    # Every other job must wait for the guard: through `needs`, directly or through other jobs, and with no
+    # job-level condition that runs it when a job it needs failed.
+    problems = []
+    for job, job_body in jobs.items():
+        if job == RELEASE_GUARD_JOB:
+            continue
+        condition = re.search(r"^    if:(.*)$", job_body, re.MULTILINE)
+        if condition and re.search(r"\b(always|failure|cancelled)\(\)", condition.group(1)):
+            problems.append(f"job `{job}` runs whatever the jobs it needs did (`if:{condition.group(1)}`)")
+        seen: set[str] = set()
+        todo = [job]
+        while todo:
+            for need in job_needs(jobs.get(todo.pop(), "")):
+                if need not in seen:
+                    seen.add(need)
+                    todo.append(need)
+        if RELEASE_GUARD_JOB not in seen:
+            problems.append(f"job `{job}` has no `needs` path to `{RELEASE_GUARD_JOB}`, so it builds on a refused tag")
+    return "; ".join(problems) or None
 
 
 def to_dash(dot_version: str) -> str:
