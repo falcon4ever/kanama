@@ -45,7 +45,8 @@ Optional environment:
       fresh (default): delete the Android build template before the export, so Godot installs it during the
       export, as on the first export after a Godot upgrade. stale: leave a template marked as another Godot
       version's, carrying the R8 compat line as older Kanama versions left it, with Editor Settings > Export >
-      Android > Build > Automatically Delete Build Directory on (without it Godot refuses the export). Godot
+      Android > Build > Automatically Delete Build Directory on (the run stops with exit 2 when the editor
+      settings do not turn it on, as Godot would refuse the stale template before any plugin runs). Godot
       then deletes all of res://android during the export, android/plugins (Kanama's plugin) too, and the
       run passes only when the export guard stops that export before Gradle. reuse: keep the installed template, as on
       every later export; the R8 compat line is taken out of it first, so only the export guard can put it back.
@@ -88,6 +89,20 @@ case "$TEMPLATE_MODE" in
     exit 2
     ;;
 esac
+if [[ "$TEMPLATE_MODE" == stale ]]; then
+  # With automatic deletion off (Godot's default), Godot refuses a stale template before any plugin runs, and
+  # the run would blame the guard. This script never changes the user's editor settings: check, and stop.
+  pin_branch="$(android_godot_version | cut -d. -f1,2)"
+  if [[ -d "$HOME/Library/Application Support/Godot" ]]; then
+    editor_settings="$HOME/Library/Application Support/Godot/editor_settings-$pin_branch.tres"
+  else
+    editor_settings="${XDG_CONFIG_HOME:-$HOME/.config}/godot/editor_settings-$pin_branch.tres"
+  fi
+  if ! grep -Eq '^export/android/build/automatically_delete_build_directory[[:space:]]*=[[:space:]]*true' "$editor_settings" 2>/dev/null; then
+    echo "[android_minified] KANAMA_ANDROID_TEMPLATE=stale needs Editor Settings > Export > Android > Build > Automatically Delete Build Directory on ($editor_settings does not set export/android/build/automatically_delete_build_directory = true); without it Godot refuses the stale template before the export guard runs" >&2
+    exit 2
+  fi
+fi
 if [[ -n "$PANAMAPORT_MAVEN_REPO" && "$TEMPLATE_MODE" != reuse ]]; then
   echo "[android_minified] KANAMA_PANAMAPORT_MAVEN_REPO patches the template's build.gradle before the export: set KANAMA_ANDROID_TEMPLATE=reuse" >&2
   exit 2

@@ -160,8 +160,9 @@ Android scripts now delete a build template from another Godot version and insta
 with one line when `GODOT_BIN` is not the pinned editor. In your own project on 4.7, delete
 `res://android/build` and run **Project > Install Android Build Template**; on 4.8, delete it. **Editor Settings >
 Export > Android > Build > Automatically Delete Build Directory** deletes all of `res://android`, Kanama's Android plugin
-in `res://android/plugins` too; the export guard stops such an export, and `./gradlew buildAndroidScripts` puts the
-plugin back. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
+in `res://android/plugins` too. The export guard then ends a command-line export before Gradle runs, marks an editor
+export as failed, and removes a one-click deploy's APK before Godot installs it; `./gradlew buildAndroidScripts` puts
+the plugin back. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
 
 #### Fixed — the exported-scene check no longer leaks a project's music at exit
 

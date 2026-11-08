@@ -1482,6 +1482,12 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
 # res://android/build; check_export_guard.gd unit-tests the writer. A mutation goes into both copies.
 GUARD_R8_BUILD_DIRECTORY = ("    if dir.is_empty():\n        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n",
                             "    dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n")
+GUARD_LATE_DISCARD = ("        _discard_on_end = _export_path\n", "        pass\n")
+case("tool_smoke.sh (export guard late problem, one-click)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD)],
+     "[export_guard_discard] FAIL: a problem found after the template setup left the one-click APK", "a problem the guard finds after _export_begin (Android plugins deleted with the old template) no longer removes a one-click deploy's APK: Godot installs the broken APK on the device",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (export guard R8 compat build directory)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY),
       Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY)],

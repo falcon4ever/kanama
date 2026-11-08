@@ -99,12 +99,13 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/android_apk_id.sh:59` | `pid="$("$adb" shell ps -A 2>/dev/null \| tr -d '\r' \| awk -v p="$package" '$NF == p { print $2; exit }' \|\| true` | justified: an adb error leaves $pid empty; the caller retries until its deadline and then fails. |
 | `scripts/android_build_template_selftest.sh:45` | `FAKE_GODOT_VERSION="$pin" ensure_android_build_template >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/android_common.sh:119` | `editor_version="$(run_with_timeout 30 "$GODOT_BIN" --version 2>/dev/null \| head -n 1 \| tr -d '[:space:]' \|\| tr` | justified: an editor that hangs or prints nothing leaves editor_version empty, which fails the pin check below |
-| `scripts/android_export_minified.sh:117` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
-| `scripts/android_export_minified.sh:250` | `"$ADB_BIN" start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_export_minified.sh:261` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the plain install on the next line is the check. |
-| `scripts/android_export_minified.sh:262` | `"$ADB_BIN" install "$APK_PATH" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/android_export_minified.sh:266` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the app may not be running yet; the launch below and the pid check after it decide. |
-| `scripts/android_export_minified.sh:267` | `"$ADB_BIN" shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_export_minified.sh:101` | `if ! grep -Eq '^export/android/build/automatically_delete_build_directory[[:space:]]*=[[:space:]]*true' "$edit` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `scripts/android_export_minified.sh:155` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
+| `scripts/android_export_minified.sh:330` | `"$ADB_BIN" start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_export_minified.sh:341` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the plain install on the next line is the check. |
+| `scripts/android_export_minified.sh:342` | `"$ADB_BIN" install "$APK_PATH" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/android_export_minified.sh:346` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the app may not be running yet; the launch below and the pid check after it decide. |
+| `scripts/android_export_minified.sh:347` | `"$ADB_BIN" shell monkey --pct-syskeys 0 -p "$PACKAGE_NAME" -c android.intent.category.LAUNCHER 1 >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/android_smoke.sh:137` | `"$ADB_BIN" kill-server >/dev/null 2>&1 \|\| true` | justified: the daemon restart is best effort; the retried command on the next loop turn is the check (after 3 attempts adb_retry returns 1). |
 | `scripts/android_smoke.sh:140` | `"$ADB_BIN" start-server >/dev/null 2>&1 \|\| true` | justified: best-effort daemon restart inside adb_retry; the retried command on the next loop turn is the check. |
 | `scripts/android_smoke.sh:150` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
@@ -157,9 +158,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_pt_tag_tables.py:365` | `except ParseError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:367` | `except OSError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:375` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
-| `scripts/check_public_signature_changes.py:1059` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1068` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1558` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1061` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1070` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1578` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_script_portability.py:1158` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
 | `scripts/check_script_portability.py:1481` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
@@ -196,9 +197,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1901` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1966` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:2017` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1929` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1994` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2045` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -375,9 +376,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web_fresh_checkout_smoke.sh:225` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
 | `.github/workflows/ci.yml:68` | `if ! command -v gdb >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `.github/workflows/package.yml:387` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
-| `.github/workflows/package.yml:404` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
-| `.github/workflows/package.yml:843` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
+| `.github/workflows/package.yml:389` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
+| `.github/workflows/package.yml:406` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
+| `.github/workflows/package.yml:845` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
 | `.github/workflows/web.yml:237` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
 | `.github/workflows/web.yml:290` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
 | `.github/workflows/web.yml:318` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
