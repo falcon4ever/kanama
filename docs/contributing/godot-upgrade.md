@@ -142,7 +142,8 @@ These steps need a person or a device, so the script prints them and stops:
   `android/.build_version` is not the pin and reinstall it. For a demo exported by hand, delete
   `res://android/build`. **Editor Settings > Export > Android > Build > Automatically Delete Build
   Directory** deletes all of `res://android`, `android/plugins` (Kanama's plugin) too; the export guard
-  then stops the export, and the plugin has to be installed again.
+  then ends a command-line export, marks an editor export as failed and keeps a one-click deploy from
+  installing, and the plugin has to be installed again.
 - **Run the API exercise before any device gate.** The page
   (`docs/reference/generated/api-exercise.md`) is already regenerated; review its
   diff, since every new class gets rows that have never run. Then run the rows

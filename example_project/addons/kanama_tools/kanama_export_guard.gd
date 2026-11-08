@@ -76,6 +76,8 @@ const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is m
 const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
 
 var _discard_on_end := ""
+## The export path _export_begin got, for problems found later in the export (_stop_after_begin).
+var _export_path := ""
 ## The files in ANDROID_PLUGINS_DIR when an Android Gradle export began (_export_begin), checked again in
 ## _get_android_libraries.
 var _android_plugins_at_begin := PackedStringArray()
@@ -95,6 +97,7 @@ func _supports_platform(_platform: EditorExportPlatform) -> bool:
 
 func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
     _discard_on_end = ""
+    _export_path = path
     _android_plugins_at_begin = PackedStringArray()
     if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
         return
@@ -143,15 +146,25 @@ func _get_android_libraries(platform: EditorExportPlatform, debug: bool) -> Pack
     var problem := android_plugins_problem(_android_plugins_at_begin, DirAccess.get_files_at(ANDROID_PLUGINS_DIR) if DirAccess.dir_exists_absolute(ANDROID_PLUGINS_DIR) else PackedStringArray())
     if problem.is_empty() and not debug and get_option(OPTION_MINIFICATION) == true:
         problem = keep_r8_compat_mode(android_gradle_properties_path(get_option(OPTION_GRADLE_BUILD_DIRECTORY)))
-    if problem.is_empty():
-        return PackedStringArray()
-    # Too late to stop the export from Godot's side: a command-line export ends here, before Gradle runs; an
-    # editor export reports the error ("Failed" in the export dialog).
-    platform.add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, "Export stopped: " + problem)
+    if not problem.is_empty():
+        _stop_after_begin(platform, problem)
+    return PackedStringArray()
+
+
+## A problem found after _export_begin, when Godot no longer lets a plugin fail the export. It is reported as
+## an export error ("Failed" in the export dialog); a command-line export ends here, before Gradle runs; a
+## one-click deploy's temporary export is removed in _export_end, which Godot runs before it installs the
+## APK (Android run(): the export's ExportNotifier ends inside export_project_helper), so nothing reaches the
+## device. Any other editor export is left as Godot produces it.
+func _stop_after_begin(platform: EditorExportPlatform, problem: String) -> void:
+    if platform != null:
+        platform.add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, "Export stopped: " + problem)
     if is_command_line_export():
         printerr("%s: ending the export process (the exit status is non-zero)." % STOP_LINE)
         end_process()
-    return PackedStringArray()
+        return
+    if is_one_click_deploy(_export_path):
+        _discard_on_end = _export_path
 
 
 ## The Export dialog's warning on the Android preset's Min SDK field, before anyone exports.
