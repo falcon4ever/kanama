@@ -24,15 +24,21 @@ env:
 
 jobs:
   slow:
-    # Sharded like ci.yml's fast set: the whole --slow set outgrew one 90-minute job (cancelled 2026-10-18..20).
-    name: gate red runs (--slow) (${{ matrix.shard }}/4)
+    # Sharded like ci.yml's fast set. The whole --slow set takes about 7.5 hours of a slow runner and these runners
+    # differ by a factor of 1.9, so the job count is set for the slowest: about 45 minutes a shard there. To grow it,
+    # add to the matrix; the job count is the N of --shard K/N.
+    name: gate red runs (--slow) (${{ matrix.shard }}/${{ strategy.job-total }})
     runs-on: ubuntu-24.04
     timeout-minutes: 75
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
+      - name: Note the job's start
+        shell: bash
+        run: echo "JOB_STARTED=$(date +%s)" >>"$GITHUB_ENV"
+
       - name: Checkout
         uses: actions/checkout@v6
         with:
@@ -55,6 +61,7 @@ jobs:
 
       - name: Download Godot and the Web and Android export templates
         if: steps.godot-cache.outputs.cache-hit != 'true'
+        timeout-minutes: 10
         shell: bash
         run: |
           mkdir -p "$HOME/godot"
@@ -99,6 +106,36 @@ jobs:
           } >"$settings"
           cat "$settings"
 
+      # Maven Central has answered 404 for files it holds (2026-11-04), and Gradle then remembers that jar as missing
+      # for a day without asking again, so one bad minute failed every later Gradle case of the shard. What the root
+      # build and the Android plugin's build resolve is fetched here, where a retry can ask again, and the build the
+      # smokes start with is built: Gradle's build cache hands the cases its output. The resolving took about 70 s from
+      # an empty cache (a Mac, 590 MB, 2026-11-07) and seconds from a full one, the whole step 215 s from an empty Gradle
+      # home (690 MB); README-gates.md has what it does not cover.
+      # The init script was only ever run on a Mac before it landed here, and a failure of this step fails all twelve
+      # shards. If it fails on Linux for a reason of its own (not a 404), drop the two `resolveBuildDependencies` lines
+      # of fetch(). `syncExampleAddonJar` alone is the build every smoke starts with, which Linux runners have built for
+      # months: it then fetches less here (README-gates.md says what), and the rest is fetched by the cases, unretried.
+      - name: Fetch the build's dependencies
+        # Three cold attempts on a slow runner (about 400 s each) and two 60 s waits.
+        timeout-minutes: 18
+        shell: bash
+        run: |
+          fetch() {
+            # Absolute: with -p, Gradle looks for a relative init script under the project directory.
+            local init="$PWD/scripts/resolve_build_dependencies.init.gradle.kts"
+            ./gradlew -q --init-script "$init" -p android/godot-plugin resolveBuildDependencies "$@" &&
+              ./gradlew -q --init-script "$init" resolveBuildDependencies "$@" &&
+              ./gradlew -q syncExampleAddonJar "$@"
+          }
+          fetch && exit 0
+          for attempt in 1 2; do
+            echo "::warning::the build failed (attempt $attempt of 3); asking the repositories again in a minute"
+            sleep 60
+            fetch --refresh-dependencies && exit 0
+          done
+          exit 1
+
       - name: Run every gate red run, slow ones included
         shell: bash
         env:
@@ -107,5 +144,11 @@ jobs:
           godot_bin="$HOME/godot/Godot_v${GODOT_VERSION}_linux.x86_64"
           chmod +x "$godot_bin"
           # sync_kdoc needs a Godot docs checkout and the iOS kit smokes a Mac with Xcode, which this runner does not
-          # have: skipped by name.
-          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" --shard ${{ matrix.shard }}/4
+          # have: skipped by name. The deadline is what is left of the job's 75 minutes, less 3 to stop the running case
+          # and report: a slow shard then ends itself, with its failures and the cases it never reached in the log and
+          # an annotation. The stop takes 20 s at most (TERM, up to STOP_GRACE = 15 s for the case's group to empty,
+          # which is more than an editor smoke's own 10 s RUN_BOUNDED_GRACE; KILL, up to 5 s for the output to close);
+          # the rest of the 3 minutes is for the workspace removal and the report.
+          elapsed=$(( ($(date +%s) - JOB_STARTED + 59) / 60 ))
+          KANAMA_GODOT_BIN="$godot_bin" python3 scripts/gate_red_runs.py --slow --strict --allow-skip "sync_kdoc,smoke.sh --ios" \
+            --deadline-minutes $(( 72 - elapsed )) --shard ${{ matrix.shard }}/${{ strategy.job-total }}
