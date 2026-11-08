@@ -98,7 +98,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/android_apk_id.sh:59` | `pid="$("$adb" shell ps -A 2>/dev/null \| tr -d '\r' \| awk -v p="$package" '$NF == p { print $2; exit }' \|\| true` | justified: an adb error leaves $pid empty; the caller retries until its deadline and then fails. |
 | `scripts/android_build_template_selftest.sh:45` | `FAKE_GODOT_VERSION="$pin" ensure_android_build_template >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/android_common.sh:119` | `editor_version="$(run_with_timeout 30 "$GODOT_BIN" --version 2>/dev/null \| head -n 1 \| tr -d '[:space:]' \|\| tr` | justified: an editor that hangs or prints nothing leaves editor_version empty, which fails the pin check below |
-| `scripts/android_export_minified.sh:118` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
+| `scripts/android_export_minified.sh:117` | `"$ADB_BIN" shell am force-stop "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: cleanup after the verdict; the app may already have exited. |
 | `scripts/android_export_minified.sh:250` | `"$ADB_BIN" start-server >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/android_export_minified.sh:261` | `"$ADB_BIN" uninstall "$PACKAGE_NAME" >/dev/null 2>&1 \|\| true` | justified: the package may simply not be installed; the plain install on the next line is the check. |
 | `scripts/android_export_minified.sh:262` | `"$ADB_BIN" install "$APK_PATH" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
@@ -138,6 +138,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_exported_scene_properties_selftest.sh:92` | `printf '%s\n' "$red" \| grep -E '^\[check_exported_scenes\] FAIL' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertion on "$red" follows. |
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_ios_selftest_phases.py:109` | `text = path.read_text(errors="ignore")` | justified: a non-UTF-8 byte sits in a comment or string literal of the Godot source; constructor names and singleton calls are ASCII |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_single_call_returns.py:351` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:180` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
@@ -155,13 +156,13 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_pt_tag_tables.py:365` | `except ParseError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:367` | `except OSError as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_pt_tag_tables.py:375` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
-| `scripts/check_public_signature_changes.py:1058` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1067` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_public_signature_changes.py:1532` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1059` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1068` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_public_signature_changes.py:1558` | `except ParseError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_script_portability.py:1158` | `except SyntaxError as error:` | justified: reported as a `parse` finding (the return value), the gate stays red |
 | `scripts/check_script_portability.py:1481` | `except UnicodeDecodeError:` | justified: a binary file is not a script; only text files are scanned |
 | `scripts/check_shell_lint.sh:27` | `if ! command -v shellcheck >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/check_wrapper_generator.py:563` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_wrapper_generator.py:565` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/editor_check_lib.sh:78` | `queue="$queue $(pgrep -P "$pid" 2>/dev/null \| tr '\n' ' ' \|\| true)"` | justified: a process with no children (or no pgrep, on Git Bash) adds nothing; the processes listed so far are still stopped. |
 | `scripts/editor_check_lib.sh:92` | `kill -TERM $targets 2>/dev/null \|\| true` | justified: a target may have exited since it was listed. |
 | `scripts/editor_check_lib.sh:98` | `kill -KILL $targets 2>/dev/null \|\| true` | justified: as above; KILL only reaches what TERM did not stop. |
@@ -191,8 +192,8 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:215` | `except ProcessLookupError:` | justified: the group already exited between the timeout and the kill |
 | `scripts/gate_red_runs.py:257` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:259` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1693` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1777` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1724` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1808` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:682` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_api_exercise.py:725` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -260,12 +261,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:3157` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:57` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:216` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:745` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:748` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:750` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:791` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:807` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:820` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:753` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:756` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:758` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:799` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:815` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:828` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/measure_edit_loop.py:98` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/measure_edit_loop.py:111` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:115` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
@@ -308,16 +309,16 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/tool_smoke.sh:147` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:279` | `mode=$(cat "$control/mode" 2>/dev/null \|\| echo ok)` | justified: no mode file means the default mode, ok |
 | `scripts/tool_smoke.sh:307` | `kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null \|\| true` | justified: clean-up only; the check itself asserts the plugin ended it |
-| `scripts/upgrade_godot.sh:155` | `restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD \| grep -vxF "$pins" \|\| true)"` | justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore. |
-| `scripts/upgrade_godot.sh:167` | `left="$(git -C "$ROOT_DIR" status --porcelain \| grep -vc '^??' \|\| true)"` | justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal. |
-| `scripts/upgrade_godot.sh:211` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
-| `scripts/upgrade_godot.sh:236` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
-| `scripts/upgrade_godot.sh:263` | `if ! git -C "$ROOT_DIR" cat-file -e "$BASELINE_REF:extension_api.json" 2>/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
-| `scripts/upgrade_godot.sh:280` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
-| `scripts/upgrade_godot.sh:304` | `TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' \| head -n 1 \|\| true)"` | justified: no .tpz in the directory leaves the path empty, which the -f test below reports. |
-| `scripts/upgrade_godot.sh:320` | `tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null \| tr -d '[:space:]' \|\| true)"` | justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects. |
-| `scripts/upgrade_godot.sh:453` | `set +e` | justified: the exit status is already decided ($rc); a failing restore step is reported below, not fatal. |
-| `scripts/upgrade_godot.sh:483` | `git -C "$ROOT_DIR" show "$BASELINE_REF:extension_api.json" >"$BASELINE_API" 2>/dev/null \|\| [[ "$MODE" == plan ` | justified: only --plan gets here with a bad --baseline-ref (the preflight listed it); a bump or dry run exited above. |
+| `scripts/upgrade_godot.sh:156` | `restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD \| grep -vxF "$pins" \|\| true)"` | justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore. |
+| `scripts/upgrade_godot.sh:168` | `left="$(git -C "$ROOT_DIR" status --porcelain \| grep -vc '^??' \|\| true)"` | justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal. |
+| `scripts/upgrade_godot.sh:212` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
+| `scripts/upgrade_godot.sh:237` | `DOCS_VERSION_PY="$(cd "$GODOT_DOCS_DIR/../.." 2>/dev/null && pwd)/version.py"` | justified: an unreachable docs dir yields a version.py path that does not exist, which fails loudly just below. |
+| `scripts/upgrade_godot.sh:264` | `if ! git -C "$ROOT_DIR" cat-file -e "$BASELINE_REF:extension_api.json" 2>/dev/null; then` | justified: output dropped, the command's exit status is the condition of the `if` |
+| `scripts/upgrade_godot.sh:281` | `unexpected="$(printf '%s\n' "$STATUS_BEFORE" \| grep -v '^??' \| grep -vE "$allowed_dirty" \| grep -v '^$' \|\| tru` | justified: grep -v exits 1 when it filters every line out, which is the clean case (no unexpected change). |
+| `scripts/upgrade_godot.sh:305` | `TEMPLATES="$(find "$TEMPLATES" -maxdepth 1 -name '*.tpz' \| head -n 1 \|\| true)"` | justified: no .tpz in the directory leaves the path empty, which the -f test below reports. |
+| `scripts/upgrade_godot.sh:321` | `tpz_version="$(unzip -p "$TEMPLATES" templates/version.txt 2>/dev/null \| tr -d '[:space:]' \|\| true)"` | justified: an archive without templates/version.txt leaves the version empty, which the comparison below rejects. |
+| `scripts/upgrade_godot.sh:454` | `set +e` | justified: the exit status is already decided ($rc); a failing restore step is reported below, not fatal. |
+| `scripts/upgrade_godot.sh:484` | `git -C "$ROOT_DIR" show "$BASELINE_REF:extension_api.json" >"$BASELINE_API" 2>/dev/null \|\| [[ "$MODE" == plan ` | justified: only --plan gets here with a bad --baseline-ref (the preflight listed it); a bump or dry run exited above. |
 | `scripts/upgrade_godot_rerun_selftest.sh:49` | `git -C "$ROOT_DIR" worktree remove --force "$TREE" >/dev/null 2>&1 \|\| true` | justified: best effort; the rm and the prune below finish the job when the worktree is half-gone. |
 | `scripts/upgrade_godot_rerun_selftest.sh:52` | `git -C "$ROOT_DIR" worktree prune >/dev/null 2>&1 \|\| true` | justified: housekeeping of a worktree registration that is already gone. |
 | `scripts/upgrade_godot_rerun_selftest.sh:120` | `unexpected="$(git -C "$TREE" status --porcelain \| grep -v '^??' \| grep -vF "$(python3 "$ROOT_DIR/scripts/check` | justified: grep -v exits 1 when only the pin files are left, which is what --reset must leave. |
@@ -367,9 +368,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/web_fresh_checkout_smoke.sh:225` | `git -C "$DEMOS_DIR" status --short >&2 \|\| true` | justified: diagnostics; FAILED=1 above already decided |
 | `scripts/web_hand_metric.py:99` | `except OSError:` | justified: a size metric for a report, not a gate; an unreadable file counts as 0 lines |
 | `.github/workflows/ci.yml:68` | `if ! command -v gdb >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `.github/workflows/package.yml:376` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
-| `.github/workflows/package.yml:393` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
-| `.github/workflows/package.yml:833` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
+| `.github/workflows/package.yml:387` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
+| `.github/workflows/package.yml:404` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
+| `.github/workflows/package.yml:843` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
 | `.github/workflows/web.yml:237` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
 | `.github/workflows/web.yml:290` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
 | `.github/workflows/web.yml:318` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
@@ -525,6 +526,9 @@ parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes eac
 | `check_ios_single_call_returns.py (brace-less loops)` | an entry point is the body of a brace-less for / while | `loop-call src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ZzRedRunBypass.kt:6 redRunFor() calls redRunDispatch inside a for loop: the engine method may run more than once / [ios_single_call` | green |
 | `check_ios_single_call_returns.py (callable-reference alias)` | an entry point is aliased with a callable reference and called twice through the alias | `alias src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ZzRedRunBypass.kt:6 redRunAlias() takes a callable reference to redRunDispatch: an alias hides how often the engine method runs; call i` | green |
 | `check_ios_static_dispatch.py` | a static call is routed through a guarded iOS entry point | `[ios_static_dispatch] FAIL dispatcher-no-static src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt:237 ptrcallDispatch() calls kanama_ios_godot_ptrcall but never kanama_ios_godo` | green |
+| `check_ios_selftest_phases.py` | a scene-init iOS self-test row constructs a TileMap (its TileMapLayer needs PhysicsServer2D) | `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsSelfTest.kt (scene-init phase) line 338: constructs TileMap (memnew(TileMapLayer))` | green |
+| `check_ios_selftest_phases.py (subclass, rows file)` | a *SelfTestRows file called at scene init creates a subclass of an unsafe class | `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/UtilitySelfTest.kt (utilitySelfTestRows, called at scene init) line 21: constructs StaticBody3D (inherits PhysicsBody3D: PhysicsServer3D)` | green |
+| `check_ios_selftest_phases.py (stale list)` | the generated unsafe-class list no longer matches the Godot source | `[ios-selftest-phases] FAIL scripts/ios_scene_init_unsafe_classes.json is stale against <godot-src> (4.8.0-beta (cafc17a192)); rerun with --regenerate --godot-src <godot-src>` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no self-test)` | a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean | `[ios_visual_smoke] runtime self-test summary missing: /PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true has none` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no frame 1)` | the app never reached its first frame: the frame-1 summary is missing while the other two passed | `[ios_visual_smoke] runtime self-test summary missing: /OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no api exercise)` | the generated API exercise did not run or did not finish: its summary is missing while the other three passed | `[ios_visual_smoke] runtime self-test summary missing: /OBJECTCALLS SELFTEST \(api exercise\): [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest` | green |

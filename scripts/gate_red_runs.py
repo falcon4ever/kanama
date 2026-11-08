@@ -545,6 +545,20 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
      "dispatcher-no-static", "a static call is routed through a guarded iOS entry point")
+# The iOS self-test phase gate (Godot 4.8 bump): a scene-init row constructing a class whose constructor needs a server
+# Godot creates after scene-level extension init (the first 4.8 iPhone run: SIGSEGV in TileMapLayer::TileMapLayer()).
+case("check_ios_selftest_phases.py", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/ObjectCallsSelfTest.kt", '  val n3 = ObjectCalls.constructObject("Node3D")\n',
+           '  val n3 = ObjectCalls.constructObject("Node3D")\n  val redRunTileMap = ObjectCalls.constructObject("TileMap")\n')],
+     "constructs TileMap (memnew(TileMapLayer))", "a scene-init iOS self-test row constructs a TileMap (its TileMapLayer needs PhysicsServer2D)")
+case("check_ios_selftest_phases.py (subclass, rows file)", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/UtilitySelfTest.kt", "  val faultsBefore = ObjectCalls.faultCount()\n",
+           "  val faultsBefore = ObjectCalls.faultCount()\n  val redRunBody = net.multigesture.kanama.api.StaticBody3D.create()\n")],
+     "constructs StaticBody3D (inherits PhysicsBody3D", "a *SelfTestRows file called at scene init creates a subclass of an unsafe class")
+case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.py"),
+     [Edit("scripts/ios_scene_init_unsafe_classes.json", '    "TileMap": "memnew(TileMapLayer)",\n', "")],
+     "ios_scene_init_unsafe_classes.json is stale", "the generated unsafe-class list no longer matches the Godot source",
+     requires_env="GODOT_DOCS")
 # The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
 # red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"

@@ -77,7 +77,7 @@ releases follow the same runbook; the diff is just smaller.
    | 3. classify | diffs the new API against `HEAD`: no-op, metadata-only, or an API change with the added and removed classes and the removed methods, properties, signals, constants and enums |
    | 4. constants | `generate_name_constants.py` |
    | 5. tree | `generate_api_wrapper.py --write-tree`: re-renders every wrapper on every platform, **adopts every class the new API adds**, keeps the desktop `ObjectCalls` `actual` set in step with the expect, and repeats until a pass writes nothing |
-   | 6. outputs | the release kit's `config/features` (`templates/release-kit/project.godot`, moved to the pin's major.minor), the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, then the KDoc sync |
+   | 6. outputs | the release kit's `config/features` (`templates/release-kit/project.godot`, moved to the pin's major.minor), the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, the iOS scene-init unsafe-class list (`scripts/ios_scene_init_unsafe_classes.json`, scanned from the source checkout), then the KDoc sync |
    | 7. format | `./gradlew ktfmtFormat` (the regen leaves the iOS `ObjectCalls` region, the expect and toggled desktop members unformatted) |
    | 8. gates index | `docs/reference/generated/gates.md`, last because it reads the gate list |
    | 9. gates | every drift gate, `ktfmtCheck`, the version pins (including the release kit's, `check_kit_version_pins.py`), and the API validation, run to the end |
