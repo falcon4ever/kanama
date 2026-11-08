@@ -102,7 +102,7 @@ check_absent() {
 # Counts after the decode, then after the container's destroy.
 DECODE_LOG="${LOG_FILE}.decode_buffers"
 decode_status=0
-"$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://decode_buffer_smoke.tscn --quit --verbose >"$DECODE_LOG" 2>&1 || decode_status=$?
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://decode_buffer_smoke.tscn --quit --verbose >"$DECODE_LOG" 2>&1 || decode_status=$?
 decode_ok="2,2,2,2:1,1,1,1"
 dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
 decode_want="array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok"
@@ -116,6 +116,12 @@ elif [[ -z "$decode_got" ]]; then
 elif [[ $decode_status -ne 0 ]]; then
   smoke_fail "decode buffers" "the run exited $decode_status after a correct result" "$DECODE_LOG"
 fi
+# The probe's run has its own log, so the main log's leak and bad-call rows don't see it: check it here.
+for decode_absent in "Leaked instance:" "Invalid call\. Nonexistent function"; do
+  if grep -Eq -- "$decode_absent" "$DECODE_LOG"; then
+    smoke_fail "decode buffers" "unexpected pattern: $decode_absent" "$DECODE_LOG"
+  fi
+done
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
@@ -1050,7 +1056,7 @@ trap 'run_logs_finish "$?" runtime_smoke' EXIT
 # the moment the first lifecycle upcall is installed. Assert the boundary line is
 # present FIRST, so a dropped env var fails loudly instead of making the absence
 # check pass vacuously.
-for adapter_log in "$LOG_FILE" "$IMPORT_LOG_FILE"; do
+for adapter_log in "$LOG_FILE" "$IMPORT_LOG_FILE" "$DECODE_LOG"; do
   if ! grep -Eq -- "\[kanama:adapter\] boundary first-lifecycle-upcall-install" "$adapter_log"; then
     echo "[runtime_smoke] FAIL -- adapter trace missing from $adapter_log" >&2
     exit 1
