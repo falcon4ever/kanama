@@ -117,7 +117,8 @@ jobs:
       # of fetch(). `syncExampleAddonJar` alone is the build every smoke starts with, which Linux runners have built for
       # months: it then fetches less here (README-gates.md says what), and the rest is fetched by the cases, unretried.
       - name: Fetch the build's dependencies
-        timeout-minutes: 12
+        # Three cold attempts on a slow runner (about 400 s each) and two 60 s waits.
+        timeout-minutes: 18
         shell: bash
         run: |
           fetch() {

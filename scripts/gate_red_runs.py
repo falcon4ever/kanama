@@ -356,15 +356,19 @@ def make_workspace() -> tuple[Path, Path]:
     """A detached worktree of HEAD carrying the dev checkout's uncommitted state; returns (tmp dir, tree)."""
     tmp = Path(tempfile.mkdtemp(prefix="gate_red_runs.")).resolve()  # resolved: /var is /private/var on macOS
     tree = tmp / "tree"
-    git_out("worktree", "add", "--detach", "--quiet", str(tree), "HEAD")
-    patch = git_out("diff", "HEAD", "--binary")
-    if patch:
-        git_out("apply", "--whitespace=nowarn", cwd=tree, data=patch)
-    untracked = git_out("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")
-    for rel in filter(None, untracked):
-        dest = tree / rel
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(SRC / rel, dest)
+    try:
+        git_out("worktree", "add", "--detach", "--quiet", str(tree), "HEAD")
+        patch = git_out("diff", "HEAD", "--binary")
+        if patch:
+            git_out("apply", "--whitespace=nowarn", cwd=tree, data=patch)
+        untracked = git_out("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")
+        for rel in filter(None, untracked):
+            dest = tree / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(SRC / rel, dest)
+    except BaseException:  # a signal's SystemExit too: a half-made worktree must not stay registered in the dev checkout
+        drop_workspace(tmp, tree)
+        raise
     return tmp, tree
 
 
@@ -1810,7 +1814,7 @@ case("gate_red_runs_selftest.py (signal while starting)", STOP_SELFTEST,
 #CASES-END
 
 def main() -> int:
-    global DEADLINE, WORK
+    global DEADLINE, WORK, STARTING
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--only", help="run only the cases whose gate name contains this text")
     parser.add_argument("--slow", action="store_true", help="also run the cases that drive Godot and Gradle (minutes each)")
@@ -1852,8 +1856,12 @@ def main() -> int:
     try:
         failures, rows, skipped = run_cases(cases, strict, allowed_skips)
     finally:
+        STARTING = True  # a signal while the workspace goes is recorded, and acted on once it is gone
         drop_workspace(tmp, WORK)
         WORK = SRC
+        STARTING = False
+        if SIGNALLED is not None:
+            stop_now(SIGNALLED)
     after = git_status()
     if before != after:
         failures.append("the dev checkout changed across the run (this must never happen):\n" + "\n".join(sorted(set(after.splitlines()) ^ set(before.splitlines()))))
