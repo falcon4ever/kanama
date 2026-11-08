@@ -778,9 +778,8 @@ cat <<EOF
      support claims; support wording moves only after the matching gate passes.
   6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates (the release kit's Godot version is already moved, step 6),
-     companion demo defaults. Review the
-     .gdextension compatibility_minimum invariant before touching it
-     (see AGENTS.md "Looks Wrong But Isn't").
+     companion demo defaults. On a new major.minor, the demos' synced kanama.gdextension
+     copies take the new compatibility_minimum when the demos re-sync the addon.
   7. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
   8. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF

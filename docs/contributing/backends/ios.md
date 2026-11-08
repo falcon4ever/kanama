@@ -73,7 +73,7 @@ project has them, the Android AAR entries:
 ```ini
 [configuration]
 entry_symbol = "kanama_entry"
-compatibility_minimum = "4.7"
+compatibility_minimum = "4.8"
 
 [libraries]
 ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"

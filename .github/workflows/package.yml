@@ -27,8 +27,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      # A prerelease pin may live on main; a release may not. Every package job needs this job, so a tag on
-      # a prerelease pin stops here and publish-release never runs. A manual run still builds on any pin.
+      # A prerelease pin may live on main; a release may not. Every other job needs this job, directly or
+      # through another job (scripts/check_godot_version_pin.py fails without that path), so a tag on a
+      # prerelease pin stops here and no job builds or publishes. A manual run still builds on any pin.
       - name: Refuse a release on a prerelease Godot pin
         if: startsWith(github.ref, 'refs/tags/v')
         run: python3 scripts/check_godot_version_pin.py --release
@@ -200,6 +201,7 @@ jobs:
   cross-runtimes:
     name: cross-runtime (${{ matrix.target }} built on macOS)
     runs-on: macos-15
+    needs: gdextension-header
     timeout-minutes: 30
     strategy:
       fail-fast: false

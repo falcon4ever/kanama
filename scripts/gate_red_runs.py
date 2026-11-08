@@ -525,6 +525,15 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_godot_version_pin.py (release guard wired)", py("check_godot_version_pin.py"),
      [Edit(".github/workflows/package.yml", "run: python3 scripts/check_godot_version_pin.py --release", "run: echo no guard")],
      "lost its release guard", "package.yml no longer runs the release guard on a tag")
+case("check_godot_version_pin.py (release guard needed by every job)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "    runs-on: macos-15\n    needs: gdextension-header\n", "    runs-on: macos-15\n")],
+     "job `cross-runtimes` has no `needs` path to `gdextension-header`", "a package job stops waiting for the release guard job: a tag on a prerelease pin would still build it")
+case("check_godot_version_pin.py (compatibility_minimum)", py("check_godot_version_pin.py"),
+     [Edit("example_project/addons/kanama/kanama.gdextension", 'compatibility_minimum = "', 'compatibility_minimum = "0.')],
+     "example_project/addons/kanama/kanama.gdextension: compatibility_minimum", "the desktop descriptor lets an older Godot load Kanama: compatibility_minimum is not the pin's major.minor")
+case("check_godot_version_pin.py (compatibility_minimum literal)", py("check_godot_version_pin.py"),
+     [Edit("build.gradle.kts", 'compatibility_minimum = "${godotCompatibilityMinimum.get()}"', 'compatibility_minimum = "4.7"')],
+     "is a literal; derive it from kanamaGodotVersion", "a generated descriptor (package kit or iOS) hardcodes compatibility_minimum again instead of deriving it from the pin")
 # The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
 case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
      [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],
@@ -892,6 +901,10 @@ case("check_public_signature_changes.py (trailing default, overridable)", py("ch
      [Append("api-snapshots/common.txt", "ZzRedRun: open class ZzRedRun\nZzRedRun: open fun redRun(a: Int)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nopen class ZzRedRun {\n  open fun redRun(a: Int, b: Int = 0) {}\n}\n")],
      "unannounced source break", "an open function gains a trailing defaulted parameter: an override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, interface member)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: interface ZzRedRun\nZzRedRun: fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\ninterface ZzRedRun {\n  fun redRun(a: Int, b: Int = 0)\n}\n")],
+     "unannounced source break", "an interface member gains a trailing defaulted parameter: its line carries no `open`, but every implementation's override stops matching, so it stays a break")
 case("check_public_signature_changes.py (trailing default, after a lambda)", py("check_public_signature_changes.py"),
      [Append("api-snapshots/common.txt", "ZzRedRun: class ZzRedRun\nZzRedRun: fun redRun(block: () -> Unit)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n  fun redRun(block: () -> Unit, b: Int = 0) {}\n}\n")],
@@ -1464,6 +1477,15 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
              'export_path="build/game.apk"\n\n[preset.0.options]\n\ngradle_build/use_gradle_build=true\n'
              'gradle_build/min_sdk="26"\nplugins/KanamaAndroid=true\n')],
      "preset's Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The R8 compat line goes into the build template the preset builds (Gradle Build Directory), not always
+# res://android/build; check_export_guard.gd unit-tests the writer. A mutation goes into both copies.
+GUARD_R8_BUILD_DIRECTORY = ("    if dir.is_empty():\n        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n",
+                            "    dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n")
+case("tool_smoke.sh (export guard R8 compat build directory)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY)],
+     "[export_guard] FAIL r8 compat: android_gradle_properties_path(res://platform/android_custom)", "the guard writes the R8 compat line into res://android/build whatever the preset's Gradle Build Directory says: a minified build in a custom directory runs R8 in full mode and crashes on the device",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
                         "    return true\n")

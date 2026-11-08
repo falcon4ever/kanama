@@ -42,8 +42,10 @@ releases follow the same runbook; the diff is just smaller.
 ## The Bump
 
 1. **Edit the pin, and only the pin.** Change `kanamaGodotVersion` in
-   `gradle.properties` and `GODOT_VERSION` in the four workflows
-   (`python3 scripts/check_godot_version_pin.py --list-files` names them).
+   `gradle.properties` and `GODOT_VERSION` in the four workflows. On a new
+   major.minor, also set `compatibility_minimum` in the two committed
+   `kanama.gdextension` descriptors to it
+   (`python3 scripts/check_godot_version_pin.py --list-files` names them all).
 
 2. **Look at the plan** (optional). `--plan` runs the read-only checks and prints
    every step with its command, changing nothing:
@@ -138,8 +140,9 @@ These steps need a person or a device, so the script prints them and stops:
   `res://android/build` installed by another Godot version ("Unable to set up Android
   build directory"). `android_smoke.sh` and `android_export_minified.sh` delete a template whose
   `android/.build_version` is not the pin and reinstall it. For a demo exported by hand, delete
-  `res://android/build`, or turn on **Editor Settings > Export > Android > Build > Automatically
-  Delete Build Directory**.
+  `res://android/build`. **Editor Settings > Export > Android > Build > Automatically Delete Build
+  Directory** deletes all of `res://android`, `android/plugins` (Kanama's plugin) too; the export guard
+  then stops the export, and the plugin has to be installed again.
 - **Run the API exercise before any device gate.** The page
   (`docs/reference/generated/api-exercise.md`) is already regenerated; review its
   diff, since every new class gets rows that have never run. Then run the rows
@@ -164,10 +167,9 @@ These steps need a person or a device, so the script prints them and stops:
   repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
 - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
   badges and version wording, templates (the release kit's Godot version is already
-  moved, step 6), and companion demo defaults. The
-  `.gdextension` `compatibility_minimum` is an invariant with its own rationale
-  (see `AGENTS.md` "Looks Wrong But Isn't"); review it deliberately before
-  touching it.
+  moved, step 6), and companion demo defaults. The demos' synced
+  `kanama.gdextension` copies take the new `compatibility_minimum` when the demos
+  re-sync the addon.
 - Bump the KDoc docs-pin commit hash in
   `docs/contributing/wrapper-maintenance.md` to the new stable tag.
 - **Scan `gdextension/gdextension_interface.h` for newly `@deprecated`

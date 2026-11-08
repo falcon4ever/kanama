@@ -116,7 +116,9 @@ plain editor export. `android_smoke.sh` and `android_export_minified.sh` add
 no repository of their own, so they exercise exactly what a user's export
 gets and fail if the `.gdap` loses that entry. For a fork published elsewhere
 (for example to `~/.m2` while iterating), set
-`KANAMA_PANAMAPORT_MAVEN_REPO=file://$HOME/.m2/repository` and pass the
+`KANAMA_PANAMAPORT_MAVEN_REPO=file://$HOME/.m2/repository` (with
+`KANAMA_ANDROID_TEMPLATE=reuse` for `android_export_minified.sh`, which patches
+the installed template's `build.gradle`) and pass the
 coordinate as `ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>`.
 Godot passes `-Pplugins_maven_repos` on its Gradle command line, so a
 `plugins_maven_repos` value in `android/build/gradle.properties` has no
