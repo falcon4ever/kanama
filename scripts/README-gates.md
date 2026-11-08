@@ -138,6 +138,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_exported_scene_properties_selftest.sh:92` | `printf '%s\n' "$red" \| grep -E '^\[check_exported_scenes\] FAIL' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertion on "$red" follows. |
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/check_ios_selftest_phases.py:109` | `text = path.read_text(errors="ignore")` | justified: a non-UTF-8 byte sits in a comment or string literal of the Godot source; constructor names and singleton calls are ASCII |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_single_call_returns.py:351` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:180` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
@@ -194,9 +195,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1857` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1922` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:1973` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1871` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1936` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1987` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -266,12 +267,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:3157` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:57` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:216` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:745` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:748` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:750` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:791` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:807` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:820` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:753` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:756` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:758` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:799` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:815` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:828` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/measure_edit_loop.py:98` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/measure_edit_loop.py:111` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:115` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |

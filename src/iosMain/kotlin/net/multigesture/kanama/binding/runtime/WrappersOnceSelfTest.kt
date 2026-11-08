@@ -286,22 +286,47 @@ internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
       ResourceLoader.CacheMode.IGNORE,
     )
   // Poll (bounded, ~5 s) until LOADED: Godot reports progress 1.0 for a loaded resource, so a
-  // progress read-back that returned nothing or a default cannot pass as 1.0.
+  // progress read-back that returned nothing or a default cannot pass as 1.0. A load may also
+  // still be IN_PROGRESS when the bound runs out, and that is Godot working as designed, not a
+  // read-back fault: the load is a LOW-priority WorkerThreadPool task, an iPhone 12 gets one
+  // low-priority thread (6 cores x threading/worker_pool/low_priority_thread_ratio 0.3), and on
+  // the first launch after an install of a Mobile-renderer app that thread is busy for longer than
+  // the bound (KanamaThirdPerson on Godot 4.8 beta 2: IN_PROGRESS at progress 0.0 after 5.5 s,
+  // loadThreadedGet back 4.4 s later with the scene; on the next launch LOADED in 21 ms, so the
+  // likely occupant is the renderer's first-launch pipeline compilation). IN_PROGRESS
+  // is not the default answer either (the no-op answer is THREAD_LOAD_INVALID_RESOURCE, 0), so it
+  // still proves the status read-back, with a progress below 1.0. loadThreadedGet then waits for
+  // the load, and the instance name proves the result either way.
+  val pollStarted = kotlin.time.TimeSource.Monotonic.markNow()
   var progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
   var polls = 0
   while (progress.status != ResourceLoader.ThreadLoadStatus.LOADED && polls++ < 500) {
     usleep(10_000u)
     progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
   }
+  val pollMs = pollStarted.elapsedNow().inWholeMilliseconds
+  val getStarted = kotlin.time.TimeSource.Monotonic.markNow()
   val scene = ResourceLoader.loadThreadedGetPackedScene(scenePath)
+  val getMs = getStarted.elapsedNow().inWholeMilliseconds
   val instance = scene?.instantiate()
-  check(
+  val instanceName = instance?.getName()
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1) INFO: resource-loader threaded " +
+      "status=${progress.status} progress=${progress.progress} polls=$polls pollMs=$pollMs " +
+      "getMs=$getMs scene=${scene != null} instance=$instanceName"
+  )
+  checkParts(
+    check,
     "resource-loader(threaded load of a saved scene -> instantiate() named KanamaSelfTestScene)",
-    sceneSaved &&
-      requested == GodotError.OK &&
-      progress.status == ResourceLoader.ThreadLoadStatus.LOADED &&
-      progress.progress == 1.0 &&
-      instance?.getName() == "KanamaSelfTestScene",
+    "scene saved" to (sceneSaved to sceneSaved.toString()),
+    "request OK" to ((requested == GodotError.OK) to requested.toString()),
+    "status LOADED with progress 1.0, or still IN_PROGRESS below 1.0" to
+      ((progress.status == ResourceLoader.ThreadLoadStatus.LOADED && progress.progress == 1.0 ||
+        progress.status == ResourceLoader.ThreadLoadStatus.IN_PROGRESS &&
+          (progress.progress ?: -1.0) >= 0.0 &&
+          (progress.progress ?: 1.0) < 1.0) to "${progress.status} ${progress.progress}"),
+    "instance named KanamaSelfTestScene" to
+      ((instanceName == "KanamaSelfTestScene") to instanceName.toString()),
   )
   instance?.let { ObjectCalls.destroyObject(it.segment) }
   scene?.close()

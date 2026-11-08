@@ -856,6 +856,17 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   singleton through the phase's `requireSingleton` helper — it records `singleton-present(<name>)`
   as its own check and the row then skips its dependent calls — because a zero instance is the
   shared tree's static-method marker and now reaches Godot as a null `this` instead of no-opping.
+  The same goes for **constructing** an object whose constructor uses a server Godot creates after
+  scene init (`PhysicsServer2D`, `PhysicsServer3D`, `CameraServer`): its C++ singleton is still
+  null, and the engine segfaults inside the constructor. Godot 4.8 added
+  `PhysicsServer2D/3D::get_singleton()->connect(...)` to the constructors of `TileMapLayer` and the
+  collision nodes, so the first 4.8 iPhone run died in `TileMapLayer::TileMapLayer()` (from the
+  scene-init `requireObject("TileMap")` row). The TileMap, TileMapLayer and GridMap rows now sit in
+  the frame-1 phase, and `scripts/check_ios_selftest_phases.py` (a local_ci stage) fails on the host
+  when a scene-init row constructs such a class or a subclass of one. The class list,
+  `scripts/ios_scene_init_unsafe_classes.json`, is generated from the Godot source: rerun
+  `python3 scripts/check_ios_selftest_phases.py --regenerate --godot-src <godot checkout>` at every
+  bump (with `GODOT_DOCS` set, the gate fails when the file is stale).
   Expected line shapes on a clean run:
 
   ```text
