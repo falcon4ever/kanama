@@ -47,6 +47,12 @@ object ThemeDB {
         @JvmName("setFallbackStyleboxProperty")
         set(value) = setFallbackStylebox(value)
 
+    var fallbackSound: AudioStream?
+        @JvmName("fallbackSoundProperty")
+        get() = getFallbackSound()
+        @JvmName("setFallbackSoundProperty")
+        set(value) = setFallbackSound(value)
+
     /**
      * Returns a reference to the default engine `Theme`. This theme resource is responsible for the
      * out-of-the-box look of `Control` nodes and cannot be overridden.
@@ -183,6 +189,29 @@ object ThemeDB {
         return StyleBox.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackStyleboxBind, singleton))
     }
 
+    /**
+     * The fallback sound of every `Control` node and `Theme` resource. Used when no other value is
+     * available to the control.
+     *
+     * Generated from Godot docs: ThemeDB.set_fallback_sound
+     */
+    @JvmStatic
+    fun setFallbackSound(audio: AudioStream?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.setFallbackSoundBind, singleton, listOf(audio?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(audio)
+    }
+
+    /**
+     * The fallback sound of every `Control` node and `Theme` resource. Used when no other value is
+     * available to the control.
+     *
+     * Generated from Godot docs: ThemeDB.get_fallback_sound
+     */
+    @JvmStatic
+    fun getFallbackSound(): AudioStream? {
+        return AudioStream.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getFallbackSoundBind, singleton))
+    }
+
     /** Signal `fallback_changed()`; see [TypedSignal]. */
     val fallbackChanged: Signal0
         @JvmName("fallbackChangedTypedSignal")
@@ -262,5 +291,15 @@ object ThemeDB {
         @JvmField
         val getFallbackStyleboxBind =
             ObjectCalls.getMethodBind("ThemeDB", "get_fallback_stylebox", GET_FALLBACK_STYLEBOX_HASH)
+
+        private const val SET_FALLBACK_SOUND_HASH = 2210767741L
+        @JvmField
+        val setFallbackSoundBind =
+            ObjectCalls.getMethodBind("ThemeDB", "set_fallback_sound", SET_FALLBACK_SOUND_HASH)
+
+        private const val GET_FALLBACK_SOUND_HASH = 1183832186L
+        @JvmField
+        val getFallbackSoundBind =
+            ObjectCalls.getMethodBind("ThemeDB", "get_fallback_sound", GET_FALLBACK_SOUND_HASH)
     }
 }

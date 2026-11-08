@@ -43,8 +43,9 @@ you write now.
       [Android export](../exporting/android.md) needs it.
     - *Release kit:* a kit is for new projects. Copy your `kotlin-src` into a
       project made from the 0.5 kit, or apply the store-addon steps above.
-    - Use the **Godot 4.7.2** editor and export templates for the build
-      (see [Requirements and Platform Status](../reference/version-support.md#requirements)).
+    - Use the **Godot 4.8** editor and export templates for the build: 4.8 stable
+      with release 0.5, 4.8 beta 2 with a checkout of `main`
+      (see [Godot Version](../reference/version-support.md#godot-version)).
 3. **Run the migration scripts on your Kotlin sources, in this order.** They are
    Python 3 files in the `scripts/` folder of a Kanama checkout (the packaged
    kits do not carry them) and take your source folder as the argument:
@@ -994,8 +995,7 @@ Script: none.
 - The Android runtime uses PanamaPort `0.1.5-kanama-r8.1` (it was `0.1.3-kanama-r8.4`),
   rebased for the Android 17 September update (apps built on the old fork aborted
   at startup on that update). The coordinate is the default of `-PkanamaPanamaPortCore`;
-  nothing to change unless you pinned the old one. Use Godot 4.7.2 export
-  templates.
+  nothing to change unless you pinned the old one.
 - The class-token tables behind `castOrNull`, `requireAs` and `node<T>()` keep
   every wrapper class's constructor reachable, so **R8 can no longer drop unused
   wrapper classes**: expect a larger minified release build.
@@ -1192,7 +1192,37 @@ on top of them), and those gave `3.0`; builds of `main` between 0.4 and 0.5 had 
 
 ## Godot 4.8
 
-Godot 4.8: this guide will gain a section when Kanama moves to Godot 4.8.
+Kanama 0.5 moves from Godot 4.7.2 to Godot 4.8. Open your project in the 4.8
+editor, let it re-import, and install the 4.8 export templates.
+
+- **Android: replace the build template.** Godot 4.8 refuses an Android export
+  whose `res://android/build` came from another Godot version ("Unable to set up
+  Android build directory"). Delete `res://android/build` and let Godot install it
+  again. Avoid **Editor Settings > Export > Android > Build > Automatically
+  Delete Build Directory** for this: it deletes everything in `res://android`,
+  Kanama's Android plugin in `res://android/plugins` too. If it already did, run
+  `./gradlew buildAndroidScripts` again before you export.
+- **Rebuild your scripts after updating Kanama.** Where Godot 4.8 added a
+  parameter with a default at the end of a method (`DisplayServer.getDisplaySafeArea`,
+  `Skeleton3D.resetBonePose`, `Skeleton3D.resetBonePoses`), your calls compile
+  unchanged, but the compiled method is a different one. A scripts jar built
+  against the older Kanama still calls the old method and fails with
+  `NoSuchMethodError` on desktop and Android. The normal build rebuilds it.
+- **Android: R8 has a preset option now.** **Gradle Build > Minification** turns it
+  on; see [Release Builds](../exporting/android.md#release-builds).
+- **Methods Godot changed:**
+    - `Image.compress` and `Image.compressFromChannels` take
+      `profile: Image.CompressProfile` instead of `astcFormat`: `ASTC_4x4` is
+      `Image.CompressProfile.MAX_QUALITY`, `ASTC_8x8` is
+      `Image.CompressProfile.MAX_COMPRESSION`.
+    - `DisplayServer.orientationChanged` emits a
+      `DisplayServer.SensorOrientation` instead of a `Long`.
+    - `GDScriptTextDocument.codeLens`, `colorPresentation` and `foldingRange` and
+      their `MethodName` constants are gone, and so is `PropertyName.triangles`.
+    - `ScriptEditor` extends `EditorDock`, not `PanelContainer`.
+- **GDScript cannot extend a Kanama class.** It never could. Godot 4.8 says so
+  when it analyzes the script: `Global class X is not a GDScript.` See
+  [Limitations](../reference/limitations.md#every-platform).
 
 ## Checklist: every announced source break
 
@@ -1257,5 +1287,5 @@ here as well):
 | The API tree is common code (defaults became overloads) | [Changes that need no edit](#changes-that-need-no-edit) |
 | Web wrappers generated from the call contract | [Web](#web) |
 | One resource-ownership rule; a forgotten `close()` is a late release | [Ownership and `close()`](#ownership-and-close) |
-| iOS exports require iOS 15.0; Godot 4.7.2 baseline | [iOS](#ios), [The order to do things in](#the-order-to-do-things-in) |
+| iOS exports require iOS 15.0; Godot 4.8 baseline | [iOS](#ios), [The order to do things in](#the-order-to-do-things-in) |
 | Kanama is one Kotlin Multiplatform module; docs pages moved | [Tooling, Gradle and the editor](#tooling-gradle-and-the-editor) |

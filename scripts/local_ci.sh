@@ -467,6 +467,15 @@ stage "iOS static-method dispatch (no zero instance reaches a guarded C entry, t
 # *Dispatch function, which also calls the entry point's _static sibling.
 python3 "$ROOT_DIR/scripts/check_ios_static_dispatch.py"
 
+stage "iOS self-test phases (no scene-init row constructs a class needing a late server)"
+# The C matrix and the first Kotlin phase run inside initialize_extensions(SCENE), before Godot creates the
+# physics and camera servers; Godot 4.8 made TileMapLayer's and the collision nodes' constructors dereference
+# PhysicsServer2D/3D, and the first 4.8 iPhone run died in TileMapLayer::TileMapLayer(). The unsafe set is generated
+# from the Godot source (scripts/ios_scene_init_unsafe_classes.json, --regenerate at a bump). With a Godot checkout of
+# the pinned version (GODOT_SRC, GODOT_DOCS, or the KDoc stage's fallbacks) the gate also fails when that file is stale;
+# without one it prints the named skip ios-unsafe-classes-staleness (allowed in ci.yml, like kdoc-staleness).
+python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py"
+
 stage "iOS read-backs run the Godot method once (no measure-then-fill double call, task 129 D)"
 # The old no-arg String / Packed*Array read-backs called the method twice (a NULL-buffer measure,
 # then a fill), so FileAccess.get_line / DirAccess.get_next lost a line or an entry on the phone.

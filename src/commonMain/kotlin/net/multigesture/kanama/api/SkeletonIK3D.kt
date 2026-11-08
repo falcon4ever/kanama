@@ -116,9 +116,9 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * First target of the IK chain where the tip bone is placed and, if `override_tip_basis` is
-     * `true`, how the tip bone is rotated. If a `target_node` path is available the nodes transform is
-     * used instead and this property is ignored.
+     * The first target of the IK chain where the tip bone is placed and, if `override_tip_basis` is
+     * `true`, how the tip bone is rotated. If `target_node` points to a valid node, that node's
+     * transform is used instead and this property is ignored.
      *
      * Generated from Godot docs: SkeletonIK3D.set_target_transform
      */
@@ -127,9 +127,9 @@ class SkeletonIK3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * First target of the IK chain where the tip bone is placed and, if `override_tip_basis` is
-     * `true`, how the tip bone is rotated. If a `target_node` path is available the nodes transform is
-     * used instead and this property is ignored.
+     * The first target of the IK chain where the tip bone is placed and, if `override_tip_basis` is
+     * `true`, how the tip bone is rotated. If `target_node` points to a valid node, that node's
+     * transform is used instead and this property is ignored.
      *
      * Generated from Godot docs: SkeletonIK3D.get_target_transform
      */

@@ -349,13 +349,12 @@ object XRServer {
     value class TrackerType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * The tracker tracks the location of the player's head. This is usually a location centered
-             * between the player's eyes. Note that for handheld AR devices this can be the current location of
-             * the device.
+             * The tracker tracks the position of an XR camera (HMD, external camera, phone camera for phone
+             * based AR).
              *
-             * Generated from Godot docs: XRServer.TRACKER_HEAD
+             * Generated from Godot docs: XRServer.TRACKER_CAMERA
              */
-            val HEAD: TrackerType get() = TrackerType(1L)
+            val CAMERA: TrackerType get() = TrackerType(1L)
             /**
              * The tracker tracks the location of a controller.
              *
@@ -410,6 +409,14 @@ object XRServer {
              * Generated from Godot docs: XRServer.TRACKER_ANY
              */
             val ANY: TrackerType get() = TrackerType(255L)
+            /**
+             * The tracker tracks the location of the player's head. This is usually a location centered
+             * between the player's eyes. Note that for handheld AR devices this can be the current location of
+             * the device.
+             *
+             * Generated from Godot docs: XRServer.TRACKER_HEAD
+             */
+            val HEAD: TrackerType get() = TrackerType(1L)
         }
     }
 

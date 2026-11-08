@@ -22,6 +22,12 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         @JvmName("setTabAlignmentProperty")
         set(value) = setTabAlignment(value)
 
+    var tabSizing: TabBar.SizingMode
+        @JvmName("tabSizingProperty")
+        get() = getTabSizing()
+        @JvmName("setTabSizingProperty")
+        set(value) = setTabSizing(value)
+
     var currentTab: Int
         @JvmName("currentTabProperty")
         get() = getCurrentTab()
@@ -191,6 +197,24 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
      */
     fun getTabAlignment(): TabBar.AlignmentMode {
         return TabBar.AlignmentMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTabAlignmentBind, segment))
+    }
+
+    /**
+     * The sizing strategy used to determine tab widths.
+     *
+     * Generated from Godot docs: TabContainer.set_tab_sizing
+     */
+    fun setTabSizing(tabSizing: TabBar.SizingMode) {
+        ObjectCalls.ptrcallWithLongArg(Binds.setTabSizingBind, segment, tabSizing.value)
+    }
+
+    /**
+     * The sizing strategy used to determine tab widths.
+     *
+     * Generated from Godot docs: TabContainer.get_tab_sizing
+     */
+    fun getTabSizing(): TabBar.SizingMode {
+        return TabBar.SizingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTabSizingBind, segment))
     }
 
     /**
@@ -728,6 +752,16 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
         @JvmField
         val getTabAlignmentBind =
             ObjectCalls.getMethodBind("TabContainer", "get_tab_alignment", GET_TAB_ALIGNMENT_HASH)
+
+        private const val SET_TAB_SIZING_HASH = 3891044528L
+        @JvmField
+        val setTabSizingBind =
+            ObjectCalls.getMethodBind("TabContainer", "set_tab_sizing", SET_TAB_SIZING_HASH)
+
+        private const val GET_TAB_SIZING_HASH = 2145546792L
+        @JvmField
+        val getTabSizingBind =
+            ObjectCalls.getMethodBind("TabContainer", "get_tab_sizing", GET_TAB_SIZING_HASH)
 
         private const val SET_TABS_POSITION_HASH = 256673370L
         @JvmField

@@ -33,6 +33,7 @@ object DisplayServer {
     const val MAIN_WINDOW_ID: Long = 0L
     const val INVALID_WINDOW_ID: Long = -1L
     const val INVALID_INDICATOR_ID: Long = -1L
+    const val INVALID_NOTIFICATION_ID: Long = -1L
 
     /**
      * Returns `true` if the specified `feature` is supported by the current `DisplayServer`, `false`
@@ -1022,30 +1023,19 @@ object DisplayServer {
     }
 
     /**
-     * Returns an `Array` of `Rect2`, each of which is the bounding rectangle for a display cutout or
-     * notch. These are non-functional areas on edge-to-edge screens used by cameras and sensors.
-     * Returns an empty array if the device does not have cutouts. See also `get_display_safe_area`.
-     * Note: Currently only implemented on Android. Other platforms will return an empty array even if
-     * they do have display cutouts or notches.
-     *
-     * Generated from Godot docs: DisplayServer.get_display_cutouts
-     */
-    @JvmStatic
-    fun getDisplayCutouts(): List<Rect2> {
-        return ObjectCalls.ptrcallNoArgsRetRect2List(Binds.getDisplayCutoutsBind, singleton)
-    }
-
-    /**
      * Returns the unobscured area of the display where interactive controls should be rendered. See
-     * also `get_display_cutouts`. Note: Currently only implemented on Android and iOS. On other
-     * platforms, `screen_get_usable_rect(SCREEN_OF_MAIN_WINDOW)` will be returned as a fallback. See
-     * also `screen_get_usable_rect`.
+     * also `get_display_cutouts`. Note: The returned rectangle is relative to the physical screen and
+     * not the virtual desktop. Note: One of the following constants can be used as `screen`:
+     * `SCREEN_OF_MAIN_WINDOW`, `SCREEN_PRIMARY`, `SCREEN_WITH_MOUSE_FOCUS`, or
+     * `SCREEN_WITH_KEYBOARD_FOCUS`. Note: Currently only implemented on Android, iOS, and macOS. On
+     * other platforms, `screen_get_usable_rect(SCREEN_OF_MAIN_WINDOW)` will be returned as a fallback.
+     * See also `screen_get_usable_rect`.
      *
      * Generated from Godot docs: DisplayServer.get_display_safe_area
      */
     @JvmStatic
-    fun getDisplaySafeArea(): Rect2i {
-        return ObjectCalls.ptrcallNoArgsRetRect2i(Binds.getDisplaySafeAreaBind, singleton)
+    fun getDisplaySafeArea(screen: Int = -1): Rect2i {
+        return ObjectCalls.ptrcallWithIntArgRetRect2i(Binds.getDisplaySafeAreaBind, singleton, screen)
     }
 
     /**
@@ -1154,8 +1144,8 @@ object DisplayServer {
      * screens, and `1.0` for all other cases. Note: On Linux (Wayland), the returned value is accurate
      * only when `screen` is `SCREEN_OF_MAIN_WINDOW`. Due to API limitations, passing a direct index
      * will return a rounded-up integer, if the screen has a fractional scale (e.g. `1.25` would get
-     * rounded up to `2.0`). Note: This method is implemented on Android, iOS, Web, macOS, and Linux
-     * (Wayland). On other platforms, this method always returns `1.0`.
+     * rounded up to `2.0`). Note: This method is implemented on Android, iOS, Web, macOS, Linux, and
+     * Windows. On other platforms, this method always returns `1.0`.
      *
      * Generated from Godot docs: DisplayServer.screen_get_scale
      */
@@ -1538,7 +1528,8 @@ object DisplayServer {
      * `PackedStringArray` argument, which is the list of dropped files. Warning: Advanced users only!
      * Adding such a callback to a `Window` node will override its default implementation, which can
      * introduce bugs. Note: This method is implemented on Windows, macOS, Linux (X11/Wayland), and
-     * Web.
+     * Web. Note: On the web platform, the files are dropped to a temporary folder and will be removed
+     * automatically after the callback.
      *
      * Generated from Godot docs: DisplayServer.window_set_drop_files_callback
      */
@@ -2072,8 +2063,8 @@ object DisplayServer {
 
     /**
      * Returns `1` if a high-contrast user interface theme should be used, `0` otherwise. Returns `-1`
-     * if status is unknown. Note: This method is implemented on Linux (X11/Wayland, GNOME), macOS, and
-     * Windows.
+     * if status is unknown. Note: This method is implemented on Android, Linux (X11/Wayland, GNOME),
+     * macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.accessibility_should_increase_contrast
      */
@@ -2085,7 +2076,7 @@ object DisplayServer {
     /**
      * Returns `1` if flashing, blinking, and other moving content that can cause seizures in users
      * with photosensitive epilepsy should be disabled, `0` otherwise. Returns `-1` if status is
-     * unknown. Note: This method is implemented on macOS and Windows.
+     * unknown. Note: This method is implemented on Android, macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.accessibility_should_reduce_animation
      */
@@ -2108,8 +2099,8 @@ object DisplayServer {
 
     /**
      * Returns `1` if a screen reader, Braille display or other assistive app is active, `0` otherwise.
-     * Returns `-1` if status is unknown. Note: This method is implemented on Linux, macOS, and
-     * Windows. Note: Accessibility debugging tools, such as Accessibility Insights for Windows,
+     * Returns `-1` if status is unknown. Note: This method is implemented on Android, Linux, macOS,
+     * and Windows. Note: Accessibility debugging tools, such as Accessibility Insights for Windows,
      * Accessibility Inspector (macOS), or AT-SPI Browser (Linux/BSD), do not count as assistive apps
      * and will not affect this value. To test your project with these tools, set
      * `ProjectSettings.accessibility/general/accessibility_support` to `1`.
@@ -2990,6 +2981,17 @@ object DisplayServer {
     }
 
     /**
+     * Hides the toast notification with `id` returned by `send_toast_notification`. Note: This method
+     * is only implemented on Windows.
+     *
+     * Generated from Godot docs: DisplayServer.hide_toast_notification
+     */
+    @JvmStatic
+    fun hideToastNotification(id: Int) {
+        ObjectCalls.ptrcallWithIntArg(Binds.hideToastNotificationBind, singleton, id)
+    }
+
+    /**
      * Returns `true` if positions of OK and Cancel buttons are swapped in dialogs. This is enabled by
      * default on Windows to follow interface conventions, and be toggled by changing
      * `ProjectSettings.gui/common/swap_cancel_ok`. Note: This doesn't affect native dialogs such as
@@ -3117,7 +3119,7 @@ object DisplayServer {
 
     /**
      * Returns the number of keyboard layouts. Note: This method is implemented on Linux (X11/Wayland),
-     * macOS and Windows.
+     * macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_get_layout_count
      */
@@ -3138,7 +3140,7 @@ object DisplayServer {
     }
 
     /**
-     * Sets the active keyboard layout. Note: This method is implemented on Linux (X11/Wayland), macOS
+     * Sets the active keyboard layout. Note: This method is implemented on Linux (X11/Wayland), macOS,
      * and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_set_current_layout
@@ -3150,7 +3152,7 @@ object DisplayServer {
 
     /**
      * Returns the ISO-639/BCP-47 language code of the keyboard layout at position `index`. Note: This
-     * method is implemented on Linux (X11/Wayland), macOS and Windows.
+     * method is implemented on Linux (X11/Wayland), macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_get_layout_language
      */
@@ -3161,7 +3163,7 @@ object DisplayServer {
 
     /**
      * Returns the localized name of the keyboard layout at position `index`. Note: This method is
-     * implemented on Linux (X11/Wayland), macOS and Windows.
+     * implemented on Linux (X11/Wayland), macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_get_layout_name
      */
@@ -3172,7 +3174,7 @@ object DisplayServer {
 
     /**
      * Converts a physical (US QWERTY) `keycode` to one in the active keyboard layout. Note: This
-     * method is implemented on Linux (X11/Wayland), macOS and Windows.
+     * method is implemented on Linux (X11/Wayland), macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_get_keycode_from_physical
      */
@@ -3183,7 +3185,7 @@ object DisplayServer {
 
     /**
      * Converts a physical (US QWERTY) `keycode` to localized label printed on the key in the active
-     * keyboard layout. Note: This method is implemented on Linux (X11/Wayland), macOS and Windows.
+     * keyboard layout. Note: This method is implemented on Linux (X11/Wayland), macOS, and Windows.
      *
      * Generated from Godot docs: DisplayServer.keyboard_get_label_from_physical
      */
@@ -3491,10 +3493,10 @@ object DisplayServer {
         ObjectCalls.ptrcallWithBoolAndIntArgs(Binds.pipModeSetAutoEnterOnBackgroundBind, singleton, autoEnterOnBackground, windowId)
     }
 
-    /** Signal `orientation_changed(orientation: int)`; see [TypedSignal]. */
-    val orientationChanged: Signal1<Long>
+    /** Signal `orientation_changed(orientation: enum::DisplayServer.SensorOrientation)`; see [TypedSignal]. */
+    val orientationChanged: Signal1<DisplayServer.SensorOrientation>
         @JvmName("orientationChangedTypedSignal")
-        get() = Signal1(GodotObject(GodotHandle(singleton)), "orientation_changed", SignalArgType.LONG)
+        get() = Signal1(GodotObject(GodotHandle(singleton)), "orientation_changed", SignalArgType.enumOf("DisplayServer.SensorOrientation", { DisplayServer.SensorOrientation(it) }, { it.value }))
 
     object Signals {
         const val orientationChanged: String = "orientation_changed"
@@ -3758,6 +3760,12 @@ object DisplayServer {
              * Generated from Godot docs: DisplayServer.FEATURE_PIP_MODE
              */
             val PIP_MODE: Feature get() = Feature(36L)
+            /**
+             * Display server is embedding windows to another process. macOS
+             *
+             * Generated from Godot docs: DisplayServer.FEATURE_EMBEDDED
+             */
+            val EMBEDDED: Feature get() = Feature(37L)
         }
     }
 
@@ -4460,7 +4468,9 @@ object DisplayServer {
             /**
              * Captures the mouse. The mouse will be hidden and its position locked at the center of the window
              * manager's window. Note: If you want to process the mouse's movement in this mode, you need to
-             * use `InputEventMouseMotion.relative`.
+             * use `InputEventMouseMotion.relative` or `InputEventMouseMotion.screen_relative`. Note: Even when
+             * captured, the mouse cursor is still able to press buttons if they overlap with the center of the
+             * window.
              *
              * Generated from Godot docs: DisplayServer.MOUSE_MODE_CAPTURED
              */
@@ -4537,6 +4547,36 @@ object DisplayServer {
              * Generated from Godot docs: DisplayServer.SCREEN_SENSOR
              */
             val SENSOR: ScreenOrientation get() = ScreenOrientation(6L)
+        }
+    }
+
+    /**
+     * Godot's `DisplayServer.SensorOrientation` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values (`DisplayServer.SensorOrientation.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.SensorOrientation
+     */
+    @JvmInline
+    value class SensorOrientation(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Unspecified screen sensor orientation.
+             *
+             * Generated from Godot docs: DisplayServer.SENSOR_ORIENTATION_UNDEFINED
+             */
+            val UNDEFINED: SensorOrientation get() = SensorOrientation(0L)
+            /**
+             * Portrait orientation (either standard portrait or reverse portrait).
+             *
+             * Generated from Godot docs: DisplayServer.SENSOR_ORIENTATION_PORTRAIT
+             */
+            val PORTRAIT: SensorOrientation get() = SensorOrientation(1L)
+            /**
+             * Landscape orientation (either standard landscape or reverse landscape).
+             *
+             * Generated from Godot docs: DisplayServer.SENSOR_ORIENTATION_LANDSCAPE
+             */
+            val LANDSCAPE: SensorOrientation get() = SensorOrientation(2L)
         }
     }
 
@@ -4970,7 +5010,7 @@ object DisplayServer {
             val EXTEND_TO_TITLE: WindowFlags get() = WindowFlags(6L)
             /**
              * All mouse events are passed to the underlying window of the same application. Note: This flag is
-             * implemented on Linux (X11), macOS, and Windows.
+             * implemented on Linux (X11/Wayland), macOS, and Windows.
              *
              * Generated from Godot docs: DisplayServer.WINDOW_FLAG_MOUSE_PASSTHROUGH
              */
@@ -5169,6 +5209,37 @@ object DisplayServer {
     }
 
     /**
+     * Godot's `DisplayServer.NotificationStatus` enum as a typed value: `.value` is the raw number
+     * Godot uses, and the companion holds the named values
+     * (`DisplayServer.NotificationStatus.<NAME>`).
+     *
+     * Generated from Godot docs: DisplayServer.NotificationStatus
+     */
+    @JvmInline
+    value class NotificationStatus(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * User activates a toast notification through a click or touch.
+             *
+             * Generated from Godot docs: DisplayServer.NOTIFICATION_ACTIVATED
+             */
+            val ACTIVATED: NotificationStatus get() = NotificationStatus(0L)
+            /**
+             * A toast notification expires or is explicitly dismissed by the user.
+             *
+             * Generated from Godot docs: DisplayServer.NOTIFICATION_DISMISSED
+             */
+            val DISMISSED: NotificationStatus get() = NotificationStatus(1L)
+            /**
+             * Attempts to raise a toast notification failed.
+             *
+             * Generated from Godot docs: DisplayServer.NOTIFICATION_FAILED
+             */
+            val FAILED: NotificationStatus get() = NotificationStatus(2L)
+        }
+    }
+
+    /**
      * Godot's `DisplayServer.VSyncMode` enum as a typed value: `.value` is the raw number Godot uses,
      * and the companion holds the named values (`DisplayServer.VSyncMode.<NAME>`).
      *
@@ -5179,7 +5250,10 @@ object DisplayServer {
         companion object {
             /**
              * No vertical synchronization, which means the engine will display frames as fast as possible
-             * (tearing may be visible). Framerate is unlimited (regardless of `Engine.max_fps`).
+             * (tearing may be visible). Framerate is unlimited (regardless of `Engine.max_fps`). `note`Since
+             * the framerate may reach very high values, this can lead to audible coil whine depending on the
+             * hardware. To avoid this, cap the framerate with `Engine.max_fps` (lower values result in less
+             * coil whine).
              *
              * Generated from Godot docs: DisplayServer.VSYNC_DISABLED
              */
@@ -5208,7 +5282,9 @@ object DisplayServer {
              * `Engine.max_fps`). Although not guaranteed, the images can be rendered as fast as possible,
              * which may reduce input lag (also called "Fast" V-Sync mode). `VSyncMode.MAILBOX` works best when
              * at least twice as many frames as the display refresh rate are rendered. Behaves like
-             * `VSyncMode.ENABLED` when using the Compatibility rendering method.
+             * `VSyncMode.ENABLED` when using the Compatibility rendering method. `note`Since the framerate may
+             * reach very high values, this can lead to audible coil whine depending on the hardware. To avoid
+             * this, cap the framerate with `Engine.max_fps` (lower values result in less coil whine).
              *
              * Generated from Godot docs: DisplayServer.VSYNC_MAILBOX
              */
@@ -5722,12 +5798,7 @@ object DisplayServer {
         val clipboardGetPrimaryBind =
             ObjectCalls.getMethodBind("DisplayServer", "clipboard_get_primary", CLIPBOARD_GET_PRIMARY_HASH)
 
-        private const val GET_DISPLAY_CUTOUTS_HASH = 3995934104L
-        @JvmField
-        val getDisplayCutoutsBind =
-            ObjectCalls.getMethodBind("DisplayServer", "get_display_cutouts", GET_DISPLAY_CUTOUTS_HASH)
-
-        private const val GET_DISPLAY_SAFE_AREA_HASH = 410525958L
+        private const val GET_DISPLAY_SAFE_AREA_HASH = 2439012528L
         @JvmField
         val getDisplaySafeAreaBind =
             ObjectCalls.getMethodBind("DisplayServer", "get_display_safe_area", GET_DISPLAY_SAFE_AREA_HASH)
@@ -6571,6 +6642,11 @@ object DisplayServer {
         @JvmField
         val cursorSetCustomImageBind =
             ObjectCalls.getMethodBind("DisplayServer", "cursor_set_custom_image", CURSOR_SET_CUSTOM_IMAGE_HASH)
+
+        private const val HIDE_TOAST_NOTIFICATION_HASH = 1286410249L
+        @JvmField
+        val hideToastNotificationBind =
+            ObjectCalls.getMethodBind("DisplayServer", "hide_toast_notification", HIDE_TOAST_NOTIFICATION_HASH)
 
         private const val GET_SWAP_CANCEL_OK_HASH = 2240911060L
         @JvmField

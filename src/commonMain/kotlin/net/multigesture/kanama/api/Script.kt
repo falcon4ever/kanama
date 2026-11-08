@@ -200,7 +200,8 @@ open class Script(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Returns the default value of the specified property.
+     * Returns the default value of the specified property. Note: In GDScript and C#, this method
+     * returns `null` outside of editor builds.
      *
      * Generated from Godot docs: Script.get_property_default_value
      */

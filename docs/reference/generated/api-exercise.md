@@ -13,7 +13,7 @@ scratch directory, the singleton rows, the Variant type values) are hand-kept in
 the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
 reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1492 (1487 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15335 generated (12998 instance, 2223 singleton, 114 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 892 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 602; excluded 344. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1490 (1485 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15672 generated (13302 instance, 2254 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 885 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 541 (of the 541 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 605; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -28,8 +28,8 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
 | B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 311 |
 | D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 94 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 602 |
-| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 344 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 605 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
 179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
@@ -40,7 +40,7 @@ or the factory `RECEIVER_SOURCES` names, because the declaring class is abstract
 - **C static** by class: `FileAccess` 13, `DirAccess` 9, `JSON` 3, `AudioStreamMP3` 2, `AudioStreamWAV` 2, `GLTFDocument` 2, `Image` 2, `DPITexture` 1, `GLTFAccessor` 1, `GLTFCamera` 1, `ImporterMesh` 1, `Node` 1, `PathFollow3D` 1, `PhysicsRayQueryParameters2D` 1, `PhysicsRayQueryParameters3D` 1, `PortableCompressedTexture2D` 1, `Resource` 1, `TLSOptions` 1, `Tween` 1.
 - **D singleton** by class: `RenderingServer` 19, `Geometry2D` 16, `Geometry3D` 13, `ClassDB` 11, `NavigationServer2D` 10, `NavigationServer3D` 10, `Time` 5, `Marshalls` 3, `PhysicsServer3D` 3, `TranslationServer` 2, `AccessibilityServer` 1, `ProjectSettings` 1.
 - **B const** through a descendant, by declaring class: `TextServer` 56, `CollisionObject2D` 8, `Font` 7, `InputEvent` 4, `IterateIK3D` 2, `Noise` 2, `TileSetSource` 2, `AnimationMixer` 1, `BaseMaterial3D` 1, `CanvasItem` 1, `CollisionObject3D` 1.
-- **F reach only**, largest classes: `RenderingServer` 86, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 13, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
+- **F reach only**, largest classes: `RenderingServer` 86, `CanvasItem` 28, `TextServer` 27, `AccessibilityServer` 22, `Animation` 19, `FontFile` 14, `PhysicsServer2D` 14, `RichTextLabel` 14, `Image` 12, `AnimationPlayer` 9, `AStar2D` 8, `PhysicsServer3D` 8.
 
 ## By iOS ptrcall tag
 
@@ -48,21 +48,21 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 827 | 3440 | 19 | 2 | 197 | 30 | 345 | 234 |
-| `PT_VOID` | 573 | 2921 | – | 34 | – | – | 426 | 113 |
-| `PT_RID` | 365 | 1750 | – | 2 | 55 | 41 | 176 | 91 |
-| `PT_BOOL` | 350 | 1250 | 9 | – | 63 | 25 | 169 | 84 |
-| `PT_OBJECT` | 270 | 677 | 20 | – | 26 | 2 | 122 | 100 |
-| `PT_STRING` | 263 | 1006 | 25 | 3 | 29 | 8 | 66 | 132 |
+| `PT_INT64` | 827 | 3518 | 19 | 2 | 197 | 30 | 347 | 232 |
+| `PT_VOID` | 574 | 2967 | – | 34 | – | – | 428 | 112 |
+| `PT_RID` | 364 | 1766 | – | 2 | 55 | 41 | 176 | 90 |
+| `PT_BOOL` | 350 | 1274 | 9 | – | 63 | 25 | 170 | 83 |
+| `PT_OBJECT` | 269 | 690 | 20 | – | 26 | 2 | 124 | 97 |
+| `PT_STRING` | 263 | 1018 | 25 | 3 | 29 | 8 | 66 | 132 |
 | `PT_FLOAT64` | 232 | 696 | 2 | – | 52 | 9 | 150 | 19 |
-| `PT_STRING_NAME` | 134 | 479 | – | 1 | 31 | 14 | 60 | 28 |
-| `PT_VECTOR2` | 133 | 252 | 1 | – | 38 | 12 | 76 | 6 |
+| `PT_STRING_NAME` | 134 | 501 | – | 1 | 31 | 14 | 60 | 28 |
+| `PT_VECTOR2` | 134 | 260 | 1 | – | 38 | 12 | 77 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
 | `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 78 | 10 |
-| `PT_VARIANT` | 77 | 157 | 3 | 3 | 12 | 2 | 37 | 20 |
-| `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 21 | 28 |
-| `PT_VECTOR3` | 60 | 184 | 1 | – | 18 | 16 | 20 | 5 |
-| `PT_CALLABLE` | 55 | 122 | – | – | – | – | 15 | 40 |
+| `PT_VARIANT` | 77 | 158 | 3 | 3 | 12 | 2 | 37 | 20 |
+| `PT_TYPED_ARRAY_BLOB` | 65 | 111 | 3 | 11 | – | 3 | 21 | 27 |
+| `PT_VECTOR3` | 60 | 192 | 1 | – | 18 | 16 | 20 | 5 |
+| `PT_CALLABLE` | 54 | 122 | – | – | – | – | 15 | 39 |
 | `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 21 | 19 |
 | `PT_RECT2` | 45 | 56 | – | – | 9 | 1 | 29 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
@@ -71,14 +71,14 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 | `PT_ARRAY` | 24 | 47 | – | 1 | 1 | – | 11 | 11 |
 | `PT_NODE_PATH` | 24 | 110 | – | 1 | 7 | – | 14 | 2 |
 | `PT_PACKED_VECTOR2_ARRAY` | 23 | 33 | – | – | – | 9 | 12 | 2 |
-| `PT_DICTIONARY` | 22 | 63 | 4 | 1 | 1 | 2 | 8 | 6 |
-| `PT_RECT2I` | 19 | 40 | – | 2 | 4 | – | 10 | 3 |
+| `PT_DICTIONARY` | 22 | 60 | 4 | 1 | 1 | 2 | 8 | 6 |
+| `PT_RECT2I` | 19 | 41 | – | 2 | 4 | – | 10 | 3 |
 | `PT_PACKED_INT32_ARRAY` | 16 | 36 | – | 1 | – | – | 11 | 4 |
 | `PT_PACKED_FLOAT32_ARRAY` | 15 | 16 | – | – | 1 | – | 12 | 2 |
 | `PT_PACKED_VECTOR3_ARRAY` | 14 | 22 | – | 1 | – | 2 | 9 | 2 |
 | `PT_VECTOR3I` | 12 | 13 | – | – | 7 | 1 | 2 | 2 |
 | `PT_PACKED_COLOR_ARRAY` | 9 | 11 | – | – | 1 | – | 6 | 2 |
-| `PT_QUATERNION` | 9 | 21 | – | 2 | 3 | – | 3 | 1 |
+| `PT_QUATERNION` | 9 | 25 | – | 2 | 3 | – | 3 | 1 |
 | `PT_AABB` | 8 | 44 | – | 2 | 1 | 2 | 3 | – |
 | `PT_BASIS` | 6 | 13 | – | 2 | 3 | – | 1 | – |
 | `PT_PACKED_INT64_ARRAY` | 5 | 7 | – | 1 | – | – | – | 4 |
@@ -100,7 +100,7 @@ instantiable descendant it excludes.
 |---|---|---|---|---|
 | `api_type=editor` | derived | not a core class (editor) | — | 71 |
 | `Window` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 4 |
-| `DisplayServer` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 42 |
+| `DisplayServer` | exact | needs a window or the display server (headless has a dummy one that errors or no-ops) | 1 | 41 |
 | `NativeMenu` | exact | the host OS menu bar | 1 | 18 |
 | `StatusIndicator` | exact | an OS tray icon | 1 | 0 |
 | `Input` | exact | process-wide input state backed by the host's input devices | 1 | 5 |
@@ -108,7 +108,7 @@ instantiable descendant it excludes.
 | `CameraServer` | exact | camera hardware | 1 | 0 |
 | `CameraFeed` | exact | camera hardware | 1 | 1 |
 | `OS` | exact | host process control (execute, kill, shell_open, environment) | 1 | 7 |
-| `EngineDebugger` | exact | the debugger connection of the running engine | 1 | 3 |
+| `EngineDebugger` | exact | the debugger connection of the running engine | 1 | 2 |
 | `GDExtensionManager` | exact | loads and unloads native extensions | 1 | 0 |
 | `ResourceSaver` | exact | writes resources outside the scratch directory | 1 | 1 |
 | `MovieWriter` | exact | movie-maker output files | 1 | 0 |
@@ -129,17 +129,17 @@ instantiable descendant it excludes.
 | `UniformSetCacheRD` | exact | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 1 |
 | `*HTTP*` | substring | opens sockets or talks to the network | 2 | 6 |
 | `*UDP*` | substring | opens sockets or talks to the network | 2 | 0 |
-| `*ENet*` | substring | opens sockets or talks to the network | 3 | 9 |
+| `*ENet*` | substring | opens sockets or talks to the network | 3 | 8 |
 | `*WebRTC*` | substring | opens sockets or talks to the network | 5 | 4 |
 | `*WebSocket*` | substring | opens sockets or talks to the network | 2 | 2 |
 | `*UPNP*` | substring | opens sockets or talks to the network | 2 | 3 |
 | `*Multiplayer*` | substring | opens sockets or talks to the network | 11 | 5 |
-| `*XR*` | substring | an XR runtime and its devices | 83 | 41 |
+| `*XR*` | substring | an XR runtime and its devices | 87 | 40 |
 | `*MobileVR*` | substring | an XR interface | 1 | 0 |
 | `*JavaClass*` | substring | the Android Java bridge | 2 | 2 |
 | `*JavaScript*` | substring | the browser JavaScript bridge | 2 | 1 |
 | `*JNI*` | substring | the Android Java bridge | 1 | 0 |
-| `*RenderingDevice*` | substring | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 57 |
+| `*RenderingDevice*` | substring | needs a RenderingDevice (the headless and Compatibility renderers have none) | 1 | 56 |
 | `*RenderSceneBuffers*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 4 | 9 |
 | `*RenderData*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 3 | 0 |
 | `*RenderSceneData*` | substring | only meaningful inside a frame being rendered by a RenderingDevice renderer | 3 | 2 |
@@ -147,7 +147,7 @@ instantiable descendant it excludes.
 | `*GDScript*` | substring | GDScript language internals | 5 | 0 |
 | `*ScriptLanguage*` | substring | script-language plumbing the running languages own | 3 | 0 |
 | `*ScriptExtension*` | substring | script-language plumbing the running languages own | 1 | 0 |
-| `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 34 | 7 |
+| `*Extension*` | substring | a base a script or extension implements (TextServerExtension, PhysicsServer3DExtension, ...): its methods are hooks, not engine behaviour | 36 | 7 |
 | `Editor*` | prefix | editor-only classes | 54 | 0 |
 | — | derived | abstract, and no instantiable descendant (and no `RECEIVER_SOURCES` entry) | — | 12 |
 | `METHOD_OVERRIDES` | method | see below | — | 7 |
@@ -213,11 +213,11 @@ Referenced by the shared sources, but never with a generated MethodBind (`NON_BI
 
 | helper | used by | why it has no row of its own |
 |---|---|---|
-| `constructObject` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (846 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
+| `constructObject` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (874 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
 | `destroyObject` | `ApiExerciseRunner`, `RefCounted` | frees what a row constructed (a RefCounted's last release); part of every row's teardown |
-| `getMethodBind` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (841 files) | resolves the MethodBind every row's call passes; a wrong bind fails the row that uses it |
-| `getSingleton` | `AccessibilityServer`, `ApiExerciseRunner`, `AudioServer`, `CameraServer`, … (43 files) | resolves the singleton handle every D row calls |
-| `keepReachable` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (685 files) | the reachability fence after each call (empty on iOS); it has no result to observe |
+| `getMethodBind` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (867 files) | resolves the MethodBind every row's call passes; a wrong bind fails the row that uses it |
+| `getSingleton` | `AccessibilityServer`, `ApiExerciseRunner`, `AudioServer`, `CameraServer`, … (44 files) | resolves the singleton handle every D row calls |
+| `keepReachable` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (705 files) | the reachability fence after each call (empty on iOS); it has no result to observe |
 
 ## Static rows and the scratch directory
 
@@ -313,6 +313,7 @@ object), which hands its setter and getter back to their method's own case.
 | `CompressedTexture2D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `CompressedTexture3D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `CompressedTextureLayered.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
+| `StreamedTexture2D.load_path` | not a pair | set by load(path), which keeps the path only once the file loads |
 | `GraphEdit.connections` | `[{"from_node": "kanama_a", "from_port": 1, "to_node": "kanama_b", "to_port": 2, "keep_alive": true}]` | the setter reads the five connection keys and fills the missing ones with defaults |
 | `OggPacketSequence.packet_data` | `[[PackedByteArray(1, 2, 3)]]` | each packet is a PackedByteArray |
 
@@ -530,58 +531,57 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `getSingleton` | N | — | 0 | hand |
 | `keepReachable` | N | — | 0 | hand |
 | `ptrcallLoadStatusWithProgress` | F | `ResourceLoader.load_threaded_get_status` (non-const singleton method) | 1 | hand |
-| `ptrcallNoArgs` | F | `AESContext.finish` (void method) | 410 | hand |
+| `ptrcallNoArgs` | F | `AESContext.finish` (void method) | 414 | hand |
 | `ptrcallNoArgsRetAABB` | A | `ArrayMesh.get_custom_aabb` (getter of `custom_aabb`) | 17 | PT_AABB |
-| `ptrcallNoArgsRetArray` | A | `Label.get_structured_text_bidi_override_options` (getter of `structured_text_bidi_override_options`) | 36 | hand |
+| `ptrcallNoArgsRetArray` | A | `Label.get_structured_text_bidi_override_options` (getter of `structured_text_bidi_override_options`) | 37 | hand |
 | `ptrcallNoArgsRetArrayList` | A | `OggPacketSequence.get_packet_data` (getter of `packet_data`) | 1 | (no tag) |
 | `ptrcallNoArgsRetBasis` | A | `GLTFPhysicsBody.get_inertia_tensor` (getter of `inertia_tensor`) | 6 | PT_BASIS |
-| `ptrcallNoArgsRetBool` | C | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStar2D.is_neighbor_filter_enabled` (getter of `neighbor_filter_enabled`) | 1166 | hand |
-| `ptrcallNoArgsRetByteArray` | A | `AudioStreamMP3.get_data` (getter of `data`) | 17 | hand |
+| `ptrcallNoArgsRetBool` | C | `PortableCompressedTexture2D.is_keeping_all_compressed_buffers` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStar2D.is_neighbor_filter_enabled` (getter of `neighbor_filter_enabled`) | 1196 | hand |
+| `ptrcallNoArgsRetByteArray` | A | `AudioStreamMP3.get_data` (getter of `data`) | 18 | hand |
 | `ptrcallNoArgsRetByteArrayList` | A | `GLTFState.get_buffers` (getter of `buffers`) | 1 | (no tag) |
 | `ptrcallNoArgsRetCallable` | E | `MultiplayerSpawner.get_spawn_function` (*Multiplayer*: opens sockets or talks to the network) | 2 | (no tag) |
-| `ptrcallNoArgsRetColor` | A | `BaseMaterial3D.get_albedo` on `ORMMaterial3D` (getter of `albedo_color`) | 82 | hand |
+| `ptrcallNoArgsRetColor` | A | `BaseMaterial3D.get_albedo` on `ORMMaterial3D` (getter of `albedo_color`) | 84 | hand |
 | `ptrcallNoArgsRetDictionary` | A | `AudioStreamOggVorbis.get_tags` (getter of `tags`) | 39 | (no tag) |
-| `ptrcallNoArgsRetDictionaryList` | A | `GraphEdit.get_connection_list` (getter of `connections`) | 16 | (no tag) |
-| `ptrcallNoArgsRetDouble` | A | `AnimatedSprite2D.get_frame_progress` (getter of `frame_progress`) | 913 | hand |
-| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AnimatedTexture.get_frames` (getter of `frames`) | 562 | hand |
-| `ptrcallNoArgsRetLong` | C | `DirAccess.get_open_error` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStarGrid2D.get_cell_shape` (getter of `cell_shape`) | 697 | hand |
+| `ptrcallNoArgsRetDictionaryList` | A | `GraphEdit.get_connection_list` (getter of `connections`) | 17 | (no tag) |
+| `ptrcallNoArgsRetDouble` | A | `AnimatedSprite2D.get_frame_progress` (getter of `frame_progress`) | 926 | hand |
+| `ptrcallNoArgsRetInt` | C | `DirAccess.get_drive_count` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AnimatedTexture.get_frames` (getter of `frames`) | 600 | hand |
+| `ptrcallNoArgsRetLong` | C | `DirAccess.get_open_error` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `AStarGrid2D.get_cell_shape` (getter of `cell_shape`) | 714 | hand |
 | `ptrcallNoArgsRetLongList` | C | `Node.get_orphan_node_ids` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `CodeEdit.get_line_length_guidelines` (getter of `line_length_guidelines`) | 7 | hand |
 | `ptrcallNoArgsRetNodePath` | A | `AnimationMixer.get_root_motion_track` on `AnimationPlayer` (getter of `root_motion_track`) | 47 | hand |
 | `ptrcallNoArgsRetNodePathList` | A | `Control.get_accessibility_controls_nodes` (getter of `accessibility_controls_nodes`) | 6 | hand |
-| `ptrcallNoArgsRetObject` | A | `AnimatedSprite2D.get_sprite_frames` (getter of `sprite_frames`) | 422 | hand |
+| `ptrcallNoArgsRetObject` | A | `AnimatedSprite2D.get_sprite_frames` (getter of `sprite_frames`) | 434 | hand |
 | `ptrcallNoArgsRetPackedColorList` | A | `CPUParticles2D.get_emission_colors` (getter of `emission_colors`) | 8 | hand |
 | `ptrcallNoArgsRetPackedFloat32List` | A | `GLTFMesh.get_blend_weights` (getter of `blend_weights`) | 9 | hand |
 | `ptrcallNoArgsRetPackedFloat64List` | A | `GLTFAccessor.get_max` (getter of `max`) | 2 | (no tag) |
-| `ptrcallNoArgsRetPackedInt32List` | A | `GLTFNode.get_children` (getter of `children`) | 34 | hand |
+| `ptrcallNoArgsRetPackedInt32List` | A | `GLTFNode.get_children` (getter of `children`) | 36 | hand |
 | `ptrcallNoArgsRetPackedInt64List` | A | `NavigationPathQueryResult2D.get_path_owner_ids` (getter of `path_owner_ids`) | 12 | (no tag) |
-| `ptrcallNoArgsRetPackedStringList` | C | `GLTFDocument.get_supported_gltf_extensions` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `SystemFont.get_font_names` (getter of `font_names`) | 65 | hand |
+| `ptrcallNoArgsRetPackedStringList` | C | `GLTFDocument.get_supported_gltf_extensions` (static with a return value) — **weak**: argument-free static whose result can be its type's zero on a healthy host; then A `SystemFont.get_font_names` (getter of `font_names`) | 67 | hand |
 | `ptrcallNoArgsRetPackedStringListList` | A | `GLTFObjectModelProperty.get_json_pointers` (getter of `json_pointers`) | 1 | (no tag) |
-| `ptrcallNoArgsRetPackedVector2List` | A | `CPUParticles2D.get_emission_normals` (getter of `emission_normals`) | 18 | hand |
+| `ptrcallNoArgsRetPackedVector2List` | A | `CPUParticles2D.get_emission_normals` (getter of `emission_normals`) | 19 | hand |
 | `ptrcallNoArgsRetPackedVector2ListList` | A | `NavigationMeshSourceGeometryData2D.get_obstruction_outlines` (getter of `obstruction_outlines`) | 2 | (no tag) |
 | `ptrcallNoArgsRetPackedVector3List` | A | `CPUParticles3D.get_emission_normals` (getter of `emission_normals`) | 14 | (no tag) |
 | `ptrcallNoArgsRetPlane` | A | `WorldBoundaryShape3D.get_plane` (getter of `plane`) | 2 | PT_PLANE |
 | `ptrcallNoArgsRetPlaneList` | B | `Camera3D.get_frustum` (const non-void method) | 1 | hand |
 | `ptrcallNoArgsRetProjection` | B | `Camera3D.get_camera_projection` (const non-void method) | 2 | PT_PROJECTION |
-| `ptrcallNoArgsRetQuaternion` | A | `GLTFNode.get_rotation` (getter of `rotation`) | 7 | PT_QUATERNION |
-| `ptrcallNoArgsRetRID` | A | `CharFXTransform.get_font` (getter of `font`) | 156 | PT_RID |
+| `ptrcallNoArgsRetQuaternion` | A | `GLTFNode.get_rotation` (getter of `rotation`) | 9 | PT_QUATERNION |
+| `ptrcallNoArgsRetRID` | A | `CharFXTransform.get_font` (getter of `font`) | 161 | PT_RID |
 | `ptrcallNoArgsRetRIDList` | A | `NavigationPathQueryParameters2D.get_excluded_regions` (getter of `excluded_regions`) | 19 | (no tag) |
 | `ptrcallNoArgsRetRect2` | A | `AtlasTexture.get_margin` (getter of `margin`) | 24 | hand |
-| `ptrcallNoArgsRetRect2List` | E | `DisplayServer.get_display_cutouts` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | (no tag) |
-| `ptrcallNoArgsRetRect2i` | A | `AStarGrid2D.get_region` (getter of `region`) | 8 | PT_RECT2I |
-| `ptrcallNoArgsRetString` | C | `Resource.generate_scene_unique_id` (static with a return value); then A `AnimatedSprite2D.get_autoplay` (getter of `autoplay`) | 262 | hand |
-| `ptrcallNoArgsRetStringName` | A | `AnimationNodeAnimation.get_animation` (getter of `animation`) | 47 | hand |
+| `ptrcallNoArgsRetRect2i` | A | `AStarGrid2D.get_region` (getter of `region`) | 7 | PT_RECT2I |
+| `ptrcallNoArgsRetString` | C | `Resource.generate_scene_unique_id` (static with a return value); then A `AnimatedSprite2D.get_autoplay` (getter of `autoplay`) | 268 | hand |
+| `ptrcallNoArgsRetStringName` | A | `AnimationNodeAnimation.get_animation` (getter of `animation`) | 48 | hand |
 | `ptrcallNoArgsRetStringNameList` | B | `AnimationLibrary.get_animation_list` (const non-void method) | 12 | hand |
 | `ptrcallNoArgsRetTransform2D` | A | `Bone2D.get_rest` (getter of `rest`) | 21 | PT_TRANSFORM2D |
 | `ptrcallNoArgsRetTransform3D` | A | `GLTFNode.get_xform` (getter of `xform`) | 23 | PT_TRANSFORM3D |
 | `ptrcallNoArgsRetTransform3DList` | A | `GLTFSkin.get_inverse_binds` (getter of `inverse_binds`) | 1 | (no tag) |
 | `ptrcallNoArgsRetTypedObjectList` | A | `Compositor.get_compositor_effects` (getter of `compositor_effects`) | 47 | hand |
 | `ptrcallNoArgsRetTypedStringList` | A | `CodeEdit.get_auto_indent_prefixes` (getter of `indent_automatic_prefixes`) | 7 | (no tag) |
-| `ptrcallNoArgsRetUInt32` | A | `AudioStreamPlayer2D.get_area_mask` (getter of `area_mask`) | 114 | PT_INT64 |
-| `ptrcallNoArgsRetVariantScalar` | A | `JSON.get_data` (getter of `data`) | 11 | hand |
-| `ptrcallNoArgsRetVector2` | A | `AStarGrid2D.get_cell_size` (getter of `cell_size`) | 182 | hand |
+| `ptrcallNoArgsRetUInt32` | A | `AudioStreamPlayer2D.get_area_mask` (getter of `area_mask`) | 116 | PT_INT64 |
+| `ptrcallNoArgsRetVariantScalar` | A | `JSON.get_data` (getter of `data`) | 12 | hand |
+| `ptrcallNoArgsRetVector2` | A | `AStarGrid2D.get_cell_size` (getter of `cell_size`) | 188 | hand |
 | `ptrcallNoArgsRetVector2i` | A | `AStarGrid2D.get_size` (getter of `size`) | 34 | hand |
-| `ptrcallNoArgsRetVector2iList` | B | `TileMapLayer.get_used_cells` (const non-void method) | 2 | (no tag) |
-| `ptrcallNoArgsRetVector3` | A | `Area3D.get_gravity_direction` (getter of `gravity_direction`) | 131 | hand |
+| `ptrcallNoArgsRetVector2iList` | B | `FuzzySearchMatch.get_matched_substrings` (const non-void method) | 3 | (no tag) |
+| `ptrcallNoArgsRetVector3` | A | `Area3D.get_gravity_direction` (getter of `gravity_direction`) | 137 | hand |
 | `ptrcallNoArgsRetVector3i` | A | `PlaceholderTexture3D.get_size` (getter of `size`) | 1 | hand |
 | `ptrcallNoArgsRetVector3iList` | B | `GridMap.get_used_cells` (const non-void method) | 2 | (no tag) |
 | `ptrcallNoArgsRetVector4` | A | `VisualShaderNodeVec4Parameter.get_default_value` (getter of `default_value`) | 1 | PT_VECTOR4 |
@@ -603,12 +603,12 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithBoolAndIntArgsRetLong` | F | `StreamPeerGZIP.start_compression` (non-const method) | 2 | PT_BOOL PT_INT64 |
 | `ptrcallWithBoolAndLongArgs` | F | `Image.resize_to_po2` (void method) | 1 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithBoolAndPackedStringArrayArgs` | E | `OS.set_restart_on_exit` (OS: host process control (execute, kill, shell_open, environment)) | 1 | PT_BOOL PT_PACKED_STRING_ARRAY PT_VOID |
-| `ptrcallWithBoolArg` | A | `AStar2D.set_neighbor_filter_enabled` (setter of `neighbor_filter_enabled`) | 955 | hand |
+| `ptrcallWithBoolArg` | A | `AStar2D.set_neighbor_filter_enabled` (setter of `neighbor_filter_enabled`) | 979 | hand |
 | `ptrcallWithBoolArgRetArray` | F | `Shader.get_shader_uniform_list` (non-const method) | 1 | PT_BOOL |
-| `ptrcallWithBoolArgRetBool` | B | `Control.has_focus` (const non-void method) | 4 | PT_BOOL |
+| `ptrcallWithBoolArgRetBool` | B | `Control.has_focus` (const non-void method) | 5 | PT_BOOL |
 | `ptrcallWithBoolArgRetDictionary` | F | `Time.get_date_dict_from_system` (reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)) | 4 | PT_BOOL |
 | `ptrcallWithBoolArgRetInt` | B | `Node.get_child_count` (const non-void method) | 3 | PT_BOOL PT_INT64 |
-| `ptrcallWithBoolArgRetLong` | F | `Image.generate_mipmaps` (non-const method) | 4 | PT_BOOL PT_INT64 |
+| `ptrcallWithBoolArgRetLong` | F | `PCKPacker.flush` (non-const method) | 3 | PT_BOOL PT_INT64 |
 | `ptrcallWithBoolArgRetObject` | F | `BoxContainer.add_spacer` (non-const method) | 10 | PT_BOOL PT_OBJECT |
 | `ptrcallWithBoolArgRetPackedInt32List` | B | `TextEdit.get_sorted_carets` (const non-void method) | 1 | PT_BOOL |
 | `ptrcallWithBoolArgRetRID` | E | `RenderSceneBuffersRD.get_color_texture` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 3 | PT_BOOL PT_RID |
@@ -643,10 +643,10 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithCallableStringNameTwoStringStringNameListArgs` | E | `EditorInterface.popup_create_dialog` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_STRING PT_STRING_NAME PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithCallableTwoIntBoolStringArgsRetLong` | E | `WorkerThreadPool.add_group_task` (WorkerThreadPool: blocks the calling thread or starts threads) | 1 | PT_BOOL PT_CALLABLE PT_INT64 PT_STRING |
 | `ptrcallWithCallableVariantVariantDoubleArgsRetObject` | F | `Tween.tween_method` (non-const method) | 1 | PT_CALLABLE PT_FLOAT64 PT_OBJECT PT_VARIANT |
-| `ptrcallWithColorArg` | A | `BaseMaterial3D.set_albedo` on `ORMMaterial3D` (setter of `albedo_color`) | 94 | hand |
+| `ptrcallWithColorArg` | A | `BaseMaterial3D.set_albedo` on `ORMMaterial3D` (setter of `albedo_color`) | 96 | hand |
 | `ptrcallWithDictionaryAndBoolArgRetString` | D | `Time.get_datetime_string_from_datetime_dict` (const non-void singleton method) | 1 | PT_BOOL PT_DICTIONARY PT_STRING |
 | `ptrcallWithDictionaryArg` | A | `AudioStreamOggVorbis.set_tags` (setter of `tags`) | 19 | PT_DICTIONARY PT_VOID |
-| `ptrcallWithDictionaryArgRetArray` | E | `GDScriptTextDocument.codeLens` (api_type=editor: `api_type` is `editor` in extension_api.json) | 8 | PT_DICTIONARY |
+| `ptrcallWithDictionaryArgRetArray` | E | `GDScriptTextDocument.completion` (api_type=editor: `api_type` is `editor` in extension_api.json) | 5 | PT_DICTIONARY |
 | `ptrcallWithDictionaryArgRetLong` | D | `Time.get_unix_time_from_datetime_dict` (const non-void singleton method) | 2 | PT_DICTIONARY PT_INT64 |
 | `ptrcallWithDictionaryArgRetObject` | C | `GLTFAccessor.from_dictionary` (static with a return value) | 6 | PT_DICTIONARY PT_OBJECT |
 | `ptrcallWithDictionaryArgRetString` | E | `HTTPClient.query_string_from_dict` (*HTTP*: opens sockets or talks to the network) | 1 | PT_DICTIONARY PT_STRING |
@@ -666,7 +666,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithDoubleAndThreeBoolArgsRetObject` | F | `SceneTree.create_timer` (non-const method) | 2 | hand |
 | `ptrcallWithDoubleAndTwoBoolArgs` | F | `AnimationPlayer.seek` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_VOID |
 | `ptrcallWithDoubleAndTwoBoolArgsRetTransform3D` | B | `Curve3D.sample_baked_with_rotation` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_TRANSFORM3D |
-| `ptrcallWithDoubleArg` | A | `AnimatedSprite2D.set_frame_progress` (setter of `frame_progress`) | 848 | hand |
+| `ptrcallWithDoubleArg` | A | `AnimatedSprite2D.set_frame_progress` (setter of `frame_progress`) | 856 | hand |
 | `ptrcallWithDoubleArgRetBool` | F | `Tween.custom_step` (non-const method) | 5 | PT_BOOL PT_FLOAT64 |
 | `ptrcallWithDoubleArgRetByteArray` | B | `Image.save_jpg_to_buffer` (const non-void method) | 1 | PT_FLOAT64 |
 | `ptrcallWithDoubleArgRetColor` | F | `Gradient.sample` (non-const method) | 1 | PT_COLOR PT_FLOAT64 |
@@ -682,9 +682,9 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithFloatArgRetStringName` | B | `Animation.get_marker_at_time` (const non-void method) | 3 | PT_FLOAT64 PT_STRING_NAME |
 | `ptrcallWithFourDoubleArgs` | F | `CanvasItem.draw_animation_slice` on `Control` (void method) | 1 | PT_FLOAT64 PT_VOID |
 | `ptrcallWithFourIntAndBoolArgs` | F | `TextEdit.collapse_carets` (void method) | 1 | PT_BOOL PT_INT64 PT_VOID |
-| `ptrcallWithFourIntArgs` | F | `AnimationNodeBlendSpace2D.add_triangle` (void method) | 2 | PT_INT64 PT_VOID |
+| `ptrcallWithFourIntArgs` | F | `AnimationNodeBlendSpace2D.add_triangle` (void method) | 4 | PT_INT64 PT_VOID |
 | `ptrcallWithFourIntArgsRetDictionary` | E | `EditorVCSInterface.create_diff_hunk` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 |
-| `ptrcallWithFourIntArgsRetLong` | E | `ENetConnection.create_host` (*ENet*: opens sockets or talks to the network) | 1 | PT_INT64 |
+| `ptrcallWithFourIntArgsRetLong` | F | `VisualShaderGroup.connect_nodes` (non-const method) | 2 | PT_INT64 |
 | `ptrcallWithFourLongLongLongLongLongLongArgsRetRID` | E | `RenderingDevice.texture_create_from_extension` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithFourStringBoolLongPackedStringListDictionaryListCallableIntArgsRetLong` | E | `DisplayServer.file_dialog_with_options_show` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_CALLABLE PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithFourStringNameAndFloatArgRetVector2` | E | `Input.get_vector` (Input: process-wide input state backed by the host's input devices) | 1 | PT_FLOAT64 PT_STRING_NAME PT_VECTOR2 |
@@ -698,7 +698,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntAndArrayArgRetLong` | E | `WebRTCMultiplayerPeer.create_client` (*WebRTC*: opens sockets or talks to the network) | 2 | PT_ARRAY PT_INT64 |
 | `ptrcallWithIntAndBoolArgRetNodePath` | E | `SceneState.get_node_path` (abstract, and no instantiable descendant) | 1 | PT_BOOL PT_INT64 PT_NODE_PATH |
 | `ptrcallWithIntAndBoolArgRetRect2` | B | `ItemList.get_item_rect` (const non-void method) | 1 | PT_BOOL PT_INT64 PT_RECT2 |
-| `ptrcallWithIntAndBoolArgs` | F | `AccessibilityServer.set_window_focused` (void singleton method) | 130 | PT_BOOL PT_INT64 PT_VOID |
+| `ptrcallWithIntAndBoolArgs` | F | `AccessibilityServer.set_window_focused` (void singleton method) | 136 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithIntAndBoolArgsRetBool` | F | `RichTextLabel.remove_paragraph` (non-const method) | 1 | PT_BOOL PT_INT64 |
 | `ptrcallWithIntAndBoolArgsRetObject` | B | `Node.get_child` (const non-void method) | 1 | PT_BOOL PT_INT64 PT_OBJECT |
 | `ptrcallWithIntAndByteArrayArgRetLong` | E | `SceneMultiplayer.send_auth` (*Multiplayer*: opens sockets or talks to the network) | 1 | PT_INT64 PT_PACKED_BYTE_ARRAY |
@@ -712,7 +712,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntAndDoubleArgRetPackedVector3List` | B | `Curve3D.tessellate` (const non-void method) | 2 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithIntAndDoubleArgRetVector2` | B | `Curve2D.sample` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 PT_VECTOR2 |
 | `ptrcallWithIntAndDoubleArgRetVector3` | B | `Curve3D.sample` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 PT_VECTOR3 |
-| `ptrcallWithIntAndLongArgs` | F | `AimModifier3D.set_forward_axis` (void method) | 48 | PT_INT64 PT_VOID |
+| `ptrcallWithIntAndLongArgs` | F | `AimModifier3D.set_forward_axis` (void method) | 50 | PT_INT64 PT_VOID |
 | `ptrcallWithIntAndLongArgsRetBool` | E | `Input.is_joy_button_pressed` (Input: process-wide input state backed by the host's input devices) | 1 | PT_BOOL PT_INT64 |
 | `ptrcallWithIntAndLongArgsRetDouble` | E | `Input.get_joy_axis` (Input: process-wide input state backed by the host's input devices) | 1 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithIntAndLongArgsRetLong` | B | `FontFile.get_extra_spacing` (const non-void method) | 1 | PT_INT64 |
@@ -729,11 +729,11 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntAndRIDArg` | F | `TileMap.set_layer_navigation_map` (void method) | 3 | PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithIntAndRect2Arg` | F | `ItemList.set_item_icon_region` (void method) | 2 | PT_INT64 PT_RECT2 PT_VOID |
 | `ptrcallWithIntAndRect2iArg` | F | `BitMap.grow_mask` (void method) | 2 | PT_INT64 PT_RECT2I PT_VOID |
-| `ptrcallWithIntAndStringArg` | F | `ArrayMesh.surface_set_name` (void method) | 54 | PT_INT64 PT_STRING PT_VOID |
+| `ptrcallWithIntAndStringArg` | F | `ArrayMesh.surface_set_name` (void method) | 56 | PT_INT64 PT_STRING PT_VOID |
 | `ptrcallWithIntAndStringArgRetBool` | F | `AnimationNode.set_input_name` (non-const method) | 1 | PT_BOOL PT_INT64 PT_STRING |
 | `ptrcallWithIntAndStringArgRetInt` | E | `UPNP.delete_port_mapping` (*UPNP*: opens sockets or talks to the network) | 2 | PT_INT64 PT_STRING |
 | `ptrcallWithIntAndStringArgRetLong` | E | `StreamPeerTCP.bind` (StreamPeerTCP: opens sockets or talks to the network) | 3 | PT_INT64 PT_STRING |
-| `ptrcallWithIntAndStringNameArg` | F | `AnimationNodeBlendSpace1D.set_blend_point_name` (void method) | 13 | PT_INT64 PT_STRING_NAME PT_VOID |
+| `ptrcallWithIntAndStringNameArg` | F | `AnimationNodeBlendSpace1D.set_blend_point_name` (void method) | 16 | PT_INT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithIntAndStringNameArgRetBool` | B | `Skeleton3D.has_bone_meta` (const non-void method) | 2 | PT_BOOL PT_INT64 PT_STRING_NAME |
 | `ptrcallWithIntAndStringNameArgRetVariantScalar` | B | `Skeleton3D.get_bone_meta` (const non-void method) | 1 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithIntAndThreeBoolArgsRetObject` | B | `TileData.get_navigation_polygon` (const non-void method) | 2 | PT_BOOL PT_INT64 PT_OBJECT |
@@ -745,46 +745,46 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithIntAndUInt32Args` | F | `MeshLibrary.set_item_navigation_layers` (void method) | 4 | PT_INT64 PT_VOID |
 | `ptrcallWithIntAndVariantArg` | F | `GraphNode.set_slot_metadata_left` (void method) | 12 | PT_INT64 PT_VARIANT PT_VOID |
 | `ptrcallWithIntAndVariantArgRetRect2` | B | `TextParagraph.get_line_object_rect` (const non-void method) | 1 | PT_INT64 PT_RECT2 PT_VARIANT |
-| `ptrcallWithIntAndVector2Arg` | F | `AnimationNodeBlendSpace2D.set_blend_point_position` (void method) | 12 | PT_INT64 PT_VECTOR2 PT_VOID |
+| `ptrcallWithIntAndVector2Arg` | F | `AnimationNodeBlendSpace2D.set_blend_point_position` (void method) | 13 | PT_INT64 PT_VECTOR2 PT_VOID |
 | `ptrcallWithIntAndVector2iArg` | F | `FontFile.clear_glyphs` (void method) | 5 | PT_INT64 PT_VECTOR2I PT_VOID |
 | `ptrcallWithIntAndVector2iArgRetBool` | F | `TileSet.has_coords_level_tile_proxy` (non-const method) | 1 | PT_BOOL PT_INT64 PT_VECTOR2I |
 | `ptrcallWithIntAndVector2iArgRetInt` | B | `FontFile.get_texture_count` (const non-void method) | 1 | PT_INT64 PT_VECTOR2I |
 | `ptrcallWithIntAndVector2iListArgsRetObject` | F | `TileMap.get_pattern` (non-const method) | 1 | PT_INT64 PT_OBJECT PT_TYPED_ARRAY_BLOB |
-| `ptrcallWithIntAndVector3Arg` | F | `Curve3D.set_point_in` (void method) | 14 | PT_INT64 PT_VECTOR3 PT_VOID |
-| `ptrcallWithIntArg` | A | `AnimatedTexture.set_frames` (setter of `frames`) | 499 | hand |
+| `ptrcallWithIntAndVector3Arg` | F | `BoneSpaceAdjuster3D.set_bone_scale` (void method) | 16 | PT_INT64 PT_VECTOR3 PT_VOID |
+| `ptrcallWithIntArg` | A | `AnimatedTexture.set_frames` (setter of `frames`) | 525 | hand |
 | `ptrcallWithIntArgRetArray` | B | `ImporterMesh.get_surface_arrays` (const non-void method) | 10 | PT_INT64 |
 | `ptrcallWithIntArgRetArrayList` | B | `Mesh.surface_get_blend_shape_arrays` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetBasis` | B | `GridMap.get_basis_with_orthogonal_index` (const non-void method) | 1 | PT_BASIS PT_INT64 |
-| `ptrcallWithIntArgRetBool` | B | `AimModifier3D.is_relative` (const non-void method) | 165 | PT_BOOL PT_INT64 |
+| `ptrcallWithIntArgRetBool` | B | `AimModifier3D.is_relative` (const non-void method) | 170 | PT_BOOL PT_INT64 |
 | `ptrcallWithIntArgRetByteArray` | F | `Crypto.generate_random_bytes` (non-const method) | 2 | PT_INT64 |
 | `ptrcallWithIntArgRetCallable` | E | `TreeItem.get_custom_draw_callback` (abstract, and no instantiable descendant) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetColor` | B | `GraphNode.get_slot_color_left` (const non-void method) | 19 | PT_COLOR PT_INT64 |
 | `ptrcallWithIntArgRetDictionary` | B | `CodeEdit.get_code_completion_option` (const non-void method) | 8 | PT_INT64 |
 | `ptrcallWithIntArgRetDouble` | B | `AnimatedTexture.get_frame_duration` (const non-void method) | 66 | PT_FLOAT64 PT_INT64 |
-| `ptrcallWithIntArgRetInt` | B | `Animation.track_get_key_count` (const non-void method) | 113 | PT_INT64 |
-| `ptrcallWithIntArgRetLong` | B | `AimModifier3D.get_forward_axis` (const non-void method) | 70 | PT_INT64 |
+| `ptrcallWithIntArgRetInt` | B | `Animation.track_get_key_count` (const non-void method) | 119 | PT_INT64 |
+| `ptrcallWithIntArgRetLong` | B | `AimModifier3D.get_forward_axis` (const non-void method) | 76 | PT_INT64 |
 | `ptrcallWithIntArgRetNodePath` | B | `Animation.track_get_path` (const non-void method) | 16 | PT_INT64 PT_NODE_PATH |
-| `ptrcallWithIntArgRetObject` | B | `AnimatedTexture.get_frame_texture` (const non-void method) | 83 | PT_INT64 PT_OBJECT |
+| `ptrcallWithIntArgRetObject` | B | `AnimatedTexture.get_frame_texture` (const non-void method) | 88 | PT_INT64 PT_OBJECT |
 | `ptrcallWithIntArgRetPackedFloat32List` | B | `MeshDataTool.get_vertex_weights` (const non-void method) | 2 | PT_INT64 |
 | `ptrcallWithIntArgRetPackedInt32List` | B | `MeshDataTool.get_edge_faces` (const non-void method) | 7 | PT_INT64 |
 | `ptrcallWithIntArgRetPackedStringList` | B | `TextEdit.get_line_wrapped_text` (const non-void method) | 3 | PT_INT64 |
 | `ptrcallWithIntArgRetPackedVector2List` | B | `NavigationPolygon.get_outline` (const non-void method) | 3 | PT_INT64 |
 | `ptrcallWithIntArgRetPlane` | B | `MeshDataTool.get_vertex_tangent` (const non-void method) | 1 | PT_INT64 PT_PLANE |
 | `ptrcallWithIntArgRetQuaternion` | B | `BoneTwistDisperser3D.get_twist_from` (const non-void method) | 2 | PT_INT64 PT_QUATERNION |
-| `ptrcallWithIntArgRetRID` | B | `KinematicCollision3D.get_collider_rid` (const non-void method) | 12 | PT_INT64 PT_RID |
+| `ptrcallWithIntArgRetRID` | B | `KinematicCollision3D.get_collider_rid` (const non-void method) | 16 | PT_INT64 PT_RID |
 | `ptrcallWithIntArgRetRect2` | B | `ItemList.get_item_icon_region` (const non-void method) | 5 | PT_INT64 PT_RECT2 |
-| `ptrcallWithIntArgRetRect2i` | E | `DisplayServer.screen_get_usable_rect` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 2 | PT_INT64 PT_RECT2I |
-| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_name` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 81 | PT_INT64 PT_STRING |
-| `ptrcallWithIntArgRetStringName` | B | `AnimationNodeBlendSpace1D.get_blend_point_name` (const non-void method) | 18 | PT_INT64 PT_STRING_NAME |
+| `ptrcallWithIntArgRetRect2i` | E | `DisplayServer.get_display_safe_area` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 3 | PT_INT64 PT_RECT2I |
+| `ptrcallWithIntArgRetString` | C | `DirAccess.get_drive_name` (static with a return value); then B `AnimationNode.get_input_name` (const non-void method) | 83 | PT_INT64 PT_STRING |
+| `ptrcallWithIntArgRetStringName` | B | `AnimationNodeBlendSpace1D.get_blend_point_name` (const non-void method) | 20 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithIntArgRetStringNameList` | B | `Skeleton3D.get_bone_meta_list` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithIntArgRetTransform2D` | B | `FontFile.get_transform` (const non-void method) | 3 | PT_INT64 PT_TRANSFORM2D |
 | `ptrcallWithIntArgRetTransform3D` | B | `MeshLibrary.get_item_mesh_transform` (const non-void method) | 11 | PT_INT64 PT_TRANSFORM3D |
 | `ptrcallWithIntArgRetUInt32` | B | `CollisionObject2D.shape_find_owner` on `Area2D` (const non-void method) | 6 | PT_INT64 |
 | `ptrcallWithIntArgRetVariantScalar` | B | `GraphNode.get_slot_metadata_left` (const non-void method) | 14 | PT_INT64 |
-| `ptrcallWithIntArgRetVector2` | B | `AnimationNodeBlendSpace2D.get_blend_point_position` (const non-void method) | 26 | PT_INT64 PT_VECTOR2 |
+| `ptrcallWithIntArgRetVector2` | B | `AnimationNodeBlendSpace2D.get_blend_point_position` (const non-void method) | 29 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithIntArgRetVector2i` | B | `TextParagraph.get_line_range` (const non-void method) | 11 | PT_INT64 PT_VECTOR2I |
 | `ptrcallWithIntArgRetVector2iList` | B | `FontFile.get_size_cache_list` (const non-void method) | 2 | PT_INT64 |
-| `ptrcallWithIntArgRetVector3` | B | `Curve3D.get_point_in` (const non-void method) | 29 | PT_INT64 PT_VECTOR3 |
+| `ptrcallWithIntArgRetVector3` | B | `BoneSpaceAdjuster3D.get_bone_scale` (const non-void method) | 33 | PT_INT64 PT_VECTOR3 |
 | `ptrcallWithIntArgRetVector3i` | E | `DisplayServer.window_get_safe_title_margins` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_VECTOR3I |
 | `ptrcallWithIntArgRetVector3iList` | B | `GridMap.get_used_cells_by_item` (const non-void method) | 2 | PT_INT64 |
 | `ptrcallWithIntBoolIntArgs` | F | `TextEdit.set_caret_column` (void method) | 1 | PT_BOOL PT_INT64 PT_VOID |
@@ -892,16 +892,16 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithLongAndUInt32ArgRetLong` | E | `RenderingDevice.framebuffer_format_get_texture_samples` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 |
 | `ptrcallWithLongAndVector2Arg` | F | `AStar2D.set_point_position` (void method) | 2 | PT_INT64 PT_VECTOR2 PT_VOID |
 | `ptrcallWithLongAndVector3Arg` | F | `AStar3D.set_point_position` (void method) | 3 | PT_INT64 PT_VECTOR3 PT_VOID |
-| `ptrcallWithLongArg` | A | `AStarGrid2D.set_cell_shape` (setter of `cell_shape`) | 595 | hand |
-| `ptrcallWithLongArgRetBool` | B | `AStar2D.has_point` (const non-void method) | 43 | PT_BOOL PT_INT64 |
+| `ptrcallWithLongArg` | A | `AStarGrid2D.set_cell_shape` (setter of `cell_shape`) | 603 | hand |
+| `ptrcallWithLongArgRetBool` | B | `AStar2D.has_point` (const non-void method) | 45 | PT_BOOL PT_INT64 |
 | `ptrcallWithLongArgRetByteArray` | B | `RDShaderSPIRV.get_stage_bytecode` (const non-void method) | 3 | PT_INT64 |
 | `ptrcallWithLongArgRetDictionary` | D | `Time.get_date_dict_from_unix_time` (const non-void singleton method) | 3 | PT_INT64 |
 | `ptrcallWithLongArgRetDictionaryList` | B | `VisualShader.get_node_connections` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithLongArgRetDouble` | B | `AStar2D.get_point_weight_scale` (const non-void method) | 29 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithLongArgRetInt` | B | `Camera2D.get_limit` (const non-void method) | 13 | PT_INT64 |
-| `ptrcallWithLongArgRetLong` | B | `Image.detect_used_channels` (const non-void method) | 23 | PT_INT64 |
+| `ptrcallWithLongArgRetLong` | B | `Image.detect_used_channels` (const non-void method) | 24 | PT_INT64 |
 | `ptrcallWithLongArgRetNodePath` | B | `Control.get_focus_neighbor` (const non-void method) | 1 | hand |
-| `ptrcallWithLongArgRetObject` | B | `BaseMaterial3D.get_texture` on `ORMMaterial3D` (const non-void method) | 17 | PT_INT64 PT_OBJECT |
+| `ptrcallWithLongArgRetObject` | B | `BaseMaterial3D.get_texture` on `ORMMaterial3D` (const non-void method) | 18 | PT_INT64 PT_OBJECT |
 | `ptrcallWithLongArgRetPackedColorList` | B | `Font.get_palette_colors` on `FontFile` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithLongArgRetPackedInt32List` | B | `VisualShader.get_node_list` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithLongArgRetPackedInt64List` | F | `AStar2D.get_point_connections` (non-const method) | 2 | PT_INT64 |
@@ -959,7 +959,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithNodePathListArg` | A | `Control.set_accessibility_controls_nodes` (setter of `accessibility_controls_nodes`) | 5 | PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithNodePathRect2TwoIntArgs` | F | `LightmapGIData.add_user` (void method) | 1 | PT_INT64 PT_NODE_PATH PT_RECT2 PT_VOID |
 | `ptrcallWithNodePathStringNameArgs` | F | `GLTFObjectModelProperty.append_path_to_property` (void method) | 1 | PT_NODE_PATH PT_STRING_NAME PT_VOID |
-| `ptrcallWithObjectAndBoolArg` | F | `GLTFDocument.register_gltf_document_extension` (void static: nothing to compare) | 15 | PT_BOOL PT_OBJECT PT_VOID |
+| `ptrcallWithObjectAndBoolArg` | F | `GLTFDocument.register_gltf_document_extension` (void static: nothing to compare) | 14 | PT_BOOL PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndBoolArgRetBool` | B | `InputEvent.is_match` on `InputEventAction` (const non-void method) | 2 | PT_BOOL PT_OBJECT |
 | `ptrcallWithObjectAndBoolArgRetDictionary` | F | `Image.compute_image_metrics` (non-const method) | 2 | PT_BOOL PT_OBJECT |
 | `ptrcallWithObjectAndBoolArgRetInt` | F | `ItemList.add_icon_item` (non-const method) | 1 | PT_BOOL PT_INT64 PT_OBJECT |
@@ -987,7 +987,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectAndStringNameArg` | F | `RDShaderFile.set_bytecode` (void method) | 2 | PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List` | F | `TileSetAtlasSource.get_tiles_to_be_removed_on_change` (non-const method) | 1 | PT_OBJECT PT_VECTOR2I |
 | `ptrcallWithObjectAndTransform3DArg` | F | `NavigationMeshSourceGeometryData3D.add_mesh` (void method) | 1 | PT_OBJECT PT_TRANSFORM3D PT_VOID |
-| `ptrcallWithObjectAndTwoBoolArgs` | E | `EngineDebugger.script_debug` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_BOOL PT_OBJECT PT_VOID |
+| `ptrcallWithObjectAndTwoBoolArgs` | F | `Node.replace_by` (void method) | 2 | PT_BOOL PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndTwoIntArgsRetRect2` | F | `Tree.get_item_area_rect` (an item's area before any layout is the zero Rect2, which a no-op answers too (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
 | `ptrcallWithObjectAndVariantArgRetLong` | E | `MultiplayerAPI.object_configuration_add` (*Multiplayer*: opens sockets or talks to the network) | 2 | PT_INT64 PT_OBJECT PT_VARIANT |
 | `ptrcallWithObjectAndVector2iArg` | E | `EditorInterface.popup_dialog_centered` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_VECTOR2I PT_VOID |
@@ -1003,7 +1003,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectArgRetStringName` | B | `AnimationMixer.find_animation` on `AnimationPlayer` (const non-void method) | 3 | PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithObjectArgRetTransform2D` | B | `Node2D.get_relative_transform_to_parent` (const non-void method) | 1 | PT_OBJECT PT_TRANSFORM2D |
 | `ptrcallWithObjectArgRetUInt32` | F | `CollisionObject2D.create_shape_owner` on `Area2D` (non-const method) | 2 | PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectArgs` | A | `AnimatedSprite2D.set_sprite_frames` (setter of `sprite_frames`) | 366 | hand |
+| `ptrcallWithObjectArgs` | A | `AnimatedSprite2D.set_sprite_frames` (setter of `sprite_frames`) | 374 | hand |
 | `ptrcallWithObjectBoolLongArgs` | F | `Node.add_child` (void method) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectBoolStringArgsRetDictionary` | E | `EditorExportPlatform.save_pack_patch` (api_type=editor: `api_type` is `editor` in extension_api.json) | 3 | PT_BOOL PT_OBJECT PT_STRING |
 | `ptrcallWithObjectBoolStringBoolArgsRetDictionary` | E | `EditorExportPlatform.save_pack` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_OBJECT PT_STRING |
@@ -1011,7 +1011,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectBoolStringLongBoolArgsRetLong` | E | `EditorExportPlatform.export_project` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithObjectBoolStringPackedStringListLongArgsRetLong` | E | `EditorExportPlatform.export_pack_patch` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_BOOL PT_INT64 PT_OBJECT PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithObjectBoolTwoCallableArgsRetLong` | E | `EditorExportPlatform.export_project_files` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_BOOL PT_CALLABLE PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectCallableArgs` | E | `EditorContextMenuPlugin.add_menu_shortcut` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_VOID |
+| `ptrcallWithObjectCallableArgs` | E | `EditorContextMenuPlugin.add_menu_shortcut` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_CALLABLE PT_OBJECT PT_VOID |
 | `ptrcallWithObjectCallablePackedInt32ListStringArgs` | E | `EditorInterface.popup_property_selector` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_PACKED_INT32_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithObjectCallableStringArgs` | E | `EditorInterface.popup_method_selector` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_CALLABLE PT_OBJECT PT_STRING PT_VOID |
 | `ptrcallWithObjectColorLongBoolArgs` | E | `RenderingServer.set_boot_image_with_stretch` (draws the boot splash over the running game's frame: the desktop smoke's dummy renderer ignores it, a phone's renderer does not (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_COLOR PT_INT64 PT_OBJECT PT_VOID |
@@ -1027,7 +1027,6 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectListArgRetLong` | F | `ImageTextureLayered.create_from_images` on `Cubemap` (non-const method) | 2 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListIntArgsRetTypedObjectList` | E | `EditorInterface.make_mesh_previews` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListLongArgsRetRID` | F | `RenderingServer.texture_2d_layered_create` (non-const singleton method) | 2 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
-| `ptrcallWithObjectListObjectCallableArgsRetObject` | E | `OpenXRSpatialEntityExtension.create_spatial_context` (*XR*: an XR runtime and its devices) | 1 | PT_CALLABLE PT_OBJECT PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListRIDUInt32ArgsRetRID` | E | `RenderingDevice.uniform_set_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListTransform3DListBoolArgsRetObject` | C | `ImporterMesh.merge_importer_meshes` (static with a return value) | 1 | PT_BOOL PT_OBJECT PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListUInt32ArgsRetLong` | E | `RenderingDevice.framebuffer_format_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_TYPED_ARRAY_BLOB |
@@ -1040,7 +1039,6 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectObjectIntTwoBoolArgs` | E | `PopupMenu.add_icon_shortcut` (*Popup*: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_INT64 PT_OBJECT PT_VOID |
 | `ptrcallWithObjectRIDArgsRetRID` | E | `RenderingDevice.texture_create_shared` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_OBJECT PT_RID |
 | `ptrcallWithObjectRIDCallableArgsRetObject` | E | `OpenXRSpatialAnchorCapability.persist_anchor` (*XR*: an XR runtime and its devices) | 2 | PT_CALLABLE PT_OBJECT PT_RID |
-| `ptrcallWithObjectRIDThreeUInt32LongArgsRetRID` | E | `RenderingDevice.texture_create_shared_from_slice` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_OBJECT PT_RID |
 | `ptrcallWithObjectRect2BoolColorBoolArgs` | F | `CanvasItem.draw_texture_rect` on `Control` (void method) | 1 | PT_BOOL PT_COLOR PT_OBJECT PT_RECT2 PT_VOID |
 | `ptrcallWithObjectRect2iAndVector2iArgs` | F | `Image.blend_rect` (void method) | 2 | PT_OBJECT PT_RECT2I PT_VECTOR2I PT_VOID |
 | `ptrcallWithObjectStringAndIntArgs` | F | `OptionButton.add_icon_item` (void method) | 1 | PT_INT64 PT_OBJECT PT_STRING PT_VOID |
@@ -1067,6 +1065,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectTwoRect2ColorThreeDoubleArgs` | F | `CanvasItem.draw_msdf_texture_rect_region` on `Control` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_OBJECT PT_RECT2 PT_VOID |
 | `ptrcallWithObjectTwoRect2ColorTwoBoolArgs` | F | `CanvasItem.draw_texture_rect_region` on `Control` (void method) | 1 | PT_BOOL PT_COLOR PT_OBJECT PT_RECT2 PT_VOID |
 | `ptrcallWithObjectVector2AndColorArgs` | F | `CanvasItem.draw_texture` on `Control` (void method) | 1 | PT_COLOR PT_OBJECT PT_VECTOR2 PT_VOID |
+| `ptrcallWithObjectVector2AndIntArgs` | F | `VisualShaderGroup.add_node` (void method) | 1 | PT_INT64 PT_OBJECT PT_VECTOR2 PT_VOID |
 | `ptrcallWithObjectVector2IntStringNameArgs` | F | `AnimationNodeBlendSpace2D.add_blend_point` (void method) | 1 | PT_INT64 PT_OBJECT PT_STRING_NAME PT_VECTOR2 PT_VOID |
 | `ptrcallWithObjectVector2StringIntColorDoubleArgs` | F | `CanvasItem.draw_char` on `Control` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_OBJECT PT_STRING PT_VECTOR2 PT_VOID |
 | `ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs` | F | `CanvasItem.draw_string` on `Control` (void method) | 1 | PT_COLOR PT_FLOAT64 PT_INT64 PT_OBJECT PT_STRING PT_VECTOR2 PT_VOID |
@@ -1121,11 +1120,11 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithPlaneArg` | A | `WorldBoundaryShape3D.set_plane` (setter of `plane`) | 3 | PT_PLANE PT_VOID |
 | `ptrcallWithPlaneListAndRIDArgsRetPackedInt64List` | D | `RenderingServer.instances_cull_convex` (const non-void singleton method) | 1 | PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithPlaneListArgRetPackedVector3List` | D | `Geometry3D.compute_convex_mesh_points` (non-void method of a stateless singleton) | 1 | PT_TYPED_ARRAY_BLOB |
-| `ptrcallWithQuaternionArg` | A | `GLTFNode.set_rotation` (setter of `rotation`) | 5 | PT_QUATERNION PT_VOID |
+| `ptrcallWithQuaternionArg` | A | `GLTFNode.set_rotation` (setter of `rotation`) | 7 | PT_QUATERNION PT_VOID |
 | `ptrcallWithRIDAndAABBArg` | F | `RenderingServer.instance_set_custom_aabb` (void singleton method) | 6 | PT_AABB PT_RID PT_VOID |
 | `ptrcallWithRIDAndArrayArg` | F | `TextServer.shaped_text_set_bidi_override` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_ARRAY PT_RID PT_VOID |
 | `ptrcallWithRIDAndBasisArg` | F | `RenderingServer.environment_set_sky_orientation` (void singleton method) | 1 | PT_BASIS PT_RID PT_VOID |
-| `ptrcallWithRIDAndBoolArg` | F | `AccessibilityServer.update_set_checked` (void singleton method) | 109 | PT_BOOL PT_RID PT_VOID |
+| `ptrcallWithRIDAndBoolArg` | F | `AccessibilityServer.update_set_checked` (void singleton method) | 110 | PT_BOOL PT_RID PT_VOID |
 | `ptrcallWithRIDAndBoolArgRetLong` | D | `RenderingServer.texture_get_native_handle` (const non-void singleton method) | 1 | PT_BOOL PT_INT64 PT_RID |
 | `ptrcallWithRIDAndBoolArgRetRID` | D | `RenderingServer.texture_get_rd_texture` (const non-void singleton method) | 1 | PT_BOOL PT_RID |
 | `ptrcallWithRIDAndByteArrayArg` | F | `TextServer.font_set_data` on `TextServerManager.get_primary_interface()` (void method) | 1 | PT_PACKED_BYTE_ARRAY PT_RID PT_VOID |
@@ -1136,13 +1135,13 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDAndIntArg` | F | `AccessibilityServer.update_set_list_item_count` (void singleton method) | 42 | PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDAndIntArgRetArray` | D | `RenderingServer.mesh_surface_get_arrays` (const non-void singleton method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetArrayList` | D | `RenderingServer.mesh_surface_get_blend_shape_arrays` (const non-void singleton method) | 1 | PT_INT64 PT_RID |
-| `ptrcallWithRIDAndIntArgRetBool` | D | `PhysicsServer3D.soft_body_is_point_pinned` (const non-void singleton method) | 6 | PT_BOOL PT_INT64 PT_RID |
+| `ptrcallWithRIDAndIntArgRetBool` | D | `PhysicsServer3D.soft_body_is_point_pinned` (const non-void singleton method) | 7 | PT_BOOL PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetColor` | D | `RenderingServer.multimesh_instance_get_color` (const non-void singleton method) | 2 | PT_COLOR PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetDictionary` | F | `RenderingServer.mesh_get_surface` (non-const singleton method) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetInt` | E | `NativeMenu.add_separator` (NativeMenu: the host OS menu bar) | 4 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetLong` | E | `NativeMenu.get_item_accelerator` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetObject` | F | `RenderingServer.texture_2d_layer_get` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_INT64 PT_OBJECT PT_RID |
-| `ptrcallWithRIDAndIntArgRetRID` | D | `RenderingServer.mesh_surface_get_material` (const non-void singleton method) | 6 | PT_INT64 PT_RID |
+| `ptrcallWithRIDAndIntArgRetRID` | D | `RenderingServer.mesh_surface_get_attribute_buffer_rd_rid` (const non-void singleton method) | 10 | PT_INT64 PT_RID |
 | `ptrcallWithRIDAndIntArgRetString` | E | `NativeMenu.get_item_text` (NativeMenu: the host OS menu bar) | 2 | PT_INT64 PT_RID PT_STRING |
 | `ptrcallWithRIDAndIntArgRetTransform2D` | D | `RenderingServer.multimesh_instance_get_transform_2d` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM2D |
 | `ptrcallWithRIDAndIntArgRetTransform3D` | D | `RenderingServer.multimesh_instance_get_transform` (const non-void singleton method) | 4 | PT_INT64 PT_RID PT_TRANSFORM3D |
@@ -1291,7 +1290,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRIDDoubleVector2TwoDoubleArgs` | F | `RenderingServer.camera_set_frustum` (void singleton method) | 1 | PT_FLOAT64 PT_RID PT_VECTOR2 PT_VOID |
 | `ptrcallWithRIDFourDoubleArgs` | F | `RenderingServer.canvas_item_add_animation_slice` (void singleton method) | 1 | PT_FLOAT64 PT_RID PT_VOID |
 | `ptrcallWithRIDFourDoubleLongArgs` | F | `RenderingServer.instance_geometry_set_visibility_range` (void singleton method) | 1 | PT_FLOAT64 PT_INT64 PT_RID PT_VOID |
-| `ptrcallWithRIDIntAndBoolArgs` | F | `PhysicsServer2D.area_set_shape_disabled` (void singleton method) | 12 | PT_BOOL PT_INT64 PT_RID PT_VOID |
+| `ptrcallWithRIDIntAndBoolArgs` | F | `PhysicsServer2D.area_set_shape_disabled` (void singleton method) | 13 | PT_BOOL PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDIntAndColorArgs` | F | `RenderingServer.multimesh_instance_set_color` (void singleton method) | 2 | PT_COLOR PT_INT64 PT_RID PT_VOID |
 | `ptrcallWithRIDIntAndObjectArg` | E | `NativeMenu.set_item_icon` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_OBJECT PT_RID PT_VOID |
 | `ptrcallWithRIDIntAndRIDArgs` | F | `PhysicsServer2D.area_set_shape` (void singleton method) | 8 | PT_INT64 PT_RID PT_VOID |
@@ -1425,7 +1424,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithRect2iAndColorArg` | F | `Image.fill_rect` (void method) | 1 | PT_COLOR PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iAndDoubleArg` | F | `AStarGrid2D.fill_weight_scale_region` (void method) | 1 | PT_FLOAT64 PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iAndDoubleArgsRetPackedVector2ListList` | B | `BitMap.opaque_to_polygons` (const non-void method) | 1 | PT_FLOAT64 PT_RECT2I |
-| `ptrcallWithRect2iArg` | A | `AStarGrid2D.set_region` (setter of `region`) | 6 | PT_RECT2I PT_VOID |
+| `ptrcallWithRect2iArg` | A | `AStarGrid2D.set_region` (setter of `region`) | 7 | PT_RECT2I PT_VOID |
 | `ptrcallWithRect2iArgRetDictionaryList` | B | `AStarGrid2D.get_point_data_in_region` (const non-void method) | 1 | PT_RECT2I |
 | `ptrcallWithRect2iArgRetObject` | F | `Image.get_region` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 2 | PT_OBJECT PT_RECT2I |
 | `ptrcallWithRect2iObjectColorIntObjectArgs` | F | `DrawableTexture2D.blit_rect` (void method) | 1 | PT_COLOR PT_INT64 PT_OBJECT PT_RECT2I PT_VOID |
@@ -1480,16 +1479,16 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringAndVariantArgRetDictionary` | F | `JSONRPC.make_notification` (non-const method) | 1 | PT_STRING PT_VARIANT |
 | `ptrcallWithStringAndVariantArgRetInt` | E | `DisplayServer.global_menu_get_item_index_from_tag` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_INT64 PT_STRING PT_VARIANT |
 | `ptrcallWithStringAndVariantArgRetVariantScalar` | A | `ProjectSettings.get_setting` (getter of the keyed value "kanama/api_exercise/probe", set and restored (SINGLETON_KEYED_PAIRS)) | 1 | PT_STRING PT_VARIANT |
-| `ptrcallWithStringArg` | A | `AnimatedSprite2D.set_autoplay` (setter of `autoplay`) | 213 | PT_STRING PT_VOID |
+| `ptrcallWithStringArg` | A | `AnimatedSprite2D.set_autoplay` (setter of `autoplay`) | 218 | PT_STRING PT_VOID |
 | `ptrcallWithStringArgRetBool` | C | `DirAccess.dir_exists_absolute` (static with a return value); then B `CodeEdit.has_auto_brace_completion_close_key` (const non-void method) | 53 | PT_BOOL PT_STRING |
 | `ptrcallWithStringArgRetByteArray` | C | `FileAccess.get_file_as_bytes` (static with a return value); then D `Marshalls.base64_to_raw` (non-void method of a stateless singleton) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetColor` | B | `CodeHighlighter.get_keyword_color` (const non-void method) | 2 | PT_COLOR PT_STRING |
 | `ptrcallWithStringArgRetDictionary` | E | `EditorExportPlatform.find_export_template` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_STRING |
 | `ptrcallWithStringArgRetInt` | B | `AnimationNode.find_input` (const non-void method) | 10 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then B `Image.save_dds` (const non-void method) | 52 | PT_INT64 PT_STRING |
-| `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value); then B `Node.find_parent` (const non-void method) | 21 | PT_OBJECT PT_STRING |
-| `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value); then B `ConfigFile.get_section_keys` (const non-void method) | 15 | PT_STRING |
-| `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value); then B `CodeEdit.get_auto_brace_completion_close_key` (const non-void method) | 29 | hand |
+| `ptrcallWithStringArgRetLong` | C | `DirAccess.make_dir_absolute` (static returning Error: its arguments must make it fail); then B `Image.save_dds` (const non-void method) | 53 | PT_INT64 PT_STRING |
+| `ptrcallWithStringArgRetObject` | C | `AudioStreamMP3.load_from_file` (static with a return value); then B `Node.find_parent` (const non-void method) | 22 | PT_OBJECT PT_STRING |
+| `ptrcallWithStringArgRetPackedStringList` | C | `DirAccess.get_directories_at` (static with a return value); then B `ConfigFile.get_section_keys` (const non-void method) | 16 | PT_STRING |
+| `ptrcallWithStringArgRetString` | C | `FileAccess.get_file_as_string` (static with a return value); then B `CodeEdit.get_auto_brace_completion_close_key` (const non-void method) | 30 | hand |
 | `ptrcallWithStringArgRetVariantScalar` | C | `JSON.parse_string` (static with a return value); then B `TileData.get_custom_data` (const non-void method) | 3 | PT_STRING |
 | `ptrcallWithStringBoolArrayArgs` | E | `EditorDebuggerSession.toggle_profiler` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_ARRAY PT_BOOL PT_STRING PT_VOID |
 | `ptrcallWithStringBoolDoubleArgsRetLong` | B | `Image.save_webp` (const non-void method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_STRING |
@@ -1539,7 +1538,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNameAndIntArgRetInt` | F | `GraphEdit.get_connection_count` (non-const method) | 1 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithStringNameAndIntArgRetObject` | B | `Shader.get_default_texture_parameter` (const non-void method) | 2 | PT_INT64 PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithStringNameAndLongArg` | F | `SpriteFrames.set_animation_loop_mode` (void method) | 1 | PT_INT64 PT_STRING_NAME PT_VOID |
-| `ptrcallWithStringNameAndObjectArg` | F | `AnimationNodeStateMachine.replace_node` (void method) | 12 | PT_OBJECT PT_STRING_NAME PT_VOID |
+| `ptrcallWithStringNameAndObjectArg` | F | `AnimationNodeStateMachine.replace_node` (void method) | 14 | PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithStringNameAndObjectArgRetBool` | E | `InputMap.action_has_event` (InputMap: the running project's process-wide action map) | 1 | PT_BOOL PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithStringNameAndObjectArgRetLong` | F | `AnimationLibrary.add_animation` (non-const method) | 2 | PT_INT64 PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithStringNameAndStringArgRetVariantScalar` | E | `EditorExportPreset.get_or_env` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_STRING PT_STRING_NAME |
@@ -1548,8 +1547,8 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithStringNameAndVariantArg` | F | `AnimationNode.set_parameter` (void method) | 18 | PT_STRING_NAME PT_VARIANT PT_VOID |
 | `ptrcallWithStringNameAndVariantArgRetVariantScalar` | B | `Object.get_meta` (hand-written root) (const non-void method) | 1 | PT_STRING_NAME PT_VARIANT |
 | `ptrcallWithStringNameAndVector2Arg` | F | `AnimationNodeBlendTree.set_node_position` (void method) | 2 | PT_STRING_NAME PT_VECTOR2 PT_VOID |
-| `ptrcallWithStringNameArg` | A | `AnimationNodeAnimation.set_animation` (setter of `animation`) | 85 | PT_STRING_NAME PT_VOID |
-| `ptrcallWithStringNameArgRetBool` | B | `Animation.has_marker` (const non-void method) | 49 | PT_BOOL PT_STRING_NAME |
+| `ptrcallWithStringNameArg` | A | `AnimationNodeAnimation.set_animation` (setter of `animation`) | 88 | PT_STRING_NAME PT_VOID |
+| `ptrcallWithStringNameArgRetBool` | B | `Animation.has_marker` (const non-void method) | 52 | PT_BOOL PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetColor` | B | `Animation.get_marker_color` (const non-void method) | 1 | PT_COLOR PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetDictionaryList` | B | `GraphEdit.get_connection_list_from_node` (const non-void method) | 2 | PT_STRING_NAME |
 | `ptrcallWithStringNameArgRetDouble` | B | `Animation.get_marker_time` (const non-void method) | 4 | PT_FLOAT64 PT_STRING_NAME |
@@ -1638,7 +1637,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithThreeIntArgs` | F | `AudioServer.swap_bus_effects` (void singleton method) | 5 | PT_INT64 PT_VOID |
 | `ptrcallWithThreeIntArgsRetInt` | B | `FontFile.get_glyph_index` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithThreeIntArgsRetObject` | F | `AudioServer.get_bus_effect_instance` (non-const singleton method) | 1 | PT_INT64 PT_OBJECT |
-| `ptrcallWithThreeIntArgsRetVector2` | B | `FontFile.get_glyph_advance` (const non-void method) | 1 | PT_INT64 PT_VECTOR2 |
+| `ptrcallWithThreeIntArgsRetVector2` | B | `FontFile.get_glyph_advance` (const non-void method) | 2 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithThreeIntArgsRetVector2i` | B | `TextEdit.get_next_visible_line_index_offset_from` (const non-void method) | 1 | PT_INT64 PT_VECTOR2I |
 | `ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList` | F | `Noise.get_seamless_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 |
 | `ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList` | F | `Noise.get_image_3d` on `FastNoiseLite` (returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)) | 1 | PT_BOOL PT_INT64 |
@@ -1654,7 +1653,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithThreeStringBoolLongPackedStringListCallableIntArgsRetLong` | E | `DisplayServer.file_dialog_show` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_BOOL PT_CALLABLE PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithThreeStringCallableArgsRetLong` | E | `DisplayServer.dialog_input_text` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_INT64 PT_STRING |
 | `ptrcallWithThreeStringNameAndDoubleArg` | F | `AnimationPlayer.play_section_with_markers_backwards` (void method) | 1 | PT_FLOAT64 PT_STRING_NAME PT_VOID |
-| `ptrcallWithThreeStringNameArgs` | F | `Theme.rename_color` (void method) | 7 | PT_STRING_NAME PT_VOID |
+| `ptrcallWithThreeStringNameArgs` | F | `Theme.rename_color` (void method) | 8 | PT_STRING_NAME PT_VOID |
 | `ptrcallWithThreeStringNameObjectArgsRetRID` | E | `RenderSceneBuffersRD.create_texture_view` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_OBJECT PT_RID PT_STRING_NAME |
 | `ptrcallWithThreeStringNameTwoDoubleBoolArgs` | F | `AnimationPlayer.play_section_with_markers` (void method) | 1 | PT_BOOL PT_FLOAT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithThreeStringTwoLongArgsRetDictionary` | E | `EditorVCSInterface.create_commit` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_STRING |
@@ -1698,7 +1697,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoDoubleArrayArgs` | F | `ImporterMesh.generate_lods` (void method) | 1 | PT_ARRAY PT_FLOAT64 PT_VOID |
 | `ptrcallWithTwoDoubleIntLongArgsRetPlaneList` | D | `Geometry3D.build_cylinder_planes` (non-void method of a stateless singleton) | 1 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithTwoDoubleTwoIntLongArgsRetPlaneList` | D | `Geometry3D.build_capsule_planes` (non-void method of a stateless singleton) | 1 | PT_FLOAT64 PT_INT64 |
-| `ptrcallWithTwoIntAndBoolArgs` | F | `AudioServer.set_bus_effect_enabled` (void singleton method) | 6 | PT_BOOL PT_INT64 PT_VOID |
+| `ptrcallWithTwoIntAndBoolArgs` | F | `AudioServer.set_bus_effect_enabled` (void singleton method) | 7 | PT_BOOL PT_INT64 PT_VOID |
 | `ptrcallWithTwoIntAndByteArrayArg` | F | `ArrayMesh.surface_update_attribute_region` (void method) | 3 | PT_INT64 PT_PACKED_BYTE_ARRAY PT_VOID |
 | `ptrcallWithTwoIntAndColorArg` | F | `Image.set_pixel` (void method) | 4 | PT_COLOR PT_INT64 PT_VOID |
 | `ptrcallWithTwoIntAndDoubleArgs` | F | `Animation.audio_track_set_key_end_offset` (void method) | 16 | PT_FLOAT64 PT_INT64 PT_VOID |
@@ -1713,16 +1712,16 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoIntAndVariantArg` | F | `Animation.track_set_key_value` (void method) | 2 | PT_INT64 PT_VARIANT PT_VOID |
 | `ptrcallWithTwoIntAndVector2iArg` | F | `FontFile.remove_kerning` (void method) | 1 | PT_INT64 PT_VECTOR2I PT_VOID |
 | `ptrcallWithTwoIntAndVector3Arg` | F | `IterateIK3D.set_joint_limitation_right_axis_vector` on `CCDIK3D` (void method) | 4 | PT_INT64 PT_VECTOR3 PT_VOID |
-| `ptrcallWithTwoIntArgs` | F | `Animation.track_move_to` (void method) | 96 | PT_INT64 PT_VOID |
+| `ptrcallWithTwoIntArgs` | F | `Animation.track_move_to` (void method) | 100 | PT_INT64 PT_VOID |
 | `ptrcallWithTwoIntArgsRetArray` | B | `Animation.method_track_get_params` (const non-void method) | 2 | PT_INT64 |
-| `ptrcallWithTwoIntArgsRetBool` | B | `AStarGrid2D.is_in_bounds` (const non-void method) | 12 | PT_BOOL PT_INT64 |
+| `ptrcallWithTwoIntArgsRetBool` | B | `AStarGrid2D.is_in_bounds` (const non-void method) | 13 | PT_BOOL PT_INT64 |
 | `ptrcallWithTwoIntArgsRetColor` | B | `Image.get_pixel` (const non-void method) | 4 | PT_COLOR PT_INT64 |
 | `ptrcallWithTwoIntArgsRetDouble` | B | `Animation.audio_track_get_key_end_offset` (const non-void method) | 21 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithTwoIntArgsRetInt` | B | `AudioStreamInteractive.get_transition_filler_clip` (const non-void method) | 21 | PT_INT64 |
 | `ptrcallWithTwoIntArgsRetLong` | B | `AudioStreamInteractive.get_transition_fade_mode` (const non-void method) | 6 | PT_INT64 |
 | `ptrcallWithTwoIntArgsRetNodePath` | B | `SpringBoneSimulator3D.get_collision_path` (const non-void method) | 2 | PT_INT64 PT_NODE_PATH |
 | `ptrcallWithTwoIntArgsRetObject` | B | `Animation.audio_track_get_key_stream` (const non-void method) | 5 | PT_INT64 PT_OBJECT |
-| `ptrcallWithTwoIntArgsRetPackedInt32List` | B | `ImporterMesh.get_surface_lod_indices` (const non-void method) | 1 | PT_INT64 |
+| `ptrcallWithTwoIntArgsRetPackedInt32List` | B | `ImporterMesh.get_surface_lod_indices` (const non-void method) | 2 | PT_INT64 |
 | `ptrcallWithTwoIntArgsRetPackedVector2List` | B | `TileData.get_collision_polygon_points` (const non-void method) | 1 | PT_INT64 |
 | `ptrcallWithTwoIntArgsRetQuaternion` | B | `IterateIK3D.get_joint_limitation_rotation_offset` on `CCDIK3D` (const non-void method) | 1 | PT_INT64 PT_QUATERNION |
 | `ptrcallWithTwoIntArgsRetRect2i` | B | `TextEdit.get_rect_at_line_column` (const non-void method) | 1 | PT_INT64 PT_RECT2I |
@@ -1784,7 +1783,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoPackedVector2ListArgsRetPackedVector2ListList` | D | `Geometry2D.clip_polygons` (non-void method of a stateless singleton) | 6 | PT_PACKED_VECTOR2_ARRAY |
 | `ptrcallWithTwoRIDAndTransform2DArg` | F | `RenderingServer.viewport_set_canvas_transform` (void singleton method) | 1 | PT_RID PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithTwoRIDAndVector2Arg` | F | `RenderingServer.canvas_set_item_mirroring` (void singleton method) | 1 | PT_RID PT_VECTOR2 PT_VOID |
-| `ptrcallWithTwoRIDArgs` | F | `AccessibilityServer.update_add_child` (void singleton method) | 85 | PT_RID PT_VOID |
+| `ptrcallWithTwoRIDArgs` | F | `AccessibilityServer.update_add_child` (void singleton method) | 86 | PT_RID PT_VOID |
 | `ptrcallWithTwoRIDArgsRetInt` | E | `NativeMenu.find_item_index_with_submenu` (NativeMenu: the host OS menu bar) | 1 | PT_INT64 PT_RID |
 | `ptrcallWithTwoRIDArgsRetLong` | E | `RenderingDevice.hit_sbt_set_pipeline` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 2 | PT_INT64 PT_RID |
 | `ptrcallWithTwoRIDArgsRetRID` | F | `RenderingServer.instance_create2` (non-const singleton method) | 1 | PT_RID |
@@ -1835,15 +1834,15 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoStringNameAndColorArg` | F | `Theme.set_color` (void method) | 1 | PT_COLOR PT_STRING_NAME PT_VOID |
 | `ptrcallWithTwoStringNameAndDoubleArg` | F | `AnimationPlayer.set_blend_time` (void method) | 1 | PT_FLOAT64 PT_STRING_NAME PT_VOID |
 | `ptrcallWithTwoStringNameAndIntArg` | F | `Theme.set_constant` (void method) | 2 | PT_INT64 PT_STRING_NAME PT_VOID |
-| `ptrcallWithTwoStringNameAndObjectArg` | F | `AnimationNodeStateMachine.add_transition` (void method) | 4 | PT_OBJECT PT_STRING_NAME PT_VOID |
-| `ptrcallWithTwoStringNameArgs` | F | `AnimationLibrary.rename_animation` (void method) | 21 | PT_STRING_NAME PT_VOID |
-| `ptrcallWithTwoStringNameArgsRetBool` | B | `AnimationNodeStateMachine.has_transition` (const non-void method) | 25 | PT_BOOL PT_STRING_NAME |
+| `ptrcallWithTwoStringNameAndObjectArg` | F | `AnimationNodeStateMachine.add_transition` (void method) | 5 | PT_OBJECT PT_STRING_NAME PT_VOID |
+| `ptrcallWithTwoStringNameArgs` | F | `AnimationLibrary.rename_animation` (void method) | 22 | PT_STRING_NAME PT_VOID |
+| `ptrcallWithTwoStringNameArgsRetBool` | B | `AnimationNodeStateMachine.has_transition` (const non-void method) | 28 | PT_BOOL PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetColor` | B | `Control.get_theme_color` (const non-void method) | 3 | PT_COLOR PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetDictionary` | D | `ClassDB.class_get_signal` (const non-void singleton method) | 1 | PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetDouble` | B | `AnimationPlayer.get_blend_time` (const non-void method) | 2 | PT_FLOAT64 PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetInt` | B | `Control.get_theme_constant` (const non-void method) | 6 | PT_INT64 PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetLong` | D | `ClassDB.class_get_integer_constant` (const non-void singleton method) | 1 | PT_INT64 PT_STRING_NAME |
-| `ptrcallWithTwoStringNameArgsRetObject` | B | `Control.get_theme_font` (const non-void method) | 10 | PT_OBJECT PT_STRING_NAME |
+| `ptrcallWithTwoStringNameArgsRetObject` | B | `Control.get_theme_font` (const non-void method) | 13 | PT_OBJECT PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetRID` | E | `RenderSceneBuffersRD.get_texture` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_RID PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetString` | B | `Object.tr` (hand-written root) (const non-void method) | 1 | PT_STRING PT_STRING_NAME |
 | `ptrcallWithTwoStringNameArgsRetStringName` | B | `Translation.get_message` (const non-void method) | 5 | PT_STRING_NAME |
@@ -1900,7 +1899,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithUInt32AndTransform2DArg` | F | `CollisionObject2D.shape_owner_set_transform` on `Area2D` (void method) | 1 | PT_INT64 PT_TRANSFORM2D PT_VOID |
 | `ptrcallWithUInt32AndTransform3DArg` | F | `CollisionObject3D.shape_owner_set_transform` on `Area3D` (void method) | 1 | PT_INT64 PT_TRANSFORM3D PT_VOID |
 | `ptrcallWithUInt32AndVector2Args` | F | `CollisionObject2D.shape_owner_set_one_way_collision_direction` on `Area2D` (void method) | 1 | PT_INT64 PT_VECTOR2 PT_VOID |
-| `ptrcallWithUInt32Arg` | A | `AudioStreamPlayer2D.set_area_mask` (setter of `area_mask`) | 109 | PT_INT64 PT_VOID |
+| `ptrcallWithUInt32Arg` | A | `AudioStreamPlayer2D.set_area_mask` (setter of `area_mask`) | 110 | PT_INT64 PT_VOID |
 | `ptrcallWithUInt32ArgRetBool` | B | `CanvasItem.get_visibility_layer_bit` on `Control` (const non-void method) | 6 | PT_BOOL PT_INT64 |
 | `ptrcallWithUInt32ArgRetDouble` | B | `CollisionObject2D.get_shape_owner_one_way_collision_margin` on `Area2D` (const non-void method) | 1 | PT_FLOAT64 PT_INT64 |
 | `ptrcallWithUInt32ArgRetInt` | B | `CollisionObject2D.shape_owner_get_shape_count` on `Area2D` (const non-void method) | 2 | PT_INT64 |
@@ -1928,7 +1927,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithVariantAndBoolArgRetString` | D | `Marshalls.variant_to_base64` (non-void method of a stateless singleton) | 1 | PT_BOOL PT_STRING PT_VARIANT |
 | `ptrcallWithVariantAndBoolArgRetVariantScalar` | C | `JSON.from_native` (static with a return value); then F `JSONRPC.process_action` (non-const method) | 3 | PT_BOOL PT_VARIANT |
 | `ptrcallWithVariantAndObjectArg` | F | `Control.force_drag` (void method) | 1 | PT_OBJECT PT_VARIANT PT_VOID |
-| `ptrcallWithVariantArg` | A | `JSON.set_data` (setter of `data`) | 12 | PT_VARIANT PT_VOID |
+| `ptrcallWithVariantArg` | A | `JSON.set_data` (setter of `data`) | 13 | PT_VARIANT PT_VOID |
 | `ptrcallWithVariantArgRetBool` | B | `TextLine.has_object` (const non-void method) | 2 | PT_BOOL PT_VARIANT |
 | `ptrcallWithVariantArgRetInt` | B | `RegExMatch.get_end` (const non-void method) | 2 | PT_INT64 PT_VARIANT |
 | `ptrcallWithVariantArgRetLong` | F | `PackedDataContainer.pack` (non-const method) | 1 | PT_INT64 PT_VARIANT |
@@ -1953,7 +1952,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithVector2ArgRetLong` | B | `Control.get_cursor_shape` (const non-void method) | 1 | PT_INT64 PT_VECTOR2 |
 | `ptrcallWithVector2ArgRetObject` | B | `Tree.get_item_at_position` (const non-void method) | 1 | PT_OBJECT PT_VECTOR2 |
 | `ptrcallWithVector2ArgRetString` | B | `Control.get_tooltip` (const non-void method) | 2 | hand |
-| `ptrcallWithVector2ArgRetVector2` | B | `AStar2D.get_closest_position_in_segment` (const non-void method) | 7 | PT_VECTOR2 |
+| `ptrcallWithVector2ArgRetVector2` | B | `AStar2D.get_closest_position_in_segment` (const non-void method) | 9 | PT_VECTOR2 |
 | `ptrcallWithVector2ArgRetVector2i` | B | `TileMap.local_to_map` (const non-void method) | 2 | PT_VECTOR2 PT_VECTOR2I |
 | `ptrcallWithVector2ArgRetVector3` | B | `Camera3D.project_local_ray_normal` (const non-void method) | 3 | PT_VECTOR2 PT_VECTOR3 |
 | `ptrcallWithVector2BoolFloatBoolArgsRetObject` | F | `PhysicsBody2D.move_and_collide` on `CharacterBody2D` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_OBJECT PT_VECTOR2 |
@@ -2002,7 +2001,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithVector3ArgRetDouble` | B | `CharacterBody3D.get_floor_angle` (const non-void method) | 3 | PT_FLOAT64 PT_VECTOR3 |
 | `ptrcallWithVector3ArgRetPlaneList` | D | `Geometry3D.build_box_planes` (non-void method of a stateless singleton) | 1 | PT_VECTOR3 |
 | `ptrcallWithVector3ArgRetVector2` | B | `Camera3D.unproject_position` (const non-void method) | 1 | PT_VECTOR2 PT_VECTOR3 |
-| `ptrcallWithVector3ArgRetVector3` | B | `AStar3D.get_closest_position_in_segment` (const non-void method) | 5 | PT_VECTOR3 |
+| `ptrcallWithVector3ArgRetVector3` | B | `AStar3D.get_closest_position_in_segment` (const non-void method) | 7 | PT_VECTOR3 |
 | `ptrcallWithVector3ArgRetVector3i` | B | `GridMap.local_to_map` (const non-void method) | 1 | PT_VECTOR3 PT_VECTOR3I |
 | `ptrcallWithVector3BoolFloatBoolIntArgsRetObject` | F | `PhysicsBody3D.move_and_collide` on `CharacterBody3D` (non-const method) | 1 | PT_BOOL PT_FLOAT64 PT_INT64 PT_OBJECT PT_VECTOR3 |
 | `ptrcallWithVector3iAndIntArgRetVector3iList` | B | `GridMap.get_used_cells_in_octant_by_item` (const non-void method) | 1 | PT_INT64 PT_VECTOR3I |

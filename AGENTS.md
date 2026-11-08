@@ -8,7 +8,8 @@ release shape.
 ## Current Baseline
 
 The release line is `version` in `build.gradle.kts`, the Godot pin `kanamaGodotVersion` in
-`gradle.properties` (re-pinned only on stable releases, by `docs/contributing/godot-upgrade.md`),
+`gradle.properties` (moved by `docs/contributing/godot-upgrade.md`; `main` may sit on a beta or rc, a
+release ships only on a stable Godot),
 the JDK floor `jvmToolchain(25)`. **Android 13 (API 33) is the minimum** for every Android build
 (the plugin `minSdk`, and the export guard's Min SDK check). Platform status, requirements and
 per-platform caveats are on `docs/reference/version-support.md` and
@@ -18,12 +19,11 @@ wording.
 
 ## First Stop for Implementation Work
 
-If you're working on a specific roadmap task, read the matching file in the
-sibling `kanama-tasks/` checkout first (it sits beside this repo like
-`kanama-demos/`; `scripts/audit_stale_blockers.py` resolves it the same way, or
-through `KANAMA_TASKS_DIR`). Each task is standalone and points to the smallest
-doc set and exact files to edit. The index is `kanama-tasks/README.md`. For
-ad-hoc work not covered by a task file, use "Read First By Task" below.
+Open work is on the public tracker: the issues in the
+[`0.5.0` milestone](https://github.com/falcon4ever/kanama/milestone/1) of
+`falcon4ever/kanama`. For work on an issue, or ad-hoc work, use "Read First By
+Task" below. A sibling `kanama-tasks/` checkout holds optional private maintainer
+notes; you do not need it, and nothing here depends on it.
 
 ## Read First By Task
 
@@ -187,7 +187,7 @@ generated wrappers and focused policy fixes over ad hoc hand wrappers.
 | Item | Why it's correct | Do not change |
 |---|---|---|
 | `REFCOUNTED_REFERENCE_HASH == REFCOUNTED_UNREFERENCE_HASH` (both `2240911060`) in `ScriptBridge.kt` | `reference()` and `unreference()` share the `bool()` signature, so their method hashes match by construction. | Verified legitimate against `extension_api.json` (architecture-review verdict; the review is archived in the internal task repo). |
-| `compatibility_minimum = "4.7"` in `.gdextension` descriptors | `classdb_register_extension_class6` is a Godot 4.7 API; 4.3-4.6 loads would fail at class registration. | Keep the 4.7 invariant from architecture review F1. |
+| `compatibility_minimum` in `.gdextension` descriptors is the pin's major.minor (`"4.8"` while `kanamaGodotVersion` is 4.8.x), not the oldest Godot with the GDExtension calls Kanama makes | The runtime is generated from the pin's `extension_api.json`, so an older editor would load it and then fail on a class or method it lacks. `build.gradle.kts` derives the generated descriptors from `kanamaGodotVersion`; `check_godot_version_pin.py` holds the two committed ones to it. | Do not lower it to an older Godot, and do not write it as a literal in `build.gradle.kts`. |
 | `<Class>.jvm.kt` companions repeat a class's desktop-only members as extension functions | iOS has no audited `ObjectCalls` helper for those ptrcall shapes yet; the shared file holds the members both platforms can call and the companion header names what it waits on. | Do not move them back by hand: the regen does when the iOS helper lands. `--emit-class` regenerates the whole tree and writes one class, so the old single-class emit-union gotcha is gone. |
 | `ObjectCalls.keepReachable(this)` / `(arg)` after every generated engine call (and `GodotObject.fenced { }` in the hand root) | The JLS §12.6.2 reachability fence: once a body has read `segment` the JIT may treat the wrapper as dead mid-call, and an owned `RefCounted`'s fallback release could destroy the object under a worker-thread call. `Reference.reachabilityFence` is free on HotSpot; the iOS actual is empty. | Do not strip it as dead code; `check_wrapper_generator.py` fails a generated body that reads a handle without it. |
 | PanamaPort textual remap from `java.lang.foreign.*` to `com.v7878.foreign.*` | It is a pragmatic Android ART compatibility path guarded by pre/post audits. | Do not clean it up without replacing the audit mitigation; see the architecture review Android section. |
@@ -274,7 +274,8 @@ python3 scripts/api_wrapper_coverage.py --markdown docs/reference/generated/api-
 ### Godot Upgrade
 
 Follow `docs/contributing/godot-upgrade.md` (the authoritative runbook).
-Kanama re-pins only on stable Godot releases. Edit `kanamaGodotVersion` in
+`main` may carry a beta or rc pin (`--prerelease`); a `v*` tag on one stops in the
+package workflow (`check_godot_version_pin.py --release`). Edit `kanamaGodotVersion` in
 `gradle.properties` (plus the CI `GODOT_VERSION` dash form; `check_godot_version_pin.py
 --list-files` names the files), then run the mechanical pipeline (`--plan` prints it first):
 
@@ -288,7 +289,7 @@ output, formats, and runs every gate to one summary, then stops at the human-jud
 boundary (source-break notes, device gates, support claims, release wording). Run
 local CI and demo smoke checks before changing support claims.
 
-**Every stable bump: scan for newly deprecated GDExtension functions and keep the
+**Every bump: scan for newly deprecated GDExtension functions and keep the
 backends converged.** 4.7 is the baseline — we do not carry deprecated GDExtension
 callbacks once a newer variant solves the same problem. Diff
 `gdextension/gdextension_interface.h` for `@deprecated` entries, migrate every
@@ -320,7 +321,7 @@ python3 scripts/check_wrapper_generator.py
 mkdocs build --strict
 ./gradlew ktfmtFormat            # format hand-written Kotlin (ktfmtCheck gates CI)
 ./gradlew jvmJar
-./scripts/local_ci.sh /absolute/path/to/godot-4.7.2-stable
+./scripts/local_ci.sh /absolute/path/to/godot
 ```
 
 Hand-written Kotlin is formatted with ktfmt (googleStyle, 2-space) via the root
@@ -347,7 +348,7 @@ desktop runtime behaves — not that it is device-safe on mobile.
 Before a release tag, prefer an isolated clone gate:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /absolute/path/to/godot-4.7.2-stable
+./scripts/fresh_clone_smoke.sh /absolute/path/to/godot
 ```
 
 The Web analog is `scripts/web_fresh_checkout_smoke.sh`: it exports from a clean

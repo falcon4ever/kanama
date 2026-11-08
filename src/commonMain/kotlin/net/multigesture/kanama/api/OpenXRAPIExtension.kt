@@ -190,6 +190,18 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
+     * Returns the view count for the primary viewport.
+     *
+     * Generated from Godot docs: OpenXRAPIExtension.get_primary_view_count
+     */
+    fun getPrimaryViewCount(): Long {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetUInt32(Binds.getPrimaryViewCountBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * Returns the view configuration type, which is an XrViewConfigurationType
      * (https://registry.khronos.org/OpenXR/specs/1.0/man/html/XrViewConfigurationType.html) cast to an
      * integer.
@@ -756,6 +768,11 @@ class OpenXRAPIExtension(handle: GodotHandle) : RefCounted(handle) {
         @JvmField
         val getViewCountBind =
             ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_view_count", GET_VIEW_COUNT_HASH)
+
+        private const val GET_PRIMARY_VIEW_COUNT_HASH = 3905245786L
+        @JvmField
+        val getPrimaryViewCountBind =
+            ObjectCalls.getMethodBind("OpenXRAPIExtension", "get_primary_view_count", GET_PRIMARY_VIEW_COUNT_HASH)
 
         private const val GET_VIEW_CONFIGURATION_HASH = 3905245786L
         @JvmField

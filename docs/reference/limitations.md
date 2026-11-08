@@ -13,6 +13,7 @@ script. Most games use `@ScriptClass` only, as in
 
 | What does not work | Why | What to do instead |
 |---|---|---|
+| A GDScript cannot `extends` a Kanama class. | GDScript extends only other GDScript classes. Godot 4.8 reports it as `Global class X is not a GDScript.` | Extend the engine class in GDScript and call the Kanama script from it, or write the subclass in Kotlin. |
 | A public script function cannot take or return a `List`, `Map`, `ByteArray` or `Any?`. | Godot cannot hand those types to a Kotlin script function; the build stops with an error naming the parameter. | Pass the values as separate arguments, or make the function `internal` if only Kotlin calls it. |
 | A `@RegisterClass` type's methods need every argument from Godot; Kotlin default arguments are not applied. | Godot registers those methods with no default arguments. | Pass every argument from GDScript. For a signal connection, attach the missing ones to the callable with GDScript's `Callable.bind`, which adds fixed extra arguments to every call. |
 | A `@RegisterClass` type cannot have a public `fun getX()` beside `@Export var x`. | The export already defines `get_x` and `set_x` for Godot. | Use the property, or give the function another name. |
@@ -29,7 +30,7 @@ script. Most games use `@ScriptClass` only, as in
 | A macOS export downloaded from the internet does not open on a player's Mac. | Kanama signs the `.app` for your own machine only, and Gatekeeper wants a Developer ID signature and Apple's notarization. | Sign and notarize the game yourself, as [Signing for Distribution](../exporting/desktop.md#signing-for-distribution) shows. |
 | A macOS export does not run on an Intel Mac, and there is no Windows on Arm export. | The bundled Java runtime is built for `macos-arm64`, `windows-x64`, `linux-x64` and `linux-arm64` only. | Export macOS games for `arm64`, and ship Windows games for x64. |
 | A library you add to `build.gradle.kts` compiles, but the game fails with `ClassNotFoundException` or `NoClassDefFoundError` when it uses it. | The editor and a desktop export load Kanama, the Kotlin standard library, kotlinx.coroutines and `kanama-scripts.jar`, which holds only your own compiled scripts. | Copy a pure-Kotlin library's source into `kotlin-src/`, or do without the library. |
-| A Godot build compiled with `precision=double` does not work with Kanama. | Parts of Kanama's value passing assume Godot's default single-precision sizes. | Use the official Godot 4.7.2 builds, which are single precision. |
+| A Godot build compiled with `precision=double` does not work with Kanama. | Parts of Kanama's value passing assume Godot's default single-precision sizes. | Use the official Godot builds, which are single precision. |
 
 ## Android
 

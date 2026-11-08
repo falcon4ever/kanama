@@ -102,19 +102,21 @@ class JSON(handle: GodotHandle) : Resource(handle) {
     companion object {
         /**
          * Converts a `Variant` var to JSON text and returns the result. Useful for serializing data to
-         * store or send over the network. Note: The JSON specification does not define integer or float
-         * types, but only a number type. Therefore, converting a Variant to JSON text will convert all
-         * numerical values to `float` types. Note: If `full_precision` is `true`, when stringifying
+         * store or send over the network. If `sort_keys` is `true`, the keys of any `Dictionary`s are
+         * sorted alphabetically when converting to JSON. If `full_precision` is `true`, when stringifying
          * floats, the unreliable digits are stringified in addition to the reliable digits to guarantee
-         * exact decoding. The `indent` parameter controls if and how something is indented; its contents
+         * exact decoding. Note: The JSON specification does not define integer or float types, but only a
+         * number type. Therefore, converting a Variant to JSON text will convert all numerical values to
+         * `float` types. The `indent` parameter controls if and how something is indented; its contents
          * will be used where there should be an indent in the output. Even spaces like `" "` will work.
          * `\t` and `\n` can also be used for a tab indent, or to make a newline for each indent
-         * respectively. Warning: Non-finite numbers are not supported in JSON. Any occurrences of
-         * `@GDScript.INF` will be replaced with `1e99999`, and negative `@GDScript.INF` will be replaced
-         * with `-1e99999`, but they will be interpreted correctly as infinity by most JSON parsers.
-         * `@GDScript.NAN` will be replaced with `null`, and it will not be interpreted as NaN in JSON
-         * parsers. If you expect non-finite numbers, consider passing your data through `from_native`
-         * first.
+         * respectively. If set to an empty string, the JSON will be on a single line with no spacing,
+         * which allows for smaller file sizes. Warning: Non-finite numbers are not supported in JSON. Any
+         * occurrences of `@GDScript.INF` will be replaced with `1e99999`, and negative `@GDScript.INF`
+         * will be replaced with `-1e99999`, but they will be interpreted correctly as infinity by most
+         * JSON parsers. `@GDScript.NAN` will be replaced with `null`, and it will not be interpreted as
+         * NaN in JSON parsers. If you expect non-finite numbers, consider passing your data through
+         * `from_native` first.
          *
          * Generated from Godot docs: JSON.stringify
          */

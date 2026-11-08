@@ -39,6 +39,8 @@ class Animation(godotObject: GodotHandle) : Resource(godotObject) {
       val CUBIC: InterpolationType get() = InterpolationType(2L)
       val LINEAR_ANGLE: InterpolationType get() = InterpolationType(3L)
       val CUBIC_ANGLE: InterpolationType get() = InterpolationType(4L)
+      val MAKIMA: InterpolationType get() = InterpolationType(5L)
+      val MAKIMA_ANGLE: InterpolationType get() = InterpolationType(6L)
     }
   }
 

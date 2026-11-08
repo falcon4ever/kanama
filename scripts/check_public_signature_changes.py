@@ -55,8 +55,11 @@ Comparison with the snapshot:
     (`Node.removeChild`) announces only that member or nested owner. An unannounced break
     FAILS, naming each one (`was` / `now`); an announced one FAILS until the snapshot is rewritten
     with `--write` (so the snapshot diff is part of the change under review);
-  * a source-compatible change -- a parameter gains a default, a declaration becomes `open`, a class
-    gains a supertype -- and an ADDITION are not breaks: they FAIL only until `--write` (no CHANGELOG
+  * a source-compatible change -- a parameter gains a default, a function that cannot be overridden
+    (not `open`, `abstract` or `override`, and not a member of an interface) gains trailing parameters
+    with defaults, unless its last parameter was a lambda or a `vararg`; a declaration becomes `open`;
+    a class gains a supertype --
+    and an ADDITION are not breaks: they FAIL only until `--write` (no CHANGELOG
     line needed: an addition breaks no caller, but an unrecorded one would hide its own later
     removal). Removing a default is a break.
 
@@ -1213,12 +1216,54 @@ def _decl_parts(line: str) -> tuple[str, list[str], str, list[str], list[str]]:
     return scope, mods, rest, params, supers
 
 
-def compatible(old: str, new: str) -> bool:
-    """Whether [new] only adds to [old] in a way no caller notices: a parameter gains a default, the
-    declaration becomes `open`, a class gains a supertype. Removing any of them is a break."""
+def _without_added_parameters(rest: str, params: list[str], keep: int) -> str:
+    """[rest] as if only the first [keep] of its [params] were declared."""
+    bare = [p.removesuffix(DEFAULT) for p in params]
+    return rest.replace(f"({', '.join(bare)})", f"({', '.join(bare[:keep])})", 1)
+
+
+INTERFACE_LINE_RE = re.compile(r"^(?:\w+ )*interface (\w+)")
+
+
+def interface_scopes(lines) -> set[str]:
+    """The owners in [lines] that are interfaces (`fun interface` too), by their own declaration line
+    (`KanamaIosScriptBridge: interface KanamaIosScriptBridge`). Every member of an interface can be
+    overridden, though its line carries no `open` or `abstract`."""
+    scopes: set[str] = set()
+    for line in lines:
+        scope, _, decl = line.partition(": ")
+        match = INTERFACE_LINE_RE.match(decl)
+        if match and match.group(1) == scope.split(".")[-1]:
+            scopes.add(scope)
+    return scopes
+
+
+def only_trailing_defaults_added(mods: list[str], old_params: list[str], new_params: list[str], in_interface: bool = False) -> bool:
+    """Whether the new parameters of a `fun` all come last and have a default, so that every call still
+    compiles. An overridable function is not such a case: an override would stop matching. That is an
+    `open`, `abstract` or `override` one, and every member of an interface ([in_interface]). Neither is one
+    whose last parameter was a function or a vararg: a trailing lambda or a spread would stop reaching it."""
+    if in_interface or any(m in mods for m in ("open", "abstract", "override")):
+        return False
+    if old_params and ("->" in old_params[-1] or old_params[-1].startswith("vararg ")):
+        return False
+    return all(p.endswith(DEFAULT) for p in new_params[len(old_params) :])
+
+
+def compatible(old: str, new: str, interfaces: set[str] | frozenset[str] = frozenset()) -> bool:
+    """Whether [new] only adds to [old] in a way no caller notices: a parameter gains a default, a function
+    that cannot be overridden gains trailing parameters with defaults, the declaration becomes `open`, a
+    class gains a supertype. Removing any of them is a break. [interfaces] are the owners that are
+    interfaces (`interface_scopes`)."""
     o_scope, o_mods, o_rest, o_params, o_supers = _decl_parts(old)
     n_scope, n_mods, n_rest, n_params, n_supers = _decl_parts(new)
-    if o_scope != n_scope or o_rest != n_rest or len(o_params) != len(n_params):
+    if o_scope != n_scope or len(o_params) > len(n_params):
+        return False
+    if len(n_params) > len(o_params):
+        if not o_rest.startswith("fun ") or not only_trailing_defaults_added(n_mods, o_params, n_params, o_scope in interfaces):
+            return False
+        n_rest = _without_added_parameters(n_rest, n_params, len(o_params))
+    if o_rest != n_rest:
         return False
     if [m for m in o_mods if m != "open"] != [m for m in n_mods if m != "open"]:
         return False
@@ -1231,7 +1276,7 @@ def compatible(old: str, new: str) -> bool:
     return old != new
 
 
-def pair_compatible(removed: Counter, added: Counter) -> Counter:
+def pair_compatible(removed: Counter, added: Counter, interfaces: set[str] | frozenset[str] = frozenset()) -> Counter:
     """The removed lines whose replacement among [added] is a source-compatible change."""
     by_key: dict[str, list[str]] = {}
     for line in added.elements():
@@ -1240,7 +1285,7 @@ def pair_compatible(removed: Counter, added: Counter) -> Counter:
     for line in sorted(removed.elements()):
         candidates = by_key.get(member_key(line), [])
         for candidate in candidates:
-            if compatible(line, candidate):
+            if compatible(line, candidate, interfaces):
                 candidates.remove(candidate)
                 result[line] += 1
                 break
@@ -1251,16 +1296,17 @@ def pair_compatible(removed: Counter, added: Counter) -> Counter:
 PLATFORM_SURFACES = ("jvm", "ios")
 
 
-def pair_moved(removed: Counter, common_lines: list[str]) -> Counter:
+def pair_moved(removed: Counter, common_lines: list[str], interfaces: set[str] | frozenset[str] = frozenset()) -> Counter:
     """The [removed] platform lines that are in the current `common` surface, as they were or with a
-    source-compatible change (a default added, made `open`, a supertype added)."""
+    source-compatible change (a default or a trailing defaulted parameter added, made `open`, a
+    supertype added)."""
     present = Counter(common_lines)
     by_key: dict[str, list[str]] = {}
     for line in common_lines:
         by_key.setdefault(member_key(line), []).append(line)
     result: Counter = Counter()
     for line, count in removed.items():
-        if present[line] or any(compatible(line, candidate) for candidate in by_key.get(member_key(line), [])):
+        if present[line] or any(compatible(line, candidate, interfaces) for candidate in by_key.get(member_key(line), [])):
             result[line] = count
     return result
 
@@ -1564,14 +1610,15 @@ def main() -> int:
             continue
         removed = Counter(snapshot) - Counter(lines)
         added = Counter(lines) - Counter(snapshot)
-        compat = pair_compatible(removed, added)
+        interfaces = interface_scopes(snapshot) | interface_scopes(lines)
+        compat = pair_compatible(removed, added, interfaces)
         moved: Counter = Counter()
         if surface.name in PLATFORM_SURFACES:
             # A platform's own class generated once into the common tree (task 129): every platform
             # still compiles the declaration, so a line that left jvm/ios and is in `common` now
             # (as it was, or source-compatibly changed) is a move, not a break. The common side
             # records it as an addition, so `--write` still has to run.
-            moved = pair_moved(removed - compat, current["common"].lines)
+            moved = pair_moved(removed - compat, current["common"].lines, interfaces | interface_scopes(current["common"].lines))
         surface_breaks = removed - compat - moved
         surface_unannounced = Counter(
             {line: n for line, n in surface_breaks.items() if not surface.internal and not announced(line, marker_text)}
@@ -1641,7 +1688,7 @@ def main() -> int:
               "`python3 scripts/check_public_signature_changes.py --write`", file=sys.stderr)
     else:
         print(f"{TAG} FAIL the snapshots are out of date: {added_total} signature(s) added, {compatible_total} "
-              "source-compatible change(s) (a default added, made `open`, a supertype added); neither is a "
+              "source-compatible change(s) (a default or a trailing defaulted parameter added, made `open`, a supertype added); neither is a "
               "break, no CHANGELOG line needed. Record them: "
               "`python3 scripts/check_public_signature_changes.py --write`", file=sys.stderr)
     print("\n".join(report), file=sys.stderr)

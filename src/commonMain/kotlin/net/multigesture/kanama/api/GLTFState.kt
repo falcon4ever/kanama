@@ -1042,7 +1042,7 @@ open class GLTFState(handle: GodotHandle) : Resource(handle) {
              * When importing a glTF file with embedded binary images, extracts them and saves them to their
              * own files. This allows the image to be imported by Godot's image importer, which can then have
              * their import options customized by the user, including optionally compressing the image to VRAM
-             * texture formats. This will save the images's bytes exactly as-is, without recompression. For
+             * texture formats. This will save the images' bytes exactly as-is, without recompression. For
              * image formats supplied by glTF extensions, the file will have a filename ending with the file
              * extension supplied by `GLTFDocumentExtension._get_image_file_extension` of the extension class.
              * Note: This option is editor-only. At runtime, this acts the same as

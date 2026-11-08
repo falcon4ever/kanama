@@ -22,6 +22,12 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmName("setProfileProperty")
         set(value) = setProfile(value)
 
+    var copyBoneSkinScale: Boolean
+        @JvmName("copyBoneSkinScaleProperty")
+        get() = isCopyingBoneSkinScale()
+        @JvmName("setCopyBoneSkinScaleProperty")
+        set(value) = setCopyBoneSkinScale(value)
+
     var useGlobalPose: Boolean
         @JvmName("useGlobalPoseProperty")
         get() = isUsingGlobalPose()
@@ -51,6 +57,34 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
      */
     fun getProfile(): SkeletonProfile? {
         return SkeletonProfile.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getProfileBind, segment))
+    }
+
+    /**
+     * If `true`, copies `Skeleton3D.get_bone_skin_scale` of the source skeleton's bones to the child
+     * skeletons' mapped bones. If `false`, the skin scale of the child skeletons' mapped bones are
+     * reset to `Vector3(1, 1, 1)` once and will not be overwritten after that. Note: If you want to
+     * use `Skeleton3D.set_bone_skin_scale` on a child skeleton's mapped bone, set this to `false`.
+     * Even if you are not using `Skeleton3D.set_bone_skin_scale` with parent skeleton, `Vector3(1, 1,
+     * 1)` will always be set for the child skeletons' mapped bones.
+     *
+     * Generated from Godot docs: RetargetModifier3D.set_copy_bone_skin_scale
+     */
+    fun setCopyBoneSkinScale(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setCopyBoneSkinScaleBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, copies `Skeleton3D.get_bone_skin_scale` of the source skeleton's bones to the child
+     * skeletons' mapped bones. If `false`, the skin scale of the child skeletons' mapped bones are
+     * reset to `Vector3(1, 1, 1)` once and will not be overwritten after that. Note: If you want to
+     * use `Skeleton3D.set_bone_skin_scale` on a child skeleton's mapped bone, set this to `false`.
+     * Even if you are not using `Skeleton3D.set_bone_skin_scale` with parent skeleton, `Vector3(1, 1,
+     * 1)` will always be set for the child skeletons' mapped bones.
+     *
+     * Generated from Godot docs: RetargetModifier3D.is_copying_bone_skin_scale
+     */
+    fun isCopyingBoneSkinScale(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isCopyingBoneSkinScaleBind, segment)
     }
 
     /**
@@ -230,6 +264,16 @@ class RetargetModifier3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
         @JvmField
         val getProfileBind =
             ObjectCalls.getMethodBind("RetargetModifier3D", "get_profile", GET_PROFILE_HASH)
+
+        private const val SET_COPY_BONE_SKIN_SCALE_HASH = 2586408642L
+        @JvmField
+        val setCopyBoneSkinScaleBind =
+            ObjectCalls.getMethodBind("RetargetModifier3D", "set_copy_bone_skin_scale", SET_COPY_BONE_SKIN_SCALE_HASH)
+
+        private const val IS_COPYING_BONE_SKIN_SCALE_HASH = 36873697L
+        @JvmField
+        val isCopyingBoneSkinScaleBind =
+            ObjectCalls.getMethodBind("RetargetModifier3D", "is_copying_bone_skin_scale", IS_COPYING_BONE_SKIN_SCALE_HASH)
 
         private const val SET_USE_GLOBAL_POSE_HASH = 2586408642L
         @JvmField

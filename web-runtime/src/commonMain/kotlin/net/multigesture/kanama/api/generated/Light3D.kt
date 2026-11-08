@@ -60,7 +60,8 @@ open class Light3D(godotObject: GodotHandle) : VisualInstance3D(godotObject) {
       val SHADOW_BLUR: Param get() = Param(18L)
       val TRANSMITTANCE_BIAS: Param get() = Param(19L)
       val INTENSITY: Param get() = Param(20L)
-      val MAX: Param get() = Param(21L)
+      val CONTACT_SHADOW_BLUR: Param get() = Param(21L)
+      val MAX: Param get() = Param(22L)
     }
   }
 

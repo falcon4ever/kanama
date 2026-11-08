@@ -247,8 +247,8 @@ class NavigationLink3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * When pathfinding enters this link from another regions navigation mesh the `enter_cost` value is
-     * added to the path distance for determining the shortest path.
+     * When pathfinding enters this link from another region's navigation mesh the `enter_cost` value
+     * is added to the path distance for determining the shortest path.
      *
      * Generated from Godot docs: NavigationLink3D.set_enter_cost
      */
@@ -257,8 +257,8 @@ class NavigationLink3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * When pathfinding enters this link from another regions navigation mesh the `enter_cost` value is
-     * added to the path distance for determining the shortest path.
+     * When pathfinding enters this link from another region's navigation mesh the `enter_cost` value
+     * is added to the path distance for determining the shortest path.
      *
      * Generated from Godot docs: NavigationLink3D.get_enter_cost
      */

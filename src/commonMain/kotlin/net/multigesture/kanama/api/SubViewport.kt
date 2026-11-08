@@ -14,7 +14,7 @@ import net.multigesture.kanama.types.Vector2i
  *
  * Generated from Godot docs: SubViewport
  */
-class SubViewport(handle: GodotHandle) : Viewport(handle) {
+open class SubViewport(handle: GodotHandle) : Viewport(handle) {
     var size: Vector2i
         @JvmName("sizeProperty")
         get() = getSize()

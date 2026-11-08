@@ -338,12 +338,36 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
+     * Sets the skin scale of the bone at `bone_idx` to `skin_scale`. This scale does not affect bone
+     * children. This is useful for modifying the visual thickness of a skin. Even if the skin is
+     * visually deformed, neither scaling nor repositioning of the bones occurs. This means that you
+     * may need to adjust the origin of the child bone to synchronize its joint position with the
+     * scaling by using `BoneSpaceAdjuster3D`. Note: The skin scaling may corrupt the appearance of the
+     * gizmo for some SkeletonModifier classes, such as SpringBoneSimulator and IKModifier3D, which
+     * rely on bone lengths for skinning.
+     *
+     * Generated from Godot docs: Skeleton3D.set_bone_skin_scale
+     */
+    fun setBoneSkinScale(boneIdx: Int, skinScale: Vector3) {
+        ObjectCalls.ptrcallWithIntAndVector3Arg(Binds.setBoneSkinScaleBind, segment, boneIdx, skinScale)
+    }
+
+    /**
+     * Returns the skin scale of the bone at `bone_idx`.
+     *
+     * Generated from Godot docs: Skeleton3D.get_bone_skin_scale
+     */
+    fun getBoneSkinScale(boneIdx: Int): Vector3 {
+        return ObjectCalls.ptrcallWithIntArgRetVector3(Binds.getBoneSkinScaleBind, segment, boneIdx)
+    }
+
+    /**
      * Sets the bone pose to rest for `bone_idx`.
      *
      * Generated from Godot docs: Skeleton3D.reset_bone_pose
      */
-    fun resetBonePose(boneIdx: Int) {
-        ObjectCalls.ptrcallWithIntArg(Binds.resetBonePoseBind, segment, boneIdx)
+    fun resetBonePose(boneIdx: Int, resetBoneSkinScale: Boolean = false) {
+        ObjectCalls.ptrcallWithIntAndBoolArgs(Binds.resetBonePoseBind, segment, boneIdx, resetBoneSkinScale)
     }
 
     /**
@@ -351,8 +375,8 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
      *
      * Generated from Godot docs: Skeleton3D.reset_bone_poses
      */
-    fun resetBonePoses() {
-        ObjectCalls.ptrcallNoArgs(Binds.resetBonePosesBind, segment)
+    fun resetBonePoses(resetBoneSkinScale: Boolean = false) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.resetBonePosesBind, segment, resetBoneSkinScale)
     }
 
     /**
@@ -837,12 +861,22 @@ class Skeleton3D(handle: GodotHandle) : Node3D(handle) {
         val getBonePoseScaleBind =
             ObjectCalls.getMethodBind("Skeleton3D", "get_bone_pose_scale", GET_BONE_POSE_SCALE_HASH)
 
-        private const val RESET_BONE_POSE_HASH = 1286410249L
+        private const val SET_BONE_SKIN_SCALE_HASH = 1530502735L
+        @JvmField
+        val setBoneSkinScaleBind =
+            ObjectCalls.getMethodBind("Skeleton3D", "set_bone_skin_scale", SET_BONE_SKIN_SCALE_HASH)
+
+        private const val GET_BONE_SKIN_SCALE_HASH = 711720468L
+        @JvmField
+        val getBoneSkinScaleBind =
+            ObjectCalls.getMethodBind("Skeleton3D", "get_bone_skin_scale", GET_BONE_SKIN_SCALE_HASH)
+
+        private const val RESET_BONE_POSE_HASH = 4023243586L
         @JvmField
         val resetBonePoseBind =
             ObjectCalls.getMethodBind("Skeleton3D", "reset_bone_pose", RESET_BONE_POSE_HASH)
 
-        private const val RESET_BONE_POSES_HASH = 3218959716L
+        private const val RESET_BONE_POSES_HASH = 107499316L
         @JvmField
         val resetBonePosesBind =
             ObjectCalls.getMethodBind("Skeleton3D", "reset_bone_poses", RESET_BONE_POSES_HASH)

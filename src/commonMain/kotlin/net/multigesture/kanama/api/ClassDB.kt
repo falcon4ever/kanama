@@ -335,6 +335,18 @@ object ClassDB {
     }
 
     /**
+     * Returns whether this `class` is exposed or not. Godot uses internal and platform specific
+     * classes at run time. `ClassDB` is able to work with those and lists them like any other class.
+     * This method can be used to filter them out if your use-case requires it.
+     *
+     * Generated from Godot docs: ClassDB.is_class_exposed
+     */
+    @JvmStatic
+    fun isClassExposed(classValue: String): Boolean {
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.isClassExposedBind, singleton, classValue)
+    }
+
+    /**
      * Godot's `ClassDB.APIType` enum as a typed value: `.value` is the raw number Godot uses, and the
      * companion holds the named values (`ClassDB.APIType.<NAME>`).
      *
@@ -536,5 +548,10 @@ object ClassDB {
         @JvmField
         val isClassEnabledBind =
             ObjectCalls.getMethodBind("ClassDB", "is_class_enabled", IS_CLASS_ENABLED_HASH)
+
+        private const val IS_CLASS_EXPOSED_HASH = 2619796661L
+        @JvmField
+        val isClassExposedBind =
+            ObjectCalls.getMethodBind("ClassDB", "is_class_exposed", IS_CLASS_EXPOSED_HASH)
     }
 }

@@ -162,8 +162,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * If `true`, collision shapes will be visible when running the game from the editor for debugging
-     * purposes. Note: This property is not designed to be changed at run-time. Changing the value of
-     * `debug_collisions_hint` while the project is running will not have the desired effect.
+     * purposes.
      *
      * Generated from Godot docs: SceneTree.set_debug_collisions_hint
      */
@@ -173,8 +172,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
     /**
      * If `true`, collision shapes will be visible when running the game from the editor for debugging
-     * purposes. Note: This property is not designed to be changed at run-time. Changing the value of
-     * `debug_collisions_hint` while the project is running will not have the desired effect.
+     * purposes.
      *
      * Generated from Godot docs: SceneTree.is_debugging_collisions_hint
      */
@@ -1239,8 +1237,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * If `true`, collision shapes will be visible when running the game from the editor for debugging
-         * purposes. Note: This property is not designed to be changed at run-time. Changing the value of
-         * `debug_collisions_hint` while the project is running will not have the desired effect.
+         * purposes.
          *
          * Generated from Godot docs: SceneTree.set_debug_collisions_hint
          */
@@ -1248,8 +1245,7 @@ class SceneTree(handle: GodotHandle) : MainLoop(handle) {
 
         /**
          * If `true`, collision shapes will be visible when running the game from the editor for debugging
-         * purposes. Note: This property is not designed to be changed at run-time. Changing the value of
-         * `debug_collisions_hint` while the project is running will not have the desired effect.
+         * purposes.
          *
          * Generated from Godot docs: SceneTree.is_debugging_collisions_hint
          */

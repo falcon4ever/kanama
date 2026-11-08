@@ -16,7 +16,7 @@ concurrency:
 env:
   # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin, F4).
   # scripts/check_godot_version_pin.py fails CI if these drift.
-  GODOT_VERSION: 4.7.2-stable
+  GODOT_VERSION: 4.8-beta2
 
 jobs:
   gdextension-header:
@@ -26,6 +26,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      # A prerelease pin may live on main; a release may not. Every other job needs this job, directly or
+      # through another job (scripts/check_godot_version_pin.py fails without that path), so a tag on a
+      # prerelease pin stops here and no job builds or publishes. A manual run still builds on any pin.
+      - name: Refuse a release on a prerelease Godot pin
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: python3 scripts/check_godot_version_pin.py --release
 
       - name: Generate GDExtension header
         shell: bash
@@ -194,6 +201,7 @@ jobs:
   cross-runtimes:
     name: cross-runtime (${{ matrix.target }} built on macOS)
     runs-on: macos-15
+    needs: gdextension-header
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -277,9 +285,10 @@ jobs:
             export_template: linux_release.x86_64
           # No godot_bin_suffix: the macOS download unpacks to a Godot.app
           # bundle rather than a bare binary, so the smoke step resolves it.
+          # No godot_asset_suffix either: the macOS asset name differs between
+          # releases, scripts/download_godot_macos.sh picks it.
           - target: macos-arm64
             runner: macos-15
-            godot_asset_suffix: macos.universal.zip
             export_template: macos.zip
 
     steps:
@@ -337,8 +346,12 @@ jobs:
         shell: bash
         run: |
           mkdir -p godot-tools
-          curl -fL -o godot.zip \
-            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_${{ matrix.godot_asset_suffix }}"
+          if [ "${{ runner.os }}" = "macOS" ]; then
+            scripts/download_godot_macos.sh godot.zip
+          else
+            curl -fL -o godot.zip \
+              "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_${{ matrix.godot_asset_suffix }}"
+          fi
           # One archive holds every platform's templates; take only the release
           # template this job exports with (the same trick web.yml uses). python3
           # rather than unzip, which the Windows runners' Git Bash lacks.
@@ -683,8 +696,7 @@ jobs:
         run: |
           mkdir -p "$HOME/godot"
           godot_zip="$(mktemp)"
-          curl -fL -o "$godot_zip" \
-            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_macos.universal.zip"
+          scripts/download_godot_macos.sh "$godot_zip"
           unzip -q "$godot_zip" -d "$HOME/godot"
           rm -f "$godot_zip"
           tpz="$(mktemp)"

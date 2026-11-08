@@ -29,6 +29,12 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         @JvmName("setTabAlignmentProperty")
         set(value) = setTabAlignment(value)
 
+    var tabSizing: TabBar.SizingMode
+        @JvmName("tabSizingProperty")
+        get() = getTabSizing()
+        @JvmName("setTabSizingProperty")
+        set(value) = setTabSizing(value)
+
     var clipTabs: Boolean
         @JvmName("clipTabsProperty")
         get() = getClipTabs()
@@ -409,6 +415,24 @@ class TabBar(handle: GodotHandle) : Control(handle) {
     }
 
     /**
+     * The sizing strategy used to determine tab widths.
+     *
+     * Generated from Godot docs: TabBar.set_tab_sizing
+     */
+    fun setTabSizing(tabSizing: TabBar.SizingMode) {
+        ObjectCalls.ptrcallWithLongArg(Binds.setTabSizingBind, segment, tabSizing.value)
+    }
+
+    /**
+     * The sizing strategy used to determine tab widths.
+     *
+     * Generated from Godot docs: TabBar.get_tab_sizing
+     */
+    fun getTabSizing(): TabBar.SizingMode {
+        return TabBar.SizingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTabSizingBind, segment))
+    }
+
+    /**
      * If `true`, tabs overflowing this node's width will be hidden, displaying two navigation buttons
      * instead. Otherwise, this node's minimum size is updated so that all tabs are visible.
      *
@@ -761,6 +785,50 @@ class TabBar(handle: GodotHandle) : Control(handle) {
     }
 
     /**
+     * Godot's `TabBar.SizingMode` enum as a typed value: `.value` is the raw number Godot uses, and
+     * the companion holds the named values (`TabBar.SizingMode.<NAME>`).
+     *
+     * Generated from Godot docs: TabBar.SizingMode
+     */
+    @JvmInline
+    value class SizingMode(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * Size tabs individually according to the size of their content.
+             *
+             * Generated from Godot docs: TabBar.TAB_SIZING_FIT_CONTENT
+             */
+            val FIT_CONTENT: SizingMode get() = SizingMode(0L)
+            /**
+             * Size tabs uniformly, with the widest tab determining the size of all tabs. This may trigger
+             * clipping sooner than other sizing modes due to increased tab sizes.
+             *
+             * Generated from Godot docs: TabBar.TAB_SIZING_UNIFORM
+             */
+            val UNIFORM: SizingMode get() = SizingMode(1L)
+            /**
+             * Size tabs individually according to their content, expanding to the full width of the tab bar.
+             *
+             * Generated from Godot docs: TabBar.TAB_SIZING_JUSTIFY
+             */
+            val JUSTIFY: SizingMode get() = SizingMode(2L)
+            /**
+             * Size tabs equally, expanding to the full width of the tab bar if there is room, otherwise fall
+             * back to `SizingMode.FIT_CONTENT`.
+             *
+             * Generated from Godot docs: TabBar.TAB_SIZING_EXPAND
+             */
+            val EXPAND: SizingMode get() = SizingMode(3L)
+            /**
+             * Represents the size of the `SizingMode` enum.
+             *
+             * Generated from Godot docs: TabBar.TAB_SIZING_MAX
+             */
+            val MAX: SizingMode get() = SizingMode(4L)
+        }
+    }
+
+    /**
      * Godot's `TabBar.CloseButtonDisplayPolicy` enum as a typed value: `.value` is the raw number
      * Godot uses, and the companion holds the named values (`TabBar.CloseButtonDisplayPolicy.<NAME>`).
      *
@@ -970,6 +1038,16 @@ class TabBar(handle: GodotHandle) : Control(handle) {
         @JvmField
         val getTabAlignmentBind =
             ObjectCalls.getMethodBind("TabBar", "get_tab_alignment", GET_TAB_ALIGNMENT_HASH)
+
+        private const val SET_TAB_SIZING_HASH = 3891044528L
+        @JvmField
+        val setTabSizingBind =
+            ObjectCalls.getMethodBind("TabBar", "set_tab_sizing", SET_TAB_SIZING_HASH)
+
+        private const val GET_TAB_SIZING_HASH = 2145546792L
+        @JvmField
+        val getTabSizingBind =
+            ObjectCalls.getMethodBind("TabBar", "get_tab_sizing", GET_TAB_SIZING_HASH)
 
         private const val SET_CLIP_TABS_HASH = 2586408642L
         @JvmField

@@ -120,8 +120,8 @@ class DrawableTexture2D(handle: GodotHandle) : Texture2D(handle) {
              */
             val RGBA8: DrawableFormat get() = DrawableFormat(0L)
             /**
-             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, an
-             * sRGB to linear color space conversion is performed.
+             * OpenGL texture format RGBA with four components, each with a bitdepth of 8. When drawn to, a
+             * linear to sRGB color encoding conversion is performed.
              *
              * Generated from Godot docs: DrawableTexture2D.DRAWABLE_FORMAT_RGBA8_SRGB
              */

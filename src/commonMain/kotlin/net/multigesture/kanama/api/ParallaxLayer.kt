@@ -76,7 +76,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * only once along that direction. Note: If you want the repetition to pixel-perfect match a
      * `Texture2D` displayed by a child node, you should account for any scale applied to the texture
      * when defining this interval. For example, if you use a child `Sprite2D` scaled to `0.5` to
-     * display a 600x600 texture, and want this sprite to be repeated continuously horizontally, you
+     * display a 600×600 texture, and want this sprite to be repeated continuously horizontally, you
      * should set the mirroring to `Vector2(300, 0)`. Note: If the length of the viewport axis is
      * bigger than twice the repeated axis size, it will not repeat infinitely, as the parallax layer
      * only draws 2 instances of the layer at any given time. The visibility window is calculated from
@@ -98,7 +98,7 @@ class ParallaxLayer(handle: GodotHandle) : Node2D(handle) {
      * only once along that direction. Note: If you want the repetition to pixel-perfect match a
      * `Texture2D` displayed by a child node, you should account for any scale applied to the texture
      * when defining this interval. For example, if you use a child `Sprite2D` scaled to `0.5` to
-     * display a 600x600 texture, and want this sprite to be repeated continuously horizontally, you
+     * display a 600×600 texture, and want this sprite to be repeated continuously horizontally, you
      * should set the mirroring to `Vector2(300, 0)`. Note: If the length of the viewport axis is
      * bigger than twice the repeated axis size, it will not repeat infinitely, as the parallax layer
      * only draws 2 instances of the layer at any given time. The visibility window is calculated from

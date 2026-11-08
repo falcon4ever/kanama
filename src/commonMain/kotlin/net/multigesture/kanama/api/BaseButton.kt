@@ -76,6 +76,18 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
         set(value) = setShortcutInTooltip(value)
 
     /**
+     * Presses the button. This causes the corresponding virtual method to be called and the
+     * corresponding signal to be emitted, depending on `toggle_mode`. If `disabled` is `true`, nothing
+     * happens. Note: This method does not change the visual state of the button and does not grab
+     * focus to the button.
+     *
+     * Generated from Godot docs: BaseButton.press
+     */
+    fun press() {
+        ObjectCalls.ptrcallNoArgs(Binds.pressBind, segment)
+    }
+
+    /**
      * If `true`, the button's state is pressed. Means the button is pressed down or toggled (if
      * `toggle_mode` is active). Only works if `toggle_mode` is `true`. Note: Changing the value of
      * `button_pressed` will result in `toggled` to be emitted. If you want to change the pressed state
@@ -88,18 +100,6 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * If `true`, the button's state is pressed. Means the button is pressed down or toggled (if
-     * `toggle_mode` is active). Only works if `toggle_mode` is `true`. Note: Changing the value of
-     * `button_pressed` will result in `toggled` to be emitted. If you want to change the pressed state
-     * without emitting that signal, use `set_pressed_no_signal`.
-     *
-     * Generated from Godot docs: BaseButton.is_pressed
-     */
-    fun isPressed(): Boolean {
-        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
-    }
-
-    /**
      * Changes the `button_pressed` state of the button, without emitting `toggled`. Use when you just
      * want to change the state of the button without sending the pressed event (e.g. when initializing
      * scene). Only works if `toggle_mode` is `true`. Note: This method doesn't unpress other buttons
@@ -109,6 +109,18 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
      */
     fun setPressedNoSignal(pressed: Boolean) {
         ObjectCalls.ptrcallWithBoolArg(Binds.setPressedNoSignalBind, segment, pressed)
+    }
+
+    /**
+     * If `true`, the button's state is pressed. Means the button is pressed down or toggled (if
+     * `toggle_mode` is active). Only works if `toggle_mode` is `true`. Note: Changing the value of
+     * `button_pressed` will result in `toggled` to be emitted. If you want to change the pressed state
+     * without emitting that signal, use `set_pressed_no_signal`.
+     *
+     * Generated from Godot docs: BaseButton.is_pressed
+     */
+    fun isPressed(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isPressedBind, segment)
     }
 
     /**
@@ -423,20 +435,25 @@ open class BaseButton(handle: GodotHandle) : Control(handle) {
     }
 
     private object Binds {
+        private const val PRESS_HASH = 3218959716L
+        @JvmField
+        val pressBind =
+            ObjectCalls.getMethodBind("BaseButton", "press", PRESS_HASH)
+
         private const val SET_PRESSED_HASH = 2586408642L
         @JvmField
         val setPressedBind =
             ObjectCalls.getMethodBind("BaseButton", "set_pressed", SET_PRESSED_HASH)
 
-        private const val IS_PRESSED_HASH = 36873697L
-        @JvmField
-        val isPressedBind =
-            ObjectCalls.getMethodBind("BaseButton", "is_pressed", IS_PRESSED_HASH)
-
         private const val SET_PRESSED_NO_SIGNAL_HASH = 2586408642L
         @JvmField
         val setPressedNoSignalBind =
             ObjectCalls.getMethodBind("BaseButton", "set_pressed_no_signal", SET_PRESSED_NO_SIGNAL_HASH)
+
+        private const val IS_PRESSED_HASH = 36873697L
+        @JvmField
+        val isPressedBind =
+            ObjectCalls.getMethodBind("BaseButton", "is_pressed", IS_PRESSED_HASH)
 
         private const val IS_HOVERED_HASH = 36873697L
         @JvmField

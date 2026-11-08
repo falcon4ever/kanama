@@ -153,7 +153,9 @@
       "date": "2026-06-21",
       "where": "macOS arm64: scripts/runtime_smoke.sh against 4.7.stable.official.5b4e0cb0f",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:30,69-71"
+      "source": "docs/reference/version-support.md:30,69-71",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "macos-local-ci-desktop-smoke",
@@ -163,7 +165,9 @@
       "date": "2026-09-08",
       "where": "macOS arm64, 4.7.2 binary: scripts/local_ci.sh end to end (runtime, @Tool, hot-reload, in-process hot-reload smokes) + demos desktop_smoke_all.sh nine-demo matrix",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:50,55-58"
+      "source": "docs/reference/version-support.md:50,55-58",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "ios-device-gate",
@@ -173,7 +177,9 @@
       "date": "2026-09-10",
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
-      "source": "scripts/ios_device_gate.sh"
+      "source": "scripts/ios_device_gate.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "ios-device-gate",
@@ -183,7 +189,9 @@
       "date": "2026-09-10",
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
-      "source": "scripts/ios_device_gate.sh"
+      "source": "scripts/ios_device_gate.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "macos-exported-game",
@@ -193,7 +201,9 @@
       "date": "2026-09-10",
       "where": "macOS 26.6.2 arm64, Godot 4.7.2.stable, Temurin 25.0.4.1+1: scripts/export_game_smoke.sh twice (host-jlinked image, then the macos-arm64 Temurin-jmods image); the exported .app booted headless with JAVA_HOME unset and PATH stripped, from Contents/Resources/runtime/lib/server/libjvm.dylib",
       "result": "PASS",
-      "source": "docs/reference/version-support.md:29; docs/exporting/desktop.md"
+      "source": "docs/reference/version-support.md:29; docs/exporting/desktop.md",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "ios-device-gate",
@@ -203,7 +213,9 @@
       "date": "2026-09-10",
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
-      "source": "scripts/ios_device_gate.sh"
+      "source": "scripts/ios_device_gate.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "ios-device-gate",
@@ -213,7 +225,9 @@
       "date": "2026-09-11",
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
-      "source": "scripts/ios_device_gate.sh"
+      "source": "scripts/ios_device_gate.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "ios-device-gate",
@@ -223,7 +237,9 @@
       "date": "2026-09-11",
       "where": "iPhone 12, iOS 26.6",
       "result": "PASS",
-      "source": "scripts/ios_device_gate.sh"
+      "source": "scripts/ios_device_gate.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "android-debug-matrix",
@@ -233,7 +249,9 @@
       "date": "2026-09-15",
       "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh; the smoke now installs the desktop addon and runs the exported-scene parity check before installing (task 116)",
       "result": "PASS",
-      "source": "scripts/android_smoke.sh"
+      "source": "scripts/android_smoke.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "android-debug-matrix",
@@ -243,7 +261,9 @@
       "date": "2026-09-15",
       "where": "Pixel 7 (Android 17): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh (task 104 step 3 close-out run, one KMP module; log kanama-tasks/evidence/task104/closeout-android-matrix-2026-09-15.log)",
       "result": "PASS",
-      "source": "scripts/android_smoke.sh"
+      "source": "scripts/android_smoke.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "android-debug-matrix",
@@ -253,7 +273,9 @@
       "date": "2026-10-01",
       "where": "Pixel 7 (Android 17, build CP3A.260905.009, the September 2026 update): nine-demo debug APK matrix via kanama-demos android_smoke_all.sh on PanamaPort fork 0.1.5-kanama-r8.1 from JitPack (task 127; the previous fork aborts in the FFI bootstrap on this build)",
       "result": "PASS",
-      "source": "scripts/android_smoke.sh"
+      "source": "scripts/android_smoke.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     },
     {
       "gate": "android-r8-release",
@@ -263,7 +285,9 @@
       "date": "2026-10-01",
       "where": "Pixel 7 (Android 17, build CP3A.260905.009): scripts/android_export_minified.sh R8-minified Match3 release on PanamaPort fork 0.1.5-kanama-r8.1 from JitPack (task 127)",
       "result": "PASS",
-      "source": "scripts/android_export_minified.sh"
+      "source": "scripts/android_export_minified.sh",
+      "acceptedStaleUntil": "2026-12-31",
+      "acceptedStaleReason": "pin moved to a beta; re-run at the 4.8 cut"
     }
   ]
 }

@@ -448,6 +448,17 @@ object NativeMenu {
     }
 
     /**
+     * Returns `true` if the item at index `idx` is indeterminate. See `set_item_indeterminate` for
+     * more info on how to set an item. Note: This method is implemented only on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.is_item_indeterminate
+     */
+    @JvmStatic
+    fun isItemIndeterminate(rid: RID, idx: Int): Boolean {
+        return ObjectCalls.ptrcallWithRIDAndIntArgRetBool(Binds.isItemIndeterminateBind, singleton, rid, idx)
+    }
+
+    /**
      * Returns `true` if the item at index `idx` is checkable in some way, i.e. if it has a checkbox or
      * radio button. Note: This method is implemented on macOS and Windows.
      *
@@ -625,6 +636,17 @@ object NativeMenu {
     @JvmStatic
     fun setItemChecked(rid: RID, idx: Int, checked: Boolean) {
         ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemCheckedBind, singleton, rid, idx, checked)
+    }
+
+    /**
+     * Sets the indeterminate status of the item at index `idx`. Note: This method is implemented only
+     * on macOS.
+     *
+     * Generated from Godot docs: NativeMenu.set_item_indeterminate
+     */
+    @JvmStatic
+    fun setItemIndeterminate(rid: RID, idx: Int, indeterminate: Boolean) {
+        ObjectCalls.ptrcallWithRIDIntAndBoolArgs(Binds.setItemIndeterminateBind, singleton, rid, idx, indeterminate)
     }
 
     /**
@@ -1136,6 +1158,11 @@ object NativeMenu {
         val isItemCheckedBind =
             ObjectCalls.getMethodBind("NativeMenu", "is_item_checked", IS_ITEM_CHECKED_HASH)
 
+        private const val IS_ITEM_INDETERMINATE_HASH = 3120086654L
+        @JvmField
+        val isItemIndeterminateBind =
+            ObjectCalls.getMethodBind("NativeMenu", "is_item_indeterminate", IS_ITEM_INDETERMINATE_HASH)
+
         private const val IS_ITEM_CHECKABLE_HASH = 3120086654L
         @JvmField
         val isItemCheckableBind =
@@ -1215,6 +1242,11 @@ object NativeMenu {
         @JvmField
         val setItemCheckedBind =
             ObjectCalls.getMethodBind("NativeMenu", "set_item_checked", SET_ITEM_CHECKED_HASH)
+
+        private const val SET_ITEM_INDETERMINATE_HASH = 2658558584L
+        @JvmField
+        val setItemIndeterminateBind =
+            ObjectCalls.getMethodBind("NativeMenu", "set_item_indeterminate", SET_ITEM_INDETERMINATE_HASH)
 
         private const val SET_ITEM_CHECKABLE_HASH = 2658558584L
         @JvmField

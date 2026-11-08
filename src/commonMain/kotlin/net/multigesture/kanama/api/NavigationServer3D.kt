@@ -135,7 +135,7 @@ object NavigationServer3D {
     }
 
     /**
-     * Returns map's internal merge rasterizer cell scale.
+     * Returns the map's internal merge rasterizer cell scale.
      *
      * Generated from Godot docs: NavigationServer3D.map_get_merge_rasterizer_cell_scale
      */
@@ -278,7 +278,7 @@ object NavigationServer3D {
     }
 
     /**
-     * Returns all navigation regions `RID`s that are currently assigned to the requested navigation
+     * Returns all navigation region `RID`s that are currently assigned to the requested navigation
      * `map`.
      *
      * Generated from Godot docs: NavigationServer3D.map_get_regions
@@ -289,7 +289,7 @@ object NavigationServer3D {
     }
 
     /**
-     * Returns all navigation agents `RID`s that are currently assigned to the requested navigation
+     * Returns all navigation agent `RID`s that are currently assigned to the requested navigation
      * `map`.
      *
      * Generated from Godot docs: NavigationServer3D.map_get_agents
@@ -317,7 +317,7 @@ object NavigationServer3D {
      * navigation map. This makes it possible to query a navigation path for a changed map immediately
      * and in the same frame (multiple times if needed). Due to technical restrictions the current
      * NavigationServer command queue will be flushed. This means all already queued update commands
-     * for this physics frame will be executed, even those intended for other maps, regions and agents
+     * for this physics frame will be executed, even those intended for other maps, regions, and agents
      * not part of the specified map. The expensive computation of the navigation meshes and region
      * connections of a map will only be done for the specified map. Other maps will receive the normal
      * synchronization at the end of the physics frame. Should the specified map receive changes after
@@ -821,8 +821,8 @@ object NavigationServer3D {
     }
 
     /**
-     * Set the links's navigation layers. This allows selecting links from a path request (when using
-     * `NavigationServer3D.map_get_path`).
+     * Sets the given `link`'s navigation layers to `navigation_layers`. This allows selecting links
+     * from a path request (when using `NavigationServer3D.map_get_path`).
      *
      * Generated from Godot docs: NavigationServer3D.link_set_navigation_layers
      */
@@ -973,16 +973,15 @@ object NavigationServer3D {
 
     /**
      * Sets if the agent uses the 2D avoidance or the 3D avoidance while avoidance is enabled. If
-     * `true` the agent calculates avoidance velocities in 3D for the xyz-axis, e.g. for games that
-     * take place in air, underwater or space. The 3D using agent only avoids other 3D avoidance using
-     * agent's. The 3D using agent only reacts to radius based avoidance obstacles. The 3D using agent
-     * ignores any vertices based obstacles. The 3D using agent only avoids other 3D using agent's. If
-     * `false` the agent calculates avoidance velocities in 2D along the xz-axis ignoring the y-axis.
-     * The 2D using agent only avoids other 2D avoidance using agent's. The 2D using agent reacts to
-     * radius avoidance obstacles. The 2D using agent reacts to vertices based avoidance obstacles. The
-     * 2D using agent only avoids other 2D using agent's. 2D using agents will ignore other 2D using
-     * agents or obstacles that are below their current position or above their current position
-     * including the agents height in 2D avoidance.
+     * `true` the agent calculates avoidance velocities in 3D for the XYZ axes, e.g. for games that
+     * take place in the air, underwater, or space. The 3D agent only avoids other 3D avoidance agents.
+     * The 3D agent only reacts to radius based avoidance obstacles. The 3D agent ignores any vertices
+     * based obstacles. The 3D agent only avoids other 3D agents. If `false` the agent calculates
+     * avoidance velocities in 2D along the xz-axes ignoring the y-axis. The 2D agent only avoids other
+     * 2D avoidance agents. The 2D agent reacts to radius avoidance obstacles. The 2D agent reacts to
+     * vertex based avoidance obstacles. The 2D agent only avoids other 2D agents. 2D agents will
+     * ignore other 2D agents or obstacles that are below their current position or above their current
+     * position including the agent's height in 2D avoidance.
      *
      * Generated from Godot docs: NavigationServer3D.agent_set_use_3d_avoidance
      */
@@ -1093,7 +1092,7 @@ object NavigationServer3D {
      * The minimal amount of time for which the agent's velocities that are computed by the simulation
      * are safe with respect to other agents. The larger this number, the sooner this agent will
      * respond to the presence of other agents, but the less freedom this agent has in choosing its
-     * velocities. A too high value will slow down agents movement considerably. Must be positive.
+     * velocities. A too high value will slow down agent movement considerably. Must be positive.
      *
      * Generated from Godot docs: NavigationServer3D.agent_set_time_horizon_agents
      */
@@ -1117,7 +1116,7 @@ object NavigationServer3D {
      * The minimal amount of time for which the agent's velocities that are computed by the simulation
      * are safe with respect to static avoidance obstacles. The larger this number, the sooner this
      * agent will respond to the presence of static avoidance obstacles, but the less freedom this
-     * agent has in choosing its velocities. A too high value will slow down agents movement
+     * agent has in choosing its velocities. A too high value will slow down agent movement
      * considerably. Must be positive.
      *
      * Generated from Godot docs: NavigationServer3D.agent_set_time_horizon_obstacles
@@ -1212,9 +1211,9 @@ object NavigationServer3D {
 
     /**
      * Sets `velocity` as the new wanted velocity for the specified `agent`. The avoidance simulation
-     * will try to fulfill this velocity if possible but will modify it to avoid collision with other
-     * agent's and obstacles. When an agent is teleported to a new position use
-     * `agent_set_velocity_forced` as well to reset the internal simulation velocity.
+     * will try to achieve this velocity if possible, but will adjust it to avoid colliding with other
+     * agents and obstacles. When an agent is teleported to a new position far away, use
+     * `agent_set_velocity_forced` instead to reset the internal velocity state.
      *
      * Generated from Godot docs: NavigationServer3D.agent_set_velocity
      */
@@ -1549,7 +1548,7 @@ object NavigationServer3D {
     }
 
     /**
-     * Set the obstacles's `avoidance_layers` bitmask.
+     * Sets the given `obstacle`'s avoidance layers to `layers`.
      *
      * Generated from Godot docs: NavigationServer3D.obstacle_set_avoidance_layers
      */
@@ -1660,7 +1659,7 @@ object NavigationServer3D {
 
     /**
      * Returns a simplified version of `path` with less critical path points removed. The
-     * simplification amount is in worlds units and controlled by `epsilon`. The simplification uses a
+     * simplification amount is in world units and controlled by `epsilon`. The simplification uses a
      * variant of Ramer-Douglas-Peucker algorithm for curve point decimation. Path simplification can
      * be helpful to mitigate various path following issues that can arise with certain agent types and
      * script behaviors. E.g. "steering" agents or avoidance in "open fields".

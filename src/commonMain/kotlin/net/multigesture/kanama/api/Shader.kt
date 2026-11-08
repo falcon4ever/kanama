@@ -103,6 +103,18 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
+     * Sets the include path for this shader. Used only if the shader does not have a resource path
+     * set, for example when created by code.
+     *
+     * Generated from Godot docs: Shader.set_include_path
+     */
+    fun setIncludePath(path: String) {
+        checkOpen()
+        ObjectCalls.ptrcallWithStringArg(Binds.setIncludePathBind, segment, path)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
      * Only available when running in the editor. Opens a popup that visualizes the generated shader
      * code, including all variants and internal shader code. See also
      * `Material.inspect_native_shader_code`.
@@ -210,6 +222,11 @@ open class Shader(handle: GodotHandle) : Resource(handle) {
         @JvmField
         val getShaderUniformListBind =
             ObjectCalls.getMethodBind("Shader", "get_shader_uniform_list", GET_SHADER_UNIFORM_LIST_HASH)
+
+        private const val SET_INCLUDE_PATH_HASH = 83702148L
+        @JvmField
+        val setIncludePathBind =
+            ObjectCalls.getMethodBind("Shader", "set_include_path", SET_INCLUDE_PATH_HASH)
 
         private const val INSPECT_NATIVE_SHADER_CODE_HASH = 3218959716L
         @JvmField

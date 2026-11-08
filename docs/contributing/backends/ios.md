@@ -73,7 +73,7 @@ project has them, the Android AAR entries:
 ```ini
 [configuration]
 entry_symbol = "kanama_entry"
-compatibility_minimum = "4.7"
+compatibility_minimum = "4.8"
 
 [libraries]
 ios.debug.arm64 = "res://addons/kanama/bin/ios/kanama_ios.debug.xcframework"
@@ -151,7 +151,7 @@ made, and copies them only when the installed ones came from other inputs.
 Measured on an M1 Max, the release link runs out of a 2 GB heap and links in
 3 GB, and its process peaks at 9 to 11 GB with LLVM's native memory, which is
 why the user page asks for a 16 GB Mac. The checkout's own libraries measure
-roughly 168 MB debug / 110 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
+roughly 172 MB debug / 113 MB release; a kit project's debug library is about 195 MB. <!-- kanama-claim: ios-static-size -->
 
 `scripts/package_install_smoke.sh --ios` runs the documented commands from an
 unzipped macOS kit or store addon with a fresh `GRADLE_USER_HOME`: then a
@@ -856,6 +856,25 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   singleton through the phase's `requireSingleton` helper — it records `singleton-present(<name>)`
   as its own check and the row then skips its dependent calls — because a zero instance is the
   shared tree's static-method marker and now reaches Godot as a null `this` instead of no-opping.
+  The same goes for **constructing** an object whose constructor uses a server Godot creates after
+  scene init (`PhysicsServer2D`, `PhysicsServer3D`, `CameraServer`): its C++ singleton is still
+  null, and the engine segfaults inside the constructor. Godot 4.8 added
+  `PhysicsServer2D/3D::get_singleton()->connect(...)` to the constructors of `TileMapLayer` and the
+  collision nodes, so the first 4.8 iPhone run died in `TileMapLayer::TileMapLayer()` (from the
+  scene-init `requireObject("TileMap")` row). The TileMap, TileMapLayer and GridMap rows now sit in
+  the frame-1 phase, and `scripts/check_ios_selftest_phases.py` (a local_ci stage) fails on the host
+  when a scene-init row constructs such a class or a subclass of one. The class list,
+  `scripts/ios_scene_init_unsafe_classes.json`, is generated from the constructors in the Godot
+  source (`scene/`, `modules/`, `servers/`): `upgrade_godot.sh` reruns
+  `python3 scripts/check_ios_selftest_phases.py --regenerate --godot-src <godot checkout> --godot-bin <editor>`
+  at every bump, and the gate fails when the list's pin is not the current pin. With a checkout at
+  the list's commit (`GODOT_SRC`, `GODOT_DOCS`) it also fails when the file is stale; without one it
+  prints `SKIP: ios-unsafe-classes-staleness`.
+  A row must finish in its own frame, so never assert that a threaded load is done by a deadline: the
+  load is a low-priority worker task, an iPhone 12 has one low-priority thread, and on the first
+  launch of a Mobile-renderer app that thread stays busy for seconds. The threaded-load row accepts a
+  load still in progress at its bound, and proves LOADED with progress 1.0 through a request for a
+  scene already in the resource cache, which Godot answers as loaded without queuing a task.
   Expected line shapes on a clean run:
 
   ```text

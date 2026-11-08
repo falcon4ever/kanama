@@ -276,11 +276,11 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The camera's field of view angle (in degrees). Only applicable in perspective mode. Since
-     * `keep_aspect` locks one axis, `fov` sets the other axis' field of view angle. For reference, the
-     * default vertical field of view value (`75.0`) is equivalent to a horizontal FOV of: - ~91.31
-     * degrees in a 4:3 viewport - ~101.67 degrees in a 16:10 viewport - ~107.51 degrees in a 16:9
-     * viewport - ~121.63 degrees in a 21:9 viewport
+     * The camera's field of view (also known as FOV), as an angle in degrees. Only applicable in
+     * perspective mode. Since `keep_aspect` locks one axis, this property sets the field of view on
+     * the other axis. For reference, the default angle for the vertical FOV (`75.0`) is equivalent to
+     * a horizontal FOV of: - ~91.31 degrees in a 4:3 viewport - ~101.67 degrees in a 16:10 viewport -
+     * ~107.51 degrees in a 16:9 viewport - ~121.63 degrees in a 21:9 viewport
      *
      * Generated from Godot docs: Camera3D.get_fov
      */
@@ -333,11 +333,11 @@ open class Camera3D(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * The camera's field of view angle (in degrees). Only applicable in perspective mode. Since
-     * `keep_aspect` locks one axis, `fov` sets the other axis' field of view angle. For reference, the
-     * default vertical field of view value (`75.0`) is equivalent to a horizontal FOV of: - ~91.31
-     * degrees in a 4:3 viewport - ~101.67 degrees in a 16:10 viewport - ~107.51 degrees in a 16:9
-     * viewport - ~121.63 degrees in a 21:9 viewport
+     * The camera's field of view (also known as FOV), as an angle in degrees. Only applicable in
+     * perspective mode. Since `keep_aspect` locks one axis, this property sets the field of view on
+     * the other axis. For reference, the default angle for the vertical FOV (`75.0`) is equivalent to
+     * a horizontal FOV of: - ~91.31 degrees in a 4:3 viewport - ~101.67 degrees in a 16:10 viewport -
+     * ~107.51 degrees in a 16:9 viewport - ~121.63 degrees in a 21:9 viewport
      *
      * Generated from Godot docs: Camera3D.set_fov
      */

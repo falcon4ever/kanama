@@ -32,6 +32,12 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         @JvmName("setDoubleTapProperty")
         set(value) = setDoubleTap(value)
 
+    var longPress: Boolean
+        @JvmName("longPressProperty")
+        get() = isLongPress()
+        @JvmName("setLongPressProperty")
+        set(value) = setLongPress(value)
+
     /**
      * The touch index in the case of a multi-touch event. One index = one finger.
      *
@@ -123,6 +129,29 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         return ret
     }
 
+    /**
+     * If `true`, the touch's state is a long press. Note: This is only supported on Android and iOS.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.set_long_press
+     */
+    fun setLongPress(longPress: Boolean) {
+        checkOpen()
+        ObjectCalls.ptrcallWithBoolArg(Binds.setLongPressBind, segment, longPress)
+        ObjectCalls.keepReachable(this)
+    }
+
+    /**
+     * If `true`, the touch's state is a long press. Note: This is only supported on Android and iOS.
+     *
+     * Generated from Godot docs: InputEventScreenTouch.is_long_press
+     */
+    fun isLongPress(): Boolean {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isLongPressBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): InputEventScreenTouch? =
@@ -185,5 +214,15 @@ class InputEventScreenTouch(handle: GodotHandle) : InputEventFromWindow(handle) 
         @JvmField
         val isDoubleTapBind =
             ObjectCalls.getMethodBind("InputEventScreenTouch", "is_double_tap", IS_DOUBLE_TAP_HASH)
+
+        private const val SET_LONG_PRESS_HASH = 2586408642L
+        @JvmField
+        val setLongPressBind =
+            ObjectCalls.getMethodBind("InputEventScreenTouch", "set_long_press", SET_LONG_PRESS_HASH)
+
+        private const val IS_LONG_PRESS_HASH = 36873697L
+        @JvmField
+        val isLongPressBind =
+            ObjectCalls.getMethodBind("InputEventScreenTouch", "is_long_press", IS_LONG_PRESS_HASH)
     }
 }

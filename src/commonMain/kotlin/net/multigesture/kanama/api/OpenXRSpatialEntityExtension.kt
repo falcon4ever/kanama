@@ -36,24 +36,6 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
     }
 
     /**
-     * Creates a new spatial context that handles entities for the provided capability configurations.
-     * `capability_configurations` is an array of `OpenXRSpatialCapabilityConfigurationBaseHeader` with
-     * the needed capability configuration data. `next` is an optional parameter that can contain
-     * additional information for creating our spatial context. Note: This is an asynchronous method
-     * and returns an `OpenXRFutureResult` object with which to track the status, discarding this
-     * object will not cancel the creation process. On success `user_callback` will be called if
-     * specified. The result data for this function is the `RID` for our spatial context.
-     *
-     * Generated from Godot docs: OpenXRSpatialEntityExtension.create_spatial_context
-     */
-    fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase? = null, userCallback: GodotCallable): OpenXRFutureResult? {
-        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectListObjectCallableArgsRetObject(Binds.createSpatialContextBind, segment, capabilityConfigurations, next?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method))
-        ObjectCalls.keepReachable(next)
-        ObjectCalls.keepReachable(userCallback)
-        return ret
-    }
-
-    /**
      * Returns `true` if the spatial context finished its creation and is ready to be used.
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.get_spatial_context_ready
@@ -324,7 +306,7 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
              */
             val MARKER_TRACKING_MICRO_QR_CODE: Capability get() = Capability(1000743001L)
             /**
-             * Aruco marker based marker tracking capability.
+             * ArUco marker based marker tracking capability.
              *
              * Generated from Godot docs: OpenXRSpatialEntityExtension.CAPABILITY_MARKER_TRACKING_ARUCO_MARKER
              */
@@ -443,6 +425,55 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
         }
     }
 
+    /**
+     * Godot's `OpenXRSpatialEntityExtension.TrackingState` enum as a typed value: `.value` is the raw
+     * number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialEntityExtension.TrackingState.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityExtension.TrackingState
+     */
+    @JvmInline
+    value class TrackingState(override val value: Long) : GodotEnumValue {
+        companion object {
+            /**
+             * A capability supplied when creating the spatial context for tracking is unsupported.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_UNSUPPORTED_CAPABILITY
+             */
+            val UNSUPPORTED_CAPABILITY: TrackingState get() = TrackingState(-3L)
+            /**
+             * A permission required by the tracking logic is missing.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_NO_PERMISSION
+             */
+            val NO_PERMISSION: TrackingState get() = TrackingState(-2L)
+            /**
+             * Setup of the tracking logic failed, consult the logs for more details.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_SETUP_FAILED
+             */
+            val SETUP_FAILED: TrackingState get() = TrackingState(-1L)
+            /**
+             * Tracking is currently not active.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_NOT_ACTIVE
+             */
+            val NOT_ACTIVE: TrackingState get() = TrackingState(0L)
+            /**
+             * Tracking is being set up.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_SETTING_UP
+             */
+            val SETTING_UP: TrackingState get() = TrackingState(1L)
+            /**
+             * Tracking is enabled and running.
+             *
+             * Generated from Godot docs: OpenXRSpatialEntityExtension.TRACKING_ENABLED
+             */
+            val ENABLED: TrackingState get() = TrackingState(2L)
+        }
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialEntityExtension? =
@@ -462,11 +493,6 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
         @JvmField
         val supportsComponentTypeBind =
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "supports_component_type", SUPPORTS_COMPONENT_TYPE_HASH)
-
-        private const val CREATE_SPATIAL_CONTEXT_HASH = 1874506473L
-        @JvmField
-        val createSpatialContextBind =
-            ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "create_spatial_context", CREATE_SPATIAL_CONTEXT_HASH)
 
         private const val GET_SPATIAL_CONTEXT_READY_HASH = 4155700596L
         @JvmField

@@ -18,15 +18,17 @@ run natively, and Godot's Web export runs them in the page next to your game.
   Kanama Web runtime, so you need nothing else from Kanama. A project built
   from a checkout of the Kanama repository exports from there; see
   [From a Source Checkout](#from-a-source-checkout).
-- Godot 4.7.2 and its export templates, installed from **Editor > Manage
-  Export Templates**. The Web export uses `web_nothreads_release.zip` from the
-  templates folder:
+- The Godot version of your Kanama and its export templates, installed from
+  **Editor > Manage Export Templates**
+  ([Godot Version](../reference/version-support.md#godot-version)). The Web export
+  uses `web_nothreads_release.zip` from the templates folder, whose last part is
+  `4.7.2.stable` for release 0.4.0 and `4.8.beta2` for a checkout of `main`:
 
     | OS | Export templates folder |
     | --- | --- |
-    | macOS | `~/Library/Application Support/Godot/export_templates/4.7.2.stable/` |
-    | Linux | `~/.local/share/godot/export_templates/4.7.2.stable/` |
-    | Windows | `%APPDATA%\Godot\export_templates\4.7.2.stable\` |
+    | macOS | `~/Library/Application Support/Godot/export_templates/<version>/` |
+    | Linux | `~/.local/share/godot/export_templates/<version>/` |
+    | Windows | `%APPDATA%\Godot\export_templates\<version>\` |
 
 - A network connection for the first export. It downloads the tools the Web
   build runs, about 90 MB in all: Node.js, Yarn and Binaryen into Gradle's
@@ -220,7 +222,7 @@ it; serve it from your own host.
 | `exportWeb` says the project `has no main scene`, or that the main scene does not exist or matches no scene file. | Set **Project > Project Settings > Application > Run > Main Scene** to a scene of the project, and save it. |
 | The build stops on one of your scripts. | See [Web-Compatible Scripts](#web-compatible-scripts). |
 | `exportWeb` says `Godot was not found` or `Godot not found at`. | Add `-PkanamaGodotExecutable=/path/to/godot`. |
-| `exportWeb` says the Web export template is not installed or not found. | Install the 4.7.2 export templates from **Editor > Manage Export Templates**, or add `-PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip`. |
+| `exportWeb` says the Web export template is not installed or not found. | Install the export templates of your Godot version from **Editor > Manage Export Templates**, or add `-PkanamaWebTemplateRelease=/path/to/web_nothreads_release.zip`. |
 | The first `exportWeb` fails while it downloads Node.js, Yarn or an npm package. | It needs a network connection, also through a proxy Gradle can use. Run it again once the network is back. |
 | `exportWeb` fails with `Java heap space` or `OutOfMemoryError`. | The project needs more than 3 GB heap the Web build gives the compiler. Run `./gradlew exportWeb -PkanamaWebHeap=6g`. |
 | The page says `Kanama Web protocol mismatch`. | The page's files come from two exports. Run `exportWeb` again and serve the new `build/web-export/`, and clear the browser's cache. |

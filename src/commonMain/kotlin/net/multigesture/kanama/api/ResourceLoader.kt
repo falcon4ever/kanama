@@ -187,6 +187,16 @@ object ResourceLoader {
     }
 
     /**
+     * Returns the resource type associated with a given resource path.
+     *
+     * Generated from Godot docs: ResourceLoader.get_resource_type
+     */
+    @JvmStatic
+    fun getResourceType(path: String): String {
+        return ObjectCalls.ptrcallWithStringArgRetString(Binds.getResourceTypeBind, singleton, path)
+    }
+
+    /**
      * Lists a directory, returning all resources and subdirectories contained within. The resource
      * files have the original file names as visible in the editor before exporting. The directories
      * have `"/"` appended.
@@ -442,6 +452,11 @@ object ResourceLoader {
         @JvmField
         val getResourceUidBind =
             ObjectCalls.getMethodBind("ResourceLoader", "get_resource_uid", GET_RESOURCE_UID_HASH)
+
+        private const val GET_RESOURCE_TYPE_HASH = 1703090593L
+        @JvmField
+        val getResourceTypeBind =
+            ObjectCalls.getMethodBind("ResourceLoader", "get_resource_type", GET_RESOURCE_TYPE_HASH)
 
         private const val LIST_DIRECTORY_HASH = 3538744774L
         @JvmField

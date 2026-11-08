@@ -87,7 +87,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets the reference bone of the setting at `index` to `bone_name`. This bone will be only
+     * Sets the reference bone of the setting at `index` to `bone_name`. This bone will only be
      * referenced and not modified by this modifier.
      *
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone_name
@@ -107,7 +107,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets the reference bone of the setting at `index` to `bone`. This bone will be only referenced
+     * Sets the reference bone of the setting at `index` to `bone`. This bone will only be referenced
      * and not modified by this modifier.
      *
      * Generated from Godot docs: BoneConstraint3D.set_reference_bone
@@ -127,7 +127,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Sets the reference node path of the setting at `index` to `node`. This node will be only
+     * Sets the reference node path of the setting at `index` to `node`. This node will only be
      * referenced and not modified by this modifier.
      *
      * Generated from Godot docs: BoneConstraint3D.set_reference_node
@@ -137,7 +137,7 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     }
 
     /**
-     * Returns the reference node path of the setting at `index`. This node will be only referenced and
+     * Returns the reference node path of the setting at `index`. This node will only be referenced and
      * not modified by this modifier.
      *
      * Generated from Godot docs: BoneConstraint3D.get_reference_node
@@ -183,15 +183,15 @@ open class BoneConstraint3D(handle: GodotHandle) : SkeletonModifier3D(handle) {
     value class ReferenceType(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * The reference target is a bone. In this case, the reference target spaces is local space.
+             * The reference target is a bone. In this case, the reference target space is local space.
              *
              * Generated from Godot docs: BoneConstraint3D.REFERENCE_TYPE_BONE
              */
             val BONE: ReferenceType get() = ReferenceType(0L)
             /**
-             * The reference target is a `Node3D`. In this case, the reference target spaces is model space. In
-             * other words, the reference target's coordinates are treated as if it were placed directly under
-             * `Skeleton3D` which parent of the `BoneConstraint3D`.
+             * The reference target is a `Node3D`. In this case, the reference target space is model space. In
+             * other words, the reference target's coordinates are treated as if it was placed directly under
+             * the `Skeleton3D` parent of the `BoneConstraint3D`.
              *
              * Generated from Godot docs: BoneConstraint3D.REFERENCE_TYPE_NODE
              */

@@ -40,7 +40,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `MouseButton` | `MouseButton` | `MOUSE_BUTTON_NONE` -> `NONE`, `MOUSE_BUTTON_LEFT` -> `LEFT`, `MOUSE_BUTTON_RIGHT` -> `RIGHT`, `MOUSE_BUTTON_MIDDLE` -> `MIDDLE`, `MOUSE_BUTTON_WHEEL_UP` -> `WHEEL_UP`, `MOUSE_BUTTON_WHEEL_DOWN` -> `WHEEL_DOWN`, `MOUSE_BUTTON_WHEEL_LEFT` -> `WHEEL_LEFT`, `MOUSE_BUTTON_WHEEL_RIGHT` -> `WHEEL_RIGHT`, `MOUSE_BUTTON_XBUTTON1` -> `XBUTTON1`, `MOUSE_BUTTON_XBUTTON2` -> `XBUTTON2` |
 | `MouseButtonMask` | `MouseButtonMask` | `MOUSE_BUTTON_MASK_LEFT` -> `LEFT`, `MOUSE_BUTTON_MASK_RIGHT` -> `RIGHT`, `MOUSE_BUTTON_MASK_MIDDLE` -> `MIDDLE`, `MOUSE_BUTTON_MASK_MB_XBUTTON1` -> `MB_XBUTTON1`, `MOUSE_BUTTON_MASK_MB_XBUTTON2` -> `MB_XBUTTON2` |
 | `Orientation` | `Orientation` | `VERTICAL` -> `VERTICAL`, `HORIZONTAL` -> `HORIZONTAL` |
-| `PropertyHint` | `GodotPropertyHint` | `PROPERTY_HINT_NONE` -> `NONE`, `PROPERTY_HINT_RANGE` -> `RANGE`, `PROPERTY_HINT_ENUM` -> `ENUM`, `PROPERTY_HINT_ENUM_SUGGESTION` -> `ENUM_SUGGESTION`, `PROPERTY_HINT_EXP_EASING` -> `EXP_EASING`, `PROPERTY_HINT_LINK` -> `LINK`, `PROPERTY_HINT_FLAGS` -> `FLAGS`, `PROPERTY_HINT_LAYERS_2D_RENDER` -> `LAYERS_2D_RENDER`, `PROPERTY_HINT_LAYERS_2D_PHYSICS` -> `LAYERS_2D_PHYSICS`, `PROPERTY_HINT_LAYERS_2D_NAVIGATION` -> `LAYERS_2D_NAVIGATION`, `PROPERTY_HINT_LAYERS_3D_RENDER` -> `LAYERS_3D_RENDER`, `PROPERTY_HINT_LAYERS_3D_PHYSICS` -> `LAYERS_3D_PHYSICS`, `PROPERTY_HINT_LAYERS_3D_NAVIGATION` -> `LAYERS_3D_NAVIGATION`, `PROPERTY_HINT_LAYERS_AVOIDANCE` -> `LAYERS_AVOIDANCE`, `PROPERTY_HINT_FILE` -> `FILE`, `PROPERTY_HINT_DIR` -> `DIR`, `PROPERTY_HINT_GLOBAL_FILE` -> `GLOBAL_FILE`, `PROPERTY_HINT_GLOBAL_DIR` -> `GLOBAL_DIR`, `PROPERTY_HINT_RESOURCE_TYPE` -> `RESOURCE_TYPE`, `PROPERTY_HINT_MULTILINE_TEXT` -> `MULTILINE_TEXT`, `PROPERTY_HINT_EXPRESSION` -> `EXPRESSION`, `PROPERTY_HINT_PLACEHOLDER_TEXT` -> `PLACEHOLDER_TEXT`, `PROPERTY_HINT_COLOR_NO_ALPHA` -> `COLOR_NO_ALPHA`, `PROPERTY_HINT_OBJECT_ID` -> `OBJECT_ID`, `PROPERTY_HINT_TYPE_STRING` -> `TYPE_STRING`, `PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE` -> `NODE_PATH_TO_EDITED_NODE`, `PROPERTY_HINT_OBJECT_TOO_BIG` -> `OBJECT_TOO_BIG`, `PROPERTY_HINT_NODE_PATH_VALID_TYPES` -> `NODE_PATH_VALID_TYPES`, `PROPERTY_HINT_SAVE_FILE` -> `SAVE_FILE`, `PROPERTY_HINT_GLOBAL_SAVE_FILE` -> `GLOBAL_SAVE_FILE`, `PROPERTY_HINT_INT_IS_OBJECTID` -> `INT_IS_OBJECTID`, `PROPERTY_HINT_INT_IS_POINTER` -> `INT_IS_POINTER`, `PROPERTY_HINT_ARRAY_TYPE` -> `ARRAY_TYPE`, `PROPERTY_HINT_DICTIONARY_TYPE` -> `DICTIONARY_TYPE`, `PROPERTY_HINT_LOCALE_ID` -> `LOCALE_ID`, `PROPERTY_HINT_LOCALIZABLE_STRING` -> `LOCALIZABLE_STRING`, `PROPERTY_HINT_NODE_TYPE` -> `NODE_TYPE`, `PROPERTY_HINT_HIDE_QUATERNION_EDIT` -> `HIDE_QUATERNION_EDIT`, `PROPERTY_HINT_PASSWORD` -> `PASSWORD`, `PROPERTY_HINT_TOOL_BUTTON` -> `TOOL_BUTTON`, `PROPERTY_HINT_ONESHOT` -> `ONESHOT`, `PROPERTY_HINT_GROUP_ENABLE` -> `GROUP_ENABLE`, `PROPERTY_HINT_INPUT_NAME` -> `INPUT_NAME`, `PROPERTY_HINT_FILE_PATH` -> `FILE_PATH`, `PROPERTY_HINT_MAX` -> `MAX` |
+| `PropertyHint` | `GodotPropertyHint` | `PROPERTY_HINT_NONE` -> `NONE`, `PROPERTY_HINT_RANGE` -> `RANGE`, `PROPERTY_HINT_ENUM` -> `ENUM`, `PROPERTY_HINT_ENUM_SUGGESTION` -> `ENUM_SUGGESTION`, `PROPERTY_HINT_EXP_EASING` -> `EXP_EASING`, `PROPERTY_HINT_LINK` -> `LINK`, `PROPERTY_HINT_FLAGS` -> `FLAGS`, `PROPERTY_HINT_LAYERS_2D_RENDER` -> `LAYERS_2D_RENDER`, `PROPERTY_HINT_LAYERS_2D_PHYSICS` -> `LAYERS_2D_PHYSICS`, `PROPERTY_HINT_LAYERS_2D_NAVIGATION` -> `LAYERS_2D_NAVIGATION`, `PROPERTY_HINT_LAYERS_3D_RENDER` -> `LAYERS_3D_RENDER`, `PROPERTY_HINT_LAYERS_3D_PHYSICS` -> `LAYERS_3D_PHYSICS`, `PROPERTY_HINT_LAYERS_3D_NAVIGATION` -> `LAYERS_3D_NAVIGATION`, `PROPERTY_HINT_LAYERS_AVOIDANCE` -> `LAYERS_AVOIDANCE`, `PROPERTY_HINT_FILE` -> `FILE`, `PROPERTY_HINT_DIR` -> `DIR`, `PROPERTY_HINT_GLOBAL_FILE` -> `GLOBAL_FILE`, `PROPERTY_HINT_GLOBAL_DIR` -> `GLOBAL_DIR`, `PROPERTY_HINT_RESOURCE_TYPE` -> `RESOURCE_TYPE`, `PROPERTY_HINT_MULTILINE_TEXT` -> `MULTILINE_TEXT`, `PROPERTY_HINT_EXPRESSION` -> `EXPRESSION`, `PROPERTY_HINT_PLACEHOLDER_TEXT` -> `PLACEHOLDER_TEXT`, `PROPERTY_HINT_COLOR_NO_ALPHA` -> `COLOR_NO_ALPHA`, `PROPERTY_HINT_OBJECT_ID` -> `OBJECT_ID`, `PROPERTY_HINT_TYPE_STRING` -> `TYPE_STRING`, `PROPERTY_HINT_NODE_PATH_TO_EDITED_NODE` -> `NODE_PATH_TO_EDITED_NODE`, `PROPERTY_HINT_OBJECT_TOO_BIG` -> `OBJECT_TOO_BIG`, `PROPERTY_HINT_NODE_PATH_VALID_TYPES` -> `NODE_PATH_VALID_TYPES`, `PROPERTY_HINT_SAVE_FILE` -> `SAVE_FILE`, `PROPERTY_HINT_GLOBAL_SAVE_FILE` -> `GLOBAL_SAVE_FILE`, `PROPERTY_HINT_INT_IS_OBJECTID` -> `INT_IS_OBJECTID`, `PROPERTY_HINT_INT_IS_POINTER` -> `INT_IS_POINTER`, `PROPERTY_HINT_ARRAY_TYPE` -> `ARRAY_TYPE`, `PROPERTY_HINT_DICTIONARY_TYPE` -> `DICTIONARY_TYPE`, `PROPERTY_HINT_LOCALE_ID` -> `LOCALE_ID`, `PROPERTY_HINT_LOCALIZABLE_STRING` -> `LOCALIZABLE_STRING`, `PROPERTY_HINT_NODE_TYPE` -> `NODE_TYPE`, `PROPERTY_HINT_HIDE_QUATERNION_EDIT` -> `HIDE_QUATERNION_EDIT`, `PROPERTY_HINT_PASSWORD` -> `PASSWORD`, `PROPERTY_HINT_TOOL_BUTTON` -> `TOOL_BUTTON`, `PROPERTY_HINT_ONESHOT` -> `ONESHOT`, `PROPERTY_HINT_GROUP_ENABLE` -> `GROUP_ENABLE`, `PROPERTY_HINT_INPUT_NAME` -> `INPUT_NAME`, `PROPERTY_HINT_FILE_PATH` -> `FILE_PATH`, `PROPERTY_HINT_AUDIO_BUS` -> `AUDIO_BUS`, `PROPERTY_HINT_MAX` -> `MAX` |
 | `PropertyUsageFlags` | `PropertyUsageFlags` | `PROPERTY_USAGE_NONE` -> `NONE`, `PROPERTY_USAGE_STORAGE` -> `STORAGE`, `PROPERTY_USAGE_EDITOR` -> `EDITOR`, `PROPERTY_USAGE_INTERNAL` -> `INTERNAL`, `PROPERTY_USAGE_CHECKABLE` -> `CHECKABLE`, `PROPERTY_USAGE_CHECKED` -> `CHECKED`, `PROPERTY_USAGE_GROUP` -> `GROUP`, `PROPERTY_USAGE_CATEGORY` -> `CATEGORY`, `PROPERTY_USAGE_SUBGROUP` -> `SUBGROUP`, `PROPERTY_USAGE_CLASS_IS_BITFIELD` -> `CLASS_IS_BITFIELD`, `PROPERTY_USAGE_NO_INSTANCE_STATE` -> `NO_INSTANCE_STATE`, `PROPERTY_USAGE_RESTART_IF_CHANGED` -> `RESTART_IF_CHANGED`, `PROPERTY_USAGE_SCRIPT_VARIABLE` -> `SCRIPT_VARIABLE`, `PROPERTY_USAGE_STORE_IF_NULL` -> `STORE_IF_NULL`, `PROPERTY_USAGE_UPDATE_ALL_IF_MODIFIED` -> `UPDATE_ALL_IF_MODIFIED`, `PROPERTY_USAGE_SCRIPT_DEFAULT_VALUE` -> `SCRIPT_DEFAULT_VALUE`, `PROPERTY_USAGE_CLASS_IS_ENUM` -> `CLASS_IS_ENUM`, `PROPERTY_USAGE_NIL_IS_VARIANT` -> `NIL_IS_VARIANT`, `PROPERTY_USAGE_ARRAY` -> `ARRAY`, `PROPERTY_USAGE_ALWAYS_DUPLICATE` -> `ALWAYS_DUPLICATE`, `PROPERTY_USAGE_NEVER_DUPLICATE` -> `NEVER_DUPLICATE`, `PROPERTY_USAGE_HIGH_END_GFX` -> `HIGH_END_GFX`, `PROPERTY_USAGE_NODE_PATH_FROM_SCENE_ROOT` -> `NODE_PATH_FROM_SCENE_ROOT`, `PROPERTY_USAGE_RESOURCE_NOT_PERSISTENT` -> `RESOURCE_NOT_PERSISTENT`, `PROPERTY_USAGE_KEYING_INCREMENTS` -> `KEYING_INCREMENTS`, `PROPERTY_USAGE_DEFERRED_SET_RESOURCE` -> `DEFERRED_SET_RESOURCE`, `PROPERTY_USAGE_EDITOR_INSTANTIATE_OBJECT` -> `EDITOR_INSTANTIATE_OBJECT`, `PROPERTY_USAGE_EDITOR_BASIC_SETTING` -> `EDITOR_BASIC_SETTING`, `PROPERTY_USAGE_READ_ONLY` -> `READ_ONLY`, `PROPERTY_USAGE_SECRET` -> `SECRET`, `PROPERTY_USAGE_DEFAULT` -> `DEFAULT`, `PROPERTY_USAGE_NO_EDITOR` -> `NO_EDITOR` |
 | `Side` | `Side` | `SIDE_LEFT` -> `LEFT`, `SIDE_TOP` -> `TOP`, `SIDE_RIGHT` -> `RIGHT`, `SIDE_BOTTOM` -> `BOTTOM` |
 | `Variant.Operator` | `VariantOperator` | `OP_EQUAL` -> `EQUAL`, `OP_NOT_EQUAL` -> `NOT_EQUAL`, `OP_LESS` -> `LESS`, `OP_LESS_EQUAL` -> `LESS_EQUAL`, `OP_GREATER` -> `GREATER`, `OP_GREATER_EQUAL` -> `GREATER_EQUAL`, `OP_ADD` -> `ADD`, `OP_SUBTRACT` -> `SUBTRACT`, `OP_MULTIPLY` -> `MULTIPLY`, `OP_DIVIDE` -> `DIVIDE`, `OP_NEGATE` -> `NEGATE`, `OP_POSITIVE` -> `POSITIVE`, `OP_MODULE` -> `MODULE`, `OP_POWER` -> `POWER`, `OP_SHIFT_LEFT` -> `SHIFT_LEFT`, `OP_SHIFT_RIGHT` -> `SHIFT_RIGHT`, `OP_BIT_AND` -> `BIT_AND`, `OP_BIT_OR` -> `BIT_OR`, `OP_BIT_XOR` -> `BIT_XOR`, `OP_BIT_NEGATE` -> `BIT_NEGATE`, `OP_AND` -> `AND`, `OP_OR` -> `OR`, `OP_XOR` -> `XOR`, `OP_NOT` -> `NOT`, `OP_IN` -> `IN`, `OP_MAX` -> `MAX` |
@@ -180,6 +180,8 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Animation.INTERPOLATION_CUBIC` | `Animation.InterpolationType.CUBIC` |
 | `Animation.INTERPOLATION_LINEAR_ANGLE` | `Animation.InterpolationType.LINEAR_ANGLE` |
 | `Animation.INTERPOLATION_CUBIC_ANGLE` | `Animation.InterpolationType.CUBIC_ANGLE` |
+| `Animation.INTERPOLATION_MAKIMA` | `Animation.InterpolationType.MAKIMA` |
+| `Animation.INTERPOLATION_MAKIMA_ANGLE` | `Animation.InterpolationType.MAKIMA_ANGLE` |
 | `Animation.UPDATE_CONTINUOUS` | `Animation.UpdateMode.CONTINUOUS` |
 | `Animation.UPDATE_DISCRETE` | `Animation.UpdateMode.DISCRETE` |
 | `Animation.UPDATE_CAPTURE` | `Animation.UpdateMode.CAPTURE` |
@@ -396,6 +398,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `BaseMaterial3D.FEATURE_REFRACTION` | `BaseMaterial3D.Feature.REFRACTION` |
 | `BaseMaterial3D.FEATURE_DETAIL` | `BaseMaterial3D.Feature.DETAIL` |
 | `BaseMaterial3D.FEATURE_BENT_NORMAL_MAPPING` | `BaseMaterial3D.Feature.BENT_NORMAL_MAPPING` |
+| `BaseMaterial3D.FEATURE_PARTICLES_ANIMATION` | `BaseMaterial3D.Feature.PARTICLES_ANIMATION` |
 | `BaseMaterial3D.FEATURE_MAX` | `BaseMaterial3D.Feature.MAX` |
 | `BaseMaterial3D.BLEND_MODE_MIX` | `BaseMaterial3D.BlendMode.MIX` |
 | `BaseMaterial3D.BLEND_MODE_ADD` | `BaseMaterial3D.BlendMode.ADD` |
@@ -480,6 +483,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `BlitMaterial.BLEND_MODE_SUB` | `BlitMaterial.BlendMode.SUB` |
 | `BlitMaterial.BLEND_MODE_MUL` | `BlitMaterial.BlendMode.MUL` |
 | `BlitMaterial.BLEND_MODE_DISABLED` | `BlitMaterial.BlendMode.DISABLED` |
+| `BlitMaterial.BLEND_MODE_PREMULTIPLIED_ALPHA` | `BlitMaterial.BlendMode.PREMULTIPLIED_ALPHA` |
 | `BoneConstraint3D.REFERENCE_TYPE_BONE` | `BoneConstraint3D.ReferenceType.BONE` |
 | `BoneConstraint3D.REFERENCE_TYPE_NODE` | `BoneConstraint3D.ReferenceType.NODE` |
 | `BoneTwistDisperser3D.DISPERSE_MODE_EVEN` | `BoneTwistDisperser3D.DisperseMode.EVEN` |
@@ -722,6 +726,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Control.SIZE_EXPAND_FILL` | `Control.SizeFlags.EXPAND_FILL` |
 | `Control.SIZE_SHRINK_CENTER` | `Control.SizeFlags.SHRINK_CENTER` |
 | `Control.SIZE_SHRINK_END` | `Control.SizeFlags.SHRINK_END` |
+| `Control.SIZE_MAXIMIZE` | `Control.SizeFlags.MAXIMIZE` |
 | `Control.MOUSE_FILTER_STOP` | `Control.MouseFilter.STOP` |
 | `Control.MOUSE_FILTER_PASS` | `Control.MouseFilter.PASS` |
 | `Control.MOUSE_FILTER_IGNORE` | `Control.MouseFilter.IGNORE` |
@@ -804,6 +809,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `DisplayServer.FEATURE_ACCESSIBILITY_SCREEN_READER` | `DisplayServer.Feature.ACCESSIBILITY_SCREEN_READER` |
 | `DisplayServer.FEATURE_HDR_OUTPUT` | `DisplayServer.Feature.HDR_OUTPUT` |
 | `DisplayServer.FEATURE_PIP_MODE` | `DisplayServer.Feature.PIP_MODE` |
+| `DisplayServer.FEATURE_EMBEDDED` | `DisplayServer.Feature.EMBEDDED` |
 | `DisplayServer.ROLE_UNKNOWN` | `DisplayServer.AccessibilityRole.UNKNOWN` |
 | `DisplayServer.ROLE_DEFAULT_BUTTON` | `DisplayServer.AccessibilityRole.DEFAULT_BUTTON` |
 | `DisplayServer.ROLE_AUDIO` | `DisplayServer.AccessibilityRole.AUDIO` |
@@ -913,6 +919,9 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `DisplayServer.SCREEN_SENSOR_LANDSCAPE` | `DisplayServer.ScreenOrientation.SENSOR_LANDSCAPE` |
 | `DisplayServer.SCREEN_SENSOR_PORTRAIT` | `DisplayServer.ScreenOrientation.SENSOR_PORTRAIT` |
 | `DisplayServer.SCREEN_SENSOR` | `DisplayServer.ScreenOrientation.SENSOR` |
+| `DisplayServer.SENSOR_ORIENTATION_UNDEFINED` | `DisplayServer.SensorOrientation.UNDEFINED` |
+| `DisplayServer.SENSOR_ORIENTATION_PORTRAIT` | `DisplayServer.SensorOrientation.PORTRAIT` |
+| `DisplayServer.SENSOR_ORIENTATION_LANDSCAPE` | `DisplayServer.SensorOrientation.LANDSCAPE` |
 | `DisplayServer.KEYBOARD_TYPE_DEFAULT` | `DisplayServer.VirtualKeyboardType.DEFAULT` |
 | `DisplayServer.KEYBOARD_TYPE_MULTILINE` | `DisplayServer.VirtualKeyboardType.MULTILINE` |
 | `DisplayServer.KEYBOARD_TYPE_NUMBER` | `DisplayServer.VirtualKeyboardType.NUMBER` |
@@ -987,6 +996,9 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `DisplayServer.WINDOW_EDGE_BOTTOM` | `DisplayServer.WindowResizeEdge.BOTTOM` |
 | `DisplayServer.WINDOW_EDGE_BOTTOM_RIGHT` | `DisplayServer.WindowResizeEdge.BOTTOM_RIGHT` |
 | `DisplayServer.WINDOW_EDGE_MAX` | `DisplayServer.WindowResizeEdge.MAX` |
+| `DisplayServer.NOTIFICATION_ACTIVATED` | `DisplayServer.NotificationStatus.ACTIVATED` |
+| `DisplayServer.NOTIFICATION_DISMISSED` | `DisplayServer.NotificationStatus.DISMISSED` |
+| `DisplayServer.NOTIFICATION_FAILED` | `DisplayServer.NotificationStatus.FAILED` |
 | `DisplayServer.VSYNC_DISABLED` | `DisplayServer.VSyncMode.DISABLED` |
 | `DisplayServer.VSYNC_ENABLED` | `DisplayServer.VSyncMode.ENABLED` |
 | `DisplayServer.VSYNC_ADAPTIVE` | `DisplayServer.VSyncMode.ADAPTIVE` |
@@ -1056,6 +1068,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `EditorDock.DOCK_LAYOUT_VERTICAL` | `EditorDock.DockLayout.VERTICAL` |
 | `EditorDock.DOCK_LAYOUT_HORIZONTAL` | `EditorDock.DockLayout.HORIZONTAL` |
 | `EditorDock.DOCK_LAYOUT_FLOATING` | `EditorDock.DockLayout.FLOATING` |
+| `EditorDock.DOCK_LAYOUT_MAIN_SCREEN` | `EditorDock.DockLayout.MAIN_SCREEN` |
 | `EditorDock.DOCK_LAYOUT_ALL` | `EditorDock.DockLayout.ALL` |
 | `EditorDock.DOCK_SLOT_NONE` | `EditorDock.DockSlot.NONE` |
 | `EditorDock.DOCK_SLOT_LEFT_UL` | `EditorDock.DockSlot.LEFT_UL` |
@@ -1069,6 +1082,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `EditorDock.DOCK_SLOT_BOTTOM` | `EditorDock.DockSlot.BOTTOM` |
 | `EditorDock.DOCK_SLOT_BOTTOM_L` | `EditorDock.DockSlot.BOTTOM_L` |
 | `EditorDock.DOCK_SLOT_BOTTOM_R` | `EditorDock.DockSlot.BOTTOM_R` |
+| `EditorDock.DOCK_SLOT_MAIN_SCREEN` | `EditorDock.DockSlot.MAIN_SCREEN` |
 | `EditorDock.DOCK_SLOT_MAX` | `EditorDock.DockSlot.MAX` |
 | `EditorExportPlatform.EXPORT_MESSAGE_NONE` | `EditorExportPlatform.ExportMessageType.NONE` |
 | `EditorExportPlatform.EXPORT_MESSAGE_INFO` | `EditorExportPlatform.ExportMessageType.INFO` |
@@ -1258,6 +1272,9 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `FileDialog.CUSTOMIZATION_LAYOUT` | `FileDialog.Customization.LAYOUT` |
 | `FileDialog.CUSTOMIZATION_OVERWRITE_WARNING` | `FileDialog.Customization.OVERWRITE_WARNING` |
 | `FileDialog.CUSTOMIZATION_DELETE` | `FileDialog.Customization.DELETE` |
+| `FileDialog.CUSTOMIZATION_NAVIGATION_BUTTONS` | `FileDialog.Customization.NAVIGATION_BUTTONS` |
+| `FileDialog.CUSTOMIZATION_DRIVE_SELECTOR` | `FileDialog.Customization.DRIVE_SELECTOR` |
+| `FileDialog.CUSTOMIZATION_FILTERS` | `FileDialog.Customization.FILTERS` |
 | `FlowContainer.ALIGNMENT_BEGIN` | `FlowContainer.AlignmentMode.BEGIN` |
 | `FlowContainer.ALIGNMENT_CENTER` | `FlowContainer.AlignmentMode.CENTER` |
 | `FlowContainer.ALIGNMENT_END` | `FlowContainer.AlignmentMode.END` |
@@ -1382,11 +1399,14 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_STIFFNESS` | `Generic6DOFJoint3D.Param.ANGULAR_SPRING_STIFFNESS` |
 | `Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_DAMPING` | `Generic6DOFJoint3D.Param.ANGULAR_SPRING_DAMPING` |
 | `Generic6DOFJoint3D.PARAM_ANGULAR_SPRING_EQUILIBRIUM_POINT` | `Generic6DOFJoint3D.Param.ANGULAR_SPRING_EQUILIBRIUM_POINT` |
+| `Generic6DOFJoint3D.PARAM_LINEAR_DRIVE_FORCE_LIMIT` | `Generic6DOFJoint3D.Param.LINEAR_DRIVE_FORCE_LIMIT` |
+| `Generic6DOFJoint3D.PARAM_ANGULAR_DRIVE_TORQUE_LIMIT` | `Generic6DOFJoint3D.Param.ANGULAR_DRIVE_TORQUE_LIMIT` |
 | `Generic6DOFJoint3D.PARAM_MAX` | `Generic6DOFJoint3D.Param.MAX` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_LINEAR_LIMIT` | `Generic6DOFJoint3D.Flag.ENABLE_LINEAR_LIMIT` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_ANGULAR_LIMIT` | `Generic6DOFJoint3D.Flag.ENABLE_ANGULAR_LIMIT` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_LINEAR_SPRING` | `Generic6DOFJoint3D.Flag.ENABLE_LINEAR_SPRING` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_ANGULAR_SPRING` | `Generic6DOFJoint3D.Flag.ENABLE_ANGULAR_SPRING` |
+| `Generic6DOFJoint3D.FLAG_ENABLE_ANGULAR_MOTOR` | `Generic6DOFJoint3D.Flag.ENABLE_ANGULAR_MOTOR` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_MOTOR` | `Generic6DOFJoint3D.Flag.ENABLE_MOTOR` |
 | `Generic6DOFJoint3D.FLAG_ENABLE_LINEAR_MOTOR` | `Generic6DOFJoint3D.Flag.ENABLE_LINEAR_MOTOR` |
 | `Generic6DOFJoint3D.FLAG_MAX` | `Generic6DOFJoint3D.Flag.MAX` |
@@ -1607,6 +1627,8 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Image.FORMAT_RG16I` | `Image.Format.RG16I` |
 | `Image.FORMAT_RGB16I` | `Image.Format.RGB16I` |
 | `Image.FORMAT_RGBA16I` | `Image.Format.RGBA16I` |
+| `Image.FORMAT_ASTC_6x6` | `Image.Format.ASTC_6x6` |
+| `Image.FORMAT_ASTC_6x6_HDR` | `Image.Format.ASTC_6x6_HDR` |
 | `Image.FORMAT_MAX` | `Image.Format.MAX` |
 | `Image.INTERPOLATE_NEAREST` | `Image.Interpolation.NEAREST` |
 | `Image.INTERPOLATE_BILINEAR` | `Image.Interpolation.BILINEAR` |
@@ -1631,6 +1653,11 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Image.COMPRESS_SOURCE_GENERIC` | `Image.CompressSource.GENERIC` |
 | `Image.COMPRESS_SOURCE_SRGB` | `Image.CompressSource.SRGB` |
 | `Image.COMPRESS_SOURCE_NORMAL` | `Image.CompressSource.NORMAL` |
+| `Image.COMPRESS_PROFILE_AUTOMATIC` | `Image.CompressProfile.AUTOMATIC` |
+| `Image.COMPRESS_PROFILE_MAX_QUALITY` | `Image.CompressProfile.MAX_QUALITY` |
+| `Image.COMPRESS_PROFILE_COMPRESSED` | `Image.CompressProfile.COMPRESSED` |
+| `Image.COMPRESS_PROFILE_MAX_COMPRESSION` | `Image.CompressProfile.MAX_COMPRESSION` |
+| `Image.COMPRESS_PROFILE_MAX` | `Image.CompressProfile.MAX` |
 | `Image.ASTC_FORMAT_4x4` | `Image.ASTCFormat.FORMAT_4x4` |
 | `Image.ASTC_FORMAT_8x8` | `Image.ASTCFormat.FORMAT_8x8` |
 | `ImageFormatLoader.FLAG_NONE` | `ImageFormatLoader.LoaderFlags.NONE` |
@@ -1709,6 +1736,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Light3D.PARAM_SHADOW_BLUR` | `Light3D.Param.SHADOW_BLUR` |
 | `Light3D.PARAM_TRANSMITTANCE_BIAS` | `Light3D.Param.TRANSMITTANCE_BIAS` |
 | `Light3D.PARAM_INTENSITY` | `Light3D.Param.INTENSITY` |
+| `Light3D.PARAM_CONTACT_SHADOW_BLUR` | `Light3D.Param.CONTACT_SHADOW_BLUR` |
 | `Light3D.PARAM_MAX` | `Light3D.Param.MAX` |
 | `Light3D.BAKE_DISABLED` | `Light3D.BakeMode.DISABLED` |
 | `Light3D.BAKE_STATIC` | `Light3D.BakeMode.STATIC` |
@@ -1734,6 +1762,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `LightmapGI.BAKE_ERROR_TEXTURE_SIZE_TOO_SMALL` | `LightmapGI.BakeError.TEXTURE_SIZE_TOO_SMALL` |
 | `LightmapGI.BAKE_ERROR_LIGHTMAP_TOO_SMALL` | `LightmapGI.BakeError.LIGHTMAP_TOO_SMALL` |
 | `LightmapGI.BAKE_ERROR_ATLAS_TOO_SMALL` | `LightmapGI.BakeError.ATLAS_TOO_SMALL` |
+| `LightmapGI.BAKE_ERROR_TEXTURE_EXCEEDS_DEVICE_LIMIT` | `LightmapGI.BakeError.TEXTURE_EXCEEDS_DEVICE_LIMIT` |
 | `LightmapGI.ENVIRONMENT_MODE_DISABLED` | `LightmapGI.EnvironmentMode.DISABLED` |
 | `LightmapGI.ENVIRONMENT_MODE_SCENE` | `LightmapGI.EnvironmentMode.SCENE` |
 | `LightmapGI.ENVIRONMENT_MODE_CUSTOM_SKY` | `LightmapGI.EnvironmentMode.CUSTOM_SKY` |
@@ -1750,6 +1779,16 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Line2D.LINE_TEXTURE_NONE` | `Line2D.LineTextureMode.NONE` |
 | `Line2D.LINE_TEXTURE_TILE` | `Line2D.LineTextureMode.TILE` |
 | `Line2D.LINE_TEXTURE_STRETCH` | `Line2D.LineTextureMode.STRETCH` |
+| `Line3D.MESH_ALIGNMENT_LOCAL` | `Line3D.MeshAlignment.LOCAL` |
+| `Line3D.MESH_ALIGNMENT_BILLBOARD` | `Line3D.MeshAlignment.BILLBOARD` |
+| `Line3D.MESH_ALIGNMENT_MAX` | `Line3D.MeshAlignment.MAX` |
+| `Line3D.TILING_MODE_STRETCH` | `Line3D.TilingMode.MODE_STRETCH` |
+| `Line3D.TILING_MODE_TILE` | `Line3D.TilingMode.MODE_TILE` |
+| `Line3D.TILING_MAX` | `Line3D.TilingMode.MAX` |
+| `Line3D.MATERIAL_MODE_MIX` | `Line3D.MaterialMode.MIX` |
+| `Line3D.MATERIAL_MODE_ADD` | `Line3D.MaterialMode.ADD` |
+| `Line3D.MATERIAL_MODE_CUSTOM` | `Line3D.MaterialMode.CUSTOM` |
+| `Line3D.MATERIAL_MODE_MAX` | `Line3D.MaterialMode.MAX` |
 | `LineEdit.MENU_CUT` | `LineEdit.MenuItems.CUT` |
 | `LineEdit.MENU_COPY` | `LineEdit.MenuItems.COPY` |
 | `LineEdit.MENU_PASTE` | `LineEdit.MenuItems.PASTE` |
@@ -1858,6 +1897,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS` | `Mesh.ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` |
 | `Mesh.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY` | `Mesh.ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY` |
 | `Mesh.ARRAY_FLAG_COMPRESS_ATTRIBUTES` | `Mesh.ArrayFormat.FLAG_COMPRESS_ATTRIBUTES` |
+| `Mesh.ARRAY_FLAG_USE_STORAGE_BUFFER` | `Mesh.ArrayFormat.FLAG_USE_STORAGE_BUFFER` |
 | `Mesh.BLEND_SHAPE_MODE_NORMALIZED` | `Mesh.BlendShapeMode.NORMALIZED` |
 | `Mesh.BLEND_SHAPE_MODE_RELATIVE` | `Mesh.BlendShapeMode.RELATIVE` |
 | `MeshConvexDecompositionSettings.CONVEX_DECOMPOSITION_MODE_VOXEL` | `MeshConvexDecompositionSettings.Mode.VOXEL` |
@@ -2063,6 +2103,11 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `OpenXRInterface.SESSION_STATE_STOPPING` | `OpenXRInterface.SessionState.STOPPING` |
 | `OpenXRInterface.SESSION_STATE_LOSS_PENDING` | `OpenXRInterface.SessionState.LOSS_PENDING` |
 | `OpenXRInterface.SESSION_STATE_EXITING` | `OpenXRInterface.SessionState.EXITING` |
+| `OpenXRInterface.VIEW_CONFIGURATION_MONO` | `OpenXRInterface.ViewConfiguration.MONO` |
+| `OpenXRInterface.VIEW_CONFIGURATION_STEREO` | `OpenXRInterface.ViewConfiguration.STEREO` |
+| `OpenXRInterface.VIEW_CONFIGURATION_STEREO_WITH_INSET` | `OpenXRInterface.ViewConfiguration.STEREO_WITH_INSET` |
+| `OpenXRInterface.VIEW_CONFIGURATION_UNSET` | `OpenXRInterface.ViewConfiguration.UNSET` |
+| `OpenXRInterface.VIEW_CONFIGURATION_UNKNOWN` | `OpenXRInterface.ViewConfiguration.UNKNOWN` |
 | `OpenXRInterface.HAND_LEFT` | `OpenXRInterface.Hand.LEFT` |
 | `OpenXRInterface.HAND_RIGHT` | `OpenXRInterface.Hand.RIGHT` |
 | `OpenXRInterface.HAND_MAX` | `OpenXRInterface.Hand.MAX` |
@@ -2158,6 +2203,8 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `OpenXRSpatialComponentPlaneSemanticLabelList.PLANE_SEMANTIC_LABEL_WALL` | `OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel.WALL` |
 | `OpenXRSpatialComponentPlaneSemanticLabelList.PLANE_SEMANTIC_LABEL_CEILING` | `OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel.CEILING` |
 | `OpenXRSpatialComponentPlaneSemanticLabelList.PLANE_SEMANTIC_LABEL_TABLE` | `OpenXRSpatialComponentPlaneSemanticLabelList.PlaneSemanticLabel.TABLE` |
+| `OpenXRSpatialContainerState.BOUNDS_MODE_BOUNDED` | `OpenXRSpatialContainerState.BoundsMode.BOUNDED` |
+| `OpenXRSpatialContainerState.BOUNDS_MODE_IMMERSIVE` | `OpenXRSpatialContainerState.BoundsMode.IMMERSIVE` |
 | `OpenXRSpatialEntityExtension.CAPABILITY_PLANE_TRACKING` | `OpenXRSpatialEntityExtension.Capability.PLANE_TRACKING` |
 | `OpenXRSpatialEntityExtension.CAPABILITY_MARKER_TRACKING_QR_CODE` | `OpenXRSpatialEntityExtension.Capability.MARKER_TRACKING_QR_CODE` |
 | `OpenXRSpatialEntityExtension.CAPABILITY_MARKER_TRACKING_MICRO_QR_CODE` | `OpenXRSpatialEntityExtension.Capability.MARKER_TRACKING_MICRO_QR_CODE` |
@@ -2175,9 +2222,19 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `OpenXRSpatialEntityExtension.COMPONENT_TYPE_MARKER` | `OpenXRSpatialEntityExtension.ComponentType.MARKER` |
 | `OpenXRSpatialEntityExtension.COMPONENT_TYPE_ANCHOR` | `OpenXRSpatialEntityExtension.ComponentType.ANCHOR` |
 | `OpenXRSpatialEntityExtension.COMPONENT_TYPE_PERSISTENCE` | `OpenXRSpatialEntityExtension.ComponentType.PERSISTENCE` |
+| `OpenXRSpatialEntityExtension.TRACKING_UNSUPPORTED_CAPABILITY` | `OpenXRSpatialEntityExtension.TrackingState.UNSUPPORTED_CAPABILITY` |
+| `OpenXRSpatialEntityExtension.TRACKING_NO_PERMISSION` | `OpenXRSpatialEntityExtension.TrackingState.NO_PERMISSION` |
+| `OpenXRSpatialEntityExtension.TRACKING_SETUP_FAILED` | `OpenXRSpatialEntityExtension.TrackingState.SETUP_FAILED` |
+| `OpenXRSpatialEntityExtension.TRACKING_NOT_ACTIVE` | `OpenXRSpatialEntityExtension.TrackingState.NOT_ACTIVE` |
+| `OpenXRSpatialEntityExtension.TRACKING_SETTING_UP` | `OpenXRSpatialEntityExtension.TrackingState.SETTING_UP` |
+| `OpenXRSpatialEntityExtension.TRACKING_ENABLED` | `OpenXRSpatialEntityExtension.TrackingState.ENABLED` |
 | `OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_STOPPED` | `OpenXRSpatialEntityTracker.EntityTrackingState.STOPPED` |
 | `OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_PAUSED` | `OpenXRSpatialEntityTracker.EntityTrackingState.PAUSED` |
 | `OpenXRSpatialEntityTracker.ENTITY_TRACKING_STATE_TRACKING` | `OpenXRSpatialEntityTracker.EntityTrackingState.TRACKING` |
+| `OpenXRSpatialMarkerTrackingCapability.MARKER_QR_CODE` | `OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags.QR_CODE` |
+| `OpenXRSpatialMarkerTrackingCapability.MARKER_MICRO_QR_CODE` | `OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags.MICRO_QR_CODE` |
+| `OpenXRSpatialMarkerTrackingCapability.MARKER_ARUCO` | `OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags.ARUCO` |
+| `OpenXRSpatialMarkerTrackingCapability.MARKER_APRIL_TAG` | `OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags.APRIL_TAG` |
 | `PackedScene.GEN_EDIT_STATE_DISABLED` | `PackedScene.GenEditState.DISABLED` |
 | `PackedScene.GEN_EDIT_STATE_INSTANCE` | `PackedScene.GenEditState.INSTANCE` |
 | `PackedScene.GEN_EDIT_STATE_MAIN` | `PackedScene.GenEditState.MAIN` |
@@ -2211,6 +2268,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `ParticleProcessMaterial.PARTICLE_FLAG_DISABLE_Z` | `ParticleProcessMaterial.ParticleFlags.DISABLE_Z` |
 | `ParticleProcessMaterial.PARTICLE_FLAG_DAMPING_AS_FRICTION` | `ParticleProcessMaterial.ParticleFlags.DAMPING_AS_FRICTION` |
 | `ParticleProcessMaterial.PARTICLE_FLAG_INHERIT_EMITTER_SCALE` | `ParticleProcessMaterial.ParticleFlags.INHERIT_EMITTER_SCALE` |
+| `ParticleProcessMaterial.PARTICLE_FLAG_PRESERVE_COLOR` | `ParticleProcessMaterial.ParticleFlags.PRESERVE_COLOR` |
 | `ParticleProcessMaterial.PARTICLE_FLAG_MAX` | `ParticleProcessMaterial.ParticleFlags.MAX` |
 | `ParticleProcessMaterial.EMISSION_SHAPE_POINT` | `ParticleProcessMaterial.EmissionShape.POINT` |
 | `ParticleProcessMaterial.EMISSION_SHAPE_SPHERE` | `ParticleProcessMaterial.EmissionShape.SPHERE` |
@@ -2294,6 +2352,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Performance.NAVIGATION_3D_EDGE_CONNECTION_COUNT` | `Performance.Monitor.NAVIGATION_3D_EDGE_CONNECTION_COUNT` |
 | `Performance.NAVIGATION_3D_EDGE_FREE_COUNT` | `Performance.Monitor.NAVIGATION_3D_EDGE_FREE_COUNT` |
 | `Performance.NAVIGATION_3D_OBSTACLE_COUNT` | `Performance.Monitor.NAVIGATION_3D_OBSTACLE_COUNT` |
+| `Performance.RENDER_STREAMING_TEXTURE_MEM_USED` | `Performance.Monitor.RENDER_STREAMING_TEXTURE_MEM_USED` |
 | `Performance.MONITOR_MAX` | `Performance.Monitor.MONITOR_MAX` |
 | `Performance.MONITOR_TYPE_QUANTITY` | `Performance.MonitorType.QUANTITY` |
 | `Performance.MONITOR_TYPE_MEMORY` | `Performance.MonitorType.MEMORY` |
@@ -2455,11 +2514,14 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `PhysicsServer3D.G6DOF_JOINT_ANGULAR_SPRING_STIFFNESS` | `PhysicsServer3D.G6DOFJointAxisParam.ANGULAR_SPRING_STIFFNESS` |
 | `PhysicsServer3D.G6DOF_JOINT_ANGULAR_SPRING_DAMPING` | `PhysicsServer3D.G6DOFJointAxisParam.ANGULAR_SPRING_DAMPING` |
 | `PhysicsServer3D.G6DOF_JOINT_ANGULAR_SPRING_EQUILIBRIUM_POINT` | `PhysicsServer3D.G6DOFJointAxisParam.ANGULAR_SPRING_EQUILIBRIUM_POINT` |
+| `PhysicsServer3D.G6DOF_JOINT_LINEAR_DRIVE_FORCE_LIMIT` | `PhysicsServer3D.G6DOFJointAxisParam.LINEAR_DRIVE_FORCE_LIMIT` |
+| `PhysicsServer3D.G6DOF_JOINT_ANGULAR_DRIVE_TORQUE_LIMIT` | `PhysicsServer3D.G6DOFJointAxisParam.ANGULAR_DRIVE_TORQUE_LIMIT` |
 | `PhysicsServer3D.G6DOF_JOINT_MAX` | `PhysicsServer3D.G6DOFJointAxisParam.MAX` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_LINEAR_LIMIT` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_LINEAR_LIMIT` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_ANGULAR_LIMIT` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_ANGULAR_LIMIT` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_ANGULAR_SPRING` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_ANGULAR_SPRING` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_LINEAR_SPRING` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_LINEAR_SPRING` |
+| `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_ANGULAR_MOTOR` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_ANGULAR_MOTOR` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_MOTOR` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_MOTOR` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_ENABLE_LINEAR_MOTOR` | `PhysicsServer3D.G6DOFJointAxisFlag.ENABLE_LINEAR_MOTOR` |
 | `PhysicsServer3D.G6DOF_JOINT_FLAG_MAX` | `PhysicsServer3D.G6DOFJointAxisFlag.MAX` |
@@ -2872,6 +2934,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `RenderingDevice.TEXTURE_SLICE_2D` | `RenderingDevice.TextureSliceType.SLICE_2D` |
 | `RenderingDevice.TEXTURE_SLICE_CUBEMAP` | `RenderingDevice.TextureSliceType.CUBEMAP` |
 | `RenderingDevice.TEXTURE_SLICE_3D` | `RenderingDevice.TextureSliceType.SLICE_3D` |
+| `RenderingDevice.TEXTURE_SLICE_2D_ARRAY` | `RenderingDevice.TextureSliceType.SLICE_2D_ARRAY` |
 | `RenderingDevice.SAMPLER_FILTER_NEAREST` | `RenderingDevice.SamplerFilter.NEAREST` |
 | `RenderingDevice.SAMPLER_FILTER_LINEAR` | `RenderingDevice.SamplerFilter.LINEAR` |
 | `RenderingDevice.SAMPLER_REPEAT_MODE_REPEAT` | `RenderingDevice.SamplerRepeatMode.REPEAT` |
@@ -3052,6 +3115,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `RenderingDevice.SUPPORTS_RAY_QUERY` | `RenderingDevice.Features.RAY_QUERY` |
 | `RenderingDevice.SUPPORTS_RAYTRACING_PIPELINE` | `RenderingDevice.Features.RAYTRACING_PIPELINE` |
 | `RenderingDevice.SUPPORTS_HDR_OUTPUT` | `RenderingDevice.Features.HDR_OUTPUT` |
+| `RenderingDevice.SUPPORTS_RASTERIZATION_RATE_MAP` | `RenderingDevice.Features.RASTERIZATION_RATE_MAP` |
 | `RenderingDevice.LIMIT_MAX_BOUND_UNIFORM_SETS` | `RenderingDevice.Limit.MAX_BOUND_UNIFORM_SETS` |
 | `RenderingDevice.LIMIT_MAX_FRAMEBUFFER_COLOR_ATTACHMENTS` | `RenderingDevice.Limit.MAX_FRAMEBUFFER_COLOR_ATTACHMENTS` |
 | `RenderingDevice.LIMIT_MAX_TEXTURES_PER_UNIFORM_SET` | `RenderingDevice.Limit.MAX_TEXTURES_PER_UNIFORM_SET` |
@@ -3207,6 +3271,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `RenderingServer.ARRAY_FLAG_USE_8_BONE_WEIGHTS` | `RenderingServer.ArrayFormat.FLAG_USE_8_BONE_WEIGHTS` |
 | `RenderingServer.ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY` | `RenderingServer.ArrayFormat.FLAG_USES_EMPTY_VERTEX_ARRAY` |
 | `RenderingServer.ARRAY_FLAG_COMPRESS_ATTRIBUTES` | `RenderingServer.ArrayFormat.FLAG_COMPRESS_ATTRIBUTES` |
+| `RenderingServer.ARRAY_FLAG_USE_STORAGE_BUFFER` | `RenderingServer.ArrayFormat.FLAG_USE_STORAGE_BUFFER` |
 | `RenderingServer.ARRAY_FLAG_FORMAT_VERSION_BASE` | `RenderingServer.ArrayFormat.FLAG_FORMAT_VERSION_BASE` |
 | `RenderingServer.ARRAY_FLAG_FORMAT_VERSION_SHIFT` | `RenderingServer.ArrayFormat.FLAG_FORMAT_VERSION_SHIFT` |
 | `RenderingServer.ARRAY_FLAG_FORMAT_VERSION_1` | `RenderingServer.ArrayFormat.FLAG_FORMAT_VERSION_1` |
@@ -3256,6 +3321,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `RenderingServer.LIGHT_PARAM_SHADOW_BLUR` | `RenderingServer.LightParam.SHADOW_BLUR` |
 | `RenderingServer.LIGHT_PARAM_TRANSMITTANCE_BIAS` | `RenderingServer.LightParam.TRANSMITTANCE_BIAS` |
 | `RenderingServer.LIGHT_PARAM_INTENSITY` | `RenderingServer.LightParam.INTENSITY` |
+| `RenderingServer.LIGHT_PARAM_CONTACT_SHADOW_BLUR` | `RenderingServer.LightParam.CONTACT_SHADOW_BLUR` |
 | `RenderingServer.LIGHT_PARAM_MAX` | `RenderingServer.LightParam.MAX` |
 | `RenderingServer.LIGHT_BAKE_DISABLED` | `RenderingServer.LightBakeMode.DISABLED` |
 | `RenderingServer.LIGHT_BAKE_STATIC` | `RenderingServer.LightBakeMode.STATIC` |
@@ -3682,6 +3748,11 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `RichTextLabel.UPDATE_PAD` | `RichTextLabel.ImageUpdateMask.PAD` |
 | `RichTextLabel.UPDATE_TOOLTIP` | `RichTextLabel.ImageUpdateMask.TOOLTIP` |
 | `RichTextLabel.UPDATE_WIDTH_UNIT` | `RichTextLabel.ImageUpdateMask.WIDTH_UNIT` |
+| `RichTextLabel.RESOURCE_ACCESS_RESOURCES` | `RichTextLabel.ResourceAccessFlag.RESOURCES` |
+| `RichTextLabel.RESOURCE_ACCESS_USERDATA` | `RichTextLabel.ResourceAccessFlag.USERDATA` |
+| `RichTextLabel.RESOURCE_ACCESS_FILESYSTEM` | `RichTextLabel.ResourceAccessFlag.FILESYSTEM` |
+| `RichTextLabel.RESOURCE_ACCESS_PIPE` | `RichTextLabel.ResourceAccessFlag.PIPE` |
+| `RichTextLabel.RESOURCE_ACCESS_NETWORK` | `RichTextLabel.ResourceAccessFlag.NETWORK` |
 | `RichTextLabel.IMAGE_UNIT_PIXEL` | `RichTextLabel.ImageUnit.PIXEL` |
 | `RichTextLabel.IMAGE_UNIT_PERCENT` | `RichTextLabel.ImageUnit.PERCENT` |
 | `RichTextLabel.IMAGE_UNIT_EM` | `RichTextLabel.ImageUnit.EM` |
@@ -3754,6 +3825,12 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `ScrollContainer.SCROLL_HINT_MODE_ALL` | `ScrollContainer.ScrollHintMode.ALL` |
 | `ScrollContainer.SCROLL_HINT_MODE_TOP_AND_LEFT` | `ScrollContainer.ScrollHintMode.TOP_AND_LEFT` |
 | `ScrollContainer.SCROLL_HINT_MODE_BOTTOM_AND_RIGHT` | `ScrollContainer.ScrollHintMode.BOTTOM_AND_RIGHT` |
+| `ScrollContainer.SCROLL_HINT_MODE_TOP_AND_BOTTOM` | `ScrollContainer.ScrollHintMode.TOP_AND_BOTTOM` |
+| `ScrollContainer.SCROLL_HINT_MODE_LEFT_AND_RIGHT` | `ScrollContainer.ScrollHintMode.LEFT_AND_RIGHT` |
+| `ScrollContainer.SCROLL_HINT_MODE_TOP` | `ScrollContainer.ScrollHintMode.TOP` |
+| `ScrollContainer.SCROLL_HINT_MODE_BOTTOM` | `ScrollContainer.ScrollHintMode.BOTTOM` |
+| `ScrollContainer.SCROLL_HINT_MODE_LEFT` | `ScrollContainer.ScrollHintMode.LEFT` |
+| `ScrollContainer.SCROLL_HINT_MODE_RIGHT` | `ScrollContainer.ScrollHintMode.RIGHT` |
 | `Shader.MODE_SPATIAL` | `Shader.Mode.SPATIAL` |
 | `Shader.MODE_CANVAS_ITEM` | `Shader.Mode.CANVAS_ITEM` |
 | `Shader.MODE_PARTICLES` | `Shader.Mode.PARTICLES` |
@@ -3887,6 +3964,11 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `TabBar.ALIGNMENT_CENTER` | `TabBar.AlignmentMode.CENTER` |
 | `TabBar.ALIGNMENT_RIGHT` | `TabBar.AlignmentMode.RIGHT` |
 | `TabBar.ALIGNMENT_MAX` | `TabBar.AlignmentMode.MAX` |
+| `TabBar.TAB_SIZING_FIT_CONTENT` | `TabBar.SizingMode.FIT_CONTENT` |
+| `TabBar.TAB_SIZING_UNIFORM` | `TabBar.SizingMode.UNIFORM` |
+| `TabBar.TAB_SIZING_JUSTIFY` | `TabBar.SizingMode.JUSTIFY` |
+| `TabBar.TAB_SIZING_EXPAND` | `TabBar.SizingMode.EXPAND` |
+| `TabBar.TAB_SIZING_MAX` | `TabBar.SizingMode.MAX` |
 | `TabBar.CLOSE_BUTTON_SHOW_NEVER` | `TabBar.CloseButtonDisplayPolicy.SHOW_NEVER` |
 | `TabBar.CLOSE_BUTTON_SHOW_ACTIVE_ONLY` | `TabBar.CloseButtonDisplayPolicy.SHOW_ACTIVE_ONLY` |
 | `TabBar.CLOSE_BUTTON_SHOW_ALWAYS` | `TabBar.CloseButtonDisplayPolicy.SHOW_ALWAYS` |
@@ -4098,6 +4180,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Theme.DATA_TYPE_FONT_SIZE` | `Theme.DataType.FONT_SIZE` |
 | `Theme.DATA_TYPE_ICON` | `Theme.DataType.ICON` |
 | `Theme.DATA_TYPE_STYLEBOX` | `Theme.DataType.STYLEBOX` |
+| `Theme.DATA_TYPE_SOUND` | `Theme.DataType.SOUND` |
 | `Theme.DATA_TYPE_MAX` | `Theme.DataType.MAX` |
 | `Thread.PRIORITY_LOW` | `Thread.Priority.LOW` |
 | `Thread.PRIORITY_NORMAL` | `Thread.Priority.NORMAL` |
@@ -4165,6 +4248,9 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `Timer.TIMER_PROCESS_IDLE` | `Timer.TimerProcessCallback.IDLE` |
 | `TouchScreenButton.VISIBILITY_ALWAYS` | `TouchScreenButton.VisibilityMode.ALWAYS` |
 | `TouchScreenButton.VISIBILITY_TOUCHSCREEN_ONLY` | `TouchScreenButton.VisibilityMode.TOUCHSCREEN_ONLY` |
+| `Trail3D.LIMIT_MODE_LIFETIME` | `Trail3D.LimitMode.LIFETIME` |
+| `Trail3D.LIMIT_MODE_MAX_LENGTH` | `Trail3D.LimitMode.MAX_LENGTH` |
+| `Trail3D.LIMIT_MODE_MAX` | `Trail3D.LimitMode.MAX` |
 | `Tree.SELECT_SINGLE` | `Tree.SelectMode.SINGLE` |
 | `Tree.SELECT_ROW` | `Tree.SelectMode.ROW` |
 | `Tree.SELECT_MULTI` | `Tree.SelectMode.MULTI` |
@@ -5133,6 +5219,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `XRInterface.XR_VRS_TEXTURE_FORMAT_UNIFIED` | `XRInterface.VRSTextureFormat.UNIFIED` |
 | `XRInterface.XR_VRS_TEXTURE_FORMAT_FRAGMENT_SHADING_RATE` | `XRInterface.VRSTextureFormat.FRAGMENT_SHADING_RATE` |
 | `XRInterface.XR_VRS_TEXTURE_FORMAT_FRAGMENT_DENSITY_MAP` | `XRInterface.VRSTextureFormat.FRAGMENT_DENSITY_MAP` |
+| `XRInterface.XR_VRS_TEXTURE_FORMAT_RASTERIZATION_RATE_MAP` | `XRInterface.VRSTextureFormat.RASTERIZATION_RATE_MAP` |
 | `XRPose.XR_TRACKING_CONFIDENCE_NONE` | `XRPose.TrackingConfidence.NONE` |
 | `XRPose.XR_TRACKING_CONFIDENCE_LOW` | `XRPose.TrackingConfidence.LOW` |
 | `XRPose.XR_TRACKING_CONFIDENCE_HIGH` | `XRPose.TrackingConfidence.HIGH` |
@@ -5140,7 +5227,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `XRPositionalTracker.TRACKER_HAND_LEFT` | `XRPositionalTracker.TrackerHand.LEFT` |
 | `XRPositionalTracker.TRACKER_HAND_RIGHT` | `XRPositionalTracker.TrackerHand.RIGHT` |
 | `XRPositionalTracker.TRACKER_HAND_MAX` | `XRPositionalTracker.TrackerHand.MAX` |
-| `XRServer.TRACKER_HEAD` | `XRServer.TrackerType.HEAD` |
+| `XRServer.TRACKER_CAMERA` | `XRServer.TrackerType.CAMERA` |
 | `XRServer.TRACKER_CONTROLLER` | `XRServer.TrackerType.CONTROLLER` |
 | `XRServer.TRACKER_BASESTATION` | `XRServer.TrackerType.BASESTATION` |
 | `XRServer.TRACKER_ANCHOR` | `XRServer.TrackerType.ANCHOR` |
@@ -5150,6 +5237,7 @@ drop the enum's common prefix by Godot's C# rule, frozen per enum in `scripts/en
 | `XRServer.TRACKER_ANY_KNOWN` | `XRServer.TrackerType.ANY_KNOWN` |
 | `XRServer.TRACKER_UNKNOWN` | `XRServer.TrackerType.UNKNOWN` |
 | `XRServer.TRACKER_ANY` | `XRServer.TrackerType.ANY` |
+| `XRServer.TRACKER_HEAD` | `XRServer.TrackerType.HEAD` |
 | `XRServer.RESET_FULL_ROTATION` | `XRServer.RotationMode.RESET_FULL_ROTATION` |
 | `XRServer.RESET_BUT_KEEP_TILT` | `XRServer.RotationMode.RESET_BUT_KEEP_TILT` |
 | `XRServer.DONT_RESET_ROTATION` | `XRServer.RotationMode.DONT_RESET_ROTATION` |

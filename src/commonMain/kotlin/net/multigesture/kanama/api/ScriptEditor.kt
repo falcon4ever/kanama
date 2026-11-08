@@ -12,7 +12,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
  *
  * Generated from Godot docs: ScriptEditor
  */
-class ScriptEditor(handle: GodotHandle) : PanelContainer(handle) {
+class ScriptEditor(handle: GodotHandle) : EditorDock(handle) {
     /**
      * Returns the `ScriptEditorBase` object that the user is currently editing.
      *

@@ -8,7 +8,7 @@ config_version=5
 config/name="Kanama Starter"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
-config/features=PackedStringArray("4.7")
+config/features=PackedStringArray("4.8")
 
 [editor_plugins]
 

@@ -18,7 +18,7 @@ GRADLE_TIMEOUT="${KANAMA_UPGRADE_GRADLE_TIMEOUT:-1200}"
 
 usage() {
   cat <<'EOF'
-usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease-trial] [--baseline-ref REF]
+usage: scripts/upgrade_godot.sh [--plan | --dry-run] [--prerelease] [--baseline-ref REF]
                                 [--godot-docs /path/to/godot/doc/classes]
                                 [--templates /path/to/export_templates.tpz]
                                 /absolute/path/to/godot_binary
@@ -68,8 +68,9 @@ Modes:
                      this Godot added all diff against it, so a bump whose half-done result was
                      committed can be re-run with the pre-bump commit here and reach the same result.
 
---prerelease-trial   allow a beta/rc pin (4.8.beta1), for a trial on a throwaway branch. Kanama
-                     re-pins only on stable releases; never merge a prerelease pin.
+--prerelease         allow a beta/rc pin (4.8.beta2) and a source checkout whose version.py says `beta`.
+                     A prerelease pin may live on main; a release may not: a tag on one stops
+                     (scripts/check_godot_version_pin.py --release). A stable pin needs no flag.
 --templates PATH     the export templates .tpz (or the directory holding it): installed into the
                      templates folder for the pin when it is missing, checked against the pin when not.
 
@@ -105,7 +106,7 @@ while [[ $# -gt 0 ]]; do
       MODE=plan
       shift
       ;;
-    --prerelease-trial)
+    --prerelease)
       PRERELEASE=1
       shift
       ;;
@@ -197,14 +198,14 @@ if [[ -z "$PIN" ]]; then
   exit 1
 fi
 
-# Upgrade policy (maintainer decision, 2026-07-09): Kanama re-pins only on stable Godot releases.
-# --prerelease-trial lets a beta/rc pin through for a trial branch (task 139: the RC re-run).
+# Upgrade policy: a beta or rc pin is a deliberate choice, so it takes --prerelease. It may live on main
+# (maintainer decision, 2026-11-07); a release may not ship on one, see check_godot_version_pin.py --release.
 if [[ "$PIN" == *.stable ]]; then
   :
 elif [[ $PRERELEASE -eq 1 && "$PIN" =~ \.(beta|rc)[0-9]+$ ]]; then
-  log "prerelease trial: kanamaGodotVersion=$PIN (a trial branch only; never merge a prerelease pin)"
+  log "prerelease pin: kanamaGodotVersion=$PIN (main may carry it; no release is cut on it)"
 else
-  preflight_fail "kanamaGodotVersion=$PIN is not a stable release. Kanama re-pins only on stable Godot releases; --prerelease-trial allows a beta/rc pin on a trial branch"
+  preflight_fail "kanamaGodotVersion=$PIN is not a stable release; pass --prerelease to pin a beta or rc on purpose (no release can be cut on it)"
 fi
 
 # justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below.
@@ -641,6 +642,8 @@ run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
 run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" \
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md"
 run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_report.py"
+run_soft "iOS scene-init unsafe classes" python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py" \
+  --regenerate --godot-src "$GODOT_DOCS_DIR/../.." --godot-bin "$GODOT_BIN"
 run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
@@ -662,6 +665,7 @@ run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scrip
 run_soft "release kit version pins" python3 "$ROOT_DIR/scripts/check_kit_version_pins.py"
 run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
 run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
+run_soft "iOS self-test phases" python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py" --godot-src "$GODOT_DOCS_DIR/../.."
 run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --check
 run_soft "builtin coverage" python3 "$ROOT_DIR/scripts/check_builtin_coverage.py"
 run_soft "ObjectCalls parity" python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
@@ -774,9 +778,8 @@ cat <<EOF
      support claims; support wording moves only after the matching gate passes.
   6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates (the release kit's Godot version is already moved, step 6),
-     companion demo defaults. Review the
-     .gdextension compatibility_minimum invariant before touching it
-     (see AGENTS.md "Looks Wrong But Isn't").
+     companion demo defaults. On a new major.minor, the demos' synced kanama.gdextension
+     copies take the new compatibility_minimum when the demos re-sync the addon.
   7. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
   8. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF

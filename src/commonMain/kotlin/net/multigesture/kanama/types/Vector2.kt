@@ -318,6 +318,16 @@ private constructor(
   fun isFinite(): Boolean = rawX.isFinite() && rawY.isFinite()
 
   /**
+   * Returns the inverse of the vector. This is the same as `Vector2(1.0 / v.x, 1.0 / v.y)`.
+   *
+   * Generated from Godot docs: Vector2.inverse
+   */
+  fun inverse(): Vector2 {
+    val one = narrowReal(1.0)
+    return raw(one / rawX, one / rawY)
+  }
+
+  /**
    * Returns a vector composed of the `@GlobalScope.fposmod` of this vector's components and `mod`.
    *
    * Generated from Godot docs: Vector2.posmod
@@ -379,8 +389,8 @@ private constructor(
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
-   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
-   * representing the amount of interpolation.
+   * handles, and returns the result at position `weight`. `weight` is on the range of `0.0` to
+   * `1.0`, representing the amount of interpolation.
    *
    * Generated from Godot docs: Vector2.cubic_interpolate
    */
@@ -397,8 +407,8 @@ private constructor(
 
   /**
    * Performs a cubic interpolation between this vector and `b` using `pre_a` and `post_b` as
-   * handles, and returns the result at position `weight`. `weight` is on the range of 0.0 to 1.0,
-   * representing the amount of interpolation. It can perform smoother interpolation than
+   * handles, and returns the result at position `weight`. `weight` is on the range of `0.0` to
+   * `1.0`, representing the amount of interpolation. It can perform smoother interpolation than
    * `cubic_interpolate` by the time values.
    *
    * Generated from Godot docs: Vector2.cubic_interpolate_in_time

@@ -107,7 +107,9 @@ object PhysicsServer3D {
       val ANGULAR_SPRING_STIFFNESS: G6DOFJointAxisParam get() = G6DOFJointAxisParam(19L)
       val ANGULAR_SPRING_DAMPING: G6DOFJointAxisParam get() = G6DOFJointAxisParam(20L)
       val ANGULAR_SPRING_EQUILIBRIUM_POINT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(21L)
-      val MAX: G6DOFJointAxisParam get() = G6DOFJointAxisParam(22L)
+      val LINEAR_DRIVE_FORCE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(22L)
+      val ANGULAR_DRIVE_TORQUE_LIMIT: G6DOFJointAxisParam get() = G6DOFJointAxisParam(23L)
+      val MAX: G6DOFJointAxisParam get() = G6DOFJointAxisParam(24L)
     }
   }
 
@@ -117,6 +119,7 @@ object PhysicsServer3D {
       val ENABLE_ANGULAR_LIMIT: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(1L)
       val ENABLE_ANGULAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(2L)
       val ENABLE_LINEAR_SPRING: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(3L)
+      val ENABLE_ANGULAR_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(4L)
       val ENABLE_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(4L)
       val ENABLE_LINEAR_MOTOR: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(5L)
       val MAX: G6DOFJointAxisFlag get() = G6DOFJointAxisFlag(6L)

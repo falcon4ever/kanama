@@ -14,6 +14,12 @@ import net.multigesture.kanama.binding.runtime.requireConstructed
  * Generated from Godot docs: DirectionalLight3D
  */
 class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
+    var skyMode: DirectionalLight3D.SkyMode
+        @JvmName("skyModeProperty")
+        get() = getSkyMode()
+        @JvmName("setSkyModeProperty")
+        set(value) = setSkyMode(value)
+
     var directionalShadowMode: DirectionalLight3D.ShadowMode
         @JvmName("directionalShadowModeProperty")
         get() = getShadowMode()
@@ -61,12 +67,6 @@ class DirectionalLight3D(handle: GodotHandle) : Light3D(handle) {
         get() = getParam(Light3D.Param.SHADOW_PANCAKE_SIZE)
         @JvmName("setDirectionalShadowPancakeSizeProperty")
         set(value) = setParam(Light3D.Param.SHADOW_PANCAKE_SIZE, value)
-
-    var skyMode: DirectionalLight3D.SkyMode
-        @JvmName("skyModeProperty")
-        get() = getSkyMode()
-        @JvmName("setSkyModeProperty")
-        set(value) = setSkyMode(value)
 
     /**
      * The light's shadow rendering algorithm.

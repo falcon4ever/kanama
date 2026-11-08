@@ -244,6 +244,25 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
     }
 
     /**
+     * Returns the title bar `Control` at the given `index`, or `null` if the index is out of bounds.
+     * Use `get_title_bar_control_count` to get the total number of title bar controls.
+     *
+     * Generated from Godot docs: FoldableContainer.get_title_bar_control
+     */
+    fun getTitleBarControl(index: Long): Control? {
+        return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.getTitleBarControlBind, segment, index))
+    }
+
+    /**
+     * Returns the number of controls added to the title bar via `add_title_bar_control`.
+     *
+     * Generated from Godot docs: FoldableContainer.get_title_bar_control_count
+     */
+    fun getTitleBarControlCount(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getTitleBarControlCountBind, segment)
+    }
+
+    /**
      * Removes a `Control` added with `add_title_bar_control`. The node is not freed automatically, you
      * need to use `Node.queue_free`.
      *
@@ -397,6 +416,16 @@ class FoldableContainer(handle: GodotHandle) : Container(handle) {
         @JvmField
         val addTitleBarControlBind =
             ObjectCalls.getMethodBind("FoldableContainer", "add_title_bar_control", ADD_TITLE_BAR_CONTROL_HASH)
+
+        private const val GET_TITLE_BAR_CONTROL_HASH = 1065994134L
+        @JvmField
+        val getTitleBarControlBind =
+            ObjectCalls.getMethodBind("FoldableContainer", "get_title_bar_control", GET_TITLE_BAR_CONTROL_HASH)
+
+        private const val GET_TITLE_BAR_CONTROL_COUNT_HASH = 3905245786L
+        @JvmField
+        val getTitleBarControlCountBind =
+            ObjectCalls.getMethodBind("FoldableContainer", "get_title_bar_control_count", GET_TITLE_BAR_CONTROL_COUNT_HASH)
 
         private const val REMOVE_TITLE_BAR_CONTROL_HASH = 1496901182L
         @JvmField

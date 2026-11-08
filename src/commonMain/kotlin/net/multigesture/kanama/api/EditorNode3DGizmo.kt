@@ -187,6 +187,19 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
         return ret
     }
 
+    /**
+     * Returns `true` if this gizmo is currently selected. Can be used to write custom visualization
+     * logic during `_redraw`.
+     *
+     * Generated from Godot docs: EditorNode3DGizmo.is_selected
+     */
+    fun isSelected(): Boolean {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetBool(Binds.isSelectedBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): EditorNode3DGizmo? =
@@ -269,5 +282,10 @@ class EditorNode3DGizmo(handle: GodotHandle) : Node3DGizmo(handle) {
         @JvmField
         val getSubgizmoSelectionBind =
             ObjectCalls.getMethodBind("EditorNode3DGizmo", "get_subgizmo_selection", GET_SUBGIZMO_SELECTION_HASH)
+
+        private const val IS_SELECTED_HASH = 36873697L
+        @JvmField
+        val isSelectedBind =
+            ObjectCalls.getMethodBind("EditorNode3DGizmo", "is_selected", IS_SELECTED_HASH)
     }
 }

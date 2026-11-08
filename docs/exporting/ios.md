@@ -17,8 +17,8 @@ an Xcode project, and you build and run it on an iPhone or iPad from Xcode.
   Kanama iOS runtime, so you need nothing else from Kanama.
 - 16 GB of memory or more. Linking the release library uses up to about
   11 GB.
-- Godot's iOS export templates for 4.7.2, installed from **Editor > Manage
-  Export Templates**.
+- Godot's iOS export templates for the Godot version of your Kanama ([Godot Version](../reference/version-support.md#godot-version)),
+  installed from **Editor > Manage Export Templates**.
 - An Apple Developer account, signed in under **Xcode > Settings > Accounts**.
 - An iPhone or iPad with iOS 15 or newer, Developer Mode on, connected and
   trusted.
@@ -200,7 +200,7 @@ the scene checker is in the checkout's `scripts/` folder.
 | `buildIosScripts` stops with `Xcode not found`. | Install Xcode, then run `sudo xcode-select -s /Applications/Xcode.app`, or set `DEVELOPER_DIR` to its `Contents/Developer` folder. The Command Line Tools alone cannot build for iOS. |
 | `buildIosScripts` stops with `addons/kanama/maven has no Kanama iOS runtime`. | The project's addon came from a Linux or Windows kit, or the unzip was incomplete. Unzip the macOS kit or the store addon of the same Kanama version into the project again. |
 | `buildIosScripts` fails with `Java heap space` or `OutOfMemoryError`. | The project needs more than the 6 GB heap the iOS build gives Kotlin/Native. Run `./gradlew buildIosScripts -PkanamaIosHeap=10g`; the Mac needs that much free memory plus about 5 GB more for the link. |
-| Godot cannot export for iOS. | Install the iOS export templates for Godot 4.7.2. |
+| Godot cannot export for iOS. | Install the iOS export templates for your Godot version. |
 | The export fails with `Cannot export project with preset "iOS" due to configuration errors`. | Godot's iOS export needs the ETC2/ASTC texture import. Run `./gradlew buildIosScripts`, which turns it on, then choose **Project > Reload Current Project** in Godot and export again. |
 | The export fails with `Export Icons: Invalid icon`. | Set an app icon in **Project Settings > Application > Config > Icon**. |
 | Xcode reports no signing team. | Set the team in the preset, or under **Signing & Capabilities** in Xcode. |

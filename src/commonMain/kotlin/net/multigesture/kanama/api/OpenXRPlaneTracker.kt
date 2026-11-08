@@ -140,7 +140,33 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
     }
 
     /**
-     * Gets a mesh created from either the mesh data or from our bounding size for this plane.
+     * Gets the vertex data for the mesh.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_vertices
+     */
+    fun getVertices(): List<Vector2> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedVector2List(Binds.getVerticesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Gets the index data for the mesh.
+     *
+     * Generated from Godot docs: OpenXRPlaneTracker.get_indices
+     */
+    fun getIndices(): List<Int> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetPackedInt32List(Binds.getIndicesBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Gets a mesh created from either the mesh data or from our bounding size for this plane. This
+     * mesh is cached and will return the same resource when called while vertex and index data remains
+     * unchanged.
      *
      * Generated from Godot docs: OpenXRPlaneTracker.get_mesh
      */
@@ -234,6 +260,16 @@ class OpenXRPlaneTracker(handle: GodotHandle) : OpenXRSpatialEntityTracker(handl
         @JvmField
         val getMeshOffsetBind =
             ObjectCalls.getMethodBind("OpenXRPlaneTracker", "get_mesh_offset", GET_MESH_OFFSET_HASH)
+
+        private const val GET_VERTICES_HASH = 2961356807L
+        @JvmField
+        val getVerticesBind =
+            ObjectCalls.getMethodBind("OpenXRPlaneTracker", "get_vertices", GET_VERTICES_HASH)
+
+        private const val GET_INDICES_HASH = 1930428628L
+        @JvmField
+        val getIndicesBind =
+            ObjectCalls.getMethodBind("OpenXRPlaneTracker", "get_indices", GET_INDICES_HASH)
 
         private const val GET_MESH_HASH = 4081188045L
         @JvmField

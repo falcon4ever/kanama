@@ -59,7 +59,11 @@ non-zero or shows an unbound `.kt` script, runs
 launches the APK with `adb`, checks logcat for Kanama startup signals, verifies a
 captured screenshot is not blank, and force-stops the app before exiting.
 `scripts/android_export_minified.sh` (the R8 release smoke) does the same up to
-the export.
+the export. By default it deletes the build template first, so Godot installs it
+during the export, as on the first export after a Godot upgrade, and the run
+fails unless the export guard's `android.enableR8.fullMode=false` reached the
+template Gradle built from. `KANAMA_ANDROID_TEMPLATE=reuse` keeps the installed
+template instead.
 
 To run the same smoke under a different renderer, set
 `KANAMA_ANDROID_RENDERER` (`mobile`, `gl_compatibility`, or `forward_plus`).
@@ -270,7 +274,7 @@ into one evidence JSON plus a Markdown summary.
 ```sh
 scripts/web_ci_matrix.sh \
   --godot /absolute/path/to/godot \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
+  --template "$HOME/Library/Application Support/Godot/export_templates/<pin>/web_nothreads_release.zip" \
   --demos-dir /absolute/path/to/kanama-demos \
   --demo-set full \
   --engine chrome --engine firefox \
@@ -502,7 +506,7 @@ asserts what a promotion review needs to see:
 
 ```sh
 scripts/web_fresh_checkout_smoke.sh \
-  --template "$HOME/Library/Application Support/Godot/export_templates/4.7.2.stable/web_nothreads_release.zip" \
+  --template "$HOME/Library/Application Support/Godot/export_templates/<pin>/web_nothreads_release.zip" \
   --demo web3d --demo match3 \
   --evidence /tmp/web-fresh-checkout.json \
   /absolute/path/to/godot

@@ -729,10 +729,11 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * Emits a single particle. Whether `xform`, `velocity`, `color` and `custom` are applied depends
-     * on the value of `flags`. See `EmitFlags`. The default ParticleProcessMaterial will overwrite
-     * `color` and use the contents of `custom` as `(rotation, age, animation, lifetime)`. Note:
-     * `emit_particle` is only supported on the Forward+ and Mobile rendering methods, not
-     * Compatibility.
+     * on the value of `flags`. See `EmitFlags`. The default ParticleProcessMaterial needs to have
+     * `ParticleProcessMaterial.particle_flag_preserve_color` set to `true` to correctly use the color
+     * given from this function. Additionally, it will use the contents of `custom` as `(rotation,
+     * lifetime, animation, lifetime randomness)`. Note: `emit_particle` is only supported on the
+     * Forward+ and Mobile rendering methods, not Compatibility.
      *
      * Generated from Godot docs: GPUParticles3D.emit_particle
      */

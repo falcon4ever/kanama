@@ -321,7 +321,7 @@ private constructor(
   }
 
   /**
-   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this quaternion, `b`, and
    * `post_b`, by the given amount `weight`.
    *
    * Generated from Godot docs: Quaternion.spherical_cubic_interpolate
@@ -343,7 +343,7 @@ private constructor(
   }
 
   /**
-   * Performs a spherical cubic interpolation between quaternions `pre_a`, this vector, `b`, and
+   * Performs a spherical cubic interpolation between quaternions `pre_a`, this quaternion, `b`, and
    * `post_b`, by the given amount `weight`. It can perform smoother interpolation than
    * `spherical_cubic_interpolate` by the time values.
    *

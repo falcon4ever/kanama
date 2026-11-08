@@ -1,6 +1,7 @@
 package net.multigesture.kanama.api
 
 import kotlin.jvm.JvmField
+import kotlin.jvm.JvmInline
 import kotlin.jvm.JvmStatic
 import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
@@ -32,7 +33,7 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
     }
 
     /**
-     * Returns `true` if Aruco marker tracking is supported by the current device.
+     * Returns `true` if ArUco marker tracking is supported by the current device.
      *
      * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.is_aruco_supported
      */
@@ -90,6 +91,81 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
         ObjectCalls.keepReachable(nextSnapshotQuery)
     }
 
+    /**
+     * Returns the state of the built-in tracking system.
+     *
+     * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.get_built_in_tracking_state
+     */
+    fun getBuiltInTrackingState(): OpenXRSpatialEntityExtension.TrackingState {
+        return OpenXRSpatialEntityExtension.TrackingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBuiltInTrackingStateBind, segment))
+    }
+
+    /**
+     * Starts the built-in marker tracking logic for the specified marker types. This will fail if
+     * built-in tracking is already enabled.
+     *
+     * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.start_built_in_tracking
+     */
+    fun startBuiltInTracking(markerTypes: OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags): Boolean {
+        return ObjectCalls.ptrcallWithLongArgRetBool(Binds.startBuiltInTrackingBind, segment, markerTypes.value)
+    }
+
+    /**
+     * Stops the built-in marker tracking logic.
+     *
+     * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.stop_built_in_tracking
+     */
+    fun stopBuiltInTracking(clearTrackers: Boolean = true) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.stopBuiltInTrackingBind, segment, clearTrackers)
+    }
+
+    /**
+     * Godot's `OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags` bitfield as a typed value:
+     * `.value` is the raw number Godot uses, and the companion holds the named values
+     * (`OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags.<NAME>`).
+     *
+     * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.MarkerTypeFlags
+     */
+    @JvmInline
+    value class MarkerTypeFlags(override val value: Long) : GodotEnumValue {
+        infix fun or(other: MarkerTypeFlags): MarkerTypeFlags = MarkerTypeFlags(value or other.value)
+
+        infix fun and(other: MarkerTypeFlags): MarkerTypeFlags = MarkerTypeFlags(value and other.value)
+
+        infix fun xor(other: MarkerTypeFlags): MarkerTypeFlags = MarkerTypeFlags(value xor other.value)
+
+        fun inv(): MarkerTypeFlags = MarkerTypeFlags(value.inv())
+
+        operator fun contains(other: MarkerTypeFlags): Boolean = (value and other.value) == other.value
+
+        companion object {
+            /**
+             * QR Code.
+             *
+             * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.MARKER_QR_CODE
+             */
+            val QR_CODE: MarkerTypeFlags get() = MarkerTypeFlags(1L)
+            /**
+             * Micro QR Code.
+             *
+             * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.MARKER_MICRO_QR_CODE
+             */
+            val MICRO_QR_CODE: MarkerTypeFlags get() = MarkerTypeFlags(2L)
+            /**
+             * ArUco marker.
+             *
+             * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.MARKER_ARUCO
+             */
+            val ARUCO: MarkerTypeFlags get() = MarkerTypeFlags(4L)
+            /**
+             * April tag.
+             *
+             * Generated from Godot docs: OpenXRSpatialMarkerTrackingCapability.MARKER_APRIL_TAG
+             */
+            val APRIL_TAG: MarkerTypeFlags get() = MarkerTypeFlags(8L)
+        }
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialMarkerTrackingCapability? =
@@ -129,5 +205,20 @@ class OpenXRSpatialMarkerTrackingCapability(handle: GodotHandle) : OpenXRExtensi
         @JvmField
         val doEntityUpdateBind =
             ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "do_entity_update", DO_ENTITY_UPDATE_HASH)
+
+        private const val GET_BUILT_IN_TRACKING_STATE_HASH = 434811308L
+        @JvmField
+        val getBuiltInTrackingStateBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "get_built_in_tracking_state", GET_BUILT_IN_TRACKING_STATE_HASH)
+
+        private const val START_BUILT_IN_TRACKING_HASH = 4090240782L
+        @JvmField
+        val startBuiltInTrackingBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "start_built_in_tracking", START_BUILT_IN_TRACKING_HASH)
+
+        private const val STOP_BUILT_IN_TRACKING_HASH = 3216645846L
+        @JvmField
+        val stopBuiltInTrackingBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialMarkerTrackingCapability", "stop_built_in_tracking", STOP_BUILT_IN_TRACKING_HASH)
     }
 }

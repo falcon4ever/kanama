@@ -27,6 +27,18 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         @JvmName("setDownloadChunkSizeProperty")
         set(value) = setDownloadChunkSize(value)
 
+    var keepPartialDownload: Boolean
+        @JvmName("keepPartialDownloadProperty")
+        get() = isKeepingPartialDownload()
+        @JvmName("setKeepPartialDownloadProperty")
+        set(value) = setKeepPartialDownload(value)
+
+    var appendToDownloadFile: Boolean
+        @JvmName("appendToDownloadFileProperty")
+        get() = isAppendingToDownloadFile()
+        @JvmName("setAppendToDownloadFileProperty")
+        set(value) = setAppendToDownloadFile(value)
+
     var useThreads: Boolean
         @JvmName("useThreadsProperty")
         get() = isUsingThreads()
@@ -223,6 +235,56 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
      */
     fun getDownloadFile(): String {
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getDownloadFileBind, segment)
+    }
+
+    /**
+     * If `true`, the partially downloaded file set via `download_file` will not be deleted when the
+     * request fails or is canceled. This allows resuming an interrupted download later by sending a
+     * new request with an HTTP `Range` header and `append_to_download_file` set to `true`. If `false`
+     * (the default), incomplete download files are automatically deleted on failure or cancellation.
+     *
+     * Generated from Godot docs: HTTPRequest.set_keep_partial_download
+     */
+    fun setKeepPartialDownload(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setKeepPartialDownloadBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, the partially downloaded file set via `download_file` will not be deleted when the
+     * request fails or is canceled. This allows resuming an interrupted download later by sending a
+     * new request with an HTTP `Range` header and `append_to_download_file` set to `true`. If `false`
+     * (the default), incomplete download files are automatically deleted on failure or cancellation.
+     *
+     * Generated from Godot docs: HTTPRequest.is_keeping_partial_download
+     */
+    fun isKeepingPartialDownload(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isKeepingPartialDownloadBind, segment)
+    }
+
+    /**
+     * If `true` and the server responds with HTTP status code `206 Partial Content`, the response body
+     * will be appended to the existing `download_file` instead of overwriting it. If the server
+     * responds with `200 OK` (e.g. if it does not support range requests), the file will be
+     * overwritten as usual. This is useful for resuming interrupted downloads when used together with
+     * an HTTP `Range` header in the request. See also `keep_partial_download`.
+     *
+     * Generated from Godot docs: HTTPRequest.set_append_to_download_file
+     */
+    fun setAppendToDownloadFile(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAppendToDownloadFileBind, segment, enabled)
+    }
+
+    /**
+     * If `true` and the server responds with HTTP status code `206 Partial Content`, the response body
+     * will be appended to the existing `download_file` instead of overwriting it. If the server
+     * responds with `200 OK` (e.g. if it does not support range requests), the file will be
+     * overwritten as usual. This is useful for resuming interrupted downloads when used together with
+     * an HTTP `Range` header in the request. See also `keep_partial_download`.
+     *
+     * Generated from Godot docs: HTTPRequest.is_appending_to_download_file
+     */
+    fun isAppendingToDownloadFile(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isAppendingToDownloadFileBind, segment)
     }
 
     /**
@@ -517,6 +579,26 @@ class HTTPRequest(handle: GodotHandle) : Node(handle) {
         @JvmField
         val getDownloadFileBind =
             ObjectCalls.getMethodBind("HTTPRequest", "get_download_file", GET_DOWNLOAD_FILE_HASH)
+
+        private const val SET_KEEP_PARTIAL_DOWNLOAD_HASH = 2586408642L
+        @JvmField
+        val setKeepPartialDownloadBind =
+            ObjectCalls.getMethodBind("HTTPRequest", "set_keep_partial_download", SET_KEEP_PARTIAL_DOWNLOAD_HASH)
+
+        private const val IS_KEEPING_PARTIAL_DOWNLOAD_HASH = 36873697L
+        @JvmField
+        val isKeepingPartialDownloadBind =
+            ObjectCalls.getMethodBind("HTTPRequest", "is_keeping_partial_download", IS_KEEPING_PARTIAL_DOWNLOAD_HASH)
+
+        private const val SET_APPEND_TO_DOWNLOAD_FILE_HASH = 2586408642L
+        @JvmField
+        val setAppendToDownloadFileBind =
+            ObjectCalls.getMethodBind("HTTPRequest", "set_append_to_download_file", SET_APPEND_TO_DOWNLOAD_FILE_HASH)
+
+        private const val IS_APPENDING_TO_DOWNLOAD_FILE_HASH = 36873697L
+        @JvmField
+        val isAppendingToDownloadFileBind =
+            ObjectCalls.getMethodBind("HTTPRequest", "is_appending_to_download_file", IS_APPENDING_TO_DOWNLOAD_FILE_HASH)
 
         private const val GET_DOWNLOADED_BYTES_HASH = 3905245786L
         @JvmField

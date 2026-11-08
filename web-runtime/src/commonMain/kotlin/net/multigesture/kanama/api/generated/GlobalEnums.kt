@@ -531,7 +531,8 @@ value class GodotPropertyHint(override val value: Long) : GodotEnumValue {
     val GROUP_ENABLE: GodotPropertyHint get() = GodotPropertyHint(42L)
     val INPUT_NAME: GodotPropertyHint get() = GodotPropertyHint(43L)
     val FILE_PATH: GodotPropertyHint get() = GodotPropertyHint(44L)
-    val MAX: GodotPropertyHint get() = GodotPropertyHint(45L)
+    val AUDIO_BUS: GodotPropertyHint get() = GodotPropertyHint(45L)
+    val MAX: GodotPropertyHint get() = GodotPropertyHint(46L)
   }
 }
 

@@ -605,17 +605,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * The maximum size of this Control's bounding rectangle. If set to a value greater than or equal
-     * to `(0, 0)`, the node's bounding rectangle will never exceed this size. A value below `(0, 0)`
-     * means there is no maximum size. Note: The final effective maximum size may be subject to parent
-     * Container sizing and propagated maximum sizes. See also: `get_combined_maximum_size`. Note: Not
-     * all `Control` subtypes handle a custom maximum size gracefully, which may lead to unexpected
-     * behavior if the control's contents exceed this size. Note: This value has priority over
-     * `custom_minimum_size`. For example, if you set `custom_maximum_size` to `(100, 100)` and
-     * `custom_minimum_size` to `(200, 200)`, the resulting size will be `(100, 100)`. Note: It is
-     * recommended to use `get_bound_minimum_size` instead of `get_combined_minimum_size` when using
-     * this property, as the former respects maximum size limits when calculating the minimum size,
-     * while the latter does not.
+     * The maximum size of the node's bounding rectangle. If set to a value greater than or equal to
+     * `(0, 0)`, the node's bounding rectangle will never exceed this size. A value below `(0, 0)`
+     * means there is no maximum size. This value has priority over `custom_minimum_size` if the two
+     * conflict. Note: The final effective maximum size may be subject to the parent's maximum size
+     * (via `propagate_maximum_size`), so it is recommended to use `get_combined_maximum_size` instead
+     * of `get_maximum_size`. Likewise, use `get_bound_minimum_size` instead of
+     * `get_combined_minimum_size` to account for the maximum size. Note: Not all `Control` subtypes
+     * handle this gracefully, and their contents may extend beyond the bounding rectangle. Set
+     * `clip_contents` to `true` to prevent child controls from rendering outside of this size,
+     * especially when this node is a `Container`.
      *
      * Generated from Godot docs: Control.set_custom_maximum_size
      */
@@ -832,17 +831,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * The maximum size of this Control's bounding rectangle. If set to a value greater than or equal
-     * to `(0, 0)`, the node's bounding rectangle will never exceed this size. A value below `(0, 0)`
-     * means there is no maximum size. Note: The final effective maximum size may be subject to parent
-     * Container sizing and propagated maximum sizes. See also: `get_combined_maximum_size`. Note: Not
-     * all `Control` subtypes handle a custom maximum size gracefully, which may lead to unexpected
-     * behavior if the control's contents exceed this size. Note: This value has priority over
-     * `custom_minimum_size`. For example, if you set `custom_maximum_size` to `(100, 100)` and
-     * `custom_minimum_size` to `(200, 200)`, the resulting size will be `(100, 100)`. Note: It is
-     * recommended to use `get_bound_minimum_size` instead of `get_combined_minimum_size` when using
-     * this property, as the former respects maximum size limits when calculating the minimum size,
-     * while the latter does not.
+     * The maximum size of the node's bounding rectangle. If set to a value greater than or equal to
+     * `(0, 0)`, the node's bounding rectangle will never exceed this size. A value below `(0, 0)`
+     * means there is no maximum size. This value has priority over `custom_minimum_size` if the two
+     * conflict. Note: The final effective maximum size may be subject to the parent's maximum size
+     * (via `propagate_maximum_size`), so it is recommended to use `get_combined_maximum_size` instead
+     * of `get_maximum_size`. Likewise, use `get_bound_minimum_size` instead of
+     * `get_combined_minimum_size` to account for the maximum size. Note: Not all `Control` subtypes
+     * handle this gracefully, and their contents may extend beyond the bounding rectangle. Set
+     * `clip_contents` to `true` to prevent child controls from rendering outside of this size,
+     * especially when this node is a `Container`.
      *
      * Generated from Godot docs: Control.get_custom_maximum_size
      */
@@ -1041,6 +1039,21 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun findValidFocusNeighbor(side: Side): Control? {
         return Control.wrap(ObjectCalls.ptrcallWithLongArgRetObject(Binds.findValidFocusNeighborBind, segment, side.value))
+    }
+
+    /**
+     * Plays the sound from the `stream` resource non-positionally in the bus specified by the
+     * `ProjectSettings.audio/buses/gui_theme_bus` project setting. Typically, the `stream` resource is
+     * obtained using `get_theme_sound`. Note: This method should only be used to play UI-related
+     * sounds. It should not be used to play general game sounds, as it offers very limited control.
+     * Use the `AudioStreamPlayer`, `AudioStreamPlayer2D`, and `AudioStreamPlayer3D` nodes for general
+     * game audio instead.
+     *
+     * Generated from Godot docs: Control.play_theme_sound
+     */
+    fun playThemeSound(stream: AudioStream?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.playThemeSoundBind, segment, listOf(stream?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(stream)
     }
 
     /**
@@ -1435,6 +1448,18 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
+     * Creates a local override for a theme sound with the specified `name`. Local overrides always
+     * take precedence when fetching theme items for the control. An override can be removed with
+     * `remove_theme_sound_override`. See also `get_theme_sound`.
+     *
+     * Generated from Godot docs: Control.add_theme_sound_override
+     */
+    fun addThemeSoundOverride(name: String, audio: AudioStream?) {
+        ObjectCalls.ptrcallWithStringNameAndObjectArg(Binds.addThemeSoundOverrideBind, segment, name, audio?.requireOpenHandle() ?: NULL_SEGMENT)
+        ObjectCalls.keepReachable(audio)
+    }
+
+    /**
      * Removes a local override for a theme icon with the specified `name` previously added by
      * `add_theme_icon_override` or via the Inspector dock.
      *
@@ -1492,6 +1517,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun removeThemeConstantOverride(name: String) {
         ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeConstantOverrideBind, segment, name)
+    }
+
+    /**
+     * Removes a local override for a theme sound with the specified `name` previously added by
+     * `add_theme_sound_override` or via the Inspector dock.
+     *
+     * Generated from Godot docs: Control.remove_theme_sound_override
+     */
+    fun removeThemeSoundOverride(name: String) {
+        ObjectCalls.ptrcallWithStringNameArg(Binds.removeThemeSoundOverrideBind, segment, name)
     }
 
     /**
@@ -1563,6 +1598,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
+     * Returns a sound from the first matching `Theme` in the tree if that `Theme` has a sound item
+     * with the specified `name` and `theme_type`. See `get_theme_color` for details.
+     *
+     * Generated from Godot docs: Control.get_theme_sound
+     */
+    fun getThemeSound(name: String, themeType: String = ""): AudioStream? {
+        return AudioStream.wrapOwned(ObjectCalls.ptrcallWithTwoStringNameArgsRetObject(Binds.getThemeSoundBind, segment, name, themeType))
+    }
+
+    /**
      * Returns `true` if there is a local override for a theme icon with the specified `name` in this
      * `Control` node. See `add_theme_icon_override`.
      *
@@ -1620,6 +1665,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
      */
     fun hasThemeConstantOverride(name: String): Boolean {
         return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeConstantOverrideBind, segment, name)
+    }
+
+    /**
+     * Returns `true` if there is a local override for a theme sound with the specified `name` in this
+     * `Control` node. See `add_theme_sound_override`.
+     *
+     * Generated from Godot docs: Control.has_theme_sound_override
+     */
+    fun hasThemeSoundOverride(name: String): Boolean {
+        return ObjectCalls.ptrcallWithStringNameArgRetBool(Binds.hasThemeSoundOverrideBind, segment, name)
     }
 
     /**
@@ -1683,6 +1738,16 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
+     * Returns `true` if there is a matching `Theme` in the tree that has a sound item with the
+     * specified `name` and `theme_type`. See `get_theme_color` for details.
+     *
+     * Generated from Godot docs: Control.has_theme_sound
+     */
+    fun hasThemeSound(name: String, themeType: String = ""): Boolean {
+        return ObjectCalls.ptrcallWithTwoStringNameArgsRetBool(Binds.hasThemeSoundBind, segment, name, themeType)
+    }
+
+    /**
      * Returns the default base scale value from the first matching `Theme` in the tree if that `Theme`
      * has a valid `Theme.default_base_scale` value. See `get_theme_color` for details.
      *
@@ -1722,9 +1787,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * Controls the direction on the horizontal axis in which the control should grow if its horizontal
-     * minimum size is changed to be greater than its current size, as the control always has to be at
-     * least the minimum size.
+     * Controls the direction on the horizontal axis in which the control should grow or shrink if its
+     * horizontal size is changed.
      *
      * Generated from Godot docs: Control.set_h_grow_direction
      */
@@ -1733,9 +1797,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * Controls the direction on the horizontal axis in which the control should grow if its horizontal
-     * minimum size is changed to be greater than its current size, as the control always has to be at
-     * least the minimum size.
+     * Controls the direction on the horizontal axis in which the control should grow or shrink if its
+     * horizontal size is changed.
      *
      * Generated from Godot docs: Control.get_h_grow_direction
      */
@@ -1744,9 +1807,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * Controls the direction on the vertical axis in which the control should grow if its vertical
-     * minimum size is changed to be greater than its current size, as the control always has to be at
-     * least the minimum size.
+     * Controls the direction on the vertical axis in which the control should grow or shrink if its
+     * vertical size is changed.
      *
      * Generated from Godot docs: Control.set_v_grow_direction
      */
@@ -1755,9 +1817,8 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * Controls the direction on the vertical axis in which the control should grow if its vertical
-     * minimum size is changed to be greater than its current size, as the control always has to be at
-     * least the minimum size.
+     * Controls the direction on the vertical axis in which the control should grow or shrink if its
+     * vertical size is changed.
      *
      * Generated from Godot docs: Control.get_v_grow_direction
      */
@@ -2318,11 +2379,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     }
 
     /**
-     * Invalidates the maximum size cache in this node and in parent nodes up to top level. Intended to
-     * be used with `get_maximum_size` when the return value is changed. Setting `custom_maximum_size`
-     * directly calls this method automatically. Note: Calling this method also calls
-     * `update_minimum_size` since the combined minimum size may be affected by the maximum size
-     * change.
+     * Invalidates the maximum size cache in this node and in child nodes with `CanvasItem.top_level`
+     * set to `false`. Intended to be used with `get_maximum_size` when the return value is changed.
+     * Setting `custom_maximum_size` directly calls this method automatically. Note: Calling this
+     * method also calls `update_minimum_size` since the combined minimum size may be affected by the
+     * maximum size change.
      *
      * Generated from Godot docs: Control.update_maximum_size
      */
@@ -2944,6 +3005,18 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
              * Generated from Godot docs: Control.SIZE_SHRINK_END
              */
             val SHRINK_END: SizeFlags get() = SizeFlags(8L)
+            /**
+             * Tells the parent `Container` to use the node's `custom_maximum_size` when doing minimum size
+             * calculations. Use with `size_flags_horizontal` and `size_flags_vertical`. Note: Setting this
+             * flag does not necessarily mean the node will be resized to its maximum size, as the parent
+             * container may not have enough space to do so. Note: If this node is a child of a Container that
+             * enables the `size_flags_stretch_ratio` property on its children for layout, nodes with this flag
+             * set will be given priority in stretching. If multiple nodes have this flag set, their relative
+             * stretch ratios will still be respected.
+             *
+             * Generated from Godot docs: Control.SIZE_MAXIMIZE
+             */
+            val MAXIMIZE: SizeFlags get() = SizeFlags(16L)
         }
     }
 
@@ -3003,22 +3076,22 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
     value class GrowDirection(override val value: Long) : GodotEnumValue {
         companion object {
             /**
-             * The control will grow to the left or top to make up if its minimum size is changed to be greater
-             * than its current size on the respective axis.
+             * The control will grow/shrink to the left or top if its size is changed to be larger/smaller than
+             * its current size on the respective axis.
              *
              * Generated from Godot docs: Control.GROW_DIRECTION_BEGIN
              */
             val BEGIN: GrowDirection get() = GrowDirection(0L)
             /**
-             * The control will grow to the right or bottom to make up if its minimum size is changed to be
-             * greater than its current size on the respective axis.
+             * The control will grow/shrink to the right or bottom if its size is changed to be larger/smaller
+             * than its current size on the respective axis.
              *
              * Generated from Godot docs: Control.GROW_DIRECTION_END
              */
             val END: GrowDirection get() = GrowDirection(1L)
             /**
-             * The control will grow in both directions equally to make up if its minimum size is changed to be
-             * greater than its current size.
+             * The control will grow/shrink in both directions equally if its size is changed to be
+             * larger/smaller than its current size.
              *
              * Generated from Godot docs: Control.GROW_DIRECTION_BOTH
              */
@@ -3464,6 +3537,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         val findValidFocusNeighborBind =
             ObjectCalls.getMethodBind("Control", "find_valid_focus_neighbor", FIND_VALID_FOCUS_NEIGHBOR_HASH)
 
+        private const val PLAY_THEME_SOUND_HASH = 2210767741L
+        @JvmField
+        val playThemeSoundBind =
+            ObjectCalls.getMethodBind("Control", "play_theme_sound", PLAY_THEME_SOUND_HASH)
+
         private const val SET_H_SIZE_FLAGS_HASH = 394851643L
         @JvmField
         val setHSizeFlagsBind =
@@ -3634,6 +3712,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         val addThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "add_theme_constant_override", ADD_THEME_CONSTANT_OVERRIDE_HASH)
 
+        private const val ADD_THEME_SOUND_OVERRIDE_HASH = 3407455952L
+        @JvmField
+        val addThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Control", "add_theme_sound_override", ADD_THEME_SOUND_OVERRIDE_HASH)
+
         private const val REMOVE_THEME_ICON_OVERRIDE_HASH = 3304788590L
         @JvmField
         val removeThemeIconOverrideBind =
@@ -3663,6 +3746,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmField
         val removeThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "remove_theme_constant_override", REMOVE_THEME_CONSTANT_OVERRIDE_HASH)
+
+        private const val REMOVE_THEME_SOUND_OVERRIDE_HASH = 3304788590L
+        @JvmField
+        val removeThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Control", "remove_theme_sound_override", REMOVE_THEME_SOUND_OVERRIDE_HASH)
 
         private const val GET_THEME_ICON_HASH = 3163973443L
         @JvmField
@@ -3694,6 +3782,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         val getThemeConstantBind =
             ObjectCalls.getMethodBind("Control", "get_theme_constant", GET_THEME_CONSTANT_HASH)
 
+        private const val GET_THEME_SOUND_HASH = 1579966710L
+        @JvmField
+        val getThemeSoundBind =
+            ObjectCalls.getMethodBind("Control", "get_theme_sound", GET_THEME_SOUND_HASH)
+
         private const val HAS_THEME_ICON_OVERRIDE_HASH = 2619796661L
         @JvmField
         val hasThemeIconOverrideBind =
@@ -3724,6 +3817,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         val hasThemeConstantOverrideBind =
             ObjectCalls.getMethodBind("Control", "has_theme_constant_override", HAS_THEME_CONSTANT_OVERRIDE_HASH)
 
+        private const val HAS_THEME_SOUND_OVERRIDE_HASH = 2619796661L
+        @JvmField
+        val hasThemeSoundOverrideBind =
+            ObjectCalls.getMethodBind("Control", "has_theme_sound_override", HAS_THEME_SOUND_OVERRIDE_HASH)
+
         private const val HAS_THEME_ICON_HASH = 866386512L
         @JvmField
         val hasThemeIconBind =
@@ -3753,6 +3851,11 @@ open class Control(handle: GodotHandle) : CanvasItem(handle) {
         @JvmField
         val hasThemeConstantBind =
             ObjectCalls.getMethodBind("Control", "has_theme_constant", HAS_THEME_CONSTANT_HASH)
+
+        private const val HAS_THEME_SOUND_HASH = 866386512L
+        @JvmField
+        val hasThemeSoundBind =
+            ObjectCalls.getMethodBind("Control", "has_theme_sound", HAS_THEME_SOUND_HASH)
 
         private const val GET_THEME_DEFAULT_BASE_SCALE_HASH = 1740695150L
         @JvmField

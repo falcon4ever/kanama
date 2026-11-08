@@ -64,7 +64,7 @@ Validate a kit from a temporary project:
 ```sh
 scripts/package_install_smoke.sh \
   build/distributions/kanama-desktop-kit-v<version>-<platform>.zip \
-  /absolute/path/to/godot-4.7.2-stable
+  /absolute/path/to/godot
 ```
 
 The smoke unzips the kit, runs `./gradlew buildScripts`, confirms
@@ -136,7 +136,7 @@ scripts/package_install_smoke.sh \
   --store-addon \
   --require-all-store-platforms \
   build/distributions/kanama-store-addon-v<version>.zip \
-  /absolute/path/to/godot-4.7.2-stable
+  /absolute/path/to/godot
 ```
 
 For a local host-only `packageStoreAddon` build, omit
@@ -156,7 +156,9 @@ the processor generates (`verifyKanamaWebPackageProtocol`).
 ## Package Workflow
 
 The package workflow (`.github/workflows/package.yml`) runs only on manual
-dispatch and `v*` tags. It does not run on pull requests. Its jobs:
+dispatch and `v*` tags. It does not run on pull requests. On a tag, its first job
+refuses a Godot pin that is not stable, and every other job waits for that one,
+so a tag on a beta or rc builds and publishes nothing. Its jobs:
 
 - `desktop-kit` builds and smokes a desktop kit per platform, and the store
   native library for each.
@@ -248,7 +250,11 @@ The maintainer decides when a release is cut. The steps:
    `### What's new in <x.y>` yet, write one: at most 25 lines, second person,
    one link per paragraph ([docs-style.md](docs-style.md)). Entry headings
    under `### Details` are `####` and carry no task ids.
-3. **Gates.** Run `scripts/local_ci.sh` with the pinned Godot, then the
+3. **Gates.** Check that the pin is a stable Godot:
+   `python3 scripts/check_godot_version_pin.py --release`. A beta or rc pin may
+   live on `main`, but the package workflow stops on a tag that carries one, so
+   move the pin first ([Godot Upgrade Runbook](godot-upgrade.md)). Run
+   `scripts/local_ci.sh` with the pinned Godot, then the
    isolated gates from clean clones: `scripts/fresh_clone_smoke.sh` and, for
    Web, `scripts/web_fresh_checkout_smoke.sh`. Smoke the packages as
    [Gates and Claims](gates.md#local-validation) shows.

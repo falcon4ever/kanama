@@ -34,7 +34,8 @@ fail() {
   exit 1
 }
 
-godot_version="$("$GODOT_BIN" --version | head -n 1 | awk -F. '{print $1"."$2"."$3"."$4}')"
+# The templates folder is the version up to the build name: 4.7.2.stable, 4.8.beta2, 4.8.stable.
+godot_version="$("$GODOT_BIN" --version | head -n 1 | sed -E 's/\.[^.]+\.[0-9a-f]+$//')"
 templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
 if [[ -z "$templates_root" ]]; then
   if [[ -d "$HOME/Library/Application Support/Godot/export_templates" ]]; then

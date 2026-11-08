@@ -93,6 +93,24 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmName("setTabStopsProperty")
         set(value) = setTabStops(value)
 
+    var resizeFontToFit: Boolean
+        @JvmName("resizeFontToFitProperty")
+        get() = isResizeFontToFitEnabled()
+        @JvmName("setResizeFontToFitProperty")
+        set(value) = setResizeFontToFit(value)
+
+    var minimumFontSize: Int
+        @JvmName("minimumFontSizeProperty")
+        get() = getMinimumFontSize()
+        @JvmName("setMinimumFontSizeProperty")
+        set(value) = setMinimumFontSize(value)
+
+    var maximumFontSize: Int
+        @JvmName("maximumFontSizeProperty")
+        get() = getMaximumFontSize()
+        @JvmName("setMaximumFontSizeProperty")
+        set(value) = setMaximumFontSize(value)
+
     var linesSkipped: Int
         @JvmName("linesSkippedProperty")
         get() = getLinesSkipped()
@@ -619,6 +637,81 @@ class Label(handle: GodotHandle) : Control(handle) {
     }
 
     /**
+     * If `true`, the text size will automatically shrink or grow to fit within the node's bounding
+     * rectangle. It will pick the largest font size between `minimum_font_size` and
+     * `maximum_font_size` that doesn't cause the text to be truncated.
+     *
+     * Generated from Godot docs: Label.set_resize_font_to_fit
+     */
+    fun setResizeFontToFit(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setResizeFontToFitBind, segment, enabled)
+    }
+
+    /**
+     * If `true`, the text size will automatically shrink or grow to fit within the node's bounding
+     * rectangle. It will pick the largest font size between `minimum_font_size` and
+     * `maximum_font_size` that doesn't cause the text to be truncated.
+     *
+     * Generated from Godot docs: Label.is_resize_font_to_fit_enabled
+     */
+    fun isResizeFontToFitEnabled(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.isResizeFontToFitEnabledBind, segment)
+    }
+
+    /**
+     * The minimum font size used when `resize_font_to_fit` is enabled. Also determines the minimum
+     * vertical size of this `Label`, potentially used by a parent `Container`. If `minimum_font_size`
+     * is greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: Label.set_minimum_font_size
+     */
+    fun setMinimumFontSize(size: Int) {
+        ObjectCalls.ptrcallWithIntArg(Binds.setMinimumFontSizeBind, segment, size)
+    }
+
+    /**
+     * The minimum font size used when `resize_font_to_fit` is enabled. Also determines the minimum
+     * vertical size of this `Label`, potentially used by a parent `Container`. If `minimum_font_size`
+     * is greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: Label.get_minimum_font_size
+     */
+    fun getMinimumFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMinimumFontSizeBind, segment)
+    }
+
+    /**
+     * The maximum font size used when `resize_font_to_fit` is enabled. If `minimum_font_size` is
+     * greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: Label.set_maximum_font_size
+     */
+    fun setMaximumFontSize(size: Int) {
+        ObjectCalls.ptrcallWithIntArg(Binds.setMaximumFontSizeBind, segment, size)
+    }
+
+    /**
+     * The maximum font size used when `resize_font_to_fit` is enabled. If `minimum_font_size` is
+     * greater than `maximum_font_size`, the minimum font size takes precedence.
+     *
+     * Generated from Godot docs: Label.get_maximum_font_size
+     */
+    fun getMaximumFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getMaximumFontSizeBind, segment)
+    }
+
+    /**
+     * Returns the font size that is currently used for rendering. When `resize_font_to_fit` is
+     * enabled, this returns the automatically calculated font size. Otherwise, it returns the theme
+     * font size.
+     *
+     * Generated from Godot docs: Label.get_rendered_font_size
+     */
+    fun getRenderedFontSize(): Int {
+        return ObjectCalls.ptrcallNoArgsRetInt(Binds.getRenderedFontSizeBind, segment)
+    }
+
+    /**
      * Returns the bounding rectangle of the character at position `pos` in the label's local
      * coordinate system. If the character is a non-visual character or `pos` is outside the valid
      * range, an empty `Rect2` is returned. If the character is a part of a composite grapheme, the
@@ -884,6 +977,41 @@ class Label(handle: GodotHandle) : Control(handle) {
         @JvmField
         val getStructuredTextBidiOverrideOptionsBind =
             ObjectCalls.getMethodBind("Label", "get_structured_text_bidi_override_options", GET_STRUCTURED_TEXT_BIDI_OVERRIDE_OPTIONS_HASH)
+
+        private const val SET_RESIZE_FONT_TO_FIT_HASH = 2586408642L
+        @JvmField
+        val setResizeFontToFitBind =
+            ObjectCalls.getMethodBind("Label", "set_resize_font_to_fit", SET_RESIZE_FONT_TO_FIT_HASH)
+
+        private const val IS_RESIZE_FONT_TO_FIT_ENABLED_HASH = 36873697L
+        @JvmField
+        val isResizeFontToFitEnabledBind =
+            ObjectCalls.getMethodBind("Label", "is_resize_font_to_fit_enabled", IS_RESIZE_FONT_TO_FIT_ENABLED_HASH)
+
+        private const val SET_MINIMUM_FONT_SIZE_HASH = 1286410249L
+        @JvmField
+        val setMinimumFontSizeBind =
+            ObjectCalls.getMethodBind("Label", "set_minimum_font_size", SET_MINIMUM_FONT_SIZE_HASH)
+
+        private const val GET_MINIMUM_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getMinimumFontSizeBind =
+            ObjectCalls.getMethodBind("Label", "get_minimum_font_size", GET_MINIMUM_FONT_SIZE_HASH)
+
+        private const val SET_MAXIMUM_FONT_SIZE_HASH = 1286410249L
+        @JvmField
+        val setMaximumFontSizeBind =
+            ObjectCalls.getMethodBind("Label", "set_maximum_font_size", SET_MAXIMUM_FONT_SIZE_HASH)
+
+        private const val GET_MAXIMUM_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getMaximumFontSizeBind =
+            ObjectCalls.getMethodBind("Label", "get_maximum_font_size", GET_MAXIMUM_FONT_SIZE_HASH)
+
+        private const val GET_RENDERED_FONT_SIZE_HASH = 3905245786L
+        @JvmField
+        val getRenderedFontSizeBind =
+            ObjectCalls.getMethodBind("Label", "get_rendered_font_size", GET_RENDERED_FONT_SIZE_HASH)
 
         private const val GET_CHARACTER_BOUNDS_HASH = 3327874267L
         @JvmField

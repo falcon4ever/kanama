@@ -151,7 +151,9 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * reference pose's space, if `axis` is `SkeletonModifier3D.RotationAxis.CUSTOM`, you can specify
      * any axis. In here, the reference pose is the bone pose immediately before processing IK. Note:
      * The rotation axis and the forward vector shouldn't be colinear to avoid unintended rotation
-     * since `ChainIK3D` does not factor in twisting forces.
+     * since `ChainIK3D` does not factor in twisting forces. Note: Since `IterateIK3D` never modifies
+     * the twist, the twist is not fixed by `set_joint_rotation_axis` even if
+     * `is_joint_using_rest_for_limitation` is `true`.
      *
      * Generated from Godot docs: IterateIK3D.set_joint_rotation_axis
      */
@@ -272,13 +274,38 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
      * +Y axes are not orthogonal, the +X axis is implicitly modified to make it orthogonal. Also, if
      * the length of `get_joint_limitation_right_axis_vector` is zero, the space is created by rotating
      * the reference pose using the shortest arc that rotates the +Y axis of the reference pose to
-     * match the bone direction. In here, the reference pose is the bone pose immediately before
-     * processing IK.
+     * match the bone direction. In here, the reference pose is the bone rest or bone pose immediately
+     * before processing IK depending on the `is_joint_using_rest_for_limitation`.
      *
      * Generated from Godot docs: IterateIK3D.get_joint_limitation_rotation_offset
      */
     fun getJointLimitationRotationOffset(index: Int, joint: Int): Quaternion {
         return ObjectCalls.ptrcallWithTwoIntArgsRetQuaternion(Binds.getJointLimitationRotationOffsetBind, segment, index, joint)
+    }
+
+    /**
+     * Sets whether the limitation and the rotation axis at `joint` in the bone chain's joint list are
+     * applied based on the `Skeleton3D.get_bone_rest`. See also `set_joint_rotation_axis`. Note: The
+     * limitation is applied to the rotation computed by this modifier. If the reference pose is
+     * rotated around the same axis, the limitation behaves as if it also limits the rotation of the
+     * reference pose. A rotation that this modifier does not change, such as the twist, is not
+     * limited. Note: The rendered gizmo's limitation shape will only respect the reference pose when
+     * this option is `false` and the modifier is active.
+     *
+     * Generated from Godot docs: IterateIK3D.set_joint_use_rest_for_limitation
+     */
+    fun setJointUseRestForLimitation(index: Int, joint: Int, enabled: Boolean) {
+        ObjectCalls.ptrcallWithTwoIntAndBoolArgs(Binds.setJointUseRestForLimitationBind, segment, index, joint, enabled)
+    }
+
+    /**
+     * Returns whether the limitation at `joint` in the bone chain's joint list is applied based on the
+     * `Skeleton3D.get_bone_rest`.
+     *
+     * Generated from Godot docs: IterateIK3D.is_joint_using_rest_for_limitation
+     */
+    fun isJointUsingRestForLimitation(index: Int, joint: Int): Boolean {
+        return ObjectCalls.ptrcallWithTwoIntArgsRetBool(Binds.isJointUsingRestForLimitationBind, segment, index, joint)
     }
 
     companion object {
@@ -400,5 +427,15 @@ open class IterateIK3D(handle: GodotHandle) : ChainIK3D(handle) {
         @JvmField
         val getJointLimitationRotationOffsetBind =
             ObjectCalls.getMethodBind("IterateIK3D", "get_joint_limitation_rotation_offset", GET_JOINT_LIMITATION_ROTATION_OFFSET_HASH)
+
+        private const val SET_JOINT_USE_REST_FOR_LIMITATION_HASH = 1383440665L
+        @JvmField
+        val setJointUseRestForLimitationBind =
+            ObjectCalls.getMethodBind("IterateIK3D", "set_joint_use_rest_for_limitation", SET_JOINT_USE_REST_FOR_LIMITATION_HASH)
+
+        private const val IS_JOINT_USING_REST_FOR_LIMITATION_HASH = 2522259332L
+        @JvmField
+        val isJointUsingRestForLimitationBind =
+            ObjectCalls.getMethodBind("IterateIK3D", "is_joint_using_rest_for_limitation", IS_JOINT_USING_REST_FOR_LIMITATION_HASH)
     }
 }

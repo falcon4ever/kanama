@@ -215,8 +215,8 @@ object OS {
 
     /**
      * Returns the full name of the CPU model on the host machine (e.g. `"Intel(R) Core(TM) i7-6700K
-     * CPU @ 4.00GHz"`). Note: This method is only implemented on Windows, macOS, Linux and iOS. On
-     * Android and Web, `get_processor_name` returns an empty string.
+     * CPU @ 4.00GHz"`). Note: This method is only implemented on Windows, macOS, Linux, Android (API
+     * level 31+), and iOS. On Web, `get_processor_name` returns an empty string.
      *
      * Generated from Godot docs: OS.get_processor_name
      */
@@ -425,9 +425,9 @@ object OS {
     /**
      * Creates a new instance of Godot that runs independently. The `arguments` are used in the given
      * order and separated by a space. If the process is successfully created, this method returns the
-     * new process' ID, which you can use to monitor the process (and potentially terminate it with
+     * new process's ID, which you can use to monitor the process (and potentially terminate it with
      * `kill`). If the process cannot be created, this method returns `-1`. See `create_process` if you
-     * wish to run a different process. Note: This method is implemented on Android, Linux, macOS and
+     * wish to run a different process. Note: This method is implemented on Android, Linux, macOS, and
      * Windows.
      *
      * Generated from Godot docs: OS.create_instance
@@ -788,9 +788,9 @@ object OS {
      * language code (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), in lower case. - `Script`
      * - 4-letter script code (https://en.wikipedia.org/wiki/ISO_15924), in title case. - `COUNTRY` - 2
      * or 3-letter country code (https://en.wikipedia.org/wiki/ISO_3166-1), in upper case. - `VARIANT`
-     * - language variant, region and sort order. The variant can have any number of underscored
+     * - language variant, region, and sort order. The variant can have any number of underscored
      * keywords. - `extra` - semicolon separated list of additional key words. This may include
-     * currency, calendar, sort order and numbering system information. If you want only the language
+     * currency, calendar, sort order, and numbering system information. If you want only the language
      * code and not the fully specified locale from the OS, you can use `get_locale_language`.
      *
      * Generated from Godot docs: OS.get_locale
@@ -798,6 +798,25 @@ object OS {
     @JvmStatic
     fun getLocale(): String {
         return ObjectCalls.ptrcallNoArgsRetString(Binds.getLocaleBind, singleton)
+    }
+
+    /**
+     * Returns an array of locales preferred by the user, in order of preference. Each locale is as a
+     * `String` on the form `language_Script_COUNTRY_VARIANT@extra`. Every substring after `language`
+     * is optional and may not exist. - `language` - 2 or 3-letter language code
+     * (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes), in lower case. - `Script` - 4-letter
+     * script code (https://en.wikipedia.org/wiki/ISO_15924), in title case. - `COUNTRY` - 2 or
+     * 3-letter country code (https://en.wikipedia.org/wiki/ISO_3166-1), in upper case. - `VARIANT` -
+     * language variant, region, and sort order. The variant can have any number of underscored
+     * keywords. - `extra` - semicolon separated list of additional key words. This may include
+     * currency, calendar, sort order, and numbering system information. Note: This method is
+     * implemented on macOS, iOS, and Windows.
+     *
+     * Generated from Godot docs: OS.get_preferred_locales
+     */
+    @JvmStatic
+    fun getPreferredLocales(): List<String> {
+        return ObjectCalls.ptrcallNoArgsRetPackedStringList(Binds.getPreferredLocalesBind, singleton)
     }
 
     /**
@@ -1622,6 +1641,11 @@ object OS {
         @JvmField
         val getLocaleBind =
             ObjectCalls.getMethodBind("OS", "get_locale", GET_LOCALE_HASH)
+
+        private const val GET_PREFERRED_LOCALES_HASH = 1139954409L
+        @JvmField
+        val getPreferredLocalesBind =
+            ObjectCalls.getMethodBind("OS", "get_preferred_locales", GET_PREFERRED_LOCALES_HASH)
 
         private const val GET_LOCALE_LANGUAGE_HASH = 201670096L
         @JvmField

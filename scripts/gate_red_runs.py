@@ -522,6 +522,23 @@ case("check_gate_evidence.py", py("check_gate_evidence.py"),
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=", "kanamaGodotVersion=0.")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
+case("check_godot_version_pin.py (release guard wired)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "run: python3 scripts/check_godot_version_pin.py --release", "run: echo no guard")],
+     "lost its release guard", "package.yml no longer runs the release guard on a tag")
+case("check_godot_version_pin.py (release guard needed by every job)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "    runs-on: macos-15\n    needs: gdextension-header\n", "    runs-on: macos-15\n")],
+     "job `cross-runtimes` has no `needs` path to `gdextension-header`", "a package job stops waiting for the release guard job: a tag on a prerelease pin would still build it")
+case("check_godot_version_pin.py (compatibility_minimum)", py("check_godot_version_pin.py"),
+     [Edit("example_project/addons/kanama/kanama.gdextension", 'compatibility_minimum = "', 'compatibility_minimum = "0.')],
+     "example_project/addons/kanama/kanama.gdextension: compatibility_minimum", "the desktop descriptor lets an older Godot load Kanama: compatibility_minimum is not the pin's major.minor")
+case("check_godot_version_pin.py (compatibility_minimum literal)", py("check_godot_version_pin.py"),
+     [Edit("build.gradle.kts", 'compatibility_minimum = "${godotCompatibilityMinimum.get()}"', 'compatibility_minimum = "4.7"')],
+     "is a literal; derive it from kanamaGodotVersion", "a generated descriptor (package kit or iOS) hardcodes compatibility_minimum again instead of deriving it from the pin")
+# The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
+case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
+     [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],
+     "is not a stable Godot release", "a release is cut while the pin is a prerelease",
+     pre=[[PY, "-c", "import pathlib; p = pathlib.Path('build/redrun-release-pin.properties'); p.parent.mkdir(exist_ok=True); p.write_text('kanamaGodotVersion=9.9.stable\\n')"]])
 case("check_kotlin_pins.py", py("check_kotlin_pins.py"),
      [Edit("templates/release-kit/build.gradle.kts", 'id("com.google.devtools.ksp") version "', 'id("com.google.devtools.ksp") version "0.')],
      "templates/release-kit/build.gradle.kts:3: ksp 0.2", "the release kit pins a KSP version the root build does not use")
@@ -656,6 +673,62 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
      "dispatcher-no-static", "a static call is routed through a guarded iOS entry point")
+# The iOS self-test phase gate (Godot 4.8 bump): a scene-init row constructing a class whose constructor needs a server
+# Godot creates after scene-level extension init (the first 4.8 iPhone run: SIGSEGV in TileMapLayer::TileMapLayer()).
+case("check_ios_selftest_phases.py", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/ObjectCallsSelfTest.kt", '  val n3 = ObjectCalls.constructObject("Node3D")\n',
+           '  val n3 = ObjectCalls.constructObject("Node3D")\n  val redRunTileMap = ObjectCalls.constructObject("TileMap")\n')],
+     "constructs TileMap (memnew(TileMapLayer))", "a scene-init iOS self-test row constructs a TileMap (its TileMapLayer needs PhysicsServer2D)")
+case("check_ios_selftest_phases.py (subclass, rows file)", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/UtilitySelfTest.kt", "  val faultsBefore = ObjectCalls.faultCount()\n",
+           "  val faultsBefore = ObjectCalls.faultCount()\n  val redRunBody = net.multigesture.kanama.api.StaticBody3D.create()\n")],
+     "constructs StaticBody3D (inherits PhysicsBody3D", "a *SelfTestRows file called at scene init creates a subclass of an unsafe class")
+case("check_ios_selftest_phases.py (C matrix)", py("check_ios_selftest_phases.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c", '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n',
+           '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n'
+           '    int64_t red_run_area = kanama_ios_godot_construct_object("Area2D");\n')],
+     "kanama_ios_ptrcall_selftest line", "the C ptrcall matrix (kanama_ios_godot_construct_object) constructs an Area2D at scene init")
+case("check_ios_selftest_phases.py (pattern floor)", py("check_ios_selftest_phases.py"),
+     [Edit("scripts/check_ios_selftest_phases.py", "re.compile(r'(?<![A-Za-z0-9])(?:constructObject", "re.compile(r'\\b(?:constructObject")],
+     "kanama_ios_ptrcall_selftest: found no object construction",
+     "the construction pattern stops matching the C matrix's kanama_ios_godot_construct_object (it read 0 classes once)")
+# Self-contained (CI has no Godot checkout): a fake Godot tree under build/, the list generated from it, and a mutation
+# that adds a servers/ constructor using a late server, so the generator (main.cpp window, memnew closure, servers/)
+# runs in CI too. version.py is written from the API header so the gate's version match holds at every bump.
+PHASES_FAKE = "build/redrun-phases"
+PHASES_ARGS = ["--godot-src", f"{PHASES_FAKE}/godot", "--data", f"{PHASES_FAKE}/list.json"]
+PHASES_FAKE_TREE = [PY, "-c", (
+    "import json, pathlib, shutil\n"
+    f"root = pathlib.Path('{PHASES_FAKE}'); shutil.rmtree(root, ignore_errors=True); g = root / 'godot'\n"
+    "h = json.loads(pathlib.Path('extension_api.json').read_text())['header']\n"
+    "files = {\n"
+    " 'version.py': f'major = {h[\"version_major\"]}\\nminor = {h[\"version_minor\"]}\\npatch = {h[\"version_patch\"]}\\nstatus = \"{h[\"version_status\"]}\"\\n',\n"
+    " 'main/main.cpp': 'Error Main::setup2(bool p_show_boot_logo) {\\n\\tGDExtensionManager::get_singleton()->initialize_extensions(GDExtension::INITIALIZATION_LEVEL_SCENE);\\n'\n"
+    "   '\\tcamera_server = CameraServer::create();\\n\\tPhysicsServer2DManager::initialize_server();\\n\\tregister_server_singletons();\\n}\\n',\n"
+    " 'scene/tile_map_layer.cpp': 'TileMapLayer::TileMapLayer() {\\n\\tPhysicsServer2D::get_singleton()->connect(\"_debug_changed\", callable_mp(this, &TileMapLayer::_x));\\n}\\n\\n'\n"
+    "   'TileMap::TileMap() {\\n\\tTileMapLayer *layer = memnew(TileMapLayer);\\n}\\n\\nNode2D::Node2D() {\\n}\\n',\n"
+    " 'servers/camera/camera_feed.cpp': '// red-run: a constructor goes here\\n',\n"
+    "}\n"
+    "for rel, text in files.items():\n"
+    "    (g / rel).parent.mkdir(parents=True, exist_ok=True); (g / rel).write_text(text)\n"
+)]
+case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/servers/camera/camera_feed.cpp", "// red-run: a constructor goes here\n",
+           "CameraFeed::CameraFeed() {\n\tid = CameraServer::get_singleton()->get_free_id();\n}\n")],
+     "added ['CameraFeed']", "a servers/ constructor starts using a late server and the generated list is not regenerated",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (setup2 renamed)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/main/main.cpp", "register_server_singletons();", "register_servers_renamed();")],
+     "no `register_server_singletons();` after", "Godot renames a Main::setup2 marker the late-server scan relies on (a named failure, not a traceback)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (list for another pin)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/list.json", '"pin": "', '"pin": "0.0.redrun-')],
+     "was generated for Godot 0.0.redrun-", "a bump moves the pin without regenerating the list (caught without a Godot checkout)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (regenerate from another version)", py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/version.py", '\nstatus = "', '\nstatus = "rc')],
+     "--regenerate: build/redrun-phases/godot is Godot", "the list is regenerated from a checkout whose version is not exactly the pin",
+     pre=[PHASES_FAKE_TREE])
 # The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
 # red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
@@ -835,6 +908,19 @@ case("check_public_signature_changes.py", py("check_public_signature_changes.py"
 case("check_public_signature_changes.py", py("check_public_signature_changes.py"),
      [Edit("build.gradle.kts", "|    fun toC(value: Double): $storage", "|    fun toC(component: Double): $storage")],
      "unannounced source break", "the generated Real.kt (a build.gradle.kts template) changes a public signature")
+# A new trailing parameter with a default is compatible, except where a caller or an override would notice.
+case("check_public_signature_changes.py (trailing default, overridable)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: open class ZzRedRun\nZzRedRun: open fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nopen class ZzRedRun {\n  open fun redRun(a: Int, b: Int = 0) {}\n}\n")],
+     "unannounced source break", "an open function gains a trailing defaulted parameter: an override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, interface member)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: interface ZzRedRun\nZzRedRun: fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\ninterface ZzRedRun {\n  fun redRun(a: Int, b: Int = 0)\n}\n")],
+     "unannounced source break", "an interface member gains a trailing defaulted parameter: its line carries no `open`, but every implementation's override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, after a lambda)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: class ZzRedRun\nZzRedRun: fun redRun(block: () -> Unit)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n  fun redRun(block: () -> Unit, b: Int = 0) {}\n}\n")],
+     "unannounced source break", "a function whose last parameter is a lambda gains a defaulted one: a trailing lambda stops reaching it")
 case("check_public_signature_changes.py (annotations)", py("check_public_signature_changes.py"),
      [Edit("annotations/src/main/kotlin/net/multigesture/kanama/annotations/Annotations.kt", "annotation class GodotName(val name: String)", "annotation class GodotName(val name: String, val extra: Int)")],
      "unannounced source break", "a parameter is added to a script annotation (annotations/ is a snapshotted surface, task 137 item 9)")
@@ -1274,7 +1360,12 @@ case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.s
      [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
-     "missing pattern: FreedObjectSmoke decode_buffers", "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     # The smoke's first Godot run after the import is the decode probe's own, so this is the first thing the
+     # smoke can report: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe
+     # dying under the double release. The later runs' aborts (HelloScript's captureScriptBacktraces, at a
+     # different line each run) are never reached.
+     ("decode buffers: wrong reference counts", "decode buffers: the probe died before its result"),
+     "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
@@ -1398,6 +1489,21 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
              'export_path="build/game.apk"\n\n[preset.0.options]\n\ngradle_build/use_gradle_build=true\n'
              'gradle_build/min_sdk="26"\nplugins/KanamaAndroid=true\n')],
      "preset's Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The R8 compat line goes into the build template the preset builds (Gradle Build Directory), not always
+# res://android/build; check_export_guard.gd unit-tests the writer. A mutation goes into both copies.
+GUARD_R8_BUILD_DIRECTORY = ("    if dir.is_empty():\n        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n",
+                            "    dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n")
+GUARD_LATE_DISCARD = ("        _discard_on_end = _export_path\n", "        pass\n")
+case("tool_smoke.sh (export guard late problem, one-click)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD)],
+     "[export_guard_discard] FAIL: a problem found after the template setup left the one-click APK", "a problem the guard finds after _export_begin (Android plugins deleted with the old template) no longer removes a one-click deploy's APK: Godot installs the broken APK on the device",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (export guard R8 compat build directory)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY)],
+     "[export_guard] FAIL r8 compat: android_gradle_properties_path(res://platform/android_custom)", "the guard writes the R8 compat line into res://android/build whatever the preset's Gradle Build Directory says: a minified build in a custom directory runs R8 in full mode and crashes on the device",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
                         "    return true\n")

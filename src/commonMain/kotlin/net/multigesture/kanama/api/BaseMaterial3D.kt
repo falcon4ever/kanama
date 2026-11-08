@@ -646,6 +646,12 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
         @JvmName("setBillboardKeepScaleProperty")
         set(value) = setFlag(BaseMaterial3D.Flags.BILLBOARD_KEEP_SCALE, value)
 
+    var particlesAnimEnabled: Boolean
+        @JvmName("particlesAnimEnabledProperty")
+        get() = getFeature(BaseMaterial3D.Feature.PARTICLES_ANIMATION)
+        @JvmName("setParticlesAnimEnabledProperty")
+        set(value) = setFeature(BaseMaterial3D.Feature.PARTICLES_ANIMATION, value)
+
     var particlesAnimHFrames: Int
         @JvmName("particlesAnimHFramesProperty")
         get() = getParticlesAnimHFrames()
@@ -1942,8 +1948,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BillboardMode.PARTICLES`. See `billboard_mode`.
+     * The number of horizontal frames in the particle sprite sheet. Only enabled when
+     * `particles_anim_enabled` is `true` or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_h_frames
      */
@@ -1954,8 +1960,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of horizontal frames in the particle sprite sheet. Only enabled when using
-     * `BillboardMode.PARTICLES`. See `billboard_mode`.
+     * The number of horizontal frames in the particle sprite sheet. Only enabled when
+     * `particles_anim_enabled` is `true` or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_h_frames
      */
@@ -1967,8 +1973,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BillboardMode.PARTICLES`. See `billboard_mode`.
+     * The number of vertical frames in the particle sprite sheet. Only enabled when
+     * `particles_anim_enabled` is `true` or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_v_frames
      */
@@ -1979,8 +1985,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * The number of vertical frames in the particle sprite sheet. Only enabled when using
-     * `BillboardMode.PARTICLES`. See `billboard_mode`.
+     * The number of vertical frames in the particle sprite sheet. Only enabled when
+     * `particles_anim_enabled` is `true` or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_v_frames
      */
@@ -1992,8 +1998,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
-     * See `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when `particles_anim_enabled` is `true`
+     * or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.set_particles_anim_loop
      */
@@ -2004,8 +2010,8 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
     }
 
     /**
-     * If `true`, particle animations are looped. Only enabled when using `BillboardMode.PARTICLES`.
-     * See `billboard_mode`.
+     * If `true`, particle animations are looped. Only enabled when `particles_anim_enabled` is `true`
+     * or `billboard_mode` is set to `BillboardMode.PARTICLES`.
      *
      * Generated from Godot docs: BaseMaterial3D.get_particles_anim_loop
      */
@@ -3073,7 +3079,9 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
             /**
              * The material will cut off all values below a threshold, the rest will remain opaque. The opaque
              * portions will be rendered in the depth prepass. This is faster to render than alpha blending,
-             * but slower than opaque rendering. This also supports casting shadows.
+             * but slower than opaque rendering. This also supports casting shadows. For textures using this
+             * mode see the `Preserve Alpha Test Coverage` option in the texture import settings to improve
+             * distant rendering and popping.
              *
              * Generated from Godot docs: BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
              */
@@ -3229,11 +3237,17 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
              */
             val BENT_NORMAL_MAPPING: Feature get() = Feature(12L)
             /**
+             * Constant for setting `particles_anim_enabled`.
+             *
+             * Generated from Godot docs: BaseMaterial3D.FEATURE_PARTICLES_ANIMATION
+             */
+            val PARTICLES_ANIMATION: Feature get() = Feature(13L)
+            /**
              * Represents the size of the `Feature` enum.
              *
              * Generated from Godot docs: BaseMaterial3D.FEATURE_MAX
              */
-            val MAX: Feature get() = Feature(13L)
+            val MAX: Feature get() = Feature(14L)
         }
     }
 
@@ -3691,7 +3705,7 @@ open class BaseMaterial3D(handle: GodotHandle) : Material(handle) {
              * Used for particle systems when assigned to `GPUParticles3D` and `CPUParticles3D` nodes (flipbook
              * animation). Enables `particles_anim_*` properties. The `ParticleProcessMaterial.anim_speed_min`
              * or `CPUParticles3D.anim_speed_min` should also be set to a value bigger than zero for the
-             * animation to play.
+             * animation to play. For animations without bilboarding, see `particles_anim_enabled`.
              *
              * Generated from Godot docs: BaseMaterial3D.BILLBOARD_PARTICLES
              */

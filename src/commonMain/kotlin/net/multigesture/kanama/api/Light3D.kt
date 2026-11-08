@@ -147,6 +147,18 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmName("setShadowCasterMaskProperty")
         set(value) = setShadowCasterMask(value)
 
+    var shadowContactShadowsAllow: Boolean
+        @JvmName("shadowContactShadowsAllowProperty")
+        get() = getAllowContactShadows()
+        @JvmName("setShadowContactShadowsAllowProperty")
+        set(value) = setAllowContactShadows(value)
+
+    var shadowContactShadowsBlur: Double
+        @JvmName("shadowContactShadowsBlurProperty")
+        get() = getParam(Light3D.Param.CONTACT_SHADOW_BLUR)
+        @JvmName("setShadowContactShadowsBlurProperty")
+        set(value) = setParam(Light3D.Param.CONTACT_SHADOW_BLUR, value)
+
     var distanceFadeEnabled: Boolean
         @JvmName("distanceFadeEnabledProperty")
         get() = isDistanceFadeEnabled()
@@ -432,6 +444,26 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
     }
 
     /**
+     * Enables screen-space contact shadows for this light. Only used when
+     * `ProjectSettings.rendering/lights_and_shadows/contact_shadow/enabled` is enabled.
+     *
+     * Generated from Godot docs: Light3D.set_allow_contact_shadows
+     */
+    fun setAllowContactShadows(enabled: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setAllowContactShadowsBind, segment, enabled)
+    }
+
+    /**
+     * Enables screen-space contact shadows for this light. Only used when
+     * `ProjectSettings.rendering/lights_and_shadows/contact_shadow/enabled` is enabled.
+     *
+     * Generated from Godot docs: Light3D.get_allow_contact_shadows
+     */
+    fun getAllowContactShadows(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getAllowContactShadowsBind, segment)
+    }
+
+    /**
      * The light's bake mode. This will affect the global illumination techniques that have an effect
      * on the light's rendering. Note: Meshes' global illumination mode will also affect the global
      * illumination rendering. See `GeometryInstance3D.gi_mode`.
@@ -656,11 +688,17 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
              */
             val INTENSITY: Param get() = Param(20L)
             /**
+             * Constant for accessing `shadow_contact_shadows_blur`.
+             *
+             * Generated from Godot docs: Light3D.PARAM_CONTACT_SHADOW_BLUR
+             */
+            val CONTACT_SHADOW_BLUR: Param get() = Param(21L)
+            /**
              * Represents the size of the `Param` enum.
              *
              * Generated from Godot docs: Light3D.PARAM_MAX
              */
-            val MAX: Param get() = Param(21L)
+            val MAX: Param get() = Param(22L)
         }
     }
 
@@ -844,6 +882,16 @@ open class Light3D(handle: GodotHandle) : VisualInstance3D(handle) {
         @JvmField
         val getShadowCasterMaskBind =
             ObjectCalls.getMethodBind("Light3D", "get_shadow_caster_mask", GET_SHADOW_CASTER_MASK_HASH)
+
+        private const val SET_ALLOW_CONTACT_SHADOWS_HASH = 2586408642L
+        @JvmField
+        val setAllowContactShadowsBind =
+            ObjectCalls.getMethodBind("Light3D", "set_allow_contact_shadows", SET_ALLOW_CONTACT_SHADOWS_HASH)
+
+        private const val GET_ALLOW_CONTACT_SHADOWS_HASH = 36873697L
+        @JvmField
+        val getAllowContactShadowsBind =
+            ObjectCalls.getMethodBind("Light3D", "get_allow_contact_shadows", GET_ALLOW_CONTACT_SHADOWS_HASH)
 
         private const val SET_BAKE_MODE_HASH = 37739303L
         @JvmField

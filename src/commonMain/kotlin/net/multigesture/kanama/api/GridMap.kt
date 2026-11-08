@@ -10,6 +10,7 @@ import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
+import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Vector3
 import net.multigesture.kanama.types.Vector3i
@@ -97,6 +98,18 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         get() = isBakingNavigation()
         @JvmName("setBakeNavigationProperty")
         set(value) = setBakeNavigation(value)
+
+    var debugShowOctants: Boolean
+        @JvmName("debugShowOctantsProperty")
+        get() = getDebugShowOctants()
+        @JvmName("setDebugShowOctantsProperty")
+        set(value) = setDebugShowOctants(value)
+
+    var debugOctantColor: Color
+        @JvmName("debugOctantColorProperty")
+        get() = getDebugOctantColor()
+        @JvmName("setDebugOctantColorProperty")
+        set(value) = setDebugOctantColor(value)
 
     /**
      * The physics layers this GridMap is in. GridMaps act as static bodies, meaning they aren't
@@ -438,8 +451,10 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
     }
 
     /**
-     * Returns the position of a grid cell in the GridMap's local coordinate space. To convert the
-     * returned value into global coordinates, use `Node3D.to_global`. See also `local_to_map`.
+     * Returns the position of a grid cell in the GridMap's local coordinate space. The returned
+     * position is centered according to the values of `cell_center_x`, `cell_center_y`, and
+     * `cell_center_z`. To convert the returned value into global coordinates, use `Node3D.to_global`.
+     * See also `local_to_map`.
      *
      * Generated from Godot docs: GridMap.map_to_local
      */
@@ -664,6 +679,42 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
      */
     fun makeBakedMeshes(genLightmapUv: Boolean = false, lightmapUvTexelSize: Double = 0.1) {
         ObjectCalls.ptrcallWithBoolAndDoubleArgs(Binds.makeBakedMeshesBind, segment, genLightmapUv, lightmapUvTexelSize)
+    }
+
+    /**
+     * If `true`, shows debug visuals for octants.
+     *
+     * Generated from Godot docs: GridMap.set_debug_show_octants
+     */
+    fun setDebugShowOctants(enable: Boolean) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.setDebugShowOctantsBind, segment, enable)
+    }
+
+    /**
+     * If `true`, shows debug visuals for octants.
+     *
+     * Generated from Godot docs: GridMap.get_debug_show_octants
+     */
+    fun getDebugShowOctants(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.getDebugShowOctantsBind, segment)
+    }
+
+    /**
+     * The `Color` used for rendering octant debug visuals when `debug_show_octants` is enabled.
+     *
+     * Generated from Godot docs: GridMap.set_debug_octant_color
+     */
+    fun setDebugOctantColor(color: Color) {
+        ObjectCalls.ptrcallWithColorArg(Binds.setDebugOctantColorBind, segment, color)
+    }
+
+    /**
+     * The `Color` used for rendering octant debug visuals when `debug_show_octants` is enabled.
+     *
+     * Generated from Godot docs: GridMap.get_debug_octant_color
+     */
+    fun getDebugOctantColor(): Color {
+        return ObjectCalls.ptrcallNoArgsRetColor(Binds.getDebugOctantColorBind, segment)
     }
 
     /** Signal `cell_size_changed(cell_size: Vector3)`; see [TypedSignal]. */
@@ -1009,5 +1060,25 @@ class GridMap(handle: GodotHandle) : Node3D(handle) {
         @JvmField
         val makeBakedMeshesBind =
             ObjectCalls.getMethodBind("GridMap", "make_baked_meshes", MAKE_BAKED_MESHES_HASH)
+
+        private const val SET_DEBUG_SHOW_OCTANTS_HASH = 2586408642L
+        @JvmField
+        val setDebugShowOctantsBind =
+            ObjectCalls.getMethodBind("GridMap", "set_debug_show_octants", SET_DEBUG_SHOW_OCTANTS_HASH)
+
+        private const val GET_DEBUG_SHOW_OCTANTS_HASH = 36873697L
+        @JvmField
+        val getDebugShowOctantsBind =
+            ObjectCalls.getMethodBind("GridMap", "get_debug_show_octants", GET_DEBUG_SHOW_OCTANTS_HASH)
+
+        private const val SET_DEBUG_OCTANT_COLOR_HASH = 2920490490L
+        @JvmField
+        val setDebugOctantColorBind =
+            ObjectCalls.getMethodBind("GridMap", "set_debug_octant_color", SET_DEBUG_OCTANT_COLOR_HASH)
+
+        private const val GET_DEBUG_OCTANT_COLOR_HASH = 3444240500L
+        @JvmField
+        val getDebugOctantColorBind =
+            ObjectCalls.getMethodBind("GridMap", "get_debug_octant_color", GET_DEBUG_OCTANT_COLOR_HASH)
     }
 }

@@ -169,8 +169,8 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
      * when needed. When your plugin is deactivated, make sure to remove your custom control with
      * `remove_control_from_bottom_panel` and free it with `Node.queue_free`. `shortcut` is a shortcut
      * that, when activated, will toggle the bottom panel's visibility. The shortcut object is only set
-     * when this control is added to the bottom panel. Note See the default editor bottom panel
-     * shortcuts in the Editor Settings for inspiration. By convention, they all use Alt modifier.
+     * when this control is added to the bottom panel. Note: See the default editor bottom panel
+     * shortcuts in the Editor Settings for inspiration. By convention, they all use the Alt modifier.
      *
      * Generated from Godot docs: EditorPlugin.add_control_to_bottom_panel
      */
@@ -329,50 +329,6 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Registers a new `EditorSceneFormatImporter`. Scene importers are used to import custom 3D asset
-     * formats as scenes. If `first_priority` is `true`, the new import plugin is inserted first in the
-     * list and takes precedence over pre-existing plugins.
-     *
-     * Generated from Godot docs: EditorPlugin.add_scene_format_importer_plugin
-     */
-    fun addSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
-        ObjectCalls.keepReachable(sceneFormatImporter)
-    }
-
-    /**
-     * Removes a scene format importer registered by `add_scene_format_importer_plugin`.
-     *
-     * Generated from Godot docs: EditorPlugin.remove_scene_format_importer_plugin
-     */
-    fun removeSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?) {
-        ObjectCalls.ptrcallWithObjectArgs(Binds.removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
-        ObjectCalls.keepReachable(sceneFormatImporter)
-    }
-
-    /**
-     * Add an `EditorScenePostImportPlugin`. These plugins allow customizing the import process of 3D
-     * assets by adding new options to the import dialogs. If `first_priority` is `true`, the new
-     * import plugin is inserted first in the list and takes precedence over pre-existing plugins.
-     *
-     * Generated from Godot docs: EditorPlugin.add_scene_post_import_plugin
-     */
-    fun addScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?, firstPriority: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
-        ObjectCalls.keepReachable(sceneImportPlugin)
-    }
-
-    /**
-     * Remove the `EditorScenePostImportPlugin`, added with `add_scene_post_import_plugin`.
-     *
-     * Generated from Godot docs: EditorPlugin.remove_scene_post_import_plugin
-     */
-    fun removeScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(Binds.removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
-        ObjectCalls.keepReachable(sceneImportPlugin)
-    }
-
-    /**
      * Registers a new `EditorExportPlugin`. Export plugins are used to perform tasks when the project
      * is being exported. See `add_inspector_plugin` for an example of how to register a plugin.
      *
@@ -412,28 +368,6 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     fun removeExportPlatform(platform: EditorExportPlatform?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeExportPlatformBind, segment, listOf(platform?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(platform)
-    }
-
-    /**
-     * Registers a new `EditorNode3DGizmoPlugin`. Gizmo plugins are used to add custom gizmos to the 3D
-     * preview viewport for a `Node3D`. See `add_inspector_plugin` for an example of how to register a
-     * plugin.
-     *
-     * Generated from Godot docs: EditorPlugin.add_node_3d_gizmo_plugin
-     */
-    fun addNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(Binds.addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
-        ObjectCalls.keepReachable(plugin)
-    }
-
-    /**
-     * Removes a gizmo plugin registered by `add_node_3d_gizmo_plugin`.
-     *
-     * Generated from Godot docs: EditorPlugin.remove_node_3d_gizmo_plugin
-     */
-    fun removeNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
-        ObjectCalls.ptrcallWithObjectArgs(Binds.removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
-        ObjectCalls.keepReachable(plugin)
     }
 
     /**
@@ -522,6 +456,72 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
     fun removeContextMenuPlugin(plugin: EditorContextMenuPlugin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.removeContextMenuPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(plugin)
+    }
+
+    /**
+     * Registers a new `EditorNode3DGizmoPlugin`. Gizmo plugins are used to add custom gizmos to the 3D
+     * preview viewport for a `Node3D`. See `add_inspector_plugin` for an example of how to register a
+     * plugin.
+     *
+     * Generated from Godot docs: EditorPlugin.add_node_3d_gizmo_plugin
+     */
+    fun addNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.addNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
+    }
+
+    /**
+     * Removes a gizmo plugin registered by `add_node_3d_gizmo_plugin`.
+     *
+     * Generated from Godot docs: EditorPlugin.remove_node_3d_gizmo_plugin
+     */
+    fun removeNode3dGizmoPlugin(plugin: EditorNode3DGizmoPlugin?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeNode3dGizmoPluginBind, segment, listOf(plugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(plugin)
+    }
+
+    /**
+     * Registers a new `EditorSceneFormatImporter`. Scene importers are used to import custom 3D asset
+     * formats as scenes. If `first_priority` is `true`, the new import plugin is inserted first in the
+     * list and takes precedence over pre-existing plugins.
+     *
+     * Generated from Godot docs: EditorPlugin.add_scene_format_importer_plugin
+     */
+    fun addSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?, firstPriority: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addSceneFormatImporterPluginBind, segment, sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.keepReachable(sceneFormatImporter)
+    }
+
+    /**
+     * Removes a scene format importer registered by `add_scene_format_importer_plugin`.
+     *
+     * Generated from Godot docs: EditorPlugin.remove_scene_format_importer_plugin
+     */
+    fun removeSceneFormatImporterPlugin(sceneFormatImporter: EditorSceneFormatImporter?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeSceneFormatImporterPluginBind, segment, listOf(sceneFormatImporter?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(sceneFormatImporter)
+    }
+
+    /**
+     * Add an `EditorScenePostImportPlugin`. These plugins allow customizing the import process of 3D
+     * assets by adding new options to the import dialogs. If `first_priority` is `true`, the new
+     * import plugin is inserted first in the list and takes precedence over pre-existing plugins.
+     *
+     * Generated from Godot docs: EditorPlugin.add_scene_post_import_plugin
+     */
+    fun addScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?, firstPriority: Boolean = false) {
+        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.addScenePostImportPluginBind, segment, sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT, firstPriority)
+        ObjectCalls.keepReachable(sceneImportPlugin)
+    }
+
+    /**
+     * Remove the `EditorScenePostImportPlugin`, added with `add_scene_post_import_plugin`.
+     *
+     * Generated from Godot docs: EditorPlugin.remove_scene_post_import_plugin
+     */
+    fun removeScenePostImportPlugin(sceneImportPlugin: EditorScenePostImportPlugin?) {
+        ObjectCalls.ptrcallWithObjectArgs(Binds.removeScenePostImportPluginBind, segment, listOf(sceneImportPlugin?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(sceneImportPlugin)
     }
 
     /**
@@ -963,26 +963,6 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         val removeImportPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_import_plugin", REMOVE_IMPORT_PLUGIN_HASH)
 
-        private const val ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2764104752L
-        @JvmField
-        val addSceneFormatImporterPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "add_scene_format_importer_plugin", ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
-
-        private const val REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2637776123L
-        @JvmField
-        val removeSceneFormatImporterPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_format_importer_plugin", REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
-
-        private const val ADD_SCENE_POST_IMPORT_PLUGIN_HASH = 3492436322L
-        @JvmField
-        val addScenePostImportPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "add_scene_post_import_plugin", ADD_SCENE_POST_IMPORT_PLUGIN_HASH)
-
-        private const val REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH = 3045178206L
-        @JvmField
-        val removeScenePostImportPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_post_import_plugin", REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH)
-
         private const val ADD_EXPORT_PLUGIN_HASH = 4095952207L
         @JvmField
         val addExportPluginBind =
@@ -1002,16 +982,6 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         @JvmField
         val removeExportPlatformBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_export_platform", REMOVE_EXPORT_PLATFORM_HASH)
-
-        private const val ADD_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
-        @JvmField
-        val addNode3dGizmoPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "add_node_3d_gizmo_plugin", ADD_NODE_3D_GIZMO_PLUGIN_HASH)
-
-        private const val REMOVE_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
-        @JvmField
-        val removeNode3dGizmoPluginBind =
-            ObjectCalls.getMethodBind("EditorPlugin", "remove_node_3d_gizmo_plugin", REMOVE_NODE_3D_GIZMO_PLUGIN_HASH)
 
         private const val ADD_INSPECTOR_PLUGIN_HASH = 546395733L
         @JvmField
@@ -1052,6 +1022,36 @@ open class EditorPlugin(handle: GodotHandle) : Node(handle) {
         @JvmField
         val removeContextMenuPluginBind =
             ObjectCalls.getMethodBind("EditorPlugin", "remove_context_menu_plugin", REMOVE_CONTEXT_MENU_PLUGIN_HASH)
+
+        private const val ADD_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
+        @JvmField
+        val addNode3dGizmoPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "add_node_3d_gizmo_plugin", ADD_NODE_3D_GIZMO_PLUGIN_HASH)
+
+        private const val REMOVE_NODE_3D_GIZMO_PLUGIN_HASH = 1541015022L
+        @JvmField
+        val removeNode3dGizmoPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "remove_node_3d_gizmo_plugin", REMOVE_NODE_3D_GIZMO_PLUGIN_HASH)
+
+        private const val ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2764104752L
+        @JvmField
+        val addSceneFormatImporterPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "add_scene_format_importer_plugin", ADD_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
+
+        private const val REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH = 2637776123L
+        @JvmField
+        val removeSceneFormatImporterPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_format_importer_plugin", REMOVE_SCENE_FORMAT_IMPORTER_PLUGIN_HASH)
+
+        private const val ADD_SCENE_POST_IMPORT_PLUGIN_HASH = 3492436322L
+        @JvmField
+        val addScenePostImportPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "add_scene_post_import_plugin", ADD_SCENE_POST_IMPORT_PLUGIN_HASH)
+
+        private const val REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH = 3045178206L
+        @JvmField
+        val removeScenePostImportPluginBind =
+            ObjectCalls.getMethodBind("EditorPlugin", "remove_scene_post_import_plugin", REMOVE_SCENE_POST_IMPORT_PLUGIN_HASH)
 
         private const val GET_EDITOR_INTERFACE_HASH = 4223731786L
         @JvmField

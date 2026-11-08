@@ -42,9 +42,8 @@ class AESContext(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Get the current IV state for this context (IV gets updated when calling `update`). You normally
-     * don't need this function. Note: This function only makes sense when the context is started with
-     * `Mode.CBC_ENCRYPT` or `Mode.CBC_DECRYPT`.
+     * Returns an empty `PackedByteArray`. Note: This method used to return the active IV state as
+     * modified by one or more `update` calls. This is no longer supported.
      *
      * Generated from Godot docs: AESContext.get_iv_state
      */

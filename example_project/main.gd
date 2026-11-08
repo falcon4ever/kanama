@@ -385,9 +385,9 @@ func _kanama_dictionary_malformed_smoke() -> void:
 func _kanama_classdb_script_class_smoke() -> void:
 	# task 41 — ClassDB honesty for script global classes. `ClassDB.instantiate` only builds
 	# engine classes, so a script `@GlobalClass` (GDScript, C#, or Kanama) returns null +
-	# "Cannot get class" while `can_instantiate` returns true. This is upstream Godot behaviour:
-	# assert Kanama's SmokeResource matches a plain GDScript global class (ProbeGlobalRes), so a
-	# future divergence is caught. Construct script resources with `newScriptInstance<T>()` from
+	# "Cannot get class", and what `can_instantiate` answers for one is Godot's call (true up to 4.7,
+	# false since 4.8). Only the match is asserted: Kanama's SmokeResource answers as a plain
+	# GDScript global class (ProbeGlobalRes) does, so a future divergence is caught. Construct script resources with `newScriptInstance<T>()` from
 	# Kotlin, or the base-Resource + set_script recipe below from GDScript — not ClassDB.
 	var kanama_can := ClassDB.can_instantiate("SmokeResource")
 	var kanama_instantiate_null := ClassDB.instantiate("SmokeResource") == null
@@ -397,11 +397,11 @@ func _kanama_classdb_script_class_smoke() -> void:
 	var built = ClassDB.instantiate("Resource")
 	built.set_script(load("res://SmokeResource.kt"))
 	var recipe_works = built != null and built.get_script() != null
-	print("[kanama:gd] kt script classdb_parity kanama_can=", kanama_can,
-		" kanama_instantiate_null=", kanama_instantiate_null, " gdscript_can=", gdscript_can,
+	var can_matches := kanama_can == gdscript_can
+	print("[kanama:gd] kt script classdb_parity can_matches=", can_matches,
+		" kanama_instantiate_null=", kanama_instantiate_null,
 		" gdscript_instantiate_null=", gdscript_instantiate_null, " recipe_works=", recipe_works)
-	if not (kanama_can and kanama_instantiate_null and gdscript_can \
-			and gdscript_instantiate_null and recipe_works):
+	if not (can_matches and kanama_instantiate_null and gdscript_instantiate_null and recipe_works):
 		push_error("Kanama ClassDB script-class parity failed")
 
 func _kanama_typed_global_class_smoke() -> void:

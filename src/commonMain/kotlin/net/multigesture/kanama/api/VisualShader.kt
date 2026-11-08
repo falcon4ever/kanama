@@ -127,7 +127,7 @@ class VisualShader(handle: GodotHandle) : Shader(handle) {
     }
 
     /**
-     * Returns `true` if the specified node and port connection exist.
+     * Returns `true` if the specified node and port connection exists.
      *
      * Generated from Godot docs: VisualShader.is_node_connection
      */

@@ -3921,11 +3921,6 @@ actual object ObjectCalls {
     instance: MemorySegment,
   ): List<RID> = memScoped { ptrcallRetTypedRIDList(methodBind, instance, null, null, 0) }
 
-  actual fun ptrcallNoArgsRetRect2List(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-  ): List<Rect2> = memScoped { ptrcallRetTypedRect2List(methodBind, instance, null, null, 0) }
-
   actual fun ptrcallNoArgsRetRect2i(methodBind: MemorySegment, instance: MemorySegment): Rect2i =
     memScoped {
       val ret = allocArray<IntVar>(4)
@@ -13808,34 +13803,6 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
-  actual fun ptrcallWithObjectListObjectCallableArgsRetObject(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    values: List<*>,
-    objectArg: MemorySegment,
-    callableObject: MemorySegment,
-    callableMethod: String,
-  ): MemorySegment = memScoped {
-    val ret = alloc<LongVar>()
-    ret.value = 0
-    val c0 = packTypedObjectArrayDesc(values)
-    val c1 = alloc<LongVar>()
-    c1.value = objectArg.address()
-    val c2 = alloc<KanamaIosCallableArgDesc>()
-    c2.object_handle = callableObject.address()
-    c2.method = callableMethod.cstr.ptr
-    val types = allocArray<IntVar>(3)
-    types[0] = PT_TYPED_ARRAY_BLOB
-    types[1] = PT_OBJECT
-    types[2] = PT_CALLABLE
-    val ptrs = allocArray<COpaquePointerVar>(3)
-    ptrs[0] = c0.reinterpret<CPointed>()
-    ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
-    MemorySegment.ofAddress(ret.value)
-  }
-
   actual fun ptrcallWithObjectListRIDUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -14179,48 +14146,6 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_OBJECT, ret.ptr)
     MemorySegment.ofAddress(ret.value)
-  }
-
-  actual fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
-    methodBind: MemorySegment,
-    instance: MemorySegment,
-    objectArg: MemorySegment,
-    rid: RID,
-    first: Long,
-    second: Long,
-    third: Long,
-    mode: Long,
-  ): RID = memScoped {
-    val ret = alloc<LongVar>()
-    ret.value = 0
-    val c0 = alloc<LongVar>()
-    c0.value = objectArg.address()
-    val c1 = alloc<LongVar>()
-    c1.value = rid.value
-    val c2 = alloc<LongVar>()
-    c2.value = first
-    val c3 = alloc<LongVar>()
-    c3.value = second
-    val c4 = alloc<LongVar>()
-    c4.value = third
-    val c5 = alloc<LongVar>()
-    c5.value = mode
-    val types = allocArray<IntVar>(6)
-    types[0] = PT_OBJECT
-    types[1] = PT_RID
-    types[2] = PT_INT64
-    types[3] = PT_INT64
-    types[4] = PT_INT64
-    types[5] = PT_INT64
-    val ptrs = allocArray<COpaquePointerVar>(6)
-    ptrs[0] = c0.ptr.reinterpret<CPointed>()
-    ptrs[1] = c1.ptr.reinterpret<CPointed>()
-    ptrs[2] = c2.ptr.reinterpret<CPointed>()
-    ptrs[3] = c3.ptr.reinterpret<CPointed>()
-    ptrs[4] = c4.ptr.reinterpret<CPointed>()
-    ptrs[5] = c5.ptr.reinterpret<CPointed>()
-    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 6, PT_RID, ret.ptr)
-    RID(ret.value)
   }
 
   actual fun ptrcallWithObjectRect2BoolColorBoolArgs(
@@ -14974,6 +14899,32 @@ actual object ObjectCalls {
     ptrs[0] = c0.ptr.reinterpret<CPointed>()
     ptrs[1] = c1.reinterpret<CPointed>()
     ptrs[2] = c2.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
+    Unit
+  }
+
+  actual fun ptrcallWithObjectVector2AndIntArgs(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    objectArg: MemorySegment,
+    vector: Vector2,
+    intArg: Int,
+  ) = memScoped {
+    val c0 = alloc<LongVar>()
+    c0.value = objectArg.address()
+    val c1 = allocArray<GodotRealVar>(2)
+    c1[0] = vector.rawX
+    c1[1] = vector.rawY
+    val c2 = alloc<LongVar>()
+    c2.value = intArg.toLong()
+    val types = allocArray<IntVar>(3)
+    types[0] = PT_OBJECT
+    types[1] = PT_VECTOR2
+    types[2] = PT_INT64
+    val ptrs = allocArray<COpaquePointerVar>(3)
+    ptrs[0] = c0.ptr.reinterpret<CPointed>()
+    ptrs[1] = c1.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VOID, null)
     Unit
   }

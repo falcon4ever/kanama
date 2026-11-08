@@ -269,13 +269,29 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
-     * Returns PCK encryption key.
+     * Returns PCK encryption key. This will only return the value set in the export preset and not the
+     * value of the `GODOT_SCRIPT_ENCRYPTION_KEY` environment variable. See also
+     * `resolve_encryption_key`.
      *
      * Generated from Godot docs: EditorExportPreset.get_encryption_key
      */
     fun getEncryptionKey(): String {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetString(Binds.getEncryptionKeyBind, segment)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Returns PCK encryption key as a `PackedByteArray`. If the `GODOT_SCRIPT_ENCRYPTION_KEY`
+     * environment variable is set, this will return that key instead of the key set in the export
+     * preset. See also `get_encryption_key`.
+     *
+     * Generated from Godot docs: EditorExportPreset.resolve_encryption_key
+     */
+    fun resolveEncryptionKey(): ByteArray {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallNoArgsRetByteArray(Binds.resolveEncryptionKeyBind, segment)
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -492,6 +508,11 @@ class EditorExportPreset(handle: GodotHandle) : RefCounted(handle) {
         @JvmField
         val getEncryptionKeyBind =
             ObjectCalls.getMethodBind("EditorExportPreset", "get_encryption_key", GET_ENCRYPTION_KEY_HASH)
+
+        private const val RESOLVE_ENCRYPTION_KEY_HASH = 2115431945L
+        @JvmField
+        val resolveEncryptionKeyBind =
+            ObjectCalls.getMethodBind("EditorExportPreset", "resolve_encryption_key", RESOLVE_ENCRYPTION_KEY_HASH)
 
         private const val GET_SCRIPT_EXPORT_MODE_HASH = 2835358398L
         @JvmField

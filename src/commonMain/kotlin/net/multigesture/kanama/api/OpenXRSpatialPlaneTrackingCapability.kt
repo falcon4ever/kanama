@@ -47,6 +47,34 @@ class OpenXRSpatialPlaneTrackingCapability(handle: GodotHandle) : OpenXRExtensio
         return ret
     }
 
+    /**
+     * Returns the state of the built-in tracking system.
+     *
+     * Generated from Godot docs: OpenXRSpatialPlaneTrackingCapability.get_built_in_tracking_state
+     */
+    fun getBuiltInTrackingState(): OpenXRSpatialEntityExtension.TrackingState {
+        return OpenXRSpatialEntityExtension.TrackingState(ObjectCalls.ptrcallNoArgsRetLong(Binds.getBuiltInTrackingStateBind, segment))
+    }
+
+    /**
+     * Starts the built-in plane tracking logic. This will fail if built-in tracking is already
+     * enabled.
+     *
+     * Generated from Godot docs: OpenXRSpatialPlaneTrackingCapability.start_built_in_tracking
+     */
+    fun startBuiltInTracking(): Boolean {
+        return ObjectCalls.ptrcallNoArgsRetBool(Binds.startBuiltInTrackingBind, segment)
+    }
+
+    /**
+     * Stops the built-in plane tracking logic.
+     *
+     * Generated from Godot docs: OpenXRSpatialPlaneTrackingCapability.stop_built_in_tracking
+     */
+    fun stopBuiltInTracking(clearTrackers: Boolean = true) {
+        ObjectCalls.ptrcallWithBoolArg(Binds.stopBuiltInTrackingBind, segment, clearTrackers)
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): OpenXRSpatialPlaneTrackingCapability? =
@@ -66,5 +94,20 @@ class OpenXRSpatialPlaneTrackingCapability(handle: GodotHandle) : OpenXRExtensio
         @JvmField
         val startEntityDiscoveryBind =
             ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "start_entity_discovery", START_ENTITY_DISCOVERY_HASH)
+
+        private const val GET_BUILT_IN_TRACKING_STATE_HASH = 434811308L
+        @JvmField
+        val getBuiltInTrackingStateBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "get_built_in_tracking_state", GET_BUILT_IN_TRACKING_STATE_HASH)
+
+        private const val START_BUILT_IN_TRACKING_HASH = 2240911060L
+        @JvmField
+        val startBuiltInTrackingBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "start_built_in_tracking", START_BUILT_IN_TRACKING_HASH)
+
+        private const val STOP_BUILT_IN_TRACKING_HASH = 3216645846L
+        @JvmField
+        val stopBuiltInTrackingBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialPlaneTrackingCapability", "stop_built_in_tracking", STOP_BUILT_IN_TRACKING_HASH)
     }
 }

@@ -1197,14 +1197,15 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
     /**
      * Replaces this node by the given `node`. All children of this node are moved to `node`. If
      * `keep_groups` is `true`, the `node` is added to the same groups that the replaced node is in
-     * (see `add_to_group`). Warning: The replaced node is removed from the tree, but it is not
-     * deleted. To prevent memory leaks, store a reference to the node in a variable, or use
-     * `Object.free`.
+     * (see `add_to_group`). If `keep_owned_children` is `true`, children owned by this node are also
+     * transferred to `node`. If `false`, non-owned children of owned nodes are placed at the root of
+     * `node`. Warning: The replaced node is removed from the tree, but it is not deleted. To prevent
+     * memory leaks, store a reference to the node in a variable, or use `Object.free`.
      *
      * Generated from Godot docs: Node.replace_by
      */
-    fun replaceBy(node: Node, keepGroups: Boolean = false) {
-        ObjectCalls.ptrcallWithObjectAndBoolArg(Binds.replaceByBind, segment, node.segment, keepGroups)
+    fun replaceBy(node: Node, keepGroups: Boolean = false, keepOwnedChildren: Boolean = true) {
+        ObjectCalls.ptrcallWithObjectAndTwoBoolArgs(Binds.replaceByBind, segment, node.segment, keepGroups, keepOwnedChildren)
         ObjectCalls.keepReachable(node)
     }
 
@@ -2606,7 +2607,7 @@ open class Node(handle: GodotHandle) : GodotObject(handle) {
         val duplicateBind =
             ObjectCalls.getMethodBind("Node", "duplicate", DUPLICATE_HASH)
 
-        private const val REPLACE_BY_HASH = 2570952461L
+        private const val REPLACE_BY_HASH = 4170434404L
         @JvmField
         val replaceByBind =
             ObjectCalls.getMethodBind("Node", "replace_by", REPLACE_BY_HASH)

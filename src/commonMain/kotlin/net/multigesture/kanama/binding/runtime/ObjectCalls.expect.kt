@@ -34,7 +34,7 @@ import net.multigesture.kanama.types.Vector4
  * match). Parameter TYPES read `RawSegment` here and `MemorySegment` in the desktop file: the same
  * type through `actual typealias RawSegment = java.lang.foreign.MemorySegment`.
  *
- * An `actual object` may declare MORE members than its `expect`: the 78 desktop-only helpers the
+ * An `actual object` may declare MORE members than its `expect`: the 80 desktop-only helpers the
  * tree never calls, the iOS-only overloads, and every private marshalling helper on both sides stay
  * as they are, unmarked.
  *
@@ -242,8 +242,6 @@ expect object ObjectCalls {
   fun ptrcallNoArgsRetRIDList(methodBind: RawSegment, instance: RawSegment): List<RID>
 
   fun ptrcallNoArgsRetRect2(methodBind: RawSegment, instance: RawSegment): Rect2
-
-  fun ptrcallNoArgsRetRect2List(methodBind: RawSegment, instance: RawSegment): List<Rect2>
 
   fun ptrcallNoArgsRetRect2i(methodBind: RawSegment, instance: RawSegment): Rect2i
 
@@ -3428,15 +3426,6 @@ expect object ObjectCalls {
     type: Long,
   ): RID
 
-  fun ptrcallWithObjectListObjectCallableArgsRetObject(
-    methodBind: RawSegment,
-    instance: RawSegment,
-    values: List<*>,
-    objectArg: RawSegment,
-    callableObject: RawSegment,
-    callableMethod: String,
-  ): RawSegment
-
   fun ptrcallWithObjectListRIDUInt32ArgsRetRID(
     methodBind: RawSegment,
     instance: RawSegment,
@@ -3541,17 +3530,6 @@ expect object ObjectCalls {
     callableObject: RawSegment,
     callableMethod: String,
   ): RawSegment
-
-  fun ptrcallWithObjectRIDThreeUInt32LongArgsRetRID(
-    methodBind: RawSegment,
-    instance: RawSegment,
-    objectArg: RawSegment,
-    rid: RID,
-    first: Long,
-    second: Long,
-    third: Long,
-    mode: Long,
-  ): RID
 
   fun ptrcallWithObjectRect2BoolColorBoolArgs(
     methodBind: RawSegment,
@@ -3782,6 +3760,14 @@ expect object ObjectCalls {
     objectArg: RawSegment,
     vector: Vector2,
     color: Color,
+  )
+
+  fun ptrcallWithObjectVector2AndIntArgs(
+    methodBind: RawSegment,
+    instance: RawSegment,
+    objectArg: RawSegment,
+    vector: Vector2,
+    intArg: Int,
   )
 
   fun ptrcallWithObjectVector2IntStringNameArgs(

@@ -128,9 +128,10 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it
-     * is moved with a velocity regularly (every frame) instead of warped to a new position. Does only
-     * affect avoidance for the obstacles `radius`. Does nothing for the obstacles static vertices.
+     * The wanted velocity for the obstacle, used by other agents to better predict the obstacle if it
+     * is moved with a velocity regularly (every frame), instead of warped to a new position. Note:
+     * This property only affects avoidance for the obstacle's `radius`. Does nothing for the
+     * obstacle's static vertices.
      *
      * Generated from Godot docs: NavigationObstacle2D.set_velocity
      */
@@ -139,9 +140,10 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * Sets the wanted velocity for the obstacle so other agent's can better predict the obstacle if it
-     * is moved with a velocity regularly (every frame) instead of warped to a new position. Does only
-     * affect avoidance for the obstacles `radius`. Does nothing for the obstacles static vertices.
+     * The wanted velocity for the obstacle, used by other agents to better predict the obstacle if it
+     * is moved with a velocity regularly (every frame), instead of warped to a new position. Note:
+     * This property only affects avoidance for the obstacle's `radius`. Does nothing for the
+     * obstacle's static vertices.
      *
      * Generated from Godot docs: NavigationObstacle2D.get_velocity
      */
@@ -150,10 +152,10 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will
-     * be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or
-     * overlap. Should the vertices using obstacle be warped to a new position agent's can not predict
-     * this movement and may get trapped inside the obstacle.
+     * The outline vertices of the obstacle. If the vertices are winded in clockwise order, agents will
+     * be pushed in by the obstacle, otherwise they will be pushed out. Outlines cannot be crossed or
+     * overlap. If the obstacle is warped to a new position, agents cannot predict this movement and
+     * may get trapped inside the obstacle.
      *
      * Generated from Godot docs: NavigationObstacle2D.set_vertices
      */
@@ -162,10 +164,10 @@ class NavigationObstacle2D(handle: GodotHandle) : Node2D(handle) {
     }
 
     /**
-     * The outline vertices of the obstacle. If the vertices are winded in clockwise order agents will
-     * be pushed in by the obstacle, else they will be pushed out. Outlines can not be crossed or
-     * overlap. Should the vertices using obstacle be warped to a new position agent's can not predict
-     * this movement and may get trapped inside the obstacle.
+     * The outline vertices of the obstacle. If the vertices are winded in clockwise order, agents will
+     * be pushed in by the obstacle, otherwise they will be pushed out. Outlines cannot be crossed or
+     * overlap. If the obstacle is warped to a new position, agents cannot predict this movement and
+     * may get trapped inside the obstacle.
      *
      * Generated from Godot docs: NavigationObstacle2D.get_vertices
      */

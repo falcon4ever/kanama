@@ -160,33 +160,6 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * Calculate a `ConcavePolygonShape3D` from the mesh.
-     *
-     * Generated from Godot docs: Mesh.create_trimesh_shape
-     */
-    fun createTrimeshShape(): ConcavePolygonShape3D? {
-        checkOpen()
-        val ret = ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTrimeshShapeBind, segment))
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
-    /**
-     * Calculate a `ConvexPolygonShape3D` from the mesh. If `clean` is `true` (default), duplicate and
-     * interior vertices are removed automatically. You can set it to `false` to make the process
-     * faster if not needed. If `simplify` is `true`, the geometry can be further simplified to reduce
-     * the number of vertices. Disabled by default.
-     *
-     * Generated from Godot docs: Mesh.create_convex_shape
-     */
-    fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
-        checkOpen()
-        val ret = ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(Binds.createConvexShapeBind, segment, clean, simplify))
-        ObjectCalls.keepReachable(this)
-        return ret
-    }
-
-    /**
      * Calculate an outline mesh at a defined offset (margin) from the original mesh. Note: This method
      * typically returns the vertices in reverse order (e.g. clockwise to counterclockwise).
      *
@@ -212,6 +185,33 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
     fun generateTriangleMesh(): TriangleMesh? {
         checkOpen()
         val ret = TriangleMesh.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.generateTriangleMeshBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Calculate a `ConcavePolygonShape3D` from the mesh.
+     *
+     * Generated from Godot docs: Mesh.create_trimesh_shape
+     */
+    fun createTrimeshShape(): ConcavePolygonShape3D? {
+        checkOpen()
+        val ret = ConcavePolygonShape3D.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.createTrimeshShapeBind, segment))
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Calculate a `ConvexPolygonShape3D` from the mesh. If `clean` is `true` (default), duplicate and
+     * interior vertices are removed automatically. You can set it to `false` to make the process
+     * faster if not needed. If `simplify` is `true`, the geometry can be further simplified to reduce
+     * the number of vertices. Disabled by default.
+     *
+     * Generated from Godot docs: Mesh.create_convex_shape
+     */
+    fun createConvexShape(clean: Boolean = true, simplify: Boolean = false): ConvexPolygonShape3D? {
+        checkOpen()
+        val ret = ConvexPolygonShape3D.wrapOwned(ObjectCalls.ptrcallWithTwoBoolArgsRetObject(Binds.createConvexShapeBind, segment, clean, simplify))
         ObjectCalls.keepReachable(this)
         return ret
     }
@@ -643,6 +643,17 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
              * Generated from Godot docs: Mesh.ARRAY_FLAG_COMPRESS_ATTRIBUTES
              */
             val FLAG_COMPRESS_ATTRIBUTES: ArrayFormat get() = ArrayFormat(536870912L)
+            /**
+             * Flag used to mark that the surface's vertex, attribute, skin, and index buffers must be created
+             * with the storage-buffer usage bit so they can be bound as storage buffers in compute shaders.
+             * This is required to write into them from a compute pipeline through the `RID`s returned by
+             * `RenderingServer.mesh_surface_get_vertex_buffer_rd_rid` and the matching methods for the
+             * attribute, skin, and index buffers. Has no effect on the OpenGL backend, which does not expose
+             * `RenderingDevice` `RID`s.
+             *
+             * Generated from Godot docs: Mesh.ARRAY_FLAG_USE_STORAGE_BUFFER
+             */
+            val FLAG_USE_STORAGE_BUFFER: ArrayFormat get() = ArrayFormat(1073741824L)
         }
     }
 
@@ -743,16 +754,6 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         val createPlaceholderBind =
             ObjectCalls.getMethodBind("Mesh", "create_placeholder", CREATE_PLACEHOLDER_HASH)
 
-        private const val CREATE_TRIMESH_SHAPE_HASH = 4160111210L
-        @JvmField
-        val createTrimeshShapeBind =
-            ObjectCalls.getMethodBind("Mesh", "create_trimesh_shape", CREATE_TRIMESH_SHAPE_HASH)
-
-        private const val CREATE_CONVEX_SHAPE_HASH = 2529984628L
-        @JvmField
-        val createConvexShapeBind =
-            ObjectCalls.getMethodBind("Mesh", "create_convex_shape", CREATE_CONVEX_SHAPE_HASH)
-
         private const val CREATE_OUTLINE_HASH = 1208642001L
         @JvmField
         val createOutlineBind =
@@ -762,5 +763,15 @@ open class Mesh(handle: GodotHandle) : Resource(handle) {
         @JvmField
         val generateTriangleMeshBind =
             ObjectCalls.getMethodBind("Mesh", "generate_triangle_mesh", GENERATE_TRIANGLE_MESH_HASH)
+
+        private const val CREATE_TRIMESH_SHAPE_HASH = 4160111210L
+        @JvmField
+        val createTrimeshShapeBind =
+            ObjectCalls.getMethodBind("Mesh", "create_trimesh_shape", CREATE_TRIMESH_SHAPE_HASH)
+
+        private const val CREATE_CONVEX_SHAPE_HASH = 2529984628L
+        @JvmField
+        val createConvexShapeBind =
+            ObjectCalls.getMethodBind("Mesh", "create_convex_shape", CREATE_CONVEX_SHAPE_HASH)
     }
 }

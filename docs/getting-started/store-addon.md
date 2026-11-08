@@ -12,7 +12,7 @@ and a starter Kotlin script, and keeps any file that is already there.
 
 ## Requirements
 
-You need Godot 4.7.2 and a JDK 25 or newer, as listed in
+You need Godot 4.7.2 for the 0.4.0 addon and a JDK 25 or newer, as listed in
 [Get Started](index.md#requirements). The addon carries the Kanama runtime for
 every desktop platform and the Gradle wrapper. The first build downloads
 Gradle and the Kotlin compiler, so it needs a network connection.

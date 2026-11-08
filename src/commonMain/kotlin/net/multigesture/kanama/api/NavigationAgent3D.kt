@@ -479,7 +479,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
      * The minimal amount of time for which this agent's velocities, that are computed with the
      * collision avoidance algorithm, are safe with respect to other agents. The larger the number, the
      * sooner the agent will respond to other agents, but less freedom in choosing its velocities. A
-     * too high value will slow down agents movement considerably. Must be positive.
+     * too high value will slow down agent movement considerably. Must be positive.
      *
      * Generated from Godot docs: NavigationAgent3D.set_time_horizon_agents
      */
@@ -491,7 +491,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
      * The minimal amount of time for which this agent's velocities, that are computed with the
      * collision avoidance algorithm, are safe with respect to other agents. The larger the number, the
      * sooner the agent will respond to other agents, but less freedom in choosing its velocities. A
-     * too high value will slow down agents movement considerably. Must be positive.
+     * too high value will slow down agent movement considerably. Must be positive.
      *
      * Generated from Godot docs: NavigationAgent3D.get_time_horizon_agents
      */
@@ -503,7 +503,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
      * The minimal amount of time for which this agent's velocities, that are computed with the
      * collision avoidance algorithm, are safe with respect to static avoidance obstacles. The larger
      * the number, the sooner the agent will respond to static avoidance obstacles, but less freedom in
-     * choosing its velocities. A too high value will slow down agents movement considerably. Must be
+     * choosing its velocities. A too high value will slow down agent movement considerably. Must be
      * positive.
      *
      * Generated from Godot docs: NavigationAgent3D.set_time_horizon_obstacles
@@ -516,7 +516,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
      * The minimal amount of time for which this agent's velocities, that are computed with the
      * collision avoidance algorithm, are safe with respect to static avoidance obstacles. The larger
      * the number, the sooner the agent will respond to static avoidance obstacles, but less freedom in
-     * choosing its velocities. A too high value will slow down agents movement considerably. Must be
+     * choosing its velocities. A too high value will slow down agent movement considerably. Must be
      * positive.
      *
      * Generated from Godot docs: NavigationAgent3D.get_time_horizon_obstacles
@@ -731,7 +731,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * The path simplification amount in worlds units.
+     * The path simplification amount in world units.
      *
      * Generated from Godot docs: NavigationAgent3D.set_simplify_epsilon
      */
@@ -740,7 +740,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * The path simplification amount in worlds units.
+     * The path simplification amount in world units.
      *
      * Generated from Godot docs: NavigationAgent3D.get_simplify_epsilon
      */
@@ -933,7 +933,7 @@ class NavigationAgent3D(handle: GodotHandle) : Node(handle) {
      * updates when the target position is changed or the agent requires a repath. The path array is
      * not intended to be used in direct path movement as the agent has its own internal path logic
      * that would get corrupted by changing the path array manually. Use the intended
-     * `get_next_path_position` once every physics frame to receive the next path point for the agents
+     * `get_next_path_position` once every physics frame to receive the next path point for the agent's
      * movement as this function also updates the internal path logic.
      *
      * Generated from Godot docs: NavigationAgent3D.get_current_navigation_path

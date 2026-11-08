@@ -8,15 +8,27 @@ import net.multigesture.kanama.binding.runtime.requireConstructed
 import net.multigesture.kanama.types.Transform3D
 
 /**
+ * A list of inverse bind poses and corresponding bones.
+ *
  * Generated from Godot docs: Skin
  */
 class Skin(handle: GodotHandle) : Resource(handle) {
+    /**
+     * Resizes the bind pose list to a length of `bind_count`.
+     *
+     * Generated from Godot docs: Skin.set_bind_count
+     */
     fun setBindCount(bindCount: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithIntArg(Binds.setBindCountBind, segment, bindCount)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Returns the length of the bind pose list.
+     *
+     * Generated from Godot docs: Skin.get_bind_count
+     */
     fun getBindCount(): Int {
         checkOpen()
         val ret = ObjectCalls.ptrcallNoArgsRetInt(Binds.getBindCountBind, segment)
@@ -24,24 +36,45 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         return ret
     }
 
+    /**
+     * Adds a bind pose matrix of `pose` and associated bone index `bone` to the bind pose list and
+     * increases the bind count by 1.
+     *
+     * Generated from Godot docs: Skin.add_bind
+     */
     fun addBind(bone: Int, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.addBindBind, segment, bone, pose)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Like `add_bind` but adds a bone `name` instead of a bone index.
+     *
+     * Generated from Godot docs: Skin.add_named_bind
+     */
     fun addNamedBind(name: String, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithStringAndTransform3DArg(Binds.addNamedBindBind, segment, name, pose)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Sets the bind pose `bind_index` with the given offset matrix `pose`.
+     *
+     * Generated from Godot docs: Skin.set_bind_pose
+     */
     fun setBindPose(bindIndex: Int, pose: Transform3D) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndTransform3DArg(Binds.setBindPoseBind, segment, bindIndex, pose)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Returns the bind pose matrix at `bind_index`.
+     *
+     * Generated from Godot docs: Skin.get_bind_pose
+     */
     fun getBindPose(bindIndex: Int): Transform3D {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetTransform3D(Binds.getBindPoseBind, segment, bindIndex)
@@ -49,12 +82,22 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         return ret
     }
 
+    /**
+     * Sets the name of the bone in bind pose `bind_index` to `name`.
+     *
+     * Generated from Godot docs: Skin.set_bind_name
+     */
     fun setBindName(bindIndex: Int, name: String) {
         checkOpen()
         ObjectCalls.ptrcallWithIntAndStringNameArg(Binds.setBindNameBind, segment, bindIndex, name)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Returns the bone name associated with bind pose `bind_index`.
+     *
+     * Generated from Godot docs: Skin.get_bind_name
+     */
     fun getBindName(bindIndex: Int): String {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetStringName(Binds.getBindNameBind, segment, bindIndex)
@@ -62,12 +105,22 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         return ret
     }
 
+    /**
+     * Sets the bone index of bind pose `bind_index` to the given index `bone`.
+     *
+     * Generated from Godot docs: Skin.set_bind_bone
+     */
     fun setBindBone(bindIndex: Int, bone: Int) {
         checkOpen()
         ObjectCalls.ptrcallWithTwoIntArgs(Binds.setBindBoneBind, segment, bindIndex, bone)
         ObjectCalls.keepReachable(this)
     }
 
+    /**
+     * Returns the bone index associated with bind pose `bind_index`.
+     *
+     * Generated from Godot docs: Skin.get_bind_bone
+     */
     fun getBindBone(bindIndex: Int): Int {
         checkOpen()
         val ret = ObjectCalls.ptrcallWithIntArgRetInt(Binds.getBindBoneBind, segment, bindIndex)
@@ -75,6 +128,11 @@ class Skin(handle: GodotHandle) : Resource(handle) {
         return ret
     }
 
+    /**
+     * Clears the bind pose list.
+     *
+     * Generated from Godot docs: Skin.clear_binds
+     */
     fun clearBinds() {
         checkOpen()
         ObjectCalls.ptrcallNoArgs(Binds.clearBindsBind, segment)

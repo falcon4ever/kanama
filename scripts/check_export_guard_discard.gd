@@ -5,7 +5,9 @@ extends EditorPlugin
 ## makes in the editor's real temp folder. Godot's own one-click names (Android tmpexport.<n>.apk with
 ## its .idsig, iOS tmpexport.<n>/export.ipa with its export.xcarchive, hidden files and a symbolic link
 ## inside) must be recognised and deleted, without following the link; a user's export in the temp
-## folder and names Godot does not use must be left alone. Prints `[export_guard_discard] PASS` and quits
+## folder and names Godot does not use must be left alone. A problem the guard finds after _export_begin
+## (_stop_after_begin, such as Android plugins Godot deleted with an old build template) must have a one-click
+## deploy's APK removed in _export_end, and a user's export left alone. Prints `[export_guard_discard] PASS` and quits
 ## with 0, or prints each FAIL and quits with 1.
 ##
 ## Runs as an editor plugin (EditorPaths and EditorInterface exist only in the editor). Usage, from
@@ -40,6 +42,20 @@ func _run() -> void:
     Guard.discard_export(apk)
     _expect(not FileAccess.file_exists(apk), "the one-click APK %s was not deleted" % apk)
     _expect(not FileAccess.file_exists(apk + ".idsig"), "the one-click APK's .idsig was not deleted")
+
+    # A problem found after _export_begin (in _get_android_libraries): the one-click APK goes in _export_end,
+    # before Godot installs it; a user's export into the temp folder stays.
+    var late := temp.path_join("tmpexport.%s3.apk" % id)
+    var late_user := temp.path_join("kanama_guard_late_%s.apk" % id)
+    made.append_array([late, late_user])
+    for target in [late, late_user]:
+        _write(target)
+        var plugin = Guard.new()
+        plugin.set("_export_path", target)
+        plugin.call("_stop_after_begin", null, "test problem")
+        plugin.call("_export_end")
+    _expect(not FileAccess.file_exists(late), "a problem found after the template setup left the one-click APK %s for Godot to install" % late)
+    _expect(FileAccess.file_exists(late_user), "a problem found after the template setup deleted a user's export %s" % late_user)
 
     # iOS one-click: <temp>/tmpexport.<n>/export.ipa; the app is installed from export.xcarchive beside it.
     var ios_dir := temp.path_join("tmpexport.%s1" % id)

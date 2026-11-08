@@ -59,7 +59,7 @@ Typical validation:
 ```sh
 ./gradlew build
 python3 scripts/validate_godot_api.py --api extension_api.json
-./scripts/local_ci.sh /path/to/godot-4.7.2-stable
+./scripts/local_ci.sh /path/to/godot
 ```
 
 Gate scripts follow two rules (`scripts/README-gates.md`): a check that cannot run prints
@@ -73,7 +73,7 @@ Before release-facing changes, validate from isolated clones instead of your
 development worktree:
 
 ```sh
-./scripts/fresh_clone_smoke.sh /path/to/godot-4.7.2-stable
+./scripts/fresh_clone_smoke.sh /path/to/godot
 ```
 
 For a consumer project:
@@ -205,10 +205,11 @@ the claim it guards.
   - `file:<repo-relative-path-or-glob>` — nothing matches.
   - `webcall:<Class>.<godot_method_name>` — the Web backend contract dispatches
     no such call. Validated against `extension_api.json`, so a typo cannot pass.
-  - `task:<id>` — the `kanama-tasks` spec is still open (not in `archive/`).
-    That repo is separate, so these tokens are **skipped with a note** when it is
-    absent, including in PR CI. Run the audit locally, or pass `--require-tasks`,
-    to check them.
+  - `task:<id>` — the spec in the private `kanama-tasks` maintainer notes is still
+    open (not in `archive/`). Those notes are optional and not public, so these
+    tokens are **skipped with a note** when the checkout is absent, including in
+    PR CI. A maintainer who has it runs the audit locally, or passes
+    `--require-tasks`, to check them.
 - An unresolvable token — unknown kind, unknown tree, a `file:` glob whose
   anchor directory has moved, a Godot method that does not exist — is a loud
   failure, never a silent pass. A marker that can never fire is worse than no

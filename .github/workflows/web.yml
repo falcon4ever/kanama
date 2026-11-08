@@ -44,7 +44,7 @@ concurrency:
 
 env:
   # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
-  GODOT_VERSION: 4.7.2-stable
+  GODOT_VERSION: 4.8-beta2
   # The kanama-demos commit the matrix runs against. Pinned on purpose: an
   # unpinned demos checkout means an unrelated demo-repo commit can redden every
   # Kanama PR. Bump it deliberately when a demo port lands (see
@@ -55,7 +55,7 @@ env:
   # Web ray queries: tps-demo's RedRobot, PlayerInputSynchronizer and TpsScenes run from the shared
   # kotlin-src (their Web overrides, which called RayHit, are deleted) and third-person excludes its
   # camera anchor by RID. Both sides pin together or neither is green.
-  DEMOS_REF: f7b36b72c206133a4a54eea9f951928e13f1281e
+  DEMOS_REF: 0f752cd407b9e37fbe6f9c1a33b2f6d44968b7cb
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
