@@ -82,11 +82,22 @@ function makeFakeBridge({
   screenExitIgnored = false,
   collectEvery = 1,
 }) {
+  // Handle slots as the bridge keeps them: a freed slot goes on a free list, the next mint takes the
+  // most recently freed one (last in, first out) and bumps its generation, so a handle minted after a
+  // collection lands in a slot one of the old round's handles held, under a new generation.
   const slots = [];
+  const freeSlots = [];
   const mint = (kind, extra = {}) => {
-    const slot = { kind, live: true, refCounted: false, reachable: true, ...extra };
-    slots.push(slot);
+    const reused = freeSlots.length > 0 ? slots[freeSlots.pop()] : null;
+    const slot = reused ?? { index: slots.length, generation: 0 };
+    Object.assign(slot, { kind, live: true, refCounted: false, reachable: true, generation: slot.generation + 1, ...extra });
+    if (!reused) slots.push(slot);
     return slot;
+  };
+  const release = (slot) => {
+    if (!slot.live) return;
+    slot.live = false;
+    freeSlots.push(slot.index);
   };
   for (let index = 0; index < SCENE_NODES; index += 1) mint("Node");
   mint("Resource", { refCounted: true });
@@ -137,7 +148,7 @@ function makeFakeBridge({
   const freeMob = (mob) => {
     if (!mob.live) return;
     mob.live = false;
-    mob.node.live = false;
+    release(mob.node);
     if (!teardownIgnored) bridge.liveScriptsByClass["dodge.Mob"] -= 1; // the bridge's _exit_tree teardown
     for (let index = 0; index < leakPerMob(mob.round); index += 1) mint("Node");
   };
@@ -191,7 +202,7 @@ function makeFakeBridge({
         if (!screenExitIgnored) freeMob(mobByHandle.get(handle)); // Mob._on_VisibilityNotifier2D_screen_exited: queue_free
       } else if (handle === SMOKE_HANDLE && id === TEARDOWN_ID) {
         state.torn = true;
-        for (const slot of slots) slot.live = false;
+        for (const slot of slots) release(slot);
       } else {
         throw new Error(`fake dodge bridge: unexpected call handle=${handle} id=${id}`);
       }
@@ -212,7 +223,7 @@ function makeFakeBridge({
     // A requested collection releases every RefCounted handle no wrapper can reach any more. The
     // page never collects on its own here (Firefox on a quiet page, CI's Linux runner).
     if (state.collectRequested) {
-      for (const slot of slots) if (slot.live && slot.refCounted && !slot.reachable) slot.live = false;
+      for (const slot of slots) if (slot.refCounted && !slot.reachable) release(slot);
       state.collectRequested = false;
     }
     if (state.torn) return;
@@ -357,6 +368,12 @@ const scenarios = [
   ["one handle leaked per mob, the collector late (Safari)", { leakPerMob: () => 1, collectEvery: 20 }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0, retentionX100: 100 }],
   ["one handle leaked per mob of round 2 only, the collector late", { leakPerMob: (round) => (round === 2 ? 1 : 0), collectEvery: 20 }, { red: ["noPerMobHandleRetention"], retentionX100: 100 }],
   ["the page never collects", { collectEvery: Infinity }, { red: ["noPerMobHandleRetention"] }],
+  // The bridge reuses a freed slot under a new generation: once the late collection frees the old
+  // round's slots, the next round's mobs land in them. Keyed by slot alone, the trough would count a
+  // new mob there as the old round's (the collection lands on a spawn: 0.25) and drop a leaked handle
+  // whose slot was live when its round began (half of round 2's leak hidden: 0.5, green).
+  ["the next round's mob spawns into the slots the collection freed (slot reuse)", { collectEvery: 12 }, { red: [], resumes: 0, hits: 0, extended: true }],
+  ["one handle leaked per mob of round 2, in slots the old round freed (slot reuse)", { leakPerMob: (round) => (round === 2 ? 1 : 0), collectEvery: 16 }, { red: ["noPerMobHandleRetention"], retentionX100: 100 }],
   ["round 1's hit reported in the first frame after the restart", { hitAtRestart: true }, { red: [], resumes: 0, hits: 1 }],
   ["no mob is ever reported off screen (Linux CI Firefox)", { screenExits: false }, { red: ["mobsFreedOffScreen"], exact: true, resumes: 0, hits: 0, screenExitFrees: 0 }],
   ["screen_exited reaches the bridge, the mob does not free", { screenExitIgnored: true }, { red: ["mobsFreedOffScreen"], exact: true, screenExitFrees: 0 }],
