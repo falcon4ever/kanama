@@ -10,6 +10,11 @@ plugins {
     id("com.google.devtools.ksp")
 }
 
+// The demos' `config/features` name the pinned Godot's major.minor (the demos move with the pin, at
+// DEMOS_REF), so the Web staging transforms below match that, not a literal version.
+val demoGodotFeature: String =
+  providers.gradleProperty("kanamaGodotVersion").get().split('.').take(2).joinToString(".")
+
 // The runtime's own sources compile in :kanama-web (web-runtime/library), which this executable
 // links like a kit project does (task 135 item 5); its ktfmt runs there. Here: the fixtures' and the
 // project's scripts, and the registry and main() KSP generates for them.
@@ -1104,7 +1109,7 @@ tasks.register("stageWebMatch3Project") {
 
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
         check(stagedProjectText.contains(forwardFeature)) {
             "Match3 renderer feature changed; update the Web staging transform"
@@ -1116,7 +1121,7 @@ tasks.register("stageWebMatch3Project") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,
@@ -1589,7 +1594,7 @@ tasks.register("stageWebPlatformerProject") {
         // which would trip the smoke's zero-console-errors gate (match3 precedent above).
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
         val screenSpaceAa = "anti_aliasing/quality/screen_space_aa=1"
         check(stagedProjectText.contains(forwardFeature)) {
@@ -1605,7 +1610,7 @@ tasks.register("stageWebPlatformerProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,
@@ -1868,7 +1873,7 @@ tasks.register("stageWebFpsProject") {
         // screen-space AA (match3/platformer/squash precedent).
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
         val screenSpaceAa = "anti_aliasing/quality/screen_space_aa=1"
         check(stagedProjectText.contains(forwardFeature)) {
@@ -1884,7 +1889,7 @@ tasks.register("stageWebFpsProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,
@@ -2151,7 +2156,7 @@ tasks.register("stageWebCharactercontrollerProject") {
         // (FPS/squash precedent).
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val mobileFeature = "config/features=PackedStringArray(\"4.7\", \"Mobile\")"
+        val mobileFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Mobile\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
         check(stagedProjectText.contains(mobileFeature)) {
             "Character-controller renderer feature changed; update the Web staging transform"
@@ -2163,7 +2168,7 @@ tasks.register("stageWebCharactercontrollerProject") {
             stagedProjectText
                 .replace(
                     mobileFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,
@@ -2290,7 +2295,7 @@ tasks.register("stageWebRacingProject") {
         // Forward+ project with a gl_compatibility mobile override: pin Compatibility.
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"gl_compatibility\""
         check(stagedProjectText.contains(forwardFeature)) {
             "Racing renderer feature changed; update the Web staging transform"
@@ -2302,7 +2307,7 @@ tasks.register("stageWebRacingProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,
@@ -2428,7 +2433,7 @@ tasks.register("stageWebCitybuilderProject") {
         // template actually runs.
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val renderingSection = "[rendering]"
         check(stagedProjectText.contains(forwardFeature)) {
             "City-Builder renderer feature changed; update the Web staging transform"
@@ -2440,7 +2445,7 @@ tasks.register("stageWebCitybuilderProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     renderingSection,
@@ -2582,7 +2587,7 @@ tasks.register("stageWebTpsdemoProject") {
         // Default (Forward+) project: pin the Compatibility renderer the Web template runs.
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\")"
         val renderingSection = "[rendering]"
         check(stagedProjectText.contains(forwardFeature)) {
             "tps-demo renderer feature changed; update the Web staging transform"
@@ -2594,7 +2599,7 @@ tasks.register("stageWebTpsdemoProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     renderingSection,
@@ -2762,7 +2767,7 @@ tasks.register("stageWebThirdpersonProject") {
         // Forward+ project: pin the Compatibility renderer for the Web template (FPS precedent).
         val stagedProject = stagingDir.resolve("project.godot")
         val stagedProjectText = stagedProject.readText()
-        val forwardFeature = "config/features=PackedStringArray(\"4.7\", \"Forward Plus\")"
+        val forwardFeature = "config/features=PackedStringArray(\"$demoGodotFeature\", \"Forward Plus\")"
         val mobileRenderer = "renderer/rendering_method.mobile=\"mobile\""
         check(stagedProjectText.contains(forwardFeature)) {
             "Third-person renderer feature changed; update the Web staging transform"
@@ -2774,7 +2779,7 @@ tasks.register("stageWebThirdpersonProject") {
             stagedProjectText
                 .replace(
                     forwardFeature,
-                    "config/features=PackedStringArray(\"4.7\", \"GL Compatibility\")",
+                    "config/features=PackedStringArray(\"$demoGodotFeature\", \"GL Compatibility\")",
                 )
                 .replace(
                     mobileRenderer,

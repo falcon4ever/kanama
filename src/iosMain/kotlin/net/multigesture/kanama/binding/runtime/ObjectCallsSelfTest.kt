@@ -549,24 +549,6 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       r2.size.y.toDouble() == 4.5,
   )
 
-  // Rect2i return (4x int32, 16B): a fresh TileMap's get_used_rect is exactly
-  // Rect2i(0, 0, 0, 0) — deterministic, validation-free. Exercises the generated
-  // ptrcallNoArgsRetRect2i read-back (the shape that unlocks
-  // DisplayServer.get_display_safe_area for the mobile safe-area work, task 26).
-  val tilemap = requireObject("TileMap")
-  if (tilemap.address() != 0L) {
-    val r2i =
-      ObjectCalls.ptrcallNoArgsRetRect2i(
-        ObjectCalls.getMethodBind("TileMap", "get_used_rect", 410525958L),
-        tilemap,
-      )
-    check(
-      "rect2i-ret(used_rect==0,0,0,0)",
-      r2i.position.x == 0 && r2i.position.y == 0 && r2i.size.x == 0 && r2i.size.y == 0,
-    )
-    ObjectCalls.destroyObject(tilemap)
-  } else check("rect2i-ret(TileMap.get_used_rect) (instance absent)", false)
-
   // String-return (Object.get_class -> "Node2D"): exercises ptrcallNoArgsRetString
   // through the full Kotlin -> dedicated C helper -> Godot path (string_to_utf8_chars
   // round-trip). Deterministic, validation-free class name.
@@ -1483,10 +1465,10 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
   // kanama_ios_godot_ptrcall_ret_array_blob). ClassDB.get_inheriters_from_class(StringName):
   // PackedStringArray with an arg (short) and, for "Object", thousands of names — far past the 4
   // KiB
-  // inline buffer, so it proves the pending-blob drain; TileMapLayer.set_cell + get_used_cells /
-  // get_used_cells_by_id (Array[Vector2i], no-arg and int+Vector2i+int args); Skeleton3D bone meta
-  // (Array[StringName] with an int arg); Geometry3D.build_box_planes (Array[Plane] with a Vector3
-  // arg); GridMap.set_cell_item + get_used_cells (Array[Vector3i]).
+  // inline buffer, so it proves the pending-blob drain; Skeleton3D bone meta (Array[StringName]
+  // with an int arg); Geometry3D.build_box_planes (Array[Plane] with a Vector3 arg). The
+  // TileMapLayer (Array[Vector2i]) and GridMap (Array[Vector3i]) rows of this parcel construct a
+  // physics node, so they live in the frame-1 phase (kanamaIosRuntimeObjectCallsSelfTestFrame).
   val arrayClassDb = requireSingleton("ClassDB")
   if (arrayClassDb.address() != 0L) {
     val arrayNode2dHeirs =
@@ -1512,32 +1494,6 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
     // Drained-slot assertion moved to runFaultProbes as
     // `fault-probe(pending-protocol g_pending_blob drained: array-ret)` — it is a fault probe.
   } else check("array-ret(ClassDB.get_inheriters_from_class) (singleton absent)", false)
-
-  val arrayTiles = ObjectCalls.constructObject("TileMapLayer")
-  ObjectCalls.callWithVariantArgs(
-    ObjectCalls.getMethodBind("TileMapLayer", "set_cell", 2428518503L),
-    arrayTiles,
-    listOf(Vector2i(2, 3), 0, Vector2i(0, 0), 0),
-  )
-  val arrayUsed =
-    ObjectCalls.ptrcallNoArgsRetVector2iList(
-      ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", 3995934104L),
-      arrayTiles,
-    )
-  check("array-ret(TileMapLayer.get_used_cells==[(2,3)])", arrayUsed == listOf(Vector2i(2, 3)))
-  val arrayUsedById =
-    ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(
-      ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", 4175304538L),
-      arrayTiles,
-      0,
-      Vector2i(0, 0),
-      -1,
-    )
-  check(
-    "array-ret(TileMapLayer.get_used_cells_by_id(0,(0,0),-1)==[(2,3)])",
-    arrayUsedById == listOf(Vector2i(2, 3)),
-  )
-  ObjectCalls.destroyObject(arrayTiles)
 
   val arraySkel = ObjectCalls.constructObject("Skeleton3D")
   ObjectCalls.callWithVariantArgs(
@@ -1569,33 +1525,6 @@ fun kanamaIosRuntimeObjectCallsSelfTest() {
       )
     check("array-ret(Geometry3D.build_box_planes has 6 planes)", arrayPlanes.size == 6)
   } else check("array-ret(Geometry3D.build_box_planes) (singleton absent)", false)
-
-  // GridMap is the only class returning Array[Vector3i] without an Array argument, but
-  // set_cell_item creates the cell's octant with PhysicsServer3D bodies, and the physics servers
-  // do not exist yet at scene-level extension init (iPhone 12, 2026-09-10: SIGSEGV at address 0 in
-  // GridMap::set_cell_item). Reads on an EMPTY GridMap create no octant: they exercise the
-  // Array[Vector3i] encoder (count 0) and the Vector3i ARGUMENT cell without touching physics. The
-  // Vector3i element decode itself is 3 x i32LE, the same stride logic as the Vector2i row above.
-  val arrayGrid = requireObject("GridMap")
-  if (arrayGrid.address() != 0L) {
-    val arrayCells =
-      ObjectCalls.ptrcallNoArgsRetVector3iList(
-        ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
-        arrayGrid,
-      )
-    check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
-    val arrayOctantCells =
-      ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
-        ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
-        arrayGrid,
-        Vector3i(0, 0, 0),
-      )
-    check(
-      "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
-      arrayOctantCells.isEmpty(),
-    )
-    ObjectCalls.destroyObject(arrayGrid)
-  } else check("array-ret(GridMap.get_used_cells) (instance absent)", false)
 
   // task 100 (parcel 7) — Variant / Dictionary / Array ARGUMENTS through the generated helpers
   // (packVariantDesc / packDictionaryBlob / packArrayBlob; the dispatch boxes or rebuilds the Godot
@@ -4714,6 +4643,98 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
     check("singleton-present($name)", segment.address() != 0L)
     return segment
   }
+
+  fun requireObject(className: String): MemorySegment {
+    val segment = ObjectCalls.constructObject(className)
+    check("object-constructed($className)", segment.address() != 0L)
+    return segment
+  }
+
+  // Rows moved here from the scene-init phase (Godot 4.8 bump): they construct a class whose
+  // constructor needs a server Godot creates only AFTER scene-level extension init. Godot 4.8
+  // commit 117e977b25 made TileMapLayer's constructor (and the 2D/3D collision nodes') connect to
+  // PhysicsServer2D/3D::get_singleton() in debug builds; Main::setup2 creates the physics servers
+  // after initialize_extensions(INITIALIZATION_LEVEL_SCENE), so at scene init the singleton is
+  // null and the first 4.8 iPhone run died with SIGSEGV at address 0 in
+  // TileMapLayer::TileMapLayer() (from TileMap::TileMap(), reached by requireObject("TileMap")).
+  // scripts/check_ios_selftest_phases.py fails on the host when a scene-init row constructs such
+  // a class (the set is generated from the Godot source into
+  // scripts/ios_scene_init_unsafe_classes.json).
+
+  // Rect2i return (4x int32, 16B): a fresh TileMap's get_used_rect is exactly
+  // Rect2i(0, 0, 0, 0) — deterministic, validation-free. Exercises the generated
+  // ptrcallNoArgsRetRect2i read-back (the shape that unlocks
+  // DisplayServer.get_display_safe_area for the mobile safe-area work, task 26).
+  val tilemap = requireObject("TileMap")
+  if (tilemap.address() != 0L) {
+    val r2i =
+      ObjectCalls.ptrcallNoArgsRetRect2i(
+        ObjectCalls.getMethodBind("TileMap", "get_used_rect", 410525958L),
+        tilemap,
+      )
+    check(
+      "rect2i-ret(used_rect==0,0,0,0)",
+      r2i.position.x == 0 && r2i.position.y == 0 && r2i.size.x == 0 && r2i.size.y == 0,
+    )
+    ObjectCalls.destroyObject(tilemap)
+  } else check("rect2i-ret(TileMap.get_used_rect) (instance absent)", false)
+
+  // TileMapLayer.set_cell + get_used_cells / get_used_cells_by_id (Array[Vector2i], no-arg and
+  // int+Vector2i+int args) through the generated blob read-back (task 100 parcel 5).
+  val arrayTiles = requireObject("TileMapLayer")
+  if (arrayTiles.address() != 0L) {
+    ObjectCalls.callWithVariantArgs(
+      ObjectCalls.getMethodBind("TileMapLayer", "set_cell", 2428518503L),
+      arrayTiles,
+      listOf(Vector2i(2, 3), 0, Vector2i(0, 0), 0),
+    )
+    val arrayUsed =
+      ObjectCalls.ptrcallNoArgsRetVector2iList(
+        ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells", 3995934104L),
+        arrayTiles,
+      )
+    check("array-ret(TileMapLayer.get_used_cells==[(2,3)])", arrayUsed == listOf(Vector2i(2, 3)))
+    val arrayUsedById =
+      ObjectCalls.ptrcallWithIntVector2iAndIntArgsRetVector2iList(
+        ObjectCalls.getMethodBind("TileMapLayer", "get_used_cells_by_id", 4175304538L),
+        arrayTiles,
+        0,
+        Vector2i(0, 0),
+        -1,
+      )
+    check(
+      "array-ret(TileMapLayer.get_used_cells_by_id(0,(0,0),-1)==[(2,3)])",
+      arrayUsedById == listOf(Vector2i(2, 3)),
+    )
+    ObjectCalls.destroyObject(arrayTiles)
+  }
+
+  // GridMap is the only class returning Array[Vector3i] without an Array argument. The rows read
+  // an EMPTY GridMap: they exercise the Array[Vector3i] encoder (count 0) and the Vector3i ARGUMENT
+  // cell. (In the scene-init phase, set_cell_item crashed first, iPhone 12 2026-09-10: SIGSEGV at
+  // address 0 in GridMap::set_cell_item, whose octant needs PhysicsServer3D bodies; on 4.8 the
+  // constructor itself needs PhysicsServer3D.) The Vector3i element decode itself is 3 x i32LE, the
+  // same stride logic as the Vector2i row above.
+  val arrayGrid = requireObject("GridMap")
+  if (arrayGrid.address() != 0L) {
+    val arrayCells =
+      ObjectCalls.ptrcallNoArgsRetVector3iList(
+        ObjectCalls.getMethodBind("GridMap", "get_used_cells", 3995934104L),
+        arrayGrid,
+      )
+    check("array-ret(empty GridMap.get_used_cells==[])", arrayCells.isEmpty())
+    val arrayOctantCells =
+      ObjectCalls.ptrcallWithVector3iArgRetVector3iList(
+        ObjectCalls.getMethodBind("GridMap", "get_used_cells_in_octant", 2658725580L),
+        arrayGrid,
+        Vector3i(0, 0, 0),
+      )
+    check(
+      "array-ret(empty GridMap.get_used_cells_in_octant((0,0,0))==[])",
+      arrayOctantCells.isEmpty(),
+    )
+    ObjectCalls.destroyObject(arrayGrid)
+  } else check("array-ret(GridMap.get_used_cells) (instance absent)", false)
 
   // Task 128 A review — iOS Tween.tweenProperty with a Variant final value the old Vector2/Color
   // C-shim pair could not carry: a Double rotation. A valid Tween needs the running SceneTree, so

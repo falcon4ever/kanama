@@ -642,6 +642,8 @@ run_soft "coverage report" python3 "$ROOT_DIR/scripts/api_wrapper_coverage.py" \
 run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constants.py" \
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md"
 run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_report.py"
+run_soft "iOS scene-init unsafe classes" python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py" \
+  --regenerate --godot-src "$GODOT_DOCS_DIR/../.." --godot-bin "$GODOT_BIN"
 run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
@@ -663,6 +665,7 @@ run_soft "Godot version pins (with the new API header)" python3 "$ROOT_DIR/scrip
 run_soft "release kit version pins" python3 "$ROOT_DIR/scripts/check_kit_version_pins.py"
 run_soft "virtual-method signature table" python3 "$ROOT_DIR/scripts/generate_virtual_signature_table.py" --check
 run_soft "engine method-name table" python3 "$ROOT_DIR/scripts/generate_engine_method_table.py" --check
+run_soft "iOS self-test phases" python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py" --godot-src "$GODOT_DOCS_DIR/../.."
 run_soft "builtin operators and methods" python3 "$ROOT_DIR/scripts/generate_builtin_ops.py" --check
 run_soft "builtin coverage" python3 "$ROOT_DIR/scripts/check_builtin_coverage.py"
 run_soft "ObjectCalls parity" python3 "$ROOT_DIR/scripts/check_objectcalls_parity.py"
@@ -775,9 +778,8 @@ cat <<EOF
      support claims; support wording moves only after the matching gate passes.
   6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates (the release kit's Godot version is already moved, step 6),
-     companion demo defaults. Review the
-     .gdextension compatibility_minimum invariant before touching it
-     (see AGENTS.md "Looks Wrong But Isn't").
+     companion demo defaults. On a new major.minor, the demos' synced kanama.gdextension
+     copies take the new compatibility_minimum when the demos re-sync the addon.
   7. Bump the KDoc docs-pin commit hash in docs/contributing/wrapper-maintenance.md.
   8. Before tagging: scripts/fresh_clone_smoke.sh $GODOT_BIN
 EOF

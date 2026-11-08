@@ -53,6 +53,7 @@ CI_DEFAULT_WHERE = "PR + push to main (ci.yml `local-ci`); local"
 # Stages whose reach differs from "every local_ci run", keyed by stage name.
 STAGE_WHERE_OVERRIDES = {
     "wrapper KDoc staleness check ($godot_pin)": "local only when a Godot `doc/classes` checkout is present (`GODOT_DOCS`); on CI it prints `SKIP: kdoc-staleness` and is allowed to skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
+    "iOS self-test phases (no scene-init row constructs a class needing a late server)": "PR + push to main (ci.yml `local-ci`); local. The staleness half runs only with a Godot source checkout of the pinned version; elsewhere it prints `SKIP: ios-unsafe-classes-staleness`, and CI allows that skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
     "claim audit (task 85 aggregator)": "PR + push to main (ci.yml `local-ci`); local. The task-index check inside it runs only where `kanama-tasks` exists; elsewhere it prints `SKIP: task-index`, and CI allows that skip only through `KANAMA_ALLOW_SKIP` in ci.yml",
     "bootstrap cmake build": "PR + push to main; local when cmake is installed (`--skip-bootstrap` skips)",
     "mkdocs strict build": "PR + push to main via the `docs (mkdocs strict)` job (`local-ci` passes `--skip-docs`); local when mkdocs is installed",

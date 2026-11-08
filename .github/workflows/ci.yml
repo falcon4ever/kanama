@@ -74,9 +74,9 @@ jobs:
         shell: bash
         env:
           # The checks this runner cannot run, named one by one (see gate_skip.sh): under CI any
-          # other skip fails the job. kdoc-staleness needs a Godot doc/classes checkout; task-index
-          # and stale-blocker-task-tokens read the local-only kanama-tasks repo.
-          KANAMA_ALLOW_SKIP: kdoc-staleness,task-index,stale-blocker-task-tokens
+          # other skip fails the job. kdoc-staleness and ios-unsafe-classes-staleness need a Godot
+          # source checkout; task-index and stale-blocker-task-tokens read the local-only kanama-tasks repo.
+          KANAMA_ALLOW_SKIP: kdoc-staleness,ios-unsafe-classes-staleness,task-index,stale-blocker-task-tokens
           # audit_stale_blockers.py looks issue:<n> markers up with `gh api` (read-only).
           GH_TOKEN: ${{ github.token }}
         run: |

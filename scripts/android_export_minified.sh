@@ -9,7 +9,9 @@ set -euo pipefail
 #
 # Flow:
 #   - build + install the Kanama Android plugin AAR into the demo,
-#   - install/refresh the Godot Android build template,
+#   - check the Godot Android build template matches the editor, then (default) delete it, so the export is
+#     the first one after a Godot upgrade: Godot installs the template during the export, after the plugins'
+#     _export_begin, and the export guard must still get the R8 compat line into the template Gradle uses,
 #   - turn on the preset's minification,
 #   - export a *release* APK (R8 runs, consumer-rules.pro applies),
 #   - install, launch, and assert Kanama starts past the PanamaPort FFI
@@ -39,10 +41,20 @@ Optional environment:
   KANAMA_DEMO_JAVA_HOME=/path/to/jdk25
   KANAMA_ANDROID_LOG=/path/to/logcat.txt
   KANAMA_ANDROID_LAUNCH_WAIT=30
+  KANAMA_ANDROID_TEMPLATE=fresh|stale|reuse
+      fresh (default): delete the Android build template before the export, so Godot installs it during the
+      export, as on the first export after a Godot upgrade. stale: leave a template marked as another Godot
+      version's, carrying the R8 compat line as older Kanama versions left it, with Editor Settings > Export >
+      Android > Build > Automatically Delete Build Directory on (the run stops with exit 2 when the editor
+      settings do not turn it on, as Godot would refuse the stale template before any plugin runs). Godot
+      then deletes all of res://android during the export, android/plugins (Kanama's plugin) too, and the
+      run passes only when the export guard stops that export before Gradle. reuse: keep the installed template, as on
+      every later export; the R8 compat line is taken out of it first, so only the export guard can put it back.
   KANAMA_PANAMAPORT_MAVEN_REPO=file:///path/to/.m2/repository
       One extra Maven repository for a PanamaPort fork published outside JitPack (with
-      ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>). Unset by default: the export then
-      resolves PanamaPort only through KanamaAndroid.gdap, as a user's editor export does.
+      ORG_GRADLE_PROJECT_kanamaPanamaPortCore=<test coordinate>), patched into the template's build.gradle,
+      so it needs KANAMA_ANDROID_TEMPLATE=reuse. Unset by default: the export then resolves PanamaPort only
+      through KanamaAndroid.gdap, as a user's editor export does.
   # Release signing (defaults to the standard Android debug keystore so the
   # minified release APK is installable without per-machine editor settings):
   KANAMA_RELEASE_KEYSTORE=$HOME/.android/debug.keystore
@@ -69,6 +81,32 @@ LOG_FILE="${KANAMA_ANDROID_LOG:-$RUN_DIR/kanama_android_minified.log}"
 echo "[android_export_minified] output: $RUN_DIR"
 LAUNCH_WAIT="${KANAMA_ANDROID_LAUNCH_WAIT:-30}"
 PANAMAPORT_MAVEN_REPO="${KANAMA_PANAMAPORT_MAVEN_REPO:-}"
+TEMPLATE_MODE="${KANAMA_ANDROID_TEMPLATE:-fresh}"
+case "$TEMPLATE_MODE" in
+  fresh | stale | reuse) ;;
+  *)
+    echo "[android_minified] KANAMA_ANDROID_TEMPLATE must be fresh, stale or reuse, not '$TEMPLATE_MODE'" >&2
+    exit 2
+    ;;
+esac
+if [[ "$TEMPLATE_MODE" == stale ]]; then
+  # With automatic deletion off (Godot's default), Godot refuses a stale template before any plugin runs, and
+  # the run would blame the guard. This script never changes the user's editor settings: check, and stop.
+  pin_branch="$(android_godot_version | cut -d. -f1,2)"
+  if [[ -d "$HOME/Library/Application Support/Godot" ]]; then
+    editor_settings="$HOME/Library/Application Support/Godot/editor_settings-$pin_branch.tres"
+  else
+    editor_settings="${XDG_CONFIG_HOME:-$HOME/.config}/godot/editor_settings-$pin_branch.tres"
+  fi
+  if ! grep -Eq '^export/android/build/automatically_delete_build_directory[[:space:]]*=[[:space:]]*true' "$editor_settings" 2>/dev/null; then
+    echo "[android_minified] KANAMA_ANDROID_TEMPLATE=stale needs Editor Settings > Export > Android > Build > Automatically Delete Build Directory on ($editor_settings does not set export/android/build/automatically_delete_build_directory = true); without it Godot refuses the stale template before the export guard runs" >&2
+    exit 2
+  fi
+fi
+if [[ -n "$PANAMAPORT_MAVEN_REPO" && "$TEMPLATE_MODE" != reuse ]]; then
+  echo "[android_minified] KANAMA_PANAMAPORT_MAVEN_REPO patches the template's build.gradle before the export: set KANAMA_ANDROID_TEMPLATE=reuse" >&2
+  exit 2
+fi
 
 ANDROID_SDK_DIR="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
 if [[ -z "$ANDROID_SDK_DIR" ]]; then
@@ -168,20 +206,47 @@ with open(path, "w", encoding="utf-8") as handle:
 EOF
 echo "[android_minified] preset: gradle_build/minification=true for this run"
 
-# Drop what earlier script versions left in the template.
 GP="$DEMO_DIR/android/build/gradle.properties"
-rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
-
-# Strip earlier runs' blocks, this script's and android_smoke.sh's (marker -> EOF each).
-for marker in kanama-local-maven kanama-r8-minify; do
-  if grep -q "=== $marker " "$BUILD_GRADLE"; then
-    sed_inplace "$BUILD_GRADLE" "/=== $marker /,\$d"
+# The key ends at `=`, `:`, whitespace or the end of the line, as java.util.Properties reads it.
+R8_KEY_RE='^[[:space:]]*android\.enableR8\.fullMode([[:space:]=:]|$)'
+if [[ "$TEMPLATE_MODE" == fresh ]]; then
+  # The first export after a Godot upgrade: no template yet. Godot installs it inside the export, after the
+  # plugins' _export_begin and before Gradle, so a line written at _export_begin would never reach Gradle.
+  echo "[android_minified] template: deleted, Godot installs it during the export (KANAMA_ANDROID_TEMPLATE=fresh)"
+  rm -rf "$DEMO_DIR/android/build" "$DEMO_DIR/android/.build_version"
+elif [[ "$TEMPLATE_MODE" == stale ]]; then
+  # A template from another Godot version, with the line older Kanama versions wrote: Godot deletes it during
+  # the export (Automatically Delete Build Directory) and unzips a fresh one, after the plugins' _export_begin.
+  echo "[android_minified] template: marked stale, Godot replaces it during the export (KANAMA_ANDROID_TEMPLATE=stale)"
+  printf '%s\n' "kanama-smoke-stale" >"$DEMO_DIR/android/.build_version"
+  printf '%s\n' "android.enableR8.fullMode=false" >>"$GP"
+else
+  echo "[android_minified] template: reused (KANAMA_ANDROID_TEMPLATE=reuse)"
+  # Drop what earlier script versions left in the template.
+  rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
+  # A reused template (same Godot version) keeps its gradle.properties, and earlier script versions wrote the
+  # R8 compat line into it. Take every setting of the property out, so after the export only the export guard
+  # can have put it back: the check below then proves the guard writes it, as it must for a user.
+  if [[ ! -f "$GP" ]]; then
+    echo "[android_minified] the Android build template has no gradle.properties: $GP" >&2
+    exit 1
   fi
-done
-# Repositories are NOT added here: PanamaPort resolves through the repository KanamaAndroid.gdap
-# declares, as in a user's editor export (KANAMA_PANAMAPORT_MAVEN_REPO adds one).
-if [[ -n "$PANAMAPORT_MAVEN_REPO" ]]; then
-  cat >>"$BUILD_GRADLE" <<GRADLE
+  sed_inplace "$GP" -E "/$R8_KEY_RE/d"
+  if grep -qE "$R8_KEY_RE" "$GP"; then
+    echo "[android_minified] could not take android.enableR8.fullMode out of $GP before the export" >&2
+    exit 1
+  fi
+
+  # Strip earlier runs' blocks, this script's and android_smoke.sh's (marker -> EOF each).
+  for marker in kanama-local-maven kanama-r8-minify; do
+    if grep -q "=== $marker " "$BUILD_GRADLE"; then
+      sed_inplace "$BUILD_GRADLE" "/=== $marker /,\$d"
+    fi
+  done
+  # Repositories are NOT added here: PanamaPort resolves through the repository KanamaAndroid.gdap
+  # declares, as in a user's editor export (KANAMA_PANAMAPORT_MAVEN_REPO adds one).
+  if [[ -n "$PANAMAPORT_MAVEN_REPO" ]]; then
+    cat >>"$BUILD_GRADLE" <<GRADLE
 
 // === kanama-local-maven (injected by scripts/android_export_minified.sh, KANAMA_PANAMAPORT_MAVEN_REPO) ===
 allprojects {
@@ -190,9 +255,10 @@ allprojects {
     }
 }
 GRADLE
+  fi
 fi
 
-# 3) Export the release APK WITHOUT reinstalling the template (keeps the patch).
+# 3) Export the release APK (fresh: Godot installs the template first; reuse: it keeps the patch).
 rm -rf "$DEMO_DIR/.godot/exported" # task 106/116: never reuse a conversion made without the desktop addon
 EXPORT_LOG="${KANAMA_ANDROID_EXPORT_LOG:-${APK_PATH%.apk}.export.log}"
 echo "[android_minified] export release (R8): $APK_PATH (log: $EXPORT_LOG)"
@@ -202,10 +268,21 @@ export_status=0
   --path "$DEMO_DIR" \
   --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
 # The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
-# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale), or
-# when the Android preset's Min SDK is below 33 or empty.
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale),
+# when the Android preset's Min SDK is below 33 or empty, or when it cannot write the R8 compat line.
+if [[ "$TEMPLATE_MODE" == stale ]]; then
+  # Godot's automatic deletion takes res://android/plugins with the old template: the export would build an
+  # APK with no Kanama in it. The guard must stop it, naming the lost plugin, before Gradle runs.
+  if grep -q 'Kanama: Export stopped: Godot deleted .*KanamaAndroid.gdap.* from res://android/plugins' "$EXPORT_LOG" &&
+    [[ "$export_status" -ne 0 && ! -f "$APK_PATH" ]]; then
+    echo "[android_minified] PASS (stale template: Godot deleted res://android/plugins with it, and the export guard stopped the export before Gradle)"
+    exit 0
+  fi
+  echo "[android_minified] stale template: the export guard did not stop an export that lost res://android/plugins/KanamaAndroid.gdap (exit $export_status); log: $EXPORT_LOG" >&2
+  exit 1
+fi
 if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
-  echo "[android_minified] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, or the preset's Min SDK is below 33 (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
+  echo "[android_minified] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, the preset's Min SDK is below 33, or the R8 compat line could not be written (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if [[ "$export_status" -ne 0 ]]; then
@@ -240,9 +317,12 @@ fi
 assert_apk_package_id "[android_minified]" "$ANDROID_SDK_DIR" "$APK_PATH" "$PACKAGE_NAME" || exit 1
 
 # PanamaPort's R8 rules hold in compat mode only: AGP's default full mode corrupts its downcall-stub
-# dispatch, and the crash shows only on the device. The export guard writes this line, as for a user.
-if ! grep -q '^android.enableR8.fullMode=false$' "$GP"; then
-  echo "[android_minified] R8 did not run in compat mode: no android.enableR8.fullMode=false in $GP (the export guard writes it)" >&2
+# dispatch, and the crash shows only on the device. The export guard writes this line, as for a user: Godot
+# installed this template without it (fresh), or this run took it out before the export (reuse), so it is
+# there only if the guard wrote it into the template Gradle built from, and exactly once.
+r8_lines="$(R8_KEY_RE="$R8_KEY_RE" awk '$0 ~ ENVIRON["R8_KEY_RE"] { n++ } END { print n + 0 }' "$GP")"
+if ! grep -q '^android.enableR8.fullMode=false$' "$GP" || [[ "$r8_lines" != 1 ]]; then
+  echo "[android_minified] R8 did not run in compat mode: $GP should hold exactly one android.enableR8.fullMode=false, written by the export guard during the export (it holds $r8_lines setting(s) of the property)" >&2
   exit 1
 fi
 

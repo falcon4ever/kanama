@@ -42,8 +42,10 @@ releases follow the same runbook; the diff is just smaller.
 ## The Bump
 
 1. **Edit the pin, and only the pin.** Change `kanamaGodotVersion` in
-   `gradle.properties` and `GODOT_VERSION` in the four workflows
-   (`python3 scripts/check_godot_version_pin.py --list-files` names them).
+   `gradle.properties` and `GODOT_VERSION` in the four workflows. On a new
+   major.minor, also set `compatibility_minimum` in the two committed
+   `kanama.gdextension` descriptors to it
+   (`python3 scripts/check_godot_version_pin.py --list-files` names them all).
 
 2. **Look at the plan** (optional). `--plan` runs the read-only checks and prints
    every step with its command, changing nothing:
@@ -77,7 +79,7 @@ releases follow the same runbook; the diff is just smaller.
    | 3. classify | diffs the new API against `HEAD`: no-op, metadata-only, or an API change with the added and removed classes and the removed methods, properties, signals, constants and enums |
    | 4. constants | `generate_name_constants.py` |
    | 5. tree | `generate_api_wrapper.py --write-tree`: re-renders every wrapper on every platform, **adopts every class the new API adds**, keeps the desktop `ObjectCalls` `actual` set in step with the expect, and repeats until a pass writes nothing |
-   | 6. outputs | the release kit's `config/features` (`templates/release-kit/project.godot`, moved to the pin's major.minor), the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, then the KDoc sync |
+   | 6. outputs | the release kit's `config/features` (`templates/release-kit/project.godot`, moved to the pin's major.minor), the builtin operators and methods, the engine-method table, the Web backend, wrappers and exercise, the API exercise, the generator, coverage, enum-migration and iOS-handwritten pages, the iOS scene-init unsafe-class list (`scripts/ios_scene_init_unsafe_classes.json`, scanned from the source checkout), then the KDoc sync |
    | 7. format | `./gradlew ktfmtFormat` (the regen leaves the iOS `ObjectCalls` region, the expect and toggled desktop members unformatted) |
    | 8. gates index | `docs/reference/generated/gates.md`, last because it reads the gate list |
    | 9. gates | every drift gate, `ktfmtCheck`, the version pins (including the release kit's, `check_kit_version_pins.py`), and the API validation, run to the end |
@@ -138,8 +140,10 @@ These steps need a person or a device, so the script prints them and stops:
   `res://android/build` installed by another Godot version ("Unable to set up Android
   build directory"). `android_smoke.sh` and `android_export_minified.sh` delete a template whose
   `android/.build_version` is not the pin and reinstall it. For a demo exported by hand, delete
-  `res://android/build`, or turn on **Editor Settings > Export > Android > Build > Automatically
-  Delete Build Directory**.
+  `res://android/build`. **Editor Settings > Export > Android > Build > Automatically Delete Build
+  Directory** deletes all of `res://android`, `android/plugins` (Kanama's plugin) too; the export guard
+  then ends a command-line export, marks an editor export as failed and keeps a one-click deploy from
+  installing, and the plugin has to be installed again.
 - **Run the API exercise before any device gate.** The page
   (`docs/reference/generated/api-exercise.md`) is already regenerated; review its
   diff, since every new class gets rows that have never run. Then run the rows
@@ -164,10 +168,9 @@ These steps need a person or a device, so the script prints them and stops:
   repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
 - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
   badges and version wording, templates (the release kit's Godot version is already
-  moved, step 6), and companion demo defaults. The
-  `.gdextension` `compatibility_minimum` is an invariant with its own rationale
-  (see `AGENTS.md` "Looks Wrong But Isn't"); review it deliberately before
-  touching it.
+  moved, step 6), and companion demo defaults. The demos' synced
+  `kanama.gdextension` copies take the new `compatibility_minimum` when the demos
+  re-sync the addon.
 - Bump the KDoc docs-pin commit hash in
   `docs/contributing/wrapper-maintenance.md` to the new stable tag.
 - **Scan `gdextension/gdextension_interface.h` for newly `@deprecated`

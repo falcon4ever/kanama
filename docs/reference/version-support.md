@@ -66,8 +66,8 @@ a newer API fails the build, not the device.
 ## iOS Library Size
 
 The iOS build adds Kanama to your game as two prebuilt libraries,
-~168.0 MB debug / ~109.6 MB release static `.a`, measured on a clean link with
-Kotlin 2.4.21. A project built from a release kit links a larger debug library,
+~172.2 MB debug / ~113.4 MB release static `.a`, measured on a clean link with
+Kotlin 2.4.21 and Godot 4.8 beta 2. A project built from a release kit links a larger debug library,
 about 195 MB. Both libraries sit in your project's `addons/kanama/bin/ios/`
 folder, so keep them out of version control or use Git LFS.
 

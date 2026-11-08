@@ -232,7 +232,7 @@ object BuiltinTypes {
    * type and payload, so the assignment released the previous element a second time: an Object
    * since Godot 4.8 (bcbfec6cfc stopped nulling the pointer; the first
    * `Engine.captureScriptBacktraces()` entry came back freed), a packed array or a custom Callable
-   * on 4.7 as well. `FreedObjectSmoke` holds every decode loop to it.
+   * on 4.7 as well. `DecodeBufferSmoke` holds every decode loop to it.
    */
   fun destroyVariantToNil(variant: MemorySegment) {
     variantDestroy.invoke(variant)

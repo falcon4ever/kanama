@@ -12,9 +12,15 @@ harness holds each listed gate to the three-step proof, with a reversible mutati
 Every case runs in a THROWAWAY checkout (`git worktree add --detach` of HEAD, plus the uncommitted
 changes and untracked files of the dev checkout), so the checkout you work in is never mutated: a
 SIGTERM, a timeout or a crash cannot leave a half-applied mutation behind. The workspace is removed
-on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout kills the whole process group of the case (a
-gate that spawned Gradle or Godot leaves nothing behind). Mutations are still reverted between the
-red and the final green run, and the directories a mutation created are removed again.
+on exit, also on SIGTERM/SIGHUP/Ctrl-C. A timeout, the deadline and those signals all stop the case the
+same way: TERM to its whole process group, so the gate's own cleanup runs (a session-leader driver and
+its browser are the gate's to stop), then KILL to what is left once the group is empty or STOP_GRACE
+(15 s) has passed, whichever comes first. That is longer than the editor smokes' own RUN_BOUNDED_GRACE
+(10 s), so a leader that is still stopping what it started is not killed halfway. Two things can outlive
+that: a process that left the group and that the gate's cleanup missed (if it holds the output, the
+case's log says so; the harness then stops waiting for it), and a Gradle daemon, which is detached and
+stays for the next build on purpose. Mutations are still reverted between the red and the final green
+run, and the directories a mutation created are removed again.
 
 Usage:
     python3 scripts/gate_red_runs.py                  # every fast case
@@ -23,11 +29,17 @@ Usage:
     python3 scripts/gate_red_runs.py --slow           # also the Godot/Gradle smokes (needs KANAMA_GODOT_BIN)
     python3 scripts/gate_red_runs.py --list
     python3 scripts/gate_red_runs.py --markdown out.md   # also write the README-gates.md table rows
+    python3 scripts/gate_red_runs.py --deadline-minutes 65   # stop in time, and name the case it stopped on
 
 `--strict` is implied when `CI` is true/1/yes. `--allow-skip NAME[,NAME]` names the cases a runner
 may skip on purpose (CI has no Godot docs checkout: `--allow-skip sync_kdoc`). A case is SKIPPED when
 an environment variable it needs is unset (`requires_env`) or when its gate's baseline says it could
 not run the mutated row (`skip_when`, e.g. no Android export template): never a vacuous red run.
+
+Each case prints its time, and a failure as soon as it happens. A CI job killed at its time limit prints
+nothing more (the python process gets no signal it can answer), so `--deadline-minutes` ends the run from
+inside, a little before that limit: the failures so far, the case it stopped on and the cases it never ran
+reach the log and, on GitHub Actions, an annotation.
 
 Gates that need a device, a browser, a Godot binary or a long export are NOT all here: they carry
 their own `--self-test` or red-run recipe, documented in scripts/README-gates.md.
@@ -50,6 +62,14 @@ from pathlib import Path
 
 SRC = Path(__file__).resolve().parents[1]  # the dev checkout; never mutated
 WORK = SRC  # the throwaway checkout every case runs in (set by main())
+DEADLINE: float | None = None  # the time.monotonic() at which --deadline-minutes ends the run (set by main())
+LIVE: subprocess.Popen | None = None  # the case running right now, for on_signal to stop
+STARTING = False  # run() is inside Popen(): on_signal only records the signal, run() acts on it once LIVE is set
+SIGNALLED: int | None = None  # the signal on_signal recorded while STARTING
+# Seconds a stopped case's group gets to empty itself after TERM. Longer than RUN_BOUNDED_GRACE (10 s,
+# editor_check_lib.sh), so an editor smoke's leader gets to its own `kill -KILL` of what left the group below it.
+STOP_GRACE = 15.0
+KILL_GRACE = 5.0  # seconds the output gets to close after KILL; a holder still there by then has left the group
 PY = sys.executable
 
 
@@ -120,6 +140,16 @@ class UnappliableMutation(Exception):
     """A case's mutation no longer applies (the file it edits changed). The CASE fails with this
     message; the harness carries on with the next case (task 139 U9: one stale case used to abort the
     whole run and leave every later case unrun)."""
+
+
+class DeadlineCut(Exception):
+    """--deadline-minutes ended a case's command. That says nothing about the gate, so no verdict is drawn
+    from the run: the case stops here, and no case runs after it. The message is one line; `tail` is the end
+    of what the command printed before it was stopped."""
+
+    def __init__(self, message: str, tail: str):
+        super().__init__(message)
+        self.tail = tail
 
 
 class Mutator:
@@ -196,26 +226,111 @@ class Mutator:
         return False
 
 
-def run(case_: Case) -> tuple[int, str, float]:
+def signal_group(proc: subprocess.Popen, signum: int) -> None:
+    try:
+        os.killpg(proc.pid, signum)
+    except (ProcessLookupError, PermissionError):  # justified: the group is gone (macOS answers EPERM for a group of zombies); nothing is left to signal
+        pass
+
+
+def read_rest(proc: subprocess.Popen, seconds: float) -> tuple[str, bool]:
+    """What the case printed so far, and whether its output closed within `seconds`."""
+    try:
+        return proc.communicate(timeout=seconds)[0] or "", True
+    except subprocess.TimeoutExpired as expired:  # justified: the caller waits on, goes on to KILL, or reports the holder of the output
+        partial = expired.output or b""
+        return partial.decode("utf-8", "replace") if isinstance(partial, bytes) else partial, False
+
+
+def group_empty(proc: subprocess.Popen) -> bool:
+    proc.poll()  # reaps the leader once it exits: an unreaped leader is a zombie that keeps the group alive
+    try:
+        os.killpg(proc.pid, 0)
+    except (ProcessLookupError, PermissionError):  # justified: no member left (macOS answers EPERM for a group of zombies)
+        return True
+    return False
+
+
+def stop_group(proc: subprocess.Popen) -> str:
+    """Stops a case and returns what it printed. TERM first: repo cleanup runs on TERM (an EXIT trap, a
+    run_with_timeout, run_bounded_stop), and a browser driver in its own session is reachable only that way.
+    Then it waits, reading the output meanwhile, until the group is empty or STOP_GRACE has passed: the
+    output closing says nothing, as a member still cleaning up may have its output elsewhere. KILL then gets
+    whatever stayed (a member that ignores TERM)."""
+    signal_group(proc, signal.SIGTERM)
+    until = time.monotonic() + STOP_GRACE
+    out, closed = "", False
+    while True:
+        left = until - time.monotonic()
+        if not closed:
+            out, closed = read_rest(proc, min(max(left, 0), 0.1))
+        if group_empty(proc) or left <= 0:
+            break
+        if closed:
+            time.sleep(0.05)
+    signal_group(proc, signal.SIGKILL)
+    if closed:
+        return out
+    out, closed = read_rest(proc, KILL_GRACE)
+    if closed:
+        return out
+    proc.stdout.close()  # never waited for again: the holder gets SIGPIPE on its next write
+    proc.poll()
+    return f"{out}\na process outside the case's group still holds its output; it may still be running\n"
+
+
+def stop_now(signum: int) -> None:
+    """A signal's stop: the running case, then SystemExit (main()'s finally removes the workspace)."""
+    global LIVE
+    for ignored in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):  # one stop: a second Ctrl-C must not cut it short
+        signal.signal(ignored, signal.SIG_IGN)
+    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it
+        stop_group(LIVE)
+        LIVE = None
+    raise SystemExit(128 + signum)
+
+
+def on_signal(signum: int, _frame) -> None:
+    global SIGNALLED
+    if STARTING:  # no SIG_IGN here: a child forked after this would inherit it, and TERM would never reach its cleanup
+        SIGNALLED = SIGNALLED or signum
+        return
+    stop_now(signum)
+
+
+def run(case_: Case, stage: str) -> tuple[int, str, float]:
+    global LIVE, STARTING
     env = dict(os.environ)
     env.update(case_.env)
     # A gate that skips under CI would read as red here for the wrong reason; the harness decides about skips itself.
     env.pop("CI", None)
+    remaining = None if DEADLINE is None else max(DEADLINE - time.monotonic(), 0)
+    timeout = case_.timeout if remaining is None else min(case_.timeout, remaining)
     started = time.monotonic()
-    proc = subprocess.Popen(
-        case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-        start_new_session=True,  # its own process group, so a timeout can kill everything the gate spawned
-    )
+    # A signal inside Popen() would raise out of it with the child already running and LIVE not set yet, so
+    # on_signal only records it there and the finally below acts on it. Blocking signals instead would block them
+    # in the gate too: exec keeps the signal mask.
+    STARTING = True
     try:
-        out, _ = proc.communicate(timeout=case_.timeout)
+        proc = subprocess.Popen(
+            case_.cmd, cwd=WORK, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, errors="replace",
+            start_new_session=True,  # its own process group, so a timeout can stop everything the gate spawned
+        )
+        LIVE = proc
+    finally:
+        STARTING = False
+        if SIGNALLED is not None:
+            stop_now(SIGNALLED)
+    try:
+        out, _ = proc.communicate(timeout=timeout)
         return proc.returncode, out, time.monotonic() - started
-    except subprocess.TimeoutExpired:  # justified: reported as exit 124 with the partial output; the case then fails
-        try:
-            os.killpg(proc.pid, signal.SIGKILL)
-        except ProcessLookupError:  # justified: the group already exited between the timeout and the kill
-            pass
-        out, _ = proc.communicate()
-        return 124, f"timeout after {case_.timeout}s (process group killed)\n{out or ''}", time.monotonic() - started
+    except subprocess.TimeoutExpired:  # justified: reported as exit 124 or a DeadlineCut with the partial output; the case then fails
+        out = stop_group(proc)
+        if remaining is not None and remaining < case_.timeout:
+            raise DeadlineCut(f"{case_.gate}: cut by the deadline at the {stage} run", out[-800:]) from None
+        return 124, f"{out}\ntimeout after {timeout:.0f}s (process group stopped)\n", time.monotonic() - started
+    finally:
+        LIVE = None
 
 
 def red_excerpt(output: str, expect: str) -> str:
@@ -241,15 +356,19 @@ def make_workspace() -> tuple[Path, Path]:
     """A detached worktree of HEAD carrying the dev checkout's uncommitted state; returns (tmp dir, tree)."""
     tmp = Path(tempfile.mkdtemp(prefix="gate_red_runs.")).resolve()  # resolved: /var is /private/var on macOS
     tree = tmp / "tree"
-    git_out("worktree", "add", "--detach", "--quiet", str(tree), "HEAD")
-    patch = git_out("diff", "HEAD", "--binary")
-    if patch:
-        git_out("apply", "--whitespace=nowarn", cwd=tree, data=patch)
-    untracked = git_out("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")
-    for rel in filter(None, untracked):
-        dest = tree / rel
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(SRC / rel, dest)
+    try:
+        git_out("worktree", "add", "--detach", "--quiet", str(tree), "HEAD")
+        patch = git_out("diff", "HEAD", "--binary")
+        if patch:
+            git_out("apply", "--whitespace=nowarn", cwd=tree, data=patch)
+        untracked = git_out("ls-files", "--others", "--exclude-standard", "-z").decode().split("\0")
+        for rel in filter(None, untracked):
+            dest = tree / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(SRC / rel, dest)
+    except BaseException:  # a signal's SystemExit too: a half-made worktree must not stay registered in the dev checkout
+        drop_workspace(tmp, tree)
+        raise
     return tmp, tree
 
 
@@ -406,6 +525,15 @@ case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
 case("check_godot_version_pin.py (release guard wired)", py("check_godot_version_pin.py"),
      [Edit(".github/workflows/package.yml", "run: python3 scripts/check_godot_version_pin.py --release", "run: echo no guard")],
      "lost its release guard", "package.yml no longer runs the release guard on a tag")
+case("check_godot_version_pin.py (release guard needed by every job)", py("check_godot_version_pin.py"),
+     [Edit(".github/workflows/package.yml", "    runs-on: macos-15\n    needs: gdextension-header\n", "    runs-on: macos-15\n")],
+     "job `cross-runtimes` has no `needs` path to `gdextension-header`", "a package job stops waiting for the release guard job: a tag on a prerelease pin would still build it")
+case("check_godot_version_pin.py (compatibility_minimum)", py("check_godot_version_pin.py"),
+     [Edit("example_project/addons/kanama/kanama.gdextension", 'compatibility_minimum = "', 'compatibility_minimum = "0.')],
+     "example_project/addons/kanama/kanama.gdextension: compatibility_minimum", "the desktop descriptor lets an older Godot load Kanama: compatibility_minimum is not the pin's major.minor")
+case("check_godot_version_pin.py (compatibility_minimum literal)", py("check_godot_version_pin.py"),
+     [Edit("build.gradle.kts", 'compatibility_minimum = "${godotCompatibilityMinimum.get()}"', 'compatibility_minimum = "4.7"')],
+     "is a literal; derive it from kanamaGodotVersion", "a generated descriptor (package kit or iOS) hardcodes compatibility_minimum again instead of deriving it from the pin")
 # The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
 case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
      [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],
@@ -545,6 +673,62 @@ case("check_ios_static_dispatch.py", py("check_ios_static_dispatch.py"),
      [Edit(f"{IOS}/binding/runtime/ObjectCalls.kt", "      kanama_ios_godot_ptrcall_static(methodBind, argTypes, argPtrs, argCount, retType, retOut)",
            "      kanama_ios_godot_ptrcall(0L, methodBind, argTypes, argPtrs, argCount, retType, retOut)")],
      "dispatcher-no-static", "a static call is routed through a guarded iOS entry point")
+# The iOS self-test phase gate (Godot 4.8 bump): a scene-init row constructing a class whose constructor needs a server
+# Godot creates after scene-level extension init (the first 4.8 iPhone run: SIGSEGV in TileMapLayer::TileMapLayer()).
+case("check_ios_selftest_phases.py", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/ObjectCallsSelfTest.kt", '  val n3 = ObjectCalls.constructObject("Node3D")\n',
+           '  val n3 = ObjectCalls.constructObject("Node3D")\n  val redRunTileMap = ObjectCalls.constructObject("TileMap")\n')],
+     "constructs TileMap (memnew(TileMapLayer))", "a scene-init iOS self-test row constructs a TileMap (its TileMapLayer needs PhysicsServer2D)")
+case("check_ios_selftest_phases.py (subclass, rows file)", py("check_ios_selftest_phases.py"),
+     [Edit(f"{IOS}/binding/runtime/UtilitySelfTest.kt", "  val faultsBefore = ObjectCalls.faultCount()\n",
+           "  val faultsBefore = ObjectCalls.faultCount()\n  val redRunBody = net.multigesture.kanama.api.StaticBody3D.create()\n")],
+     "constructs StaticBody3D (inherits PhysicsBody3D", "a *SelfTestRows file called at scene init creates a subclass of an unsafe class")
+case("check_ios_selftest_phases.py (C matrix)", py("check_ios_selftest_phases.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c", '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n',
+           '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n'
+           '    int64_t red_run_area = kanama_ios_godot_construct_object("Area2D");\n')],
+     "kanama_ios_ptrcall_selftest line", "the C ptrcall matrix (kanama_ios_godot_construct_object) constructs an Area2D at scene init")
+case("check_ios_selftest_phases.py (pattern floor)", py("check_ios_selftest_phases.py"),
+     [Edit("scripts/check_ios_selftest_phases.py", "re.compile(r'(?<![A-Za-z0-9])(?:constructObject", "re.compile(r'\\b(?:constructObject")],
+     "kanama_ios_ptrcall_selftest: found no object construction",
+     "the construction pattern stops matching the C matrix's kanama_ios_godot_construct_object (it read 0 classes once)")
+# Self-contained (CI has no Godot checkout): a fake Godot tree under build/, the list generated from it, and a mutation
+# that adds a servers/ constructor using a late server, so the generator (main.cpp window, memnew closure, servers/)
+# runs in CI too. version.py is written from the API header so the gate's version match holds at every bump.
+PHASES_FAKE = "build/redrun-phases"
+PHASES_ARGS = ["--godot-src", f"{PHASES_FAKE}/godot", "--data", f"{PHASES_FAKE}/list.json"]
+PHASES_FAKE_TREE = [PY, "-c", (
+    "import json, pathlib, shutil\n"
+    f"root = pathlib.Path('{PHASES_FAKE}'); shutil.rmtree(root, ignore_errors=True); g = root / 'godot'\n"
+    "h = json.loads(pathlib.Path('extension_api.json').read_text())['header']\n"
+    "files = {\n"
+    " 'version.py': f'major = {h[\"version_major\"]}\\nminor = {h[\"version_minor\"]}\\npatch = {h[\"version_patch\"]}\\nstatus = \"{h[\"version_status\"]}\"\\n',\n"
+    " 'main/main.cpp': 'Error Main::setup2(bool p_show_boot_logo) {\\n\\tGDExtensionManager::get_singleton()->initialize_extensions(GDExtension::INITIALIZATION_LEVEL_SCENE);\\n'\n"
+    "   '\\tcamera_server = CameraServer::create();\\n\\tPhysicsServer2DManager::initialize_server();\\n\\tregister_server_singletons();\\n}\\n',\n"
+    " 'scene/tile_map_layer.cpp': 'TileMapLayer::TileMapLayer() {\\n\\tPhysicsServer2D::get_singleton()->connect(\"_debug_changed\", callable_mp(this, &TileMapLayer::_x));\\n}\\n\\n'\n"
+    "   'TileMap::TileMap() {\\n\\tTileMapLayer *layer = memnew(TileMapLayer);\\n}\\n\\nNode2D::Node2D() {\\n}\\n',\n"
+    " 'servers/camera/camera_feed.cpp': '// red-run: a constructor goes here\\n',\n"
+    "}\n"
+    "for rel, text in files.items():\n"
+    "    (g / rel).parent.mkdir(parents=True, exist_ok=True); (g / rel).write_text(text)\n"
+)]
+case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/servers/camera/camera_feed.cpp", "// red-run: a constructor goes here\n",
+           "CameraFeed::CameraFeed() {\n\tid = CameraServer::get_singleton()->get_free_id();\n}\n")],
+     "added ['CameraFeed']", "a servers/ constructor starts using a late server and the generated list is not regenerated",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (setup2 renamed)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/main/main.cpp", "register_server_singletons();", "register_servers_renamed();")],
+     "no `register_server_singletons();` after", "Godot renames a Main::setup2 marker the late-server scan relies on (a named failure, not a traceback)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (list for another pin)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/list.json", '"pin": "', '"pin": "0.0.redrun-')],
+     "was generated for Godot 0.0.redrun-", "a bump moves the pin without regenerating the list (caught without a Godot checkout)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (regenerate from another version)", py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/version.py", '\nstatus = "', '\nstatus = "rc')],
+     "--regenerate: build/redrun-phases/godot is Godot", "the list is regenerated from a checkout whose version is not exactly the pin",
+     pre=[PHASES_FAKE_TREE])
 # The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
 # red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
@@ -738,6 +922,10 @@ case("check_public_signature_changes.py (trailing default, overridable)", py("ch
      [Append("api-snapshots/common.txt", "ZzRedRun: open class ZzRedRun\nZzRedRun: open fun redRun(a: Int)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nopen class ZzRedRun {\n  open fun redRun(a: Int, b: Int = 0) {}\n}\n")],
      "unannounced source break", "an open function gains a trailing defaulted parameter: an override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, interface member)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: interface ZzRedRun\nZzRedRun: fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\ninterface ZzRedRun {\n  fun redRun(a: Int, b: Int = 0)\n}\n")],
+     "unannounced source break", "an interface member gains a trailing defaulted parameter: its line carries no `open`, but every implementation's override stops matching, so it stays a break")
 case("check_public_signature_changes.py (trailing default, after a lambda)", py("check_public_signature_changes.py"),
      [Append("api-snapshots/common.txt", "ZzRedRun: class ZzRedRun\nZzRedRun: fun redRun(block: () -> Unit)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n  fun redRun(block: () -> Unit, b: Int = 0) {}\n}\n")],
@@ -1181,7 +1369,12 @@ case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.s
      [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
-     "missing pattern: FreedObjectSmoke decode_buffers", "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     # The smoke's first Godot run after the import is the decode probe's own, so this is the first thing the
+     # smoke can report: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe
+     # dying under the double release. The later runs' aborts (HelloScript's captureScriptBacktraces, at a
+     # different line each run) are never reached.
+     ("decode buffers: wrong reference counts", "decode buffers: the probe died before its result"),
+     "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
@@ -1305,6 +1498,21 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
              'export_path="build/game.apk"\n\n[preset.0.options]\n\ngradle_build/use_gradle_build=true\n'
              'gradle_build/min_sdk="26"\nplugins/KanamaAndroid=true\n')],
      "preset's Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The R8 compat line goes into the build template the preset builds (Gradle Build Directory), not always
+# res://android/build; check_export_guard.gd unit-tests the writer. A mutation goes into both copies.
+GUARD_R8_BUILD_DIRECTORY = ("    if dir.is_empty():\n        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n",
+                            "    dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n")
+GUARD_LATE_DISCARD = ("        _discard_on_end = _export_path\n", "        pass\n")
+case("tool_smoke.sh (export guard late problem, one-click)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_LATE_DISCARD)],
+     "[export_guard_discard] FAIL: a problem found after the template setup left the one-click APK", "a problem the guard finds after _export_begin (Android plugins deleted with the old template) no longer removes a one-click deploy's APK: Godot installs the broken APK on the device",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (export guard R8 compat build directory)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY)],
+     "[export_guard] FAIL r8 compat: android_gradle_properties_path(res://platform/android_custom)", "the guard writes the R8 compat line into res://android/build whatever the preset's Gradle Build Directory says: a minified build in a custom directory runs R8 in full mode and crashes on the device",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
                         "    return true\n")
@@ -1695,11 +1903,33 @@ case("web/dodge_restart_selftest.mjs (off-screen free required)", ["node", "scri
 case("web_export_smoke.sh (browser-floor)", ["bash", "scripts/web/scaffold_selftest.sh"],
      [Edit("scripts/web_export_smoke.sh", 'if ! python3 "$WEB_DIR/check_browser_floor.py" "$RESULT"; then', 'if false; then')],
      "below-floor expected exit 1", "web_export_smoke.sh stops running the browser-floor gate (the `below-floor` case must catch that)")
+# The harness's own stop, on fixture trees shaped like the slow gates (a TERM trap, a driver in its own session, a
+# member that ignores TERM, a member slow to clean up). This is what keeps a deadline or a Ctrl-C from leaving a
+# browser against a deleted workspace.
+STOP_SELFTEST = script("gate_red_runs_selftest.py")
+case("gate_red_runs_selftest.py (TERM first)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "    signal_group(proc, signal.SIGTERM)\n", "")],
+     "the gate's TERM cleanup did not run", "the harness goes straight to KILL again: a gate's cleanup never runs, and the driver it started in a session of its own stays behind")
+case("gate_red_runs_selftest.py (deadline named)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "if remaining is not None and remaining < case_.timeout:", "if False:")],
+     "the cut is reported as a broken gate", "a case the deadline cut reads as a broken gate again, with no annotation when it was the shard's last")
+case("gate_red_runs_selftest.py (signal stops the case)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "    if LIVE is not None:  # in a session of its own, so it got no signal from the terminal, and nothing else stops it\n        stop_group(LIVE)\n        LIVE = None\n", "")],
+     "Ctrl-C: left running", "Ctrl-C on the harness leaves the running case going, in a session of its own, against a deleted workspace")
+case("gate_red_runs_selftest.py (held output)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "return proc.communicate(timeout=seconds)[0] or \"\", True", "return proc.communicate()[0] or \"\", True")],
+     "held output: the harness was still running", "the harness waits for ever on a process that left the case's group and holds its output")
+case("gate_red_runs_selftest.py (cleanup waited for)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "        if group_empty(proc) or left <= 0:\n", "        if closed or group_empty(proc) or left <= 0:\n")],
+     "slow cleanup: the member's cleanup was cut short", "the harness KILLs the group as soon as the output closes again: a member still cleaning up with its output elsewhere (an editor smoke's leader stopping what it started) is cut short")
+case("gate_red_runs_selftest.py (signal while starting)", STOP_SELFTEST,
+     [Edit("scripts/gate_red_runs.py", "        if SIGNALLED is not None:\n            stop_now(SIGNALLED)\n", "")],
+     "signal at start: the gate's TERM cleanup did not run", "a Ctrl-C that lands inside Popen() is dropped again: the case it was starting runs on, and the harness with it")
 
 #CASES-END
 
 def main() -> int:
-    global WORK
+    global DEADLINE, WORK, STARTING
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--only", help="run only the cases whose gate name contains this text")
     parser.add_argument("--slow", action="store_true", help="also run the cases that drive Godot and Gradle (minutes each)")
@@ -1708,6 +1938,7 @@ def main() -> int:
     parser.add_argument("--list", action="store_true")
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
     parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
+    parser.add_argument("--deadline-minutes", type=float, help="stop after this many minutes: the unrun cases are named and fail the run")
     args = parser.parse_args()
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
@@ -1730,19 +1961,22 @@ def main() -> int:
         print("gate_red_runs: no case matches", file=sys.stderr)
         return 2
 
-    def on_signal(signum, _frame):  # the finally below then removes the workspace
-        raise SystemExit(128 + signum)
-
     for signum in (signal.SIGTERM, signal.SIGHUP, signal.SIGINT):
         signal.signal(signum, on_signal)
 
+    if args.deadline_minutes is not None:
+        DEADLINE = time.monotonic() + args.deadline_minutes * 60
     before = git_status()
     tmp, WORK = make_workspace()
     try:
         failures, rows, skipped = run_cases(cases, strict, allowed_skips)
     finally:
+        STARTING = True  # a signal while the workspace goes is recorded, and acted on once it is gone
         drop_workspace(tmp, WORK)
         WORK = SRC
+        STARTING = False
+        if SIGNALLED is not None:
+            stop_now(SIGNALLED)
     after = git_status()
     if before != after:
         failures.append("the dev checkout changed across the run (this must never happen):\n" + "\n".join(sorted(set(after.splitlines()) ^ set(before.splitlines()))))
@@ -1766,69 +2000,97 @@ def run_cases(cases: list[Case], strict: bool, allowed_skips: list[str]) -> tupl
     failures: list[str] = []
     rows: list[str] = []
     skipped: list[str] = []
-    for c in cases:
+    stopped, tail = "", ""
+    reached = len(cases)
+    for index, c in enumerate(cases):
+        if DEADLINE is not None and time.monotonic() >= DEADLINE:
+            stopped = f"the --deadline-minutes budget ended after {cases[index - 1].gate}" if index else "the --deadline-minutes budget was spent before the first case"
+            reached = index
+            break
         print(f"== {c.gate}: {c.how}", flush=True)
-
-        def skip(reason: str) -> None:
-            print(f"SKIP: {c.gate}: {reason}", flush=True)
-            skipped.append(c.gate)
-            cell = reason.replace("|", "\\|")
-            rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
-            if strict and not any(a in c.gate for a in allowed_skips):
-                failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
-
-        missing_env = [name for name in filter(None, c.requires_env.split(","))
-                       if not Path(os.environ.get(name, "/nonexistent")).exists()]
-        if missing_env:
-            skip(f"needs {' and '.join(missing_env)} to name an existing path")
-            continue
-        for pre in c.pre:
-            pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout))
-            if pre_rc != 0:
-                failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
-        rc, out, _secs = run(c)
-        if rc != 0:
-            failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
-            print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
-            continue
-        if c.skip_when and c.skip_when in out:
-            skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
-            continue
+        started = time.monotonic()
+        failed_before = len(failures)
         try:
-            # Resolved before anything is mutated: a callable reads the values it needs from the clean tree.
-            mutations = c.mutations() if callable(c.mutations) else c.mutations
-            expect = c.expect() if callable(c.expect) else c.expect
-            with Mutator(mutations):
-                red_rc, red_out, red_secs = run(c)
-        except UnappliableMutation as error:
-            failures.append(f"{c.gate}: {error}")
-            print(f"   UNAPPLIABLE: {error}", flush=True)
+            run_case(c, strict, allowed_skips, failures, rows, skipped)
+        except DeadlineCut as cut:
+            stopped, tail, reached = str(cut), f":\n{cut.tail}" if cut.tail else "", index + 1
             rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
-            continue
-        green_rc, green_out, _ = run(c)
-        alternatives = (expect,) if isinstance(expect, str) else expect
-        matched = next((text for text in alternatives if text in red_out), None)
-        ok = True
-        if red_rc == 0:
-            failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
-            ok = False
-        elif matched is None:
-            failures.append(
-                f"{c.gate}: failed (exit {red_rc}) but without the expected text {expect!r}:\n{red_out[-800:]}"
-            )
-            ok = False
-        if green_rc != 0:
-            failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
-            ok = False
-        excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
-        print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
-        print(f"   green after revert: exit {green_rc}", flush=True)
-        rows.append(
-            f"| `{c.gate}` | {c.how} | `{excerpt}` | {'green' if green_rc == 0 else 'NOT GREEN'} |"
-            if ok
-            else f"| `{c.gate}` | {c.how} | UNPROVEN | - |"
-        )
+        for failure in failures[failed_before:]:
+            print(f"   FAIL: {failure.splitlines()[0]}", flush=True)
+        print(f"   took {time.monotonic() - started:.1f}s", flush=True)
+        if stopped:
+            break
+    if stopped:
+        not_run = [other.gate for other in cases[reached:]]
+        summary = f"{stopped}; {len(not_run)} of {len(cases)} case(s) not run" + (f": {', '.join(not_run)}" if not_run else "")
+        summary += f"; {len(failures)} failure(s) before that" if failures else ""
+        failures.append(summary + tail)
+        print(f"   {summary}", flush=True)
+        if os.environ.get("GITHUB_ACTIONS"):
+            print(f"::error title=gate_red_runs deadline::{summary}", flush=True)
     return failures, rows, skipped
+
+
+def run_case(c: Case, strict: bool, allowed_skips: list[str], failures: list[str], rows: list[str], skipped: list[str]) -> None:
+    def skip(reason: str) -> None:
+        print(f"SKIP: {c.gate}: {reason}", flush=True)
+        skipped.append(c.gate)
+        cell = reason.replace("|", "\\|")
+        rows.append(f"| `{c.gate}` | {c.how} | SKIPPED: {cell} | - |")
+        if strict and not any(a in c.gate for a in allowed_skips):
+            failures.append(f"{c.gate}: SKIPPED ({reason}) in a strict run; provide it, or pass --allow-skip")
+
+    missing_env = [name for name in filter(None, c.requires_env.split(","))
+                   if not Path(os.environ.get(name, "/nonexistent")).exists()]
+    if missing_env:
+        skip(f"needs {' and '.join(missing_env)} to name an existing path")
+        return
+    for pre in c.pre:
+        pre_rc, pre_out, _ = run(Case(c.gate, pre, [], "", "", env=c.env, timeout=c.timeout), "prerequisite")
+        if pre_rc != 0:
+            failures.append(f"{c.gate}: prerequisite {pre} failed (exit {pre_rc}):\n{pre_out[-600:]}")
+    rc, out, _secs = run(c, "baseline")
+    if rc != 0:
+        failures.append(f"{c.gate}: not green before the mutation (exit {rc}):\n{out[-800:]}")
+        print(f"   baseline NOT green (exit {rc}); skipped", flush=True)
+        return
+    if c.skip_when and c.skip_when in out:
+        skip(next(line.strip() for line in out.splitlines() if c.skip_when in line))
+        return
+    try:
+        # Resolved before anything is mutated: a callable reads the values it needs from the clean tree.
+        mutations = c.mutations() if callable(c.mutations) else c.mutations
+        expect = c.expect() if callable(c.expect) else c.expect
+        with Mutator(mutations):
+            red_rc, red_out, red_secs = run(c, "red")
+    except UnappliableMutation as error:
+        failures.append(f"{c.gate}: {error}")
+        print(f"   UNAPPLIABLE: {error}", flush=True)
+        rows.append(f"| `{c.gate}` | {c.how} | UNPROVEN | - |")
+        return
+    green_rc, green_out, _ = run(c, "green")
+    alternatives = (expect,) if isinstance(expect, str) else expect
+    matched = next((text for text in alternatives if text in red_out), None)
+    ok = True
+    if red_rc == 0:
+        failures.append(f"{c.gate}: STAYED GREEN after the mutation ({c.how}); the gate does not catch it")
+        ok = False
+    elif matched is None:
+        failures.append(
+            f"{c.gate}: failed (exit {red_rc}) but without the expected text {expect!r}:\n{red_out[-800:]}"
+        )
+        ok = False
+    if green_rc != 0:
+        failures.append(f"{c.gate}: NOT green after the revert (exit {green_rc}):\n{green_out[-800:]}")
+        ok = False
+    excerpt = red_excerpt(red_out, matched or alternatives[0]).replace("|", "\\|")
+    print(f"   red   exit {red_rc} in {red_secs:.1f}s: {excerpt}", flush=True)
+    print(f"   green after revert: exit {green_rc}", flush=True)
+    rows.append(
+        f"| `{c.gate}` | {c.how} | `{excerpt}` | {'green' if green_rc == 0 else 'NOT GREEN'} |"
+        if ok
+        else f"| `{c.gate}` | {c.how} | UNPROVEN | - |"
+    )
 
 
 if __name__ == "__main__":

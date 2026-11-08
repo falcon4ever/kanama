@@ -1198,8 +1198,16 @@ editor, let it re-import, and install the 4.8 export templates.
 - **Android: replace the build template.** Godot 4.8 refuses an Android export
   whose `res://android/build` came from another Godot version ("Unable to set up
   Android build directory"). Delete `res://android/build` and let Godot install it
-  again, or turn on **Editor Settings > Export > Android > Build > Automatically
-  Delete Build Directory**.
+  again. Avoid **Editor Settings > Export > Android > Build > Automatically
+  Delete Build Directory** for this: it deletes everything in `res://android`,
+  Kanama's Android plugin in `res://android/plugins` too. If it already did, run
+  `./gradlew buildAndroidScripts` again before you export.
+- **Rebuild your scripts after updating Kanama.** Where Godot 4.8 added a
+  parameter with a default at the end of a method (`DisplayServer.getDisplaySafeArea`,
+  `Skeleton3D.resetBonePose`, `Skeleton3D.resetBonePoses`), your calls compile
+  unchanged, but the compiled method is a different one. A scripts jar built
+  against the older Kanama still calls the old method and fails with
+  `NoSuchMethodError` on desktop and Android. The normal build rebuilds it.
 - **Android: R8 has a preset option now.** **Gradle Build > Minification** turns it
   on; see [Release Builds](../exporting/android.md#release-builds).
 - **Methods Godot changed:**

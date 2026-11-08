@@ -13,6 +13,23 @@ runs pass there ([Godot Upgrade Runbook](godot-upgrade.md)).
 
 ## Godot Baseline Changes
 
+`main` moved from 4.7.2 to **4.8 beta 2 on 2026-11-07**
+(`4.8.beta2.official.cafc17a19`). It is a prerelease pin: no release is cut on it,
+and the statuses on Requirements and Platform Status stay those of release 0.4.0
+on 4.7.2 until their runs pass on 4.8. `scripts/upgrade_godot.sh --prerelease`
+classified the bump as an **API change**: 33 classes added and adopted, 15 source
+breaks and 4 compatible changes on the public surface, `gdextension_interface.h`
+with no new deprecation Kanama binds. Run on macOS arm64 the same day:
+`scripts/local_ci.sh` (runtime, `@Tool`, editor-probe and hot-reload smokes
+included), every red run (`gate_red_runs.py --slow --strict`, 334 cases), the
+demos `desktop_smoke_all.sh` nine-demo matrix, the Web `pr` set in Chrome 156
+(4/4, protocol 39), the iOS device xcframeworks (172.2 / 113.4 MB), an Android
+debug export of dodge and an R8-minified release export of Match3 without a
+device, and the store addon with a headless Android export from it.
+**Not run on 4.8 yet:** every Android and iOS device gate, the Web corpus beyond
+the `pr` set, Firefox and Safari, and Windows and Linux. The ledger entries for
+them carry a dated waiver to 2026-12-31.
+
 Kanama re-pinned from 4.7.0 to **4.7.2 stable on 2026-09-08**.
 `scripts/upgrade_godot.sh` classified the bump as **metadata-only**: only the
 `extension_api.json` header changed (`version_patch` 0 → 2); the API body and

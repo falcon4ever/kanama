@@ -120,9 +120,11 @@ Export with `--export-release` and a release keystore set in the preset, as
 for any Godot Android game.
 
 To shrink a release build with R8, turn on **Gradle Build > Minification** in the
-preset (Godot 4.8 and newer). Kanama sets `android.enableR8.fullMode=false` in
-`android/build/gradle.properties` for you when it exports: Kanama's Android runtime
-works only with R8 in that mode.
+preset (Godot 4.8 and newer). When you export a release build, Kanama sets
+`android.enableR8.fullMode=false` in the build template's `gradle.properties` for
+you: `<Gradle Build Directory>/build/gradle.properties`, which is
+`res://android/build/gradle.properties` unless the preset sets **Gradle Build >
+Gradle Build Directory**. Kanama's Android runtime works only with R8 in that mode.
 
 ## Performance on Devices
 
@@ -157,7 +159,7 @@ version 3.22.1.
 | Problem | Fix |
 | --- | --- |
 | `buildAndroidScripts` fails and names a line that calls `.invoke(` on a Kotlin function value, such as `callback?.invoke()`. | The Android build cannot compile that call. Write `callback()` or `callback?.let { it() }` instead. |
-| The export stops with `Android build version mismatch` (Godot 4.7) or `Unable to set up Android build directory. Please fix by manually deleting the "res://android/build" directory` (Godot 4.8 and newer). | The build template in `res://android/build` is from another Godot version. On 4.7, delete the `res://android/build` folder, then choose **Project > Install Android Build Template**. On 4.8, delete the folder, or turn on **Editor Settings > Export > Android > Build > Automatically Delete Build Directory** and Godot installs a fresh one. |
+| The export stops with `Android build version mismatch` (Godot 4.7) or `Unable to set up Android build directory. Please fix by manually deleting the "res://android/build" directory` (Godot 4.8 and newer). | The build template in `res://android/build` is from another Godot version. On 4.7, delete the `res://android/build` folder, then choose **Project > Install Android Build Template**. On 4.8, delete the folder and export again: Godot installs a fresh one. **Editor Settings > Export > Android > Build > Automatically Delete Build Directory** also works, but it deletes everything in `res://android`, Kanama's Android plugin in `res://android/plugins` too, so run `./gradlew buildAndroidScripts` again after it. Kanama reports an export that lost the plugin that way as failed, and a one-click deploy installs nothing. |
 | `buildAndroidScripts` stops with `Android SDK not found`. | Set `ANDROID_HOME` to your Android SDK folder, or set **Editor Settings > Export > Android > Android SDK Path** in Godot. |
 | `buildAndroidScripts` stops with `addons/kanama/maven has no Kanama Android runtime`. | The addon is incomplete. Unzip the kit or the store addon into the project again. A project built from a source checkout uses the commands in [From a Source Checkout](#from-a-source-checkout) instead. |
 | Gradle stops with `Task 'buildAndroidScripts' not found`. | The project's Gradle files are older than its addon. Merge the template's `pluginManagement { }` block into your `settings.gradle.kts` and its `plugins { }` block into your `build.gradle.kts`, as [Add Kanama to an Existing Project](../getting-started/store-addon.md#projects-that-already-have-a-gradle-build) shows. |
