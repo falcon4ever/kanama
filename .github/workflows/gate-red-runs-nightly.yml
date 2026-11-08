@@ -110,7 +110,8 @@ jobs:
       # for a day without asking again, so one bad minute failed every later Gradle case of the shard. What the root
       # build and the Android plugin's build resolve is fetched here, where a retry can ask again, and the build the
       # smokes start with is built: Gradle's build cache hands the cases its output. The resolving took about 70 s from
-      # an empty cache (a Mac, 590 MB, 2026-11-07) and seconds from a full one; README-gates.md has what it does not cover.
+      # an empty cache (a Mac, 590 MB, 2026-11-07) and seconds from a full one, the whole step 215 s from an empty Gradle
+      # home (690 MB); README-gates.md has what it does not cover.
       # The init script was only ever run on a Mac before it landed here, and a failure of this step fails all twelve
       # shards. If it fails on Linux for a reason of its own (not a 404), drop the two `resolveBuildDependencies` lines
       # of fetch(). `syncExampleAddonJar` alone is the build every smoke starts with, which Linux runners have built for
