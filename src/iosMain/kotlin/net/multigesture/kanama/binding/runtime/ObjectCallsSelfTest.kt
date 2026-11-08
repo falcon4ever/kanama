@@ -4932,27 +4932,16 @@ fun kanamaIosRuntimeObjectCallsSelfTestFrame() {
 
   // Task 129 C: the classes generated once whose iOS path is new (AudioStreamPlayer,
   // ResourceLoader, Engine, ProjectSettings, ParticleProcessMaterial, ...).
-  val laterRows = mutableListOf<LaterFrameRow>()
-  wrappersOnceSelfTestRows(::check) { laterRows += it }
+  wrappersOnceSelfTestRows(::check)
 
   // The fault counter is process-wide and never reset, so by frame 1 it still holds exactly the
   // seven deliberate probes from the level-2 phase — unless something in between failed quietly,
-  // which is precisely what this line exists to show. A row that finishes on a later frame
-  // (LaterFrameRow) delays the line until it is done: it is polled once per frame, and a row that
-  // never finishes leaves the line missing, which the device runners fail on.
-  fun printSummary() =
-    println(
-      "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +
-        "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS " +
-        "in ${started.elapsedNow().inWholeMilliseconds} ms"
-    )
-  fun pumpLaterRows() {
-    laterRows.removeAll { row -> row(::check) }
-    if (laterRows.isEmpty()) printSummary()
-    else net.multigesture.kanama.api.MainThread.postNextFrame(::pumpLaterRows)
-  }
-  if (laterRows.isEmpty()) printSummary()
-  else net.multigesture.kanama.api.MainThread.postNextFrame(::pumpLaterRows)
+  // which is precisely what this line exists to show.
+  println(
+    "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1): $pass passed, $fail failed " +
+      "faults=${ObjectCalls.faultCount()} expected=$SELFTEST_EXPECTED_FAULTS " +
+      "in ${started.elapsedNow().inWholeMilliseconds} ms"
+  )
 
   // The generated API exercise (exercise/ApiExercise.generated.kt): its own summary line, after the
   // frame-1 rows, once every class and singleton is registered (ApiExerciseSelfTest.kt).

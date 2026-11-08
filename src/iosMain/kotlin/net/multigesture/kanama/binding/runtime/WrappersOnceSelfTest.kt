@@ -39,10 +39,7 @@ import platform.posix.usleep
  * or an engine fact checked two ways. The frame-1 phase runs with the SceneTree up, so the threaded
  * load and the Node-derived player are safe here. Nothing may raise a shim fault.
  */
-internal fun wrappersOnceSelfTestRows(
-  check: (String, Boolean) -> Unit,
-  later: (LaterFrameRow) -> Unit,
-) {
+internal fun wrappersOnceSelfTestRows(check: (String, Boolean) -> Unit) {
   val faultsBefore = ObjectCalls.faultCount()
 
   // ParticleProcessMaterial: the 71 Kotlin properties iOS lacked, through the generated
@@ -298,9 +295,8 @@ internal fun wrappersOnceSelfTestRows(
   // loadThreadedGet back 4.4 s later with the scene; on the next launch LOADED in 21 ms, so the
   // likely occupant is the renderer's first-launch pipeline compilation). IN_PROGRESS is not the
   // no-op answer (that is THREAD_LOAD_INVALID_RESOURCE, 0), but a progress of 0.0 does not prove
-  // the progress read-back, so that path adds a follow-up below that must reach LOADED with
-  // progress 1.0 on a later frame. loadThreadedGet waits for the load, and the instance name
-  // proves the result either way.
+  // the progress read-back, so the cache-hit row below proves LOADED with 1.0 on every launch.
+  // loadThreadedGet waits for the load, and the instance name proves the result either way.
   val pollStarted = kotlin.time.TimeSource.Monotonic.markNow()
   var progress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
   var polls = 0
@@ -335,47 +331,39 @@ internal fun wrappersOnceSelfTestRows(
   instance?.let { ObjectCalls.destroyObject(it.segment) }
   scene?.close()
 
-  // The slow path's follow-up: a second threaded request of the same scene, polled once per frame
-  // WITHOUT blocking (the main thread is free to run the frames that let the low-priority thread
-  // move on), until it reports LOADED with progress 1.0. The frame-1 summary line waits for it,
-  // so a load that never finishes leaves that summary missing, which the device runners fail on.
-  if (progress.status != ResourceLoader.ThreadLoadStatus.LOADED) {
-    val again =
-      ResourceLoader.loadThreadedRequest(
-        scenePath,
-        "PackedScene",
-        false,
-        ResourceLoader.CacheMode.IGNORE,
-      )
-    val laterStarted = kotlin.time.TimeSource.Monotonic.markNow()
-    var frames = 0
-    later { laterCheck ->
-      val next =
-        if (again == GodotError.OK) ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
-        else null
-      frames++
-      if (next?.status == ResourceLoader.ThreadLoadStatus.IN_PROGRESS && frames < 3600) {
-        return@later false
-      }
-      val loaded = next?.status == ResourceLoader.ThreadLoadStatus.LOADED
-      println(
-        "[kanama][ios][kn] OBJECTCALLS SELFTEST (frame 1) INFO: resource-loader threaded follow-up " +
-          "status=${next?.status} progress=${next?.progress} frames=$frames " +
-          "ms=${laterStarted.elapsedNow().inWholeMilliseconds}"
-      )
-      // Collect the finished load (load_threaded_get releases the request); a load that never
-      // finished is left alone rather than blocking the main thread on a failing row.
-      if (loaded) ResourceLoader.loadThreadedGetPackedScene(scenePath)?.close()
-      checkParts(
-        laterCheck,
-        "resource-loader(slow first launch: a second threaded load polled on later frames -> LOADED, progress 1.0)",
-        "request OK" to ((again == GodotError.OK) to again.toString()),
-        "status LOADED" to (loaded to next?.status.toString()),
-        "progress 1.0" to ((next?.progress == 1.0) to next?.progress.toString()),
-      )
-      true
-    }
-  }
+  // LOADED with progress 1.0, proved in the same frame on every launch, slow pool or not: with the
+  // scene held in the resource cache (a synchronous load with CacheMode.REUSE), a threaded request
+  // with REUSE never queues a task. Godot 4.8 core/io/resource_loader.cpp:800-806
+  // (ResourceLoader::_load_start) finds the cached resource and registers the task already at
+  // THREAD_LOAD_LOADED with progress 1.0, so the first status read must say exactly that. The
+  // threaded get then collects the request, and both references are released.
+  val cachedScene = ResourceLoader.loadPackedScene(scenePath, ResourceLoader.CacheMode.REUSE)
+  val cachedRequested =
+    ResourceLoader.loadThreadedRequest(
+      scenePath,
+      "PackedScene",
+      false,
+      ResourceLoader.CacheMode.REUSE,
+    )
+  val cachedProgress = ResourceLoader.loadThreadedGetStatusWithProgress(scenePath)
+  val cachedGot =
+    if (cachedRequested == GodotError.OK) ResourceLoader.loadThreadedGetPackedScene(scenePath)
+    else null
+  checkParts(
+    check,
+    "resource-loader(threaded request of a cached scene -> LOADED, progress 1.0 at the first read)",
+    "load(REUSE) returned the scene" to ((cachedScene != null) to (cachedScene != null).toString()),
+    "request OK" to ((cachedRequested == GodotError.OK) to cachedRequested.toString()),
+    "status LOADED" to
+      ((cachedProgress.status == ResourceLoader.ThreadLoadStatus.LOADED) to
+        cachedProgress.status.toString()),
+    "progress 1.0" to ((cachedProgress.progress == 1.0) to cachedProgress.progress.toString()),
+    "get returned the cached scene" to
+      ((cachedGot != null && cachedGot.getInstanceId() == cachedScene?.getInstanceId()) to
+        "${cachedGot?.getInstanceId()} vs ${cachedScene?.getInstanceId()}"),
+  )
+  cachedGot?.close()
+  cachedScene?.close()
 
   // A loaded texture read as a PackedScene: closed, reported as a Godot error, returned as null
   // (the typed loaders check the class, like GDScript's typed assignment).
@@ -679,13 +667,6 @@ private fun <T : RefCounted> newRef(className: String, wrap: (GodotHandle) -> T)
  * failure the row's label lists every failing part with the value it got, so the device log says
  * which part broke and what it saw.
  */
-/**
- * A frame-1 row that finishes on a later frame: called once per frame with the phase's `check`
- * until it returns true. The frame-1 summary line waits for every such row, so a row that never
- * finishes leaves the summary missing, and the device runners fail on a missing summary.
- */
-internal typealias LaterFrameRow = ((String, Boolean) -> Unit) -> Boolean
-
 private fun checkParts(
   check: (String, Boolean) -> Unit,
   label: String,

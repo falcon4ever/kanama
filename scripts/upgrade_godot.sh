@@ -643,7 +643,7 @@ run_soft "enum migration table" python3 "$ROOT_DIR/scripts/migrate_enum_constant
   --table "$ROOT_DIR/docs/reference/generated/enum-migration.md"
 run_soft "iOS handwritten report" python3 "$ROOT_DIR/scripts/ios_handwritten_report.py"
 run_soft "iOS scene-init unsafe classes" python3 "$ROOT_DIR/scripts/check_ios_selftest_phases.py" \
-  --regenerate --godot-src "$GODOT_DOCS_DIR/../.."
+  --regenerate --godot-src "$GODOT_DOCS_DIR/../.." --godot-bin "$GODOT_BIN"
 run_hard python3 "$ROOT_DIR/scripts/sync_kdoc_from_godot_docs.py" --godot-docs "$GODOT_DOCS_DIR" --write
 
 step "step 7: ktfmtFormat (the regen leaves ktfmt-formatted files unformatted)"
