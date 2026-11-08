@@ -729,6 +729,10 @@ case("check_public_signature_changes.py (trailing default, overridable)", py("ch
      [Append("api-snapshots/common.txt", "ZzRedRun: open class ZzRedRun\nZzRedRun: open fun redRun(a: Int)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nopen class ZzRedRun {\n  open fun redRun(a: Int, b: Int = 0) {}\n}\n")],
      "unannounced source break", "an open function gains a trailing defaulted parameter: an override stops matching, so it stays a break")
+case("check_public_signature_changes.py (trailing default, interface member)", py("check_public_signature_changes.py"),
+     [Append("api-snapshots/common.txt", "ZzRedRun: interface ZzRedRun\nZzRedRun: fun redRun(a: Int)\n"),
+      Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\ninterface ZzRedRun {\n  fun redRun(a: Int, b: Int = 0)\n}\n")],
+     "unannounced source break", "an interface member gains a trailing defaulted parameter: its line carries no `open`, but every implementation's override stops matching, so it stays a break")
 case("check_public_signature_changes.py (trailing default, after a lambda)", py("check_public_signature_changes.py"),
      [Append("api-snapshots/common.txt", "ZzRedRun: class ZzRedRun\nZzRedRun: fun redRun(block: () -> Unit)\n"),
       Create(f"{COMMON}/api/ZzRedRun.kt", "package net.multigesture.kanama.api\n\nclass ZzRedRun {\n  fun redRun(block: () -> Unit, b: Int = 0) {}\n}\n")],
