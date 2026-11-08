@@ -8,7 +8,7 @@ import net.multigesture.kanama.api.GodotObject
 import net.multigesture.kanama.api.Resource
 
 /**
- * The decode-buffer probe `FreedObjectSmoke` runs (the Godot 4.8 trial's top break). Public for
+ * The decode-buffer probe `DecodeBufferSmoke` runs (the Godot 4.8 trial's top break). Public for
  * that smoke scene only; game code does not call it.
  *
  * Each container decode of [BuiltinTypes] reads the elements one by one through `Array.get` /
