@@ -12,6 +12,7 @@
     "Area3D": "PhysicsServer3D",
     "BoxShape3D": "PhysicsServer3D",
     "CSGShape3D": "PhysicsServer3D",
+    "CameraFeed": "CameraServer",
     "CameraTexture": "CameraServer",
     "CapsuleShape2D": "PhysicsServer2D",
     "CapsuleShape3D": "PhysicsServer3D",

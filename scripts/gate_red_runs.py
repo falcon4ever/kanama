@@ -555,10 +555,40 @@ case("check_ios_selftest_phases.py (subclass, rows file)", py("check_ios_selftes
      [Edit(f"{IOS}/binding/runtime/UtilitySelfTest.kt", "  val faultsBefore = ObjectCalls.faultCount()\n",
            "  val faultsBefore = ObjectCalls.faultCount()\n  val redRunBody = net.multigesture.kanama.api.StaticBody3D.create()\n")],
      "constructs StaticBody3D (inherits PhysicsBody3D", "a *SelfTestRows file called at scene init creates a subclass of an unsafe class")
-case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.py"),
-     [Edit("scripts/ios_scene_init_unsafe_classes.json", '    "TileMap": "memnew(TileMapLayer)",\n', "")],
-     "ios_scene_init_unsafe_classes.json is stale", "the generated unsafe-class list no longer matches the Godot source",
-     requires_env="GODOT_DOCS")
+case("check_ios_selftest_phases.py (C matrix)", py("check_ios_selftest_phases.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c", '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n',
+           '    int64_t node3d = kanama_ios_godot_construct_object("Node3D");\n'
+           '    int64_t red_run_area = kanama_ios_godot_construct_object("Area2D");\n')],
+     "kanama_ios_ptrcall_selftest line", "the C ptrcall matrix (kanama_ios_godot_construct_object) constructs an Area2D at scene init")
+case("check_ios_selftest_phases.py (pattern floor)", py("check_ios_selftest_phases.py"),
+     [Edit("scripts/check_ios_selftest_phases.py", "re.compile(r'(?<![A-Za-z0-9])(?:constructObject", "re.compile(r'\\b(?:constructObject")],
+     "kanama_ios_ptrcall_selftest: found no object construction",
+     "the construction pattern stops matching the C matrix's kanama_ios_godot_construct_object (it read 0 classes once)")
+# Self-contained (CI has no Godot checkout): a fake Godot tree under build/, the list generated from it, and a mutation
+# that adds a servers/ constructor using a late server, so the generator (main.cpp window, memnew closure, servers/)
+# runs in CI too. version.py is written from the API header so the gate's version match holds at every bump.
+PHASES_FAKE = "build/redrun-phases"
+PHASES_ARGS = ["--godot-src", f"{PHASES_FAKE}/godot", "--data", f"{PHASES_FAKE}/list.json"]
+PHASES_FAKE_TREE = [PY, "-c", (
+    "import json, pathlib, shutil\n"
+    f"root = pathlib.Path('{PHASES_FAKE}'); shutil.rmtree(root, ignore_errors=True); g = root / 'godot'\n"
+    "h = json.loads(pathlib.Path('extension_api.json').read_text())['header']\n"
+    "files = {\n"
+    " 'version.py': f'major = {h[\"version_major\"]}\\nminor = {h[\"version_minor\"]}\\npatch = {h[\"version_patch\"]}\\nstatus = \"{h[\"version_status\"]}\"\\n',\n"
+    " 'main/main.cpp': 'Error Main::setup2(bool p_show_boot_logo) {\\n\\tGDExtensionManager::get_singleton()->initialize_extensions(GDExtension::INITIALIZATION_LEVEL_SCENE);\\n'\n"
+    "   '\\tcamera_server = CameraServer::create();\\n\\tPhysicsServer2DManager::initialize_server();\\n\\tregister_server_singletons();\\n}\\n',\n"
+    " 'scene/tile_map_layer.cpp': 'TileMapLayer::TileMapLayer() {\\n\\tPhysicsServer2D::get_singleton()->connect(\"_debug_changed\", callable_mp(this, &TileMapLayer::_x));\\n}\\n\\n'\n"
+    "   'TileMap::TileMap() {\\n\\tTileMapLayer *layer = memnew(TileMapLayer);\\n}\\n\\nNode2D::Node2D() {\\n}\\n',\n"
+    " 'servers/camera/camera_feed.cpp': '// red-run: a constructor goes here\\n',\n"
+    "}\n"
+    "for rel, text in files.items():\n"
+    "    (g / rel).parent.mkdir(parents=True, exist_ok=True); (g / rel).write_text(text)\n"
+)]
+case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/servers/camera/camera_feed.cpp", "// red-run: a constructor goes here\n",
+           "CameraFeed::CameraFeed() {\n\tid = CameraServer::get_singleton()->get_free_id();\n}\n")],
+     "added ['CameraFeed']", "a servers/ constructor starts using a late server and the generated list is not regenerated",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
 # The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
 # red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
