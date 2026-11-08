@@ -1310,6 +1310,15 @@ case("tool_smoke.sh (export guard Android Min SDK)", ["bash", "scripts/tool_smok
              'gradle_build/min_sdk="26"\nplugins/KanamaAndroid=true\n')],
      "preset's Min SDK is 26. Set Min SDK to 33", "an Android Gradle preset sets Min SDK 26: the editor export guard's check must stop it and say to set 33",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+# The R8 compat line goes into the build template the preset builds (Gradle Build Directory), not always
+# res://android/build; check_export_guard.gd unit-tests the writer. A mutation goes into both copies.
+GUARD_R8_BUILD_DIRECTORY = ("    if dir.is_empty():\n        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n",
+                            "    dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY\n")
+case("tool_smoke.sh (export guard R8 compat build directory)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Edit("templates/starter/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY),
+      Edit("example_project/addons/kanama_tools/kanama_export_guard.gd", *GUARD_R8_BUILD_DIRECTORY)],
+     "[export_guard] FAIL r8 compat: android_gradle_properties_path(res://platform/android_custom)", "the guard writes the R8 compat line into res://android/build whatever the preset's Gradle Build Directory says: a minified build in a custom directory runs R8 in full mode and crashes on the device",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 GUARD_ONE_CLICK_NAME = ("    return RegEx.create_from_string(ONE_CLICK_EXPORT_PATTERN).search(target.substr(prefix.length())) != null\n",
                         "    return true\n")
 case("tool_smoke.sh (export guard one-click clean-up)", ["bash", "scripts/tool_smoke.sh", GODOT],

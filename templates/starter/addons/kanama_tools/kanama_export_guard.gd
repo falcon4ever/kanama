@@ -58,10 +58,12 @@ const ANDROID_OS_NAME := "Android"
 const OPTION_GRADLE_BUILD := "gradle_build/use_gradle_build"
 const OPTION_MIN_SDK := "gradle_build/min_sdk"
 const OPTION_MINIFICATION := "gradle_build/minification"
+const OPTION_GRADLE_BUILD_DIRECTORY := "gradle_build/gradle_build_directory"
+## Where Godot keeps the Android build template when the preset's Gradle Build Directory is empty.
+const ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY := "res://android"
 
 ## A minified Android export must run R8 in compat mode: PanamaPort's R8 rules are written for it, and AGP's
 ## default full mode breaks the engine's startup on the device, after a build that looks fine.
-const ANDROID_GRADLE_PROPERTIES := "res://android/build/gradle.properties"
 const R8_FULL_MODE_PROPERTY := "android.enableR8.fullMode"
 
 const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
@@ -93,7 +95,7 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
         if not sdk_problem.is_empty():
             messages.append("Export stopped: " + sdk_problem)
         if get_option(OPTION_GRADLE_BUILD) == true and get_option(OPTION_MINIFICATION) == true:
-            var r8_problem := keep_r8_compat_mode(ANDROID_GRADLE_PROPERTIES)
+            var r8_problem := keep_r8_compat_mode(android_gradle_properties_path(get_option(OPTION_GRADLE_BUILD_DIRECTORY)))
             if not r8_problem.is_empty():
                 messages.append("Export stopped: " + r8_problem)
     var problems := find_unbound_scripts(get_export_preset())
@@ -133,9 +135,28 @@ static func android_min_sdk_problem(use_gradle_build: Variant, min_sdk: Variant)
     return "Android 13 or newer is required, and this preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
 
 
-## Writes the compat-mode line into the Android build template's gradle.properties; "" when it is there.
+## The gradle.properties of the Android build template a Gradle export builds. Godot builds in
+## <Gradle Build Directory>/build, and in res://android/build when that preset option is empty
+## (ExportTemplateManager::get_android_build_directory in Godot 4.8).
+static func android_gradle_properties_path(gradle_build_directory: Variant) -> String:
+    var dir: String = "" if gradle_build_directory == null else str(gradle_build_directory)
+    if dir.is_empty():
+        dir = ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY
+    return dir.path_join("build").path_join("gradle.properties")
+
+
+## Writes the compat-mode line into the Android build template's gradle.properties at [param path];
+## "" when it is there or was written, else one line that says what is wrong. Godot installs the template
+## before export plugins run, so a missing folder or file means the template is not where the preset says.
 static func keep_r8_compat_mode(path: String) -> String:
-    var text := FileAccess.get_file_as_string(path)
+    var build_dir := path.get_base_dir()
+    if not DirAccess.dir_exists_absolute(build_dir):
+        return "a minified build needs %s=false in the Android build template, and its folder %s does not exist. Install the Android build template (Project > Install Android Build Template), or set the preset's Gradle Build > Gradle Build Directory to the folder that holds it." % [R8_FULL_MODE_PROPERTY, build_dir]
+    var reader := FileAccess.open(path, FileAccess.READ)
+    if reader == null:
+        return "a minified build needs %s=false in %s, and that file %s. Reinstall the Android build template (Project > Install Android Build Template)." % [R8_FULL_MODE_PROPERTY, path, "is missing" if not FileAccess.file_exists(path) else "cannot be read"]
+    var text := reader.get_as_text()
+    reader.close()
     var updated := with_r8_compat_mode(text)
     if updated == text:
         return ""
@@ -146,16 +167,36 @@ static func keep_r8_compat_mode(path: String) -> String:
     return ""
 
 
-## [text], a gradle.properties, with R8's full mode switched off.
+## [param text], a gradle.properties, with R8's full mode switched off: unchanged when it already sets
+## exactly that once, else every other setting of the property dropped and the line added at the end.
+## Keeps the file's other lines and its line endings (CRLF stays CRLF).
 static func with_r8_compat_mode(text: String) -> String:
     var line := "%s=false" % R8_FULL_MODE_PROPERTY
-    if ("\n%s\n" % text).contains("\n%s\n" % line):
-        return text
+    var eol := "\r\n" if text.contains("\r\n") else "\n"
     var kept := PackedStringArray()
+    var settings := PackedStringArray()
     for existing in text.split("\n"):
-        if not existing.strip_edges().begins_with(R8_FULL_MODE_PROPERTY):
-            kept.append(existing)
-    return "%s\n%s\n" % ["\n".join(kept).strip_edges(false, true), line]
+        var bare := existing.trim_suffix("\r")
+        if _property_key(bare) == R8_FULL_MODE_PROPERTY:
+            settings.append(bare.replace(" ", "").replace("\t", ""))
+        else:
+            kept.append(bare)
+    if settings.size() == 1 and settings[0] == line:
+        return text
+    var body := eol.join(kept).strip_edges(false, true)
+    return ("" if body.is_empty() else body + eol) + line + eol
+
+
+## The key of one gradle.properties line ("" for a comment or a blank line): the text before the first
+## `=`, `:` or whitespace, as java.util.Properties reads it.
+static func _property_key(line: String) -> String:
+    var bare := line.strip_edges()
+    if bare.is_empty() or bare.begins_with("#") or bare.begins_with("!"):
+        return ""
+    for i in bare.length():
+        if bare[i] in ["=", ":", " ", "\t"]:
+            return bare.substr(0, i)
+    return bare
 
 
 func _export_end() -> void:

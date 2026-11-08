@@ -171,6 +171,20 @@ echo "[android_minified] preset: gradle_build/minification=true for this run"
 # Drop what earlier script versions left in the template.
 GP="$DEMO_DIR/android/build/gradle.properties"
 rm -f "$DEMO_DIR/android/build/kanama-minify.pro"
+# A reused template (same Godot version) keeps its gradle.properties, and earlier script versions wrote the
+# R8 compat line into it. Take every setting of the property out, so after the export only the export guard
+# can have put it back: the check below then proves the guard writes it, as it must for a user.
+if [[ ! -f "$GP" ]]; then
+  echo "[android_minified] the Android build template has no gradle.properties: $GP" >&2
+  exit 1
+fi
+# The key ends at `=`, `:`, whitespace or the end of the line, as java.util.Properties reads it.
+R8_KEY_RE='^[[:space:]]*android\.enableR8\.fullMode([[:space:]=:]|$)'
+sed_inplace "$GP" -E "/$R8_KEY_RE/d"
+if grep -qE "$R8_KEY_RE" "$GP"; then
+  echo "[android_minified] could not take android.enableR8.fullMode out of $GP before the export" >&2
+  exit 1
+fi
 
 # Strip earlier runs' blocks, this script's and android_smoke.sh's (marker -> EOF each).
 for marker in kanama-local-maven kanama-r8-minify; do
@@ -202,10 +216,10 @@ export_status=0
   --path "$DEMO_DIR" \
   --export-release Android "$APK_PATH" 2>&1 | tee "$EXPORT_LOG" || export_status="${PIPESTATUS[0]}"
 # The Kanama Tools export guard prints this line, and ends the export, when a .kt script the export
-# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale), or
-# when the Android preset's Min SDK is below 33 or empty.
+# uses does not bind in the export-time editor (desktop addon missing, or kanama-scripts.jar stale),
+# when the Android preset's Min SDK is below 33 or empty, or when it cannot write the R8 compat line.
 if grep -q 'Kanama: Export stopped' "$EXPORT_LOG"; then
-  echo "[android_minified] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, or the preset's Min SDK is below 33 (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
+  echo "[android_minified] the Kanama export guard stopped the export: a .kt script does not bind in the export-time editor, the preset's Min SDK is below 33, or the R8 compat line could not be written (the 'Kanama: Export stopped' message above names which); log: $EXPORT_LOG" >&2
   exit 1
 fi
 if [[ "$export_status" -ne 0 ]]; then
@@ -240,9 +254,11 @@ fi
 assert_apk_package_id "[android_minified]" "$ANDROID_SDK_DIR" "$APK_PATH" "$PACKAGE_NAME" || exit 1
 
 # PanamaPort's R8 rules hold in compat mode only: AGP's default full mode corrupts its downcall-stub
-# dispatch, and the crash shows only on the device. The export guard writes this line, as for a user.
-if ! grep -q '^android.enableR8.fullMode=false$' "$GP"; then
-  echo "[android_minified] R8 did not run in compat mode: no android.enableR8.fullMode=false in $GP (the export guard writes it)" >&2
+# dispatch, and the crash shows only on the device. The export guard writes this line, as for a user: this
+# run took it out before the export, so it is there only if the guard wrote it, and exactly once.
+r8_lines="$(R8_KEY_RE="$R8_KEY_RE" awk '$0 ~ ENVIRON["R8_KEY_RE"] { n++ } END { print n + 0 }' "$GP")"
+if ! grep -q '^android.enableR8.fullMode=false$' "$GP" || [[ "$r8_lines" != 1 ]]; then
+  echo "[android_minified] R8 did not run in compat mode: $GP should hold exactly one android.enableR8.fullMode=false, written by the export guard during the export (it holds $r8_lines setting(s) of the property)" >&2
   exit 1
 fi
 
