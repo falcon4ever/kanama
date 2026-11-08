@@ -864,9 +864,15 @@ the report of the probe's exception names `KanamaIosScriptErrorProbe.kt` and a l
   scene-init `requireObject("TileMap")` row). The TileMap, TileMapLayer and GridMap rows now sit in
   the frame-1 phase, and `scripts/check_ios_selftest_phases.py` (a local_ci stage) fails on the host
   when a scene-init row constructs such a class or a subclass of one. The class list,
-  `scripts/ios_scene_init_unsafe_classes.json`, is generated from the Godot source: rerun
+  `scripts/ios_scene_init_unsafe_classes.json`, is generated from the constructors in the Godot
+  source (`scene/`, `modules/`, `servers/`): `upgrade_godot.sh` reruns
   `python3 scripts/check_ios_selftest_phases.py --regenerate --godot-src <godot checkout>` at every
-  bump (with `GODOT_DOCS` set, the gate fails when the file is stale).
+  bump. With a checkout of the pinned version (`GODOT_SRC`, `GODOT_DOCS`) the gate also fails when
+  the file is stale; without one it prints `SKIP: ios-unsafe-classes-staleness`.
+  A frame-1 row may also finish on a **later** frame (a `LaterFrameRow`, polled once per frame):
+  the threaded-load row adds one when its load is still in progress after its 5 s bound, which
+  happens on the first launch of a Mobile-renderer app. The `(frame 1)` summary line then waits
+  for it, so a row that never finishes shows up as a missing summary, not as a pass.
   Expected line shapes on a clean run:
 
   ```text

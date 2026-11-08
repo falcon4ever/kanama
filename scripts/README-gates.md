@@ -48,6 +48,7 @@ Every skip in the gates goes through `gate_skip` (shell) / `skip` (Python). The 
 | id | skipped when | CI |
 |---|---|---|
 | `kdoc-staleness` | `local_ci.sh` finds no Godot `doc/classes` checkout (`GODOT_DOCS`) | listed in `ci.yml` `KANAMA_ALLOW_SKIP` (CI has no Godot source checkout) |
+| `ios-unsafe-classes-staleness` | `check_ios_selftest_phases.py` finds no Godot source checkout of the pinned version (`GODOT_SRC`, `GODOT_DOCS`, the KDoc stage's fallbacks) to check its generated class list against; the phase check itself still runs | listed in `ci.yml` `KANAMA_ALLOW_SKIP` (CI has no Godot source checkout) |
 | `task-index` | `audit_claims.sh` finds no `kanama-tasks` checkout (it is local-only) | listed in `ci.yml` |
 | `stale-blocker-task-tokens` | `audit_stale_blockers.py` finds no `kanama-tasks` checkout for its `task:<id>` tokens | listed in `ci.yml` |
 | `linux-readelf` | `local_ci.sh` on Linux without `readelf` | not listed: fails (ubuntu runners have it) |
@@ -138,7 +139,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/check_exported_scene_properties_selftest.sh:92` | `printf '%s\n' "$red" \| grep -E '^\[check_exported_scenes\] FAIL' \| sed 's/^/ /' \|\| true` | justified: echoing the evidence lines; the assertion on "$red" follows. |
 | `scripts/check_gate_evidence.py:63` | `except ValueError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_gate_evidence.py:76` | `except json.JSONDecodeError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/check_ios_selftest_phases.py:109` | `text = path.read_text(errors="ignore")` | justified: a non-UTF-8 byte sits in a comment or string literal of the Godot source; constructor names and singleton calls are ASCII |
+| `scripts/check_ios_selftest_phases.py:126` | `text = path.read_text(errors="ignore")` | justified: a non-UTF-8 byte sits in a comment or string literal of the Godot source; constructor names and singleton calls are ASCII |
 | `scripts/check_ios_shim_faults.py:276` | `except Exception as exc:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/check_ios_single_call_returns.py:351` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
 | `scripts/check_ios_static_dispatch.py:180` | `except ValueError:` | justified: only the path printed in a finding; no verdict reads it |
@@ -195,9 +196,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1871` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:1936` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:1987` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1901` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:1966` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2017` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -216,9 +217,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/generate_api_wrapper.py:1889` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1894` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
 | `scripts/generate_api_wrapper.py:1930` | `except ValueError:` | justified: not a literal of this kind, so no Kotlin default is emitted; the diff-gated generated tree shows any change |
-| `scripts/generate_gates_index.py:378` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/generate_gates_index.py:422` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
-| `scripts/generate_gates_index.py:446` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
+| `scripts/generate_gates_index.py:379` | `except ValueError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/generate_gates_index.py:423` | `check=False,` | justified: a failed probe reads as "not shallow", and the full-history path then derives the dates itself |
+| `scripts/generate_gates_index.py:447` | `check=False,` | justified: a failed `git log` leaves the date as a dash, which --check reports as a stale page |
 | `scripts/generate_web_exercise.py:1317` | `except GenerationError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/generate_web_wrappers.py:1868` | `except GenerationError as error:` | justified: a signal whose argument Web cannot pack gets no typed handle (its name stays |
 | `scripts/hot_reload_in_process_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
@@ -267,12 +268,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:3157` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:57` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:216` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:753` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:756` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:758` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:799` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:815` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:828` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:754` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:757` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:759` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:800` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:816` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:829` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/measure_edit_loop.py:98` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/measure_edit_loop.py:111` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:115` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
@@ -551,6 +552,11 @@ that build itself resolves; the rest goes back to being fetched by the cases, wi
 | `check_ios_single_call_returns.py (brace-less loops)` | an entry point is the body of a brace-less for / while | `loop-call src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ZzRedRunBypass.kt:6 redRunFor() calls redRunDispatch inside a for loop: the engine method may run more than once / [ios_single_call` | green |
 | `check_ios_single_call_returns.py (callable-reference alias)` | an entry point is aliased with a callable reference and called twice through the alias | `alias src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ZzRedRunBypass.kt:6 redRunAlias() takes a callable reference to redRunDispatch: an alias hides how often the engine method runs; call i` | green |
 | `check_ios_static_dispatch.py` | a static call is routed through a guarded iOS entry point | `[ios_static_dispatch] FAIL dispatcher-no-static src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCalls.kt:237 ptrcallDispatch() calls kanama_ios_godot_ptrcall but never kanama_ios_godo` | green |
+| `check_ios_selftest_phases.py` | a scene-init iOS self-test row constructs a TileMap (its TileMapLayer needs PhysicsServer2D) | `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/ObjectCallsSelfTest.kt (scene-init phase) line 338: constructs TileMap (memnew(TileMapLayer)) / SKIP: ios-unsafe-classes-staleness: no Godot ` | green |
+| `check_ios_selftest_phases.py (subclass, rows file)` | a *SelfTestRows file called at scene init creates a subclass of an unsafe class | `src/iosMain/kotlin/net/multigesture/kanama/binding/runtime/UtilitySelfTest.kt (utilitySelfTestRows, called at scene init) line 21: constructs StaticBody3D (inherits PhysicsBody3D: PhysicsServer3D) / S` | green |
+| `check_ios_selftest_phases.py (C matrix)` | the C ptrcall matrix (kanama_ios_godot_construct_object) constructs an Area2D at scene init | `ios/bootstrap/kanama_ios_shim.c:kanama_ios_ptrcall_selftest line 9: constructs Area2D (PhysicsServer2D) / SKIP: ios-unsafe-classes-staleness: no Godot source checkout to check scripts/ios_scene_init_u` | green |
+| `check_ios_selftest_phases.py (pattern floor)` | the construction pattern stops matching the C matrix's kanama_ios_godot_construct_object (it read 0 classes once) | `[ios-selftest-phases] FAIL ios/bootstrap/kanama_ios_shim.c:kanama_ios_ptrcall_selftest: found no object construction; a construction pattern stopped matching / SKIP: ios-unsafe-classes-staleness: no G` | green |
+| `check_ios_selftest_phases.py (stale list)` | a servers/ constructor starts using a late server and the generated list is not regenerated | `[ios-selftest-phases] FAIL build/redrun-phases/list.json is stale against build/redrun-phases/godot (4.8.0-beta2 (477803ee)): added ['CameraFeed'], removed [], late servers ['CameraServer', 'PhysicsSe` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no self-test)` | a console with no self-test lines at all (a build without -PkanamaIosSelfTest=true) must fail, not pass as clean | `[ios_visual_smoke] runtime self-test summary missing: /PTRCALL SELFTEST MATRIX: [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true has none` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no frame 1)` | the app never reached its first frame: the frame-1 summary is missing while the other two passed | `[ios_visual_smoke] runtime self-test summary missing: /OBJECTCALLS SELFTEST \(frame 1\): [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest=true` | green |
 | `ios_visual_smoke.sh --check-selftest-log (no api exercise)` | the generated API exercise did not run or did not finish: its summary is missing while the other three passed | `[ios_visual_smoke] runtime self-test summary missing: /OBJECTCALLS SELFTEST \(api exercise\): [0-9]+ passed, 0 failed/ (the self-test did not run or did not finish; a build without -PkanamaIosSelfTest` | green |
