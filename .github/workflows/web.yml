@@ -55,7 +55,7 @@ env:
   # Web ray queries: tps-demo's RedRobot, PlayerInputSynchronizer and TpsScenes run from the shared
   # kotlin-src (their Web overrides, which called RayHit, are deleted) and third-person excludes its
   # camera anchor by RID. Both sides pin together or neither is green.
-  DEMOS_REF: f90fd308d5e60e6b9e06adbcae6e0966e3d3ddbe
+  DEMOS_REF: 0f752cd407b9e37fbe6f9c1a33b2f6d44968b7cb
 
 jobs:
   # Skip the whole matrix for PRs that cannot affect a Web build. A skipped job
