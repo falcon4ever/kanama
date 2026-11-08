@@ -589,6 +589,18 @@ case("check_ios_selftest_phases.py (stale list)", py("check_ios_selftest_phases.
            "CameraFeed::CameraFeed() {\n\tid = CameraServer::get_singleton()->get_free_id();\n}\n")],
      "added ['CameraFeed']", "a servers/ constructor starts using a late server and the generated list is not regenerated",
      pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (setup2 renamed)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/main/main.cpp", "register_server_singletons();", "register_servers_renamed();")],
+     "no `register_server_singletons();` after", "Godot renames a Main::setup2 marker the late-server scan relies on (a named failure, not a traceback)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (list for another pin)", py("check_ios_selftest_phases.py", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/list.json", '"pin": "', '"pin": "0.0.redrun-')],
+     "was generated for Godot 0.0.redrun-", "a bump moves the pin without regenerating the list (caught without a Godot checkout)",
+     pre=[PHASES_FAKE_TREE, py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS)])
+case("check_ios_selftest_phases.py (regenerate from another version)", py("check_ios_selftest_phases.py", "--regenerate", *PHASES_ARGS),
+     [Edit(f"{PHASES_FAKE}/godot/version.py", '\nstatus = "', '\nstatus = "rc')],
+     "--regenerate: build/redrun-phases/godot is Godot", "the list is regenerated from a checkout whose version is not exactly the pin",
+     pre=[PHASES_FAKE_TREE])
 # The iOS self-test verdict (task 138 item 24) on a saved console log: the fixture is a clean three-summary run, the
 # red runs drop or fail a summary. No device: the same selftest_verdict a device run applies to its console.
 IOS_SELFTEST_LOG = "scripts/fixtures/ios_selftest_console.log"
