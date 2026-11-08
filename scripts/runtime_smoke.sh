@@ -63,6 +63,65 @@ if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
   fi
   exit 1
 fi
+# Report a failed assertion. The log tail is verbose Godot output, so the reason is
+# restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
+# end of the output and reads as a silent non-zero exit. The tail is the main log's, or the
+# log named third.
+smoke_fail() {
+  local kind="$1" pattern="$2" log="${3:-$LOG_FILE}"
+  echo "[runtime_smoke] $kind: $pattern" >&2
+  echo "[runtime_smoke] log tail:" >&2
+  tail -n 120 "$log" >&2
+  echo >&2
+  echo "[runtime_smoke] FAIL -- $kind: $pattern" >&2
+  echo "[runtime_smoke] full log: $log" >&2
+  exit 1
+}
+
+check() {
+  local pattern="$1"
+  if ! grep -Eq -- "$pattern" "$LOG_FILE"; then
+    smoke_fail "missing pattern" "$pattern"
+  fi
+}
+
+check_absent() {
+  local pattern="$1"
+  if grep -Eq -- "$pattern" "$LOG_FILE"; then
+    smoke_fail "unexpected pattern" "$pattern"
+  fi
+}
+
+# The Godot 4.8 trial's top break, first and in a run of its own (decode_buffer_smoke.tscn,
+# VariantDecodeProbe): every container decode releases each element once. A loop that reused a
+# destroyed Variant buffer as the next Array.get / Dictionary.get return released the previous
+# element again (an Object on 4.8, a bound Callable on 4.7.2 too). On 4.8 that second release frees
+# the element, and Godot then aborts in whichever later run decodes an Array of RefCounted elements
+# (HelloScript's captureScriptBacktraces, in every main-scene run): the smoke died at a different
+# line each time. Here nothing but the probe decodes, so a crash of this run is the probe's.
+# Counts after the decode, then after the container's destroy.
+DECODE_LOG="${LOG_FILE}.decode_buffers"
+decode_status=0
+KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://decode_buffer_smoke.tscn --quit --verbose >"$DECODE_LOG" 2>&1 || decode_status=$?
+decode_ok="2,2,2,2:1,1,1,1"
+dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
+decode_want="array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok"
+decode_got="$(awk 'sub(/^\[kanama:kt\] DecodeBufferSmoke decode_buffers /, "") { print; exit }' "$DECODE_LOG")"
+if [[ -n "$decode_got" && "$decode_got" != "$decode_want" ]]; then
+  smoke_fail "decode buffers" "wrong reference counts (an element released twice, or kept): got $decode_got, want $decode_want (exit $decode_status)" "$DECODE_LOG"
+elif [[ -z "$decode_got" ]] && grep -q '^\[kanama:kt\] DecodeBufferSmoke start$' "$DECODE_LOG"; then
+  smoke_fail "decode buffers" "the probe died before its result (exit $decode_status; a decode that releases an element twice frees it under the probe)" "$DECODE_LOG"
+elif [[ -z "$decode_got" ]]; then
+  smoke_fail "decode buffers" "the run exited $decode_status before the probe started" "$DECODE_LOG"
+elif [[ $decode_status -ne 0 ]]; then
+  smoke_fail "decode buffers" "the run exited $decode_status after a correct result" "$DECODE_LOG"
+fi
+# The probe's run has its own log, so the main log's leak and bad-call rows don't see it: check it here.
+for decode_absent in "Leaked instance:" "Invalid call\. Nonexistent function"; do
+  if grep -Eq -- "$decode_absent" "$DECODE_LOG"; then
+    smoke_fail "decode buffers" "unexpected pattern: $decode_absent" "$DECODE_LOG"
+  fi
+done
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
@@ -210,34 +269,6 @@ cat "$API_EXERCISE_LOG" >>"$LOG_FILE"
 # (KANAMA_GC_STRESS=1): Godot gets a reference of its own, so the wrapper's release never frees what
 # GDScript holds.
 KANAMA_GC_STRESS=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://register_class_object_return_smoke.tscn --quit-after 600 --verbose >>"$LOG_FILE" 2>&1
-
-# Report a failed assertion. The log tail is verbose Godot output, so the reason is
-# restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
-# end of the output and reads as a silent non-zero exit.
-smoke_fail() {
-  local kind="$1" pattern="$2"
-  echo "[runtime_smoke] $kind: $pattern" >&2
-  echo "[runtime_smoke] log tail:" >&2
-  tail -n 120 "$LOG_FILE" >&2
-  echo >&2
-  echo "[runtime_smoke] FAIL -- $kind: $pattern" >&2
-  echo "[runtime_smoke] full log: $LOG_FILE" >&2
-  exit 1
-}
-
-check() {
-  local pattern="$1"
-  if ! grep -Eq -- "$pattern" "$LOG_FILE"; then
-    smoke_fail "missing pattern" "$pattern"
-  fi
-}
-
-check_absent() {
-  local pattern="$1"
-  if grep -Eq -- "$pattern" "$LOG_FILE"; then
-    smoke_fail "unexpected pattern" "$pattern"
-  fi
-}
 
 # The API exercise first: a wrong helper usually breaks a hand smoke line too, and the exercise's FAIL
 # line names the helper and the row. A crash names the row the trace saw last; then no FAIL line
@@ -750,13 +781,6 @@ fi
 # are retained before the Array is destroyed: alive, usable, then closed. Before, each was already
 # freed (valid=false), and closing it was a use-after-free.
 check "FreedObjectSmoke backtraces valid=\[true(, true)*\] languages=\[[A-Za-z]"
-# The Godot 4.8 trial's top break -- every container decode releases each element once
-# (VariantDecodeProbe): a loop that reused a destroyed Variant buffer as the next Array.get /
-# Dictionary.get return released the previous element again (an Object on 4.8, a bound Callable on
-# 4.7.2 too). Counts after the decode, then after the container's destroy.
-decode_ok="2,2,2,2:1,1,1,1"
-dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
-check "FreedObjectSmoke decode_buffers array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok$"
 # Task 131 review: custom-script-typed exports (a KanamaScript type, a plain script type, a List
 # and a Map of them) whose nodes were freed read back as nil, without reading the freed owners.
 check "FreedObjectSmoke script_values live_read=true script_target=null script_targets=\[null\] plain_target=null plain_target_map=\{a=null\}"
@@ -1032,7 +1056,7 @@ trap 'run_logs_finish "$?" runtime_smoke' EXIT
 # the moment the first lifecycle upcall is installed. Assert the boundary line is
 # present FIRST, so a dropped env var fails loudly instead of making the absence
 # check pass vacuously.
-for adapter_log in "$LOG_FILE" "$IMPORT_LOG_FILE"; do
+for adapter_log in "$LOG_FILE" "$IMPORT_LOG_FILE" "$DECODE_LOG"; do
   if ! grep -Eq -- "\[kanama:adapter\] boundary first-lifecycle-upcall-install" "$adapter_log"; then
     echo "[runtime_smoke] FAIL -- adapter trace missing from $adapter_log" >&2
     exit 1

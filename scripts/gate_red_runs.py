@@ -1291,7 +1291,12 @@ case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.s
      [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
-     "missing pattern: FreedObjectSmoke decode_buffers", "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     # The smoke's first Godot run after the import is the decode probe's own, so this is the first thing the
+     # smoke can report: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe
+     # dying under the double release. The later runs' aborts (HelloScript's captureScriptBacktraces, at a
+     # different line each run) are never reached.
+     ("decode buffers: wrong reference counts", "decode buffers: the probe died before its result"),
+     "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
