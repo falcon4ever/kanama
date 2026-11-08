@@ -492,7 +492,10 @@ also has a `Float` overload that computes in `Double`.
   it the same way and your calls still compile, so it is not listed as a source
   break. A method you can override is the exception, because your override
   would stop matching: an `open` or `abstract` method, and every method of an
-  interface. So is a method that ended in a lambda or a `vararg`.
+  interface. So is a method that ended in a lambda or a `vararg`. Your source
+  compiles unchanged, but the compiled call does not: rebuild your scripts after
+  updating Kanama, as a scripts jar built against the old method fails with
+  `NoSuchMethodError` on desktop and Android.
 - `GodotSignal.connect` and the other members Kanama writes by hand per
   platform have overloads instead of default arguments:
   `signal.connect(target, method)` and `connect(target, method, flags)`.

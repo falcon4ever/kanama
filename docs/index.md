@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <img alt="Godot 4.7.2 stable" src="https://img.shields.io/badge/Godot-4.7.2_stable-478cbf.svg">
+  <img alt="Godot 4.7.2 stable, main on 4.8 beta 2" src="https://img.shields.io/badge/Godot-4.7.2_stable%20%7C%20main%3A%204.8_beta_2-478cbf.svg">
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
@@ -50,7 +50,9 @@ class Player(godotObject: GodotHandle) :
 
 ## Platform Status
 
-The badges above are the current status of each platform.
+The badges above are the current status of each platform. Release 0.4.0 runs
+on Godot 4.7.2. The `main` branch builds on Godot 4.8 beta 2, and 0.5.0 ships on
+4.8 stable; see [Godot Version](reference/version-support.md#godot-version).
 [Requirements and Platform Status](reference/version-support.md) lists what
 each workflow needs and what each platform has been tested on.
 

@@ -72,7 +72,9 @@ scripts rewrite your old annotations, export hints and enum constants.
 `main` now builds against Godot 4.8 beta 2, and 0.5.0 ships on 4.8 stable. The 0.4.0 release stays on Godot 4.7.2. The API
 gains 33 classes, among them `Line3D`, `Trail3D`, `StreamedTexture2D` and the `Physics*Result` classes. New defaulted
 parameters at the end of `DisplayServer.getDisplaySafeArea`, `Skeleton3D.resetBonePose` and `Skeleton3D.resetBonePoses`
-change no call. `GodotPropertyHint.AUDIO_BUS` is new, and no export annotation sets it yet.
+change no call in your source, but a scripts jar built before them calls the old method: rebuild your scripts after
+updating. A Kanama built on Godot 4.8 declares `compatibility_minimum = "4.8"`, so a Godot 4.7 editor refuses to load it
+instead of failing later. `GodotPropertyHint.AUDIO_BUS` is new, and no export annotation sets it yet.
 
 Godot's own changes to the API make these source breaks:
 
