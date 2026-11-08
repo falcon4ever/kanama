@@ -6,7 +6,8 @@ extends SceneTree
 ## checks every scene and resource under res://. It also holds every Android preset in res://export_presets.cfg
 ## to the guard's Min SDK rule (ANDROID_MIN_SDK): exit 1 names the preset and what to set. First it runs the
 ## unit cases of the guard's R8 compat-mode writer (with_r8_compat_mode, keep_r8_compat_mode and the
-## preset's Gradle Build Directory), which a minified Android export relies on: exit 1 names each failed case.
+## preset's Gradle Build Directory), which a minified Android export relies on, and of its check that the
+## Android plugins survived Godot's template setup (android_plugins_problem): exit 1 names each failed case.
 ##
 ## Usage: godot --headless --path <project with addons/kanama + addons/kanama_tools> --script <this file>
 const Guard := preload("res://addons/kanama_tools/kanama_export_guard.gd")
@@ -103,6 +104,18 @@ static func r8_compat_failures() -> PackedStringArray:
         var got := Guard.android_gradle_properties_path(p[0])
         if got != p[1]:
             failures.append("android_gradle_properties_path(%s): got %s, expected %s" % [str(p[0]), got, p[1]])
+
+    # res://android/plugins at the start of the export against after Godot set up the template.
+    var plugins := PackedStringArray(["KanamaAndroid.gdap", "KanamaAndroid.debug.aar"])
+    if not Guard.android_plugins_problem(plugins, plugins).is_empty():
+        failures.append("android_plugins_problem: reported a problem when no plugin file was lost")
+    if not Guard.android_plugins_problem(plugins, PackedStringArray(["KanamaAndroid.gdap", "KanamaAndroid.debug.aar", "New.gdap"])).is_empty():
+        failures.append("android_plugins_problem: reported a problem when a plugin file was only added")
+    if not Guard.android_plugins_problem(PackedStringArray(), PackedStringArray()).is_empty():
+        failures.append("android_plugins_problem: reported a problem for a project without Android plugins")
+    var lost := Guard.android_plugins_problem(plugins, PackedStringArray())
+    if not lost.contains("KanamaAndroid.gdap") or not lost.contains(Guard.ANDROID_PLUGINS_DIR) or not lost.contains("buildAndroidScripts"):
+        failures.append("android_plugins_problem, plugins deleted: reported \"%s\", expected it to name KanamaAndroid.gdap, %s and the fix" % [lost, Guard.ANDROID_PLUGINS_DIR])
 
     # keep_r8_compat_mode on real files: a custom build directory gets the line, the default one is left
     # alone, and a missing folder or file stops with a message that names it.

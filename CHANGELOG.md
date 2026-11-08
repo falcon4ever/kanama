@@ -74,7 +74,9 @@ gains 33 classes, among them `Line3D`, `Trail3D`, `StreamedTexture2D` and the `P
 parameters at the end of `DisplayServer.getDisplaySafeArea`, `Skeleton3D.resetBonePose` and `Skeleton3D.resetBonePoses`
 change no call in your source, but a scripts jar built before them calls the old method: rebuild your scripts after
 updating. A Kanama built on Godot 4.8 declares `compatibility_minimum = "4.8"`, so a Godot 4.7 editor refuses to load it
-instead of failing later. `GodotPropertyHint.AUDIO_BUS` is new, and no export annotation sets it yet.
+instead of failing later. A minified release export gets R8's compat mode in the build template Gradle builds from, also
+on the first export after a Godot upgrade, when Godot installs the template during the export.
+`GodotPropertyHint.AUDIO_BUS` is new, and no export annotation sets it yet.
 
 Godot's own changes to the API make these source breaks:
 
@@ -156,8 +158,10 @@ Godot refuses an Android export when `res://android/build` was installed by anot
 says "Android build version mismatch", 4.8 says "Unable to set up Android build directory"). The repository's
 Android scripts now delete a build template from another Godot version and install the current one, and stop
 with one line when `GODOT_BIN` is not the pinned editor. In your own project on 4.7, delete
-`res://android/build` and run **Project > Install Android Build Template**; on 4.8, delete it or turn on
-**Editor Settings > Export > Android > Build > Automatically Delete Build Directory**. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
+`res://android/build` and run **Project > Install Android Build Template**; on 4.8, delete it. **Editor Settings >
+Export > Android > Build > Automatically Delete Build Directory** deletes all of `res://android`, Kanama's Android plugin
+in `res://android/plugins` too; the export guard stops such an export, and `./gradlew buildAndroidScripts` puts the
+plugin back. [Troubleshooting](docs/getting-started/troubleshooting.md) has the row.
 
 #### Fixed — the exported-scene check no longer leaks a project's music at exit
 

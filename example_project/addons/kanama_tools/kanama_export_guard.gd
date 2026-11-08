@@ -35,6 +35,10 @@ extends EditorExportPlugin
 ## the warning on the Min SDK field itself (_get_export_option_warning, which Godot calls only because
 ## _supports_platform returns true).
 ##
+## A minified Android release export (Gradle Build > Minification) also gets R8's compat mode: the guard writes
+## `android.enableR8.fullMode=false` into the build template's gradle.properties from _get_android_libraries,
+## which Godot calls after it has installed or replaced the template and before it starts Gradle (see there).
+##
 ## Opt out with the project setting `kanama/tools/export_guard_enabled` (default true).
 
 const SETTING_ENABLED := "kanama/tools/export_guard_enabled"
@@ -64,28 +68,34 @@ const ANDROID_DEFAULT_GRADLE_BUILD_DIRECTORY := "res://android"
 
 ## A minified Android export must run R8 in compat mode: PanamaPort's R8 rules are written for it, and AGP's
 ## default full mode breaks the engine's startup on the device, after a build that looks fine.
+## Where Godot reads Android plugins (.gdap and their AARs; Kanama's KanamaAndroid.gdap): always res://android/plugins.
+const ANDROID_PLUGINS_DIR := "res://android/plugins"
 const R8_FULL_MODE_PROPERTY := "android.enableR8.fullMode"
 
 const REASON_NO_LOADER := "no .kt loader: the desktop addon (addons/kanama) is missing or did not load, so the export would leave the script out and could not convert or check the scenes that use it"
 const REASON_NOT_BOUND := "not in kanama-scripts.jar: the scenes that use it would be exported without its property values"
 
 var _discard_on_end := ""
+## The files in ANDROID_PLUGINS_DIR when an Android Gradle export began (_export_begin), checked again in
+## _get_android_libraries.
+var _android_plugins_at_begin := PackedStringArray()
 
 
 func _get_name() -> String:
     return "KanamaExportGuard"
 
 
-## Every platform: Godot 4.7 calls a plugin's per-platform hooks only when this returns true, among them
-## _get_export_option_warning for the Export dialog (EditorExportPreset::_get_property_warning). The guard
-## overrides no other per-platform hook, so the rest return Godot's neutral defaults (no options, no
-## Android libraries or manifest contents, no Apple project step). _export_begin runs either way.
+## Every platform: Godot calls a plugin's per-platform hooks only when this returns true, among them
+## _get_export_option_warning for the Export dialog (EditorExportPreset::_get_property_warning) and
+## _get_android_libraries. The guard overrides no other per-platform hook, so the rest return Godot's neutral
+## defaults (no options, no manifest contents, no Apple project step). _export_begin runs either way.
 func _supports_platform(_platform: EditorExportPlatform) -> bool:
     return true
 
 
 func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, _flags: int) -> void:
     _discard_on_end = ""
+    _android_plugins_at_begin = PackedStringArray()
     if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
         return
     var messages := PackedStringArray()
@@ -94,10 +104,8 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
         var sdk_problem := android_min_sdk_problem(get_option(OPTION_GRADLE_BUILD), get_option(OPTION_MIN_SDK))
         if not sdk_problem.is_empty():
             messages.append("Export stopped: " + sdk_problem)
-        if get_option(OPTION_GRADLE_BUILD) == true and get_option(OPTION_MINIFICATION) == true:
-            var r8_problem := keep_r8_compat_mode(android_gradle_properties_path(get_option(OPTION_GRADLE_BUILD_DIRECTORY)))
-            if not r8_problem.is_empty():
-                messages.append("Export stopped: " + r8_problem)
+        if get_option(OPTION_GRADLE_BUILD) == true and DirAccess.dir_exists_absolute(ANDROID_PLUGINS_DIR):
+            _android_plugins_at_begin = DirAccess.get_files_at(ANDROID_PLUGINS_DIR)
     var problems := find_unbound_scripts(get_export_preset())
     if not problems.is_empty():
         messages.append(format_message(problems))
@@ -111,6 +119,39 @@ func _export_begin(_features: PackedStringArray, _is_debug: bool, path: String, 
         return
     if is_one_click_deploy(path):
         _discard_on_end = path
+
+
+## Runs after Godot set up the Android build template and before Gradle starts. Godot 4.8's Android exporter
+## runs the plugins' _export_begin first, and only then sets up the template: it installs a missing one, or,
+## with Editor Settings > Export > Android > Build > Automatically Delete Build Directory on, deletes one from
+## another Godot version together with everything else in its parent folder (res://android, so also
+## res://android/plugins) and installs a fresh one. This hook comes after that setup (export_plugin.cpp,
+## export_project); Godot calls it only for a Gradle build. Two things are checked here:
+## - the Android plugins that were in res://android/plugins when the export began are still there: an export
+##   without KanamaAndroid.gdap builds an APK with no Kanama in it, which fails only on the device;
+## - a minified release export gets R8's compat-mode line in the template Gradle builds from. A line written in
+##   _export_begin could be deleted with the old template. Godot minifies only release builds, so a debug
+##   export or a one-click deploy is left alone.
+## The guard adds no library: it returns an empty list.
+func _get_android_libraries(platform: EditorExportPlatform, debug: bool) -> PackedStringArray:
+    if platform == null or platform.get_os_name() != ANDROID_OS_NAME:
+        return PackedStringArray()
+    if not bool(ProjectSettings.get_setting(SETTING_ENABLED, true)):
+        return PackedStringArray()
+    if get_option(OPTION_GRADLE_BUILD) != true:
+        return PackedStringArray()
+    var problem := android_plugins_problem(_android_plugins_at_begin, DirAccess.get_files_at(ANDROID_PLUGINS_DIR) if DirAccess.dir_exists_absolute(ANDROID_PLUGINS_DIR) else PackedStringArray())
+    if problem.is_empty() and not debug and get_option(OPTION_MINIFICATION) == true:
+        problem = keep_r8_compat_mode(android_gradle_properties_path(get_option(OPTION_GRADLE_BUILD_DIRECTORY)))
+    if problem.is_empty():
+        return PackedStringArray()
+    # Too late to stop the export from Godot's side: a command-line export ends here, before Gradle runs; an
+    # editor export reports the error ("Failed" in the export dialog).
+    platform.add_message(EditorExportPlatform.EXPORT_MESSAGE_ERROR, CATEGORY, "Export stopped: " + problem)
+    if is_command_line_export():
+        printerr("%s: ending the export process (the exit status is non-zero)." % STOP_LINE)
+        end_process()
+    return PackedStringArray()
 
 
 ## The Export dialog's warning on the Android preset's Min SDK field, before anyone exports.
@@ -135,6 +176,18 @@ static func android_min_sdk_problem(use_gradle_build: Variant, min_sdk: Variant)
     return "Android 13 or newer is required, and this preset's Min SDK is %s. Set Min SDK to %d in the Android export preset (Gradle Build > Min SDK)." % [current, ANDROID_MIN_SDK]
 
 
+## "" when every file of [param before] (res://android/plugins when the export began) is still in
+## [param now], else what happened and what to do.
+static func android_plugins_problem(before: PackedStringArray, now: PackedStringArray) -> String:
+    var lost := PackedStringArray()
+    for file in before:
+        if not now.has(file):
+            lost.append(file)
+    if lost.is_empty():
+        return ""
+    return "Godot deleted %s from %s while it replaced the Android build template (Editor Settings > Export > Android > Build > Automatically Delete Build Directory deletes everything in res://android), so this export would not contain Kanama. Put the Android plugin back (./gradlew buildAndroidScripts, or installAndroidPluginAar from a Kanama checkout) and export again. On the next Godot upgrade, delete res://android/build yourself instead." % [", ".join(lost), ANDROID_PLUGINS_DIR]
+
+
 ## The gradle.properties of the Android build template a Gradle export builds. Godot builds in
 ## <Gradle Build Directory>/build, and in res://android/build when that preset option is empty
 ## (ExportTemplateManager::get_android_build_directory in Godot 4.8).
@@ -146,12 +199,12 @@ static func android_gradle_properties_path(gradle_build_directory: Variant) -> S
 
 
 ## Writes the compat-mode line into the Android build template's gradle.properties at [param path];
-## "" when it is there or was written, else one line that says what is wrong. Godot installs the template
-## before export plugins run, so a missing folder or file means the template is not where the preset says.
+## "" when it is there or was written, else one line that says what is wrong. It runs after Godot set up
+## the template (_get_android_libraries), so a missing folder or file means the template is broken.
 static func keep_r8_compat_mode(path: String) -> String:
     var build_dir := path.get_base_dir()
     if not DirAccess.dir_exists_absolute(build_dir):
-        return "a minified build needs %s=false in the Android build template, and its folder %s does not exist. Install the Android build template (Project > Install Android Build Template), or set the preset's Gradle Build > Gradle Build Directory to the folder that holds it." % [R8_FULL_MODE_PROPERTY, build_dir]
+        return "a minified build needs %s=false in the Android build template, and its folder %s does not exist although Godot set the template up for this export. Reinstall the Android build template (Project > Install Android Build Template)." % [R8_FULL_MODE_PROPERTY, build_dir]
     var reader := FileAccess.open(path, FileAccess.READ)
     if reader == null:
         return "a minified build needs %s=false in %s, and that file %s. Reinstall the Android build template (Project > Install Android Build Template)." % [R8_FULL_MODE_PROPERTY, path, "is missing" if not FileAccess.file_exists(path) else "cannot be read"]
