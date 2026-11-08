@@ -409,6 +409,12 @@ case("check_godot_version_pin.py (release guard wired)", py("check_godot_version
 case("check_godot_version_pin.py (release guard needed by every job)", py("check_godot_version_pin.py"),
      [Edit(".github/workflows/package.yml", "    runs-on: macos-15\n    needs: gdextension-header\n", "    runs-on: macos-15\n")],
      "job `cross-runtimes` has no `needs` path to `gdextension-header`", "a package job stops waiting for the release guard job: a tag on a prerelease pin would still build it")
+case("check_godot_version_pin.py (compatibility_minimum)", py("check_godot_version_pin.py"),
+     [Edit("example_project/addons/kanama/kanama.gdextension", 'compatibility_minimum = "', 'compatibility_minimum = "0.')],
+     "example_project/addons/kanama/kanama.gdextension: compatibility_minimum", "the desktop descriptor lets an older Godot load Kanama: compatibility_minimum is not the pin's major.minor")
+case("check_godot_version_pin.py (compatibility_minimum literal)", py("check_godot_version_pin.py"),
+     [Edit("build.gradle.kts", 'compatibility_minimum = "${godotCompatibilityMinimum.get()}"', 'compatibility_minimum = "4.7"')],
+     "is a literal; derive it from kanamaGodotVersion", "a generated descriptor (package kit or iOS) hardcodes compatibility_minimum again instead of deriving it from the pin")
 # The tree's own pin may be a prerelease, so the guard is shown green on a scratch copy of a stable pin.
 case("check_godot_version_pin.py --release", py("check_godot_version_pin.py", "--release", "--properties", "build/redrun-release-pin.properties"),
      [Edit("build/redrun-release-pin.properties", "kanamaGodotVersion=9.9.stable", "kanamaGodotVersion=9.9.beta2")],

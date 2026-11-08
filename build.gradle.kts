@@ -1016,10 +1016,23 @@ val verifyNativeBootstrapArtifact by
     }
   }
 
+// The oldest Godot that may load Kanama: the pin's major.minor (kanamaGodotVersion 4.8.beta2 -> "4.8").
+// The runtime is generated from the pin's extension_api.json, so an older editor must refuse it outright
+// instead of loading it and failing on an engine API it does not have. scripts/check_godot_version_pin.py
+// holds the committed descriptors (example_project, the Android plugin assets) to the same value.
+val godotCompatibilityMinimum =
+  providers.gradleProperty("kanamaGodotVersion").map { version ->
+    val parts = version.split(".")
+    require(parts.size >= 2 && parts[0].all(Char::isDigit) && parts[1].all(Char::isDigit)) {
+      "kanamaGodotVersion=$version does not start with <major>.<minor>"
+    }
+    "${parts[0]}.${parts[1]}"
+  }
 val packageGdextensionDescriptorFile =
   layout.buildDirectory.file("generated/package/kanama.gdextension")
 val generatePackageGdextensionDescriptor by
   tasks.registering {
+    inputs.property("compatibilityMinimum", godotCompatibilityMinimum)
     outputs.file(packageGdextensionDescriptorFile)
     doLast {
       packageGdextensionDescriptorFile.get().asFile.apply {
@@ -1029,7 +1042,7 @@ val generatePackageGdextensionDescriptor by
                 |[configuration]
                 |
                 |entry_symbol = "kanama_entry"
-                |compatibility_minimum = "4.7"
+                |compatibility_minimum = "${godotCompatibilityMinimum.get()}"
                 |
                 |[libraries]
                 |
@@ -2261,6 +2274,7 @@ tasks.register<Exec>("verifyIosGodotTemplate") {
 val iosGdextensionDescriptorFile = layout.buildDirectory.file("generated/ios/kanama.gdextension")
 val generateIosGdextensionDescriptor by
   tasks.registering {
+    inputs.property("compatibilityMinimum", godotCompatibilityMinimum)
     outputs.file(iosGdextensionDescriptorFile)
     doLast {
       iosGdextensionDescriptorFile.get().asFile.apply {
@@ -2270,7 +2284,7 @@ val generateIosGdextensionDescriptor by
                 |[configuration]
                 |
                 |entry_symbol = "kanama_entry"
-                |compatibility_minimum = "4.7"
+                |compatibility_minimum = "${godotCompatibilityMinimum.get()}"
                 |
                 |[libraries]
                 |

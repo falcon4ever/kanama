@@ -34,8 +34,14 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 # The workflows that carry GODOT_VERSION. package.yml is the release tag; ci.yml, web.yml and
 # gate-red-runs-nightly.yml download the binary and export templates by it.
 WORKFLOWS = ("package.yml", "ci.yml", "web.yml", "gate-red-runs-nightly.yml")
+# The committed GDExtension descriptors: `compatibility_minimum` is the pin's major.minor (build.gradle.kts
+# derives the generated ones from kanamaGodotVersion), so an older editor refuses Kanama instead of loading it.
+GDEXTENSION_DESCRIPTORS = (
+    "example_project/addons/kanama/kanama.gdextension",
+    "android/godot-plugin/plugin/src/main/assets/addons/kanama/kanama.gdextension",
+)
 # Every file a Godot pin edit changes by hand (the rest read gradle.properties).
-PIN_FILES = ("gradle.properties", *(f".github/workflows/{wf}" for wf in WORKFLOWS))
+PIN_FILES = ("gradle.properties", *(f".github/workflows/{wf}" for wf in WORKFLOWS), *GDEXTENSION_DESCRIPTORS)
 # The job of package.yml that every package job needs, directly or not, and the step that stops it on a tag.
 RELEASE_GUARD_JOB = "gdextension-header"
 RELEASE_GUARD_IF = "if: startsWith(github.ref, 'refs/tags/v')"
@@ -159,8 +165,23 @@ def main() -> int:
     if guard:
         failures.append(f".github/workflows/package.yml: {guard}")
 
-    # build.gradle.kts must not re-hardcode an export-template version (it reads the property).
+    # compatibility_minimum is the pin's major.minor, in the committed descriptors and (derived) in build.gradle.kts.
+    minimum = ".".join(canonical.split(".")[:2])
+    for rel in GDEXTENSION_DESCRIPTORS:
+        found = re.findall(r'^compatibility_minimum\s*=\s*"([^"]*)"', (ROOT / rel).read_text(), re.MULTILINE)
+        if found != [minimum]:
+            failures.append(
+                f"{rel}: compatibility_minimum {found or 'missing'}, expected \"{minimum}\" (the major.minor of "
+                f"kanamaGodotVersion={canonical}: an older editor would load Kanama and fail on an API it lacks)"
+            )
     bg = (ROOT / "build.gradle.kts").read_text()
+    for literal in re.findall(r'compatibility_minimum = "([0-9][^"]*)"', bg):
+        failures.append(
+            f"build.gradle.kts: compatibility_minimum = \"{literal}\" is a literal; derive it from kanamaGodotVersion "
+            "(godotCompatibilityMinimum)"
+        )
+
+    # build.gradle.kts must not re-hardcode an export-template version (it reads the property).
     for stray in re.findall(r"export_templates/([0-9][^/\"]*)/", bg):
         if "$" not in stray and stray != canonical:
             failures.append(f"build.gradle.kts: stray export_templates/{stray}/ pin (expected the property)")
