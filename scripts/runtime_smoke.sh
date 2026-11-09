@@ -50,19 +50,11 @@ export KANAMA_SIGNAL_SELFTEST=1
 GLOBAL_CLASS_CACHE="$PROJECT_DIR/.godot/global_script_class_cache.cfg"
 rm -f "$GLOBAL_CLASS_CACHE"
 
-KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" --verbose >"$IMPORT_LOG_FILE" 2>&1
-
-if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
-   ! grep -q '"base": &"Resource"' "$GLOBAL_CLASS_CACHE"; then
-  echo "[runtime_smoke] SmokeResource missing from global_script_class_cache.cfg (issue #39 regression)"
-  # Diagnostics only; the verdict is the exit 1 below. Say so when the cache was never written.
-  if [[ -f "$GLOBAL_CLASS_CACHE" ]]; then
-    cat "$GLOBAL_CLASS_CACHE"
-  else
-    echo "[runtime_smoke] $GLOBAL_CLASS_CACHE was not written at all"
-  fi
-  exit 1
-fi
+# The editor run opens the main scene, so its @Tool scripts run here first (HelloScript's _ready, with its
+# Engine.captureScriptBacktraces() decode). Its exit status is kept, not fatal at once: a crash in it is
+# reported below, after the decode probe has had its say, with the first sign of what died.
+import_status=0
+KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --editor --quit-after 120 --path "$PROJECT_DIR_FOR_GODOT" --verbose >"$IMPORT_LOG_FILE" 2>&1 || import_status=$?
 # Report a failed assertion. The log tail is verbose Godot output, so the reason is
 # restated *after* it -- otherwise the one line that matters ends up ~120 lines above the
 # end of the output and reads as a silent non-zero exit. The tail is the main log's, or the
@@ -92,13 +84,32 @@ check_absent() {
   fi
 }
 
+# What the failed editor run above died of: its exit status and the line of its log that says what went
+# wrong. A freed object touched comes first (the cause, not the crash it leads to); then Godot's own ERROR or
+# FATAL line just before its crash handler's banner (a green editor run prints deliberate ERROR lines too, so
+# only the one that precedes the crash counts); then the banner itself, Godot's or the JVM's.
+import_death() {
+  local sign
+  sign="$(awk '/previously freed instance/ && freed == "" { freed = $0 }
+    /^ERROR: |FATAL/ { err = $0 }
+    /handle_crash: |A fatal error has been detected/ && crash == "" { crash = $0; crash_err = err }
+    END { if (freed != "") print freed; else if (crash_err != "") print crash_err; else if (crash != "") print crash }' "$IMPORT_LOG_FILE")"
+  if [[ -n "$sign" ]]; then
+    echo "the editor run (--editor, the main scene's @Tool scripts) exited $import_status; first sign: $sign"
+  else
+    echo "the editor run (--editor, the main scene's @Tool scripts) exited $import_status; its log names no crash"
+  fi
+}
+
 # The Godot 4.8 trial's top break, first and in a run of its own (decode_buffer_smoke.tscn,
 # VariantDecodeProbe): every container decode releases each element once. A loop that reused a
 # destroyed Variant buffer as the next Array.get / Dictionary.get return released the previous
 # element again (an Object on 4.8, a bound Callable on 4.7.2 too). On 4.8 that second release frees
 # the element, and Godot then aborts in whichever later run decodes an Array of RefCounted elements
 # (HelloScript's captureScriptBacktraces, in every main-scene run): the smoke died at a different
-# line each time. Here nothing but the probe decodes, so a crash of this run is the probe's.
+# line each time. Here nothing but the probe decodes, so a crash of this run is the probe's. The editor
+# run above decodes too (its @Tool scripts) and dies first under such a bug, so the probe runs even when
+# that run failed: when the probe names the cause, that is the report; otherwise the editor run's own.
 # Counts after the decode, then after the container's destroy.
 DECODE_LOG="${LOG_FILE}.decode_buffers"
 decode_status=0
@@ -107,21 +118,43 @@ decode_ok="2,2,2,2:1,1,1,1"
 dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
 decode_want="array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok"
 decode_got="$(awk 'sub(/^\[kanama:kt\] DecodeBufferSmoke decode_buffers /, "") { print; exit }' "$DECODE_LOG")"
+# A decode report says so when the editor run died too, so an unrelated editor death is not read as the
+# decode's alone (the editor run is reported on its own when the probe passes).
+import_note=""
+if [[ $import_status -ne 0 ]]; then
+  import_note=" (the editor run also exited $import_status)"
+fi
 if [[ -n "$decode_got" && "$decode_got" != "$decode_want" ]]; then
-  smoke_fail "decode buffers" "wrong reference counts (an element released twice, or kept): got $decode_got, want $decode_want (exit $decode_status)" "$DECODE_LOG"
+  smoke_fail "decode buffers" "wrong reference counts (an element released twice, or kept): got $decode_got, want $decode_want (exit $decode_status)$import_note" "$DECODE_LOG"
 elif [[ -z "$decode_got" ]] && grep -q '^\[kanama:kt\] DecodeBufferSmoke start$' "$DECODE_LOG"; then
-  smoke_fail "decode buffers" "the probe died before its result (exit $decode_status; a decode that releases an element twice frees it under the probe)" "$DECODE_LOG"
+  smoke_fail "decode buffers" "the probe died before its result (exit $decode_status; a decode that releases an element twice frees it under the probe)$import_note" "$DECODE_LOG"
+elif [[ -z "$decode_got" && $import_status -ne 0 ]]; then
+  smoke_fail "editor import" "$(import_death)" "$IMPORT_LOG_FILE"
 elif [[ -z "$decode_got" ]]; then
   smoke_fail "decode buffers" "the run exited $decode_status before the probe started" "$DECODE_LOG"
 elif [[ $decode_status -ne 0 ]]; then
-  smoke_fail "decode buffers" "the run exited $decode_status after a correct result" "$DECODE_LOG"
+  smoke_fail "decode buffers" "the run exited $decode_status after a correct result$import_note" "$DECODE_LOG"
 fi
 # The probe's run has its own log, so the main log's leak and bad-call rows don't see it: check it here.
 for decode_absent in "Leaked instance:" "Invalid call\. Nonexistent function"; do
   if grep -Eq -- "$decode_absent" "$DECODE_LOG"; then
-    smoke_fail "decode buffers" "unexpected pattern: $decode_absent" "$DECODE_LOG"
+    smoke_fail "decode buffers" "unexpected pattern: $decode_absent$import_note" "$DECODE_LOG"
   fi
 done
+if [[ $import_status -ne 0 ]]; then
+  smoke_fail "editor import" "$(import_death)" "$IMPORT_LOG_FILE"
+fi
+if ! grep -q '"class": &"SmokeResource"' "$GLOBAL_CLASS_CACHE" ||
+   ! grep -q '"base": &"Resource"' "$GLOBAL_CLASS_CACHE"; then
+  echo "[runtime_smoke] SmokeResource missing from global_script_class_cache.cfg (issue #39 regression)"
+  # Diagnostics only; the verdict is the exit 1 below. Say so when the cache was never written.
+  if [[ -f "$GLOBAL_CLASS_CACHE" ]]; then
+    cat "$GLOBAL_CLASS_CACHE"
+  else
+    echo "[runtime_smoke] $GLOBAL_CLASS_CACHE was not written at all"
+  fi
+  exit 1
+fi
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" --quit --verbose >"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://resource_owner_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
 KANAMA_TRACE_SCRIPT_PROPERTY_CLEANUP=1 KANAMA_TRACE_NATIVE_ADAPTERS=1 "$GODOT_BIN" --headless --path "$PROJECT_DIR_FOR_GODOT" res://self_smoke.tscn --quit --verbose >>"$LOG_FILE" 2>&1
