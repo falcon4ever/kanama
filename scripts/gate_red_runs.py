@@ -1873,6 +1873,24 @@ case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/w
 case("web/dodge_restart_selftest.mjs (per-round retention)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "for (const finished of rounds) {", "for (const finished of rounds.slice(-1)) {")],
      "leaked per mob of round 1 (the restarted round): noPerMobHandleRetention must be false", "dodge judges only the last round's retention again: a per-mob leak in a round that ended in a restart passes")
+case("web/tpsdemo_slow_page_selftest.mjs", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/envelope.mjs", "export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;", "export const PAGE_EVALUATE_TIMEOUT_MS = 20_000;")],
+     "23 s frames (a slow runner): checks red", "an evaluate gets the old 20 s CDP limit again: the runner's Chrome, whose tpsdemo frames take up to 31 s, fails the cell")
+case("web/tpsdemo_slow_page_selftest.mjs (frozen page)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/envelope.mjs", "export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;", "export const PAGE_EVALUATE_TIMEOUT_MS = 600_000;")],
+     "freezes during the input hold: the driver took", "an evaluate waits ten minutes: a page that never answers (a frozen main thread) runs past the cell's budget instead of failing")
+case("web/tpsdemo_slow_page_selftest.mjs (input hold)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "const HOLD_PHYSICS_CALLS = 200;", "const HOLD_PHYSICS_CALLS = 0;")],
+     "(a slow runner): checks red: playerMovedOnInput", "tpsdemo holds move_forward for 4 s of wall time only: on 23 s frames that is two frames and the player barely moves")
+case("web/tpsdemo_slow_page_selftest.mjs (hold from the press)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS", "snap.physicsCalls >= baseline.physicsCalls + HOLD_PHYSICS_CALLS")],
+     "(a slow runner): move_forward was held for", "tpsdemo counts the hold from the settled baseline again: on a slow page the frames between that sample and the press shorten the hold (CI: 0.65 m)")
+case("web/tpsdemo_slow_page_selftest.mjs (read retry on a frozen page)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait\n", "")],
+     "freezes once the level is up: a frozen page must fail, got error \"could not read the player's global position\"", "tpsdemo's position read retries a page that does not answer again: five 60 s waits, then a message that blames the read")
+case("web/tpsdemo_slow_page_selftest.mjs (teardown samples)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "(snap) => snap.liveHandles === 0, { minSamples: 3 });", "(snap) => snap.liveHandles === 0);")],
+     "(a slow runner): checks red: fullTeardownToZero", "tpsdemo's teardown window closes on its first sample again: on a slow page that is the frame still holding the level")
 case("web/dodge_restart_selftest.mjs (restart every run)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "if (roundRestarts === 0 && p.roundMobs >= FORCED_RESTART_AT_MOBS) {", "if (false) {")],
      "one handle leaked per mob of round 2 only: noPerMobHandleRetention must be false", "dodge stops ending round 1 with a restart in every run: a leak that only shows after the first new_game passes CI (it was behind KANAMA_WEB_DODGE_FORCE_RESTART)")
