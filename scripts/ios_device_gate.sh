@@ -86,7 +86,8 @@ Options:
   --check-cleanup-plan FILE    Only replay the gate's app cleanup over a saved
                                `devicectl device info apps --json-output` listing
                                and exit: FAIL when a step would leave the phone
-                               with no developer app or more than three. No device.
+                               with no Kanama app or more than three developer
+                               apps. No device.
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -313,8 +314,8 @@ results_verdict() {
 # three such apps on one device. The gate used to uninstall every known Kanama app before each step, which left the
 # phone with none between the uninstall and the install. The order now, for a step that installs KEEP:
 #   before  only to make room: when KEEP is not installed yet and the phone already holds IOS_FREE_APP_LIMIT
-#           developer apps, remove other known Kanama apps until one fewer remain. That only happens with three or
-#           more installed, so at least two stay; a reinstall of KEEP never needs room.
+#           developer apps, remove other known Kanama apps until one fewer remain, but never the last Kanama app
+#           (the trust is per developer; another developer's apps do not keep it). A reinstall of KEEP needs no room.
 #   after   once KEEP is on the phone, remove the other known Kanama apps; KEEP stays. When the step did not install
 #           KEEP (a failed build), leave everything as it is.
 # Only bundles the gate knows (the starter, the demos, the gate id) are ever removed; every developer app counts
@@ -345,13 +346,16 @@ cleanup_plan() {
   case "$phase" in
     before)
       [[ "$keep_installed" -eq 1 ]] && return 0
+      local kanama=${#removable[@]}
       for bundle_id in ${removable[@]+"${removable[@]}"}; do
-        # Never the last one, whatever the limit: the trust leaves with it.
-        if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" || "$count" -le 1 ]]; then
+        # Never the last Kanama app, whatever else is installed: the trust leaves with it (the install then hits the
+        # limit and devicectl says so, which costs nothing on the phone).
+        if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" || "$kanama" -le 1 ]]; then
           break
         fi
         echo "$bundle_id"
         count=$((count - 1))
+        kanama=$((kanama - 1))
       done
       ;;
     after)
@@ -381,7 +385,7 @@ PY
 # `--check-cleanup-plan APPS_JSON` (no device): replays a whole gate run over a saved `devicectl device info apps`
 # listing with the plan above (the fresh starter, then every demo under the gate id), once with every step installing
 # its app and once with every step failing before its install, and fails when a step would leave the phone with no
-# developer app or would install past the free-account limit.
+# Kanama app or would install past the free-account limit.
 cleanup_plan_verdict() {
   local listing="$1" initial outcome keep bundle_id step_problems=0
   local -a phone=() next=() steps=("$fresh_bundle")
@@ -393,15 +397,15 @@ cleanup_plan_verdict() {
   for outcome in installed failed; do
     phone=()
     for bundle_id in $initial; do phone+=("$bundle_id"); done
-    if [[ "${#phone[@]}" -eq 0 ]]; then
-      echo "[ios_device_gate] the listing $listing holds no developer app; the plan check needs at least one" >&2
+    if ! printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -qxF -f <(printf '%s\n' "${all_gate_bundles[@]}"); then
+      echo "[ios_device_gate] the listing $listing holds no Kanama app; the plan check needs at least one" >&2
       return 1
     fi
     for keep in "${steps[@]}"; do
       local phase
       for phase in before install after; do
         if [[ "$phase" == "install" ]]; then
-          if [[ "$outcome" == "installed" ]] && ! printf '%s\n' "${phone[@]}" | grep -qxF "$keep"; then
+          if [[ "$outcome" == "installed" ]] && ! printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -qxF "$keep"; then
             phone+=("$keep")
           fi
         else
@@ -413,8 +417,12 @@ cleanup_plan_verdict() {
           done
           phone=(${next[@]+"${next[@]}"})
         fi
-        if [[ "${#phone[@]}" -eq 0 ]]; then
-          echo "[ios_device_gate] the cleanup would leave the phone with no developer app ($outcome steps, $phase $keep): iOS then drops the trust in the developer and refuses every launch" >&2
+        local kanama_left=0
+        for bundle_id in ${phone[@]+"${phone[@]}"}; do
+          if is_gate_bundle "$bundle_id"; then kanama_left=$((kanama_left + 1)); fi
+        done
+        if [[ "$kanama_left" -eq 0 ]]; then
+          echo "[ios_device_gate] the cleanup would leave the phone with no Kanama app ($outcome steps, $phase $keep): iOS then drops the trust in the developer and refuses every launch" >&2
           step_problems=$((step_problems + 1))
           break 2
         fi
@@ -435,7 +443,7 @@ if [[ -n "$CHECK_CLEANUP_PLAN" ]]; then
     exit 2
   fi
   cleanup_plan_verdict "$CHECK_CLEANUP_PLAN" || exit 1
-  echo "[ios_device_gate] cleanup plan: PASS (never fewer than one or more than $IOS_FREE_APP_LIMIT developer apps; $CHECK_CLEANUP_PLAN)"
+  echo "[ios_device_gate] cleanup plan: PASS (never no Kanama app, never more than $IOS_FREE_APP_LIMIT developer apps; $CHECK_CLEANUP_PLAN)"
   exit 0
 fi
 

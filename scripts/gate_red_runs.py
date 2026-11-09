@@ -787,7 +787,7 @@ IOS_CLEANUP_CHECK = ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan
 IOS_CLEANUP_BEFORE = '    before)\n      [[ "$keep_installed" -eq 1 ]] && return 0\n'
 case("ios_device_gate.sh --check-cleanup-plan (uninstall before install)", IOS_CLEANUP_CHECK,
      [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      printf \'%s\\n\' ${removable[@]+"${removable[@]}"}\n      return 0\n')],
-     "would leave the phone with no developer app", "the old order returns: every other Kanama app is removed before the next install, and the phone holds none in between")
+     "would leave the phone with no Kanama app", "the old order returns: every other Kanama app is removed before the next install, and the phone holds none in between")
 case("ios_device_gate.sh --check-cleanup-plan (no room made)", IOS_CLEANUP_CHECK,
      [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      return 0\n')],
      "more than the free account's 3", "a phone already holding three developer apps gets a fourth: the install is refused")
