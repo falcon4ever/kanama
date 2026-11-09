@@ -230,9 +230,11 @@ object BuiltinTypes {
    * assigns into the cell instead). [build] constructs the return into a cell of Kanama's own; only
    * once it has returned is Godot's value destroyed and the built one moved into [rRet] (a pointer
    * move, which hands over its ownership). A [build] that throws leaves Godot's value untouched, so
-   * containment can swallow the error without Godot reading freed storage or destroying it twice.
-   * Only for a virtual's return cell: a cell Kanama allocated is uninitialised memory and must
-   * never be destroyed.
+   * containment can swallow the error without Godot reading freed storage or destroying it twice; a
+   * container [build] had already constructed is destroyed before the error goes on. That test
+   * relies on the build cell being zeroed (an arena allocation is), so a non-null pointer means
+   * [build] constructed into it. Only for a virtual's return cell, which Godot constructed: a cell
+   * Kanama allocated holds no constructed value and must never be destroyed.
    */
   fun writeVirtualReturn(type: VariantType, rRet: MemorySegment, build: (MemorySegment) -> Unit) {
     require(type == VariantType.ARRAY || type == VariantType.DICTIONARY) {
@@ -240,7 +242,12 @@ object BuiltinTypes {
     }
     Arena.ofConfined().use { arena ->
       val built = arena.allocate(CONTAINER_SIZE, 8L)
-      build(built)
+      try {
+        build(built)
+      } catch (error: Throwable) {
+        if (built.get(JAVA_LONG, 0L) != 0L) destroyTyped(type, built)
+        throw error
+      }
       destroyTyped(type, rRet)
       MemorySegment.copy(built, 0L, rRet.reinterpret(CONTAINER_SIZE), 0L, CONTAINER_SIZE)
     }

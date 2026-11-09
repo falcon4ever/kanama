@@ -439,6 +439,37 @@ def container_writes(body: str, cell: str) -> list[tuple[int, str]]:
     return sorted(found)
 
 
+BUILTIN_TYPES = ROOT / "src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt"
+
+
+def audit_write_virtual_return_order() -> list[str]:
+    """writeVirtualReturn itself: the build runs first, then Godot's value is destroyed, then the built
+    pointer moves in. Destroying before the build is the use-after-free the helper exists to prevent."""
+    rel = BUILTIN_TYPES.relative_to(ROOT)
+    text = BUILTIN_TYPES.read_text(encoding="utf-8")
+    match = re.search(r"\bfun\s+writeVirtualReturn\(", text)
+    if match is None:
+        return [f"{rel}: no `fun writeVirtualReturn(`: the container-return check has no helper to rely on"]
+    body = text[match.start() : find_function_end(text, match.end())]
+    line = text.count("\n", 0, match.start()) + 1
+    steps = {
+        "build(built)": re.search(r"^\s*build\(\s*built\s*\)", body, re.MULTILINE),
+        "destroyTyped(type, rRet)": re.search(r"^\s*destroyTyped\(\s*type\s*,\s*rRet\s*\)", body, re.MULTILINE),
+        "MemorySegment.copy(built, ..., rRet...)": re.search(r"^\s*MemorySegment\.copy\(\s*built\b[^\n]*\brRet\b", body, re.MULTILINE),
+    }
+    missing = [name for name, found in steps.items() if found is None]
+    if missing:
+        return [f"{rel}:{line}: writeVirtualReturn lacks {', '.join(missing)}"]
+    order = [name for name, _ in sorted(steps.items(), key=lambda item: item[1].start())]
+    if order != list(steps):
+        return [
+            f"{rel}:{line}: writeVirtualReturn runs {' -> '.join(order)}; it must build first, then destroy "
+            "Godot's value, then move the built pointer in (a destroy before the build hands Godot freed "
+            "storage when the build throws)",
+        ]
+    return []
+
+
 def audit_virtual_container_returns() -> list[str]:
     """A virtual's Array/Dictionary return cell arrives default-constructed (`PtrToArg<m_ret>::EncodeT ret;`,
     whose constructor allocates). Building over it leaks that allocation on every call, and destroying it
@@ -510,7 +541,7 @@ def audit_virtual_container_returns() -> list[str]:
 
 
 def audit_virtual_returns() -> list[str]:
-    errors: list[str] = audit_virtual_container_returns()
+    errors: list[str] = audit_write_virtual_return_order() + audit_virtual_container_returns()
     for path in sorted(JVM_BINDING.rglob("*.kt")):
         text = path.read_text(encoding="utf-8")
         for match in VIRTUAL_NARROW_RET_RE.finditer(text):

@@ -1121,6 +1121,13 @@ case("audit_ptrcall_helper_layouts.py (virtual return released before a lookup)"
      "_get_members destroys the engine's Array, then looks up its script: a throw there leaves Godot a freed Array")
 CONSTANTS_FUN = ("    fun callGetConstants(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
                  "      BuiltinTypes.writeVirtualReturn(\n")
+WVR_BUILD = ("      val built = arena.allocate(CONTAINER_SIZE, 8L)\n      try {\n        build(built)\n      } catch (error: Throwable) {\n"
+             "        if (built.get(JAVA_LONG, 0L) != 0L) destroyTyped(type, built)\n        throw error\n      }\n")
+case("audit_ptrcall_helper_layouts.py (writeVirtualReturn destroys before it builds)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/BuiltinTypes.kt", WVR_BUILD + "      destroyTyped(type, rRet)\n",
+           "      val built = arena.allocate(CONTAINER_SIZE, 8L)\n      destroyTyped(type, rRet)\n" + WVR_BUILD[len("      val built = arena.allocate(CONTAINER_SIZE, 8L)\n"):])],
+     "writeVirtualReturn runs destroyTyped(type, rRet) -> build(built)",
+     "writeVirtualReturn destroys Godot's value before the build: a build that throws hands Godot freed storage")
 case("audit_ptrcall_helper_layouts.py (virtual return of the wrong type)", py("audit_ptrcall_helper_layouts.py"),
      [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", CONSTANTS_FUN + f"        {KS_VT}.DICTIONARY,\n",
            CONSTANTS_FUN + f"        {KS_VT}.ARRAY,\n")],
