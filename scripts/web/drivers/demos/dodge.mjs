@@ -39,6 +39,14 @@ const EARLIEST_HIT_SECONDS = 0.4;
 // never fires (issue #370) and the quarantined cell fails exactly that check, while new_game's
 // queue_free still frees every mob (mobsSpawnAndFree).
 const SCREEN_EXIT_WAIT_SECONDS = 12;
+// How long, in wall-clock ms, the retention trough follows a round's leftover handles past the next
+// round's first mob when they had not all gone by then (sampleBetweenRounds): the browser's collector,
+// not the game, is what it waits for. Chrome and Firefox settle before the next mob and never use it;
+// Safari, whose collector the page cannot force, often does: in ten 2026-11 runs (Safari 26.6) round
+// 2 still held SpriteFrames at the next spawn in seven (every one in six), and the collection came at
+// most 12 polls (about 2.5 s) later. A real per-mob leak runs it to the end in every round and reads
+// its full count.
+const TROUGH_EXTENSION_MS = 15_000;
 // KANAMA_WEB_DODGE_NO_SCREEN_EXIT=1 reproduces that host anywhere: the probe swallows every
 // Mob._on_VisibilityNotifier2D_screen_exited dispatch (still counting it), so no mob frees itself off
 // screen. The run must go red on mobsFreedOffScreen and on nothing else.
@@ -123,6 +131,17 @@ async function snapshot(evaluate) {
             counts[slot.kind ?? "(null-kind)"] = (counts[slot.kind ?? "(null-kind)"] ?? 0) + 1;
           }
           return counts;
+        })(),
+        // The same live handles by identity (slot index and generation: a reused slot is a new
+        // handle), per kind, so the retention trough can follow the handles a round left behind
+        // after the next round started minting its own (sampleBetweenRounds).
+        liveKeys: (() => {
+          const keys = {};
+          (bridge.browserHandleSlots ?? []).forEach((slot, index) => {
+            if (!slot || !slot.live) return;
+            (keys[slot.kind ?? "(null-kind)"] ??= []).push(index + "." + (slot.generation ?? 0));
+          });
+          return keys;
         })(),
         maxLiveHandles: bridge.maxLiveBrowserHandles,
         crossings: bridge.kotlinToGodotCalls,
@@ -266,16 +285,31 @@ async function observe(take, seedPeak, windowMs, deadline, predicate, onSample =
 // two), the next round's first mob spawns (after `startMobs`), or `capMs` elapses. Without a
 // reference (round 1's baseline) it samples the whole window. A kind missing from a sample counts as
 // 0 there. Settling also needs every mob script freed (mobLive 0): on a slow host the queue_free
-// lands a frame or more after the press. It returns the probe log of the last poll, the one that saw
-// a new mob included, and the old round's mob frees and live mobs as of that last poll.
-async function sampleBetweenRounds(take, reference, deadline, capMs, startMobs) {
+// lands a frame or more after the press. It returns the probe log of the last poll (the one that saw
+// a new mob, or the last extended one below), and the old round's mob frees and live mobs as of the
+// poll that ended the window.
+//
+// When the window ends unsettled, the trough is followed further by IDENTITY, for up to
+// TROUGH_EXTENSION_MS while the next round plays: the old round left behind exactly the handles live
+// at the window's last poll (`keys`, returned as the next round's `startKeys`) that were not live when
+// the round began (`startKeys`), and each further collecting poll counts the ones still live, per kind,
+// on top of `reference`. The next round's own handles are never counted (they were not live at the
+// window's last poll), so a collector that runs late -- Safari's: JavaScriptCore has no gc() a page can
+// call, and no allocation burst reliably triggers the full collection a mob's dropped SpriteFrames
+// wrapper needs within StartTimer's 2s -- still reads 0 once it has run, while a real leak never falls
+// and reads its full count at the bound. A kind that churns (a handle released and another minted in
+// its place) cannot hide one either: the count is of the round's own handles, not of a total.
+async function sampleBetweenRounds(take, reference, deadline, capMs, startMobs, startKeys = null) {
   const byKind = {};
   let samples = 0;
+  let extendedSamples = 0;
   let settled = false;
   let detail = null;
   let probe = null;
   let mobFreed = null;
   let mobLive = null;
+  let keys = null; // every live handle at the window's last poll, before the next round's first mob
+  const isSettled = () => Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0));
   const until = Math.min(deadline, Date.now() + capMs);
   while (Date.now() < until) {
     const snap = await take();
@@ -295,14 +329,38 @@ async function sampleBetweenRounds(take, reference, deadline, capMs, startMobs) 
       detail = snap.liveDetail;
       mobFreed = snap.mobFreed;
       mobLive = snap.mobLive;
-      if (reference && mobLive === 0 && Object.entries(byKind).every(([kind, count]) => count <= (reference[kind] ?? 0))) {
+      keys = snap.liveKeys ? new Set(Object.values(snap.liveKeys).flat()) : null;
+      trace(`between rounds: live ${JSON.stringify(snap.liveByKind)} mobLive=${mobLive} trough ${JSON.stringify(byKind)}`);
+      if (reference && mobLive === 0 && isSettled()) {
         settled = true;
         break;
       }
     }
     await delay(150);
   }
-  return { byKind: samples > 0 ? byKind : null, samples, settled, probe, detail, mobFreed, mobLive };
+  if (reference && !settled && samples > 0 && keys && startKeys) {
+    const extendUntil = Math.min(deadline, Date.now() + TROUGH_EXTENSION_MS);
+    while (Date.now() < extendUntil) {
+      const snap = await take();
+      if (snap?.liveKeys) {
+        probe = snap.probe ?? probe;
+        const left = {};
+        for (const [kind, live] of Object.entries(snap.liveKeys)) {
+          left[kind] = live.filter((key) => keys.has(key) && !startKeys.has(key)).length;
+        }
+        for (const kind of Object.keys(byKind)) byKind[kind] = Math.min(byKind[kind], (reference[kind] ?? 0) + (left[kind] ?? 0));
+        extendedSamples += 1;
+        detail = snap.liveDetail;
+        trace(`between rounds, extended: the old round's handles still live ${JSON.stringify(left)} trough ${JSON.stringify(byKind)}`);
+        if (isSettled()) {
+          settled = true;
+          break;
+        }
+      }
+      await delay(150);
+    }
+  }
+  return { byKind: samples > 0 ? byKind : null, samples, extendedSamples, settled, probe, detail, mobFreed, mobLive, keys };
 }
 
 export async function runDodge({ url, evaluate, navigate, deadline, exportDir }) {
@@ -400,7 +458,7 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   let roundRestarts = 0;
   let roundResumes = 0;
   const hits = []; // { round, mobs, sinceFirstSpawn } at each game over the game itself reported
-  // Finished rounds: { index, mobs, baseline, trough, samples, settled, screenExitFrees, roundEndFrees, mobLive }.
+  // Finished rounds: { index, mobs, baseline, trough, samples, extendedSamples, settled, screenExitFrees, roundEndFrees, mobLive }.
   const rounds = [];
   // Mob frees are attributed per round from the bridge's count of mob scripts freed: those before the
   // round's end press flew off screen (screen exit); those between the press and the end of the
@@ -443,9 +501,11 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     consume(press.probe); // everything up to the press is the old round's
     previousRound = round;
     pressSim = press.sim;
-    round = { index, startMobs: press.mobs, baseline: null, spawning: true, firstSpawnSim: null, hits: 0, resume: false };
-    const between = await sampleBetweenRounds(takeCollected, reference, deadline, capMs, press.mobs);
+    round = { index, startMobs: press.mobs, baseline: null, startKeys: null, spawning: true, firstSpawnSim: null, hits: 0, resume: false };
+    const between = await sampleBetweenRounds(takeCollected, reference, deadline, capMs, press.mobs, previousRound?.startKeys ?? null);
     round.baseline = between.byKind;
+    // The handles live as the new round began: what the round after it leaves behind is measured against these.
+    round.startKeys = between.keys;
     consume(between.probe);
     const freedAfter = between.mobFreed ?? press.mobFreed;
     const screenExitFrees = press.mobFreed - accountedFrees;
@@ -464,18 +524,20 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       baseline: finished.baseline,
       trough: between.byKind,
       samples: between.samples,
+      extendedSamples: between.extendedSamples,
       settled: between.settled,
       screenExitFrees: between.screenExitFrees,
       roundEndFrees: between.roundEndFrees,
       mobLive: between.mobLive,
     });
-    trace(`${label}: round ${finished.index} ended after ${between.oldMobs} mob(s), freed ${between.screenExitFrees} off screen + ${between.roundEndFrees} by new_game, ${between.mobLive} still live; trough (${between.samples} samples, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
+    trace(`${label}: round ${finished.index} ended after ${between.oldMobs} mob(s), freed ${between.screenExitFrees} off screen + ${between.roundEndFrees} by new_game, ${between.mobLive} still live; trough (${between.samples} samples + ${between.extendedSamples} extended, settled=${between.settled}): ${JSON.stringify(between.byKind)}${between.detail ? ` detail ${between.detail}` : ""}`);
   };
 
   trace("press Start (new_game)");
   // Round 1's baseline: the scene with the game started and no mob yet (StartTimer's 2s).
   const firstBetween = await startRound(1, false, null, 1_200);
   if (!round.baseline) round.baseline = ready.liveByKind ?? {};
+  if (!round.startKeys && ready.liveKeys) round.startKeys = new Set(Object.values(ready.liveKeys).flat());
   trace(`round 1 baseline (${firstBetween.samples} samples): ${JSON.stringify(round.baseline)}`);
 
   const onRoundSample = async (snap, p) => {
@@ -529,7 +591,9 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
   // leftovers never count against the next round's mobs. The sampler asks the page to collect before
   // every poll: a mob's RefCounted results (its SpriteFrames) are released when the browser collects
   // the dropped Kotlin wrapper, and waiting for the collector to run by itself is what made the
-  // trough read 4 SpriteFrames over 7 mobs on CI.
+  // trough read 4 SpriteFrames over 7 mobs on CI. Where even the forced collection lags (Safari), the
+  // trough follows the round's own leftover handles by identity past the next round's first mob
+  // (sampleBetweenRounds, TROUGH_EXTENSION_MS), so a late collector reads 0 and a leak still 1.0.
   //
   // Measuring during play cannot work: mobs alive on screen hold their handles legitimately, and in
   // a short run they have no time to die -- which is exactly why task 72's one-handle-per-mob leak
@@ -593,8 +657,9 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
     fullTeardownToZero: settled.liveHandles === 0,
     // No handle kind is retained per spawned mob, measured per round at the trough between
     // rounds, where every mob of the round is provably gone, against that round's own baseline,
-    // with a collection forced before every poll. A real per-spawn leak sits at 1.0 (task 72
-    // measured exactly that); a healthy run sits at 0. This is the SHORT-run form of what the soak
+    // with a collection forced before every poll, followed past the next round's first mob while the
+    // collector lags (Safari). A real per-spawn leak sits at 1.0 (task 72 measured exactly that); a
+    // healthy run sits at 0. This is the SHORT-run form of what the soak
     // gate needs ten minutes to see.
     noPerMobHandleRetention: worstRetention <= 0.5,
     // The player's _on_body_entered hides it and disables its collision shape until new_game: a
@@ -662,6 +727,9 @@ export async function runDodge({ url, evaluate, navigate, deadline, exportDir })
       // (the schema requires numeric counters). 0 is healthy; 100 is one leaked
       // handle per spawn.
       worstHandleRetentionPerMobX100: Math.round(worstRetention * 100),
+      // Collecting polls the retention troughs needed past the next round's first mob (0 where every
+      // round's leftovers were gone by then: Chrome, Firefox, most Safari runs).
+      retentionTroughExtendedPolls: rounds.reduce((sum, finished) => sum + finished.extendedSamples, 0),
     },
     callbacks: {
       pendingSignalCallbacks: last.callbacks,
