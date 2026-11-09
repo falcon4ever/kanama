@@ -137,10 +137,11 @@ async function observe(evaluate, seed, windowMs, deadline, predicate, { minSampl
 
 export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir }) {
   // Engine-level action injection (ops 86/87) on the player's own handle: browser key
-  // synthesis stalls the headless-Firefox main thread for the whole hold.
+  // synthesis stalls the headless-Firefox main thread for the whole hold. Answers the physics
+  // call count at the moment of the action.
   const action = (opcode, name) =>
     evaluate(
-      `globalThis.KanamaWebBridge.immediateObjectQuery(${opcode}, globalThis.KanamaWebBridge.tpsPlayerHandle, "${name}"); true`,
+      `globalThis.KanamaWebBridge.immediateObjectQuery(${opcode}, globalThis.KanamaWebBridge.tpsPlayerHandle, "${name}"); globalThis.KanamaWebBridge.physicsProcessCalls ?? 0`,
     );
 
   const startupStart = Date.now();
@@ -220,7 +221,9 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`settled: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
-  // Hold move_forward for at least 4 s of wall time AND at least HOLD_PHYSICS_CALLS physics calls.
+  // Hold move_forward for at least 4 s of wall time AND at least HOLD_PHYSICS_CALLS physics calls
+  // counted from the press (not from the settled baseline: on a slow page frames run between the
+  // two, and a hold counted from the baseline covered three frames).
   // The wall time alone was the old rule (a physics count alone is reached before the first sample
   // on a fast page, which would cut the hold short), but on Chrome's SwiftShader on the hosted runner
   // one frame takes 11-31 s and runs at most 8 physics steps, so 4 s covered two frames and the player
@@ -230,14 +233,14 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
   const HOLD_MIN_MS = 4_000;
   const HOLD_PHYSICS_CALLS = 200;
   const HOLD_MAX_MS = 240_000;
-  await action(86, "move_forward");
+  const physicsAtPress = await action(86, "move_forward");
   const holdStart = Date.now();
   const gameplay = await observe(
     evaluate,
     { ...seedFrom(baseline), callbackErrors: 0 },
     HOLD_MAX_MS,
     deadline,
-    (snap) => Date.now() - holdStart >= HOLD_MIN_MS && snap.physicsCalls >= baseline.physicsCalls + HOLD_PHYSICS_CALLS,
+    (snap) => Date.now() - holdStart >= HOLD_MIN_MS && snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS,
   );
   await action(87, "move_forward");
   const runPosition = await playerPositionRetry(evaluate);

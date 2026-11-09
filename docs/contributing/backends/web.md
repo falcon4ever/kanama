@@ -1287,7 +1287,7 @@ Browser-specific notes:
   Chrome driver gives `Runtime.evaluate` `PAGE_EVALUATE_TIMEOUT_MS` (60 s, in
   `scripts/web/drivers/envelope.mjs`; other CDP commands keep 20 s), and the
   tpsdemo driver waits for frames, not only for wall time: its input hold runs
-  until 200 physics calls as well as 4 s, its teardown reads at least three
+  for 200 physics calls from the press as well as 4 s, its teardown reads at least three
   samples. `scripts/web/tpsdemo_slow_page_selftest.mjs` drives it on a fake page
   with these frame times, and on one that freezes, which must still fail inside
   the cell's budget.

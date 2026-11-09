@@ -1873,6 +1873,9 @@ case("web/tpsdemo_slow_page_selftest.mjs (frozen page)", ["node", "scripts/web/t
 case("web/tpsdemo_slow_page_selftest.mjs (input hold)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "const HOLD_PHYSICS_CALLS = 200;", "const HOLD_PHYSICS_CALLS = 0;")],
      "(a slow runner): checks red: playerMovedOnInput", "tpsdemo holds move_forward for 4 s of wall time only: on 23 s frames that is two frames and the player barely moves")
+case("web/tpsdemo_slow_page_selftest.mjs (hold from the press)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS", "snap.physicsCalls >= baseline.physicsCalls + HOLD_PHYSICS_CALLS")],
+     "(a slow runner): move_forward was held for", "tpsdemo counts the hold from the settled baseline again: on a slow page the frames between that sample and the press shorten the hold (CI: 0.65 m)")
 case("web/tpsdemo_slow_page_selftest.mjs (teardown samples)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "(snap) => snap.liveHandles === 0, { minSamples: 3 });", "(snap) => snap.liveHandles === 0);")],
      "(a slow runner): checks red: fullTeardownToZero", "tpsdemo's teardown window closes on its first sample again: on a slow page that is the frame still holding the level")

@@ -68,6 +68,7 @@ function makePage({
     z: 78.76,
     frozen: false,
     physicsStopped: false,
+    pressedSteps: 0, // physics steps run with move_forward held
   };
   const bridge = {
     mode: "tpsdemo",
@@ -164,6 +165,7 @@ function makePage({
       bridge.physicsProcessCalls += PHYSICS_SCRIPTS;
       bridge.appliedCommands += 18;
       bridge.kotlinToGodotCalls += 40;
+      if (state.pressed) state.pressedSteps += 1;
       state.speed = state.pressed ? Math.min(MAX_SPEED, state.speed + ACCEL / 60) : 0;
       state.z += state.speed / 60;
     }
@@ -241,7 +243,7 @@ async function runScenario(pageOptions) {
       deadline: started + BUDGET_MS,
       exportDir,
     });
-    return { result, error: null, elapsedMs: virtualNow - started, longestWait, timeouts };
+    return { result, error: null, elapsedMs: virtualNow - started, longestWait, timeouts, page: page.state };
   } catch (error) {
     return { result: null, error, elapsedMs: virtualNow - started, longestWait, timeouts };
   } finally {
@@ -279,7 +281,7 @@ const scenarios = [
 ];
 
 for (const [label, page, expected] of scenarios) {
-  const { result, error, elapsedMs, longestWait, timeouts } = await runScenario(page);
+  const { result, error, elapsedMs, longestWait, timeouts, page: pageState } = await runScenario(page);
   const seconds = (elapsedMs / 1000).toFixed(0);
   expect(elapsedMs < BUDGET_MS, `${label}: the driver took ${seconds}s, past the ${BUDGET_MS / 1000}s budget`);
   if (expected.throws !== undefined) {
@@ -299,12 +301,15 @@ for (const [label, page, expected] of scenarios) {
   if (expected.red.length === 0) {
     expect(red.length === 0, `${label}: checks red: ${red.join(", ")}`);
     expect(result.boundaryErrors.length === 0, `${label}: boundaryErrors ${JSON.stringify(result.boundaryErrors)}`);
+    // The hold is 40 physics steps from the press (HOLD_PHYSICS_CALLS / PHYSICS_SCRIPTS), however
+    // many frames ran between the settled sample and the press.
+    expect(pageState.pressedSteps >= 40, `${label}: move_forward was held for ${pageState.pressedSteps} physics steps, expected 40+`);
   } else {
     for (const name of expected.red) expect(red.includes(name), `${label}: ${name} must be false (red: [${red.join(", ")}])`);
   }
   console.log(
     `  ${label}: ${seconds}s, longest wait ${(longestWait / 1000).toFixed(1)}s, displacement=${result.crossings.playerDisplacement} ` +
-      `physics=${result.crossings.physicsProcessCalls} red=[${red.join(",")}]`,
+      `physics=${result.crossings.physicsProcessCalls} held=${pageState.pressedSteps} steps red=[${red.join(",")}]`,
   );
 }
 
