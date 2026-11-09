@@ -84,11 +84,17 @@ check_absent() {
   fi
 }
 
-# What the failed editor run above died of: its exit status and the first line of its log that says what
-# went wrong (a freed object touched, Godot's or the JVM's crash handler). A green editor run prints none.
+# What the failed editor run above died of: its exit status and the line of its log that says what went
+# wrong. A freed object touched comes first (the cause, not the crash it leads to); then Godot's own ERROR or
+# FATAL line just before its crash handler's banner (a green editor run prints deliberate ERROR lines too, so
+# only the one that precedes the crash counts); then the banner itself, Godot's or the JVM's.
 import_death() {
   local sign
-  if sign="$(grep -m1 -E "previously freed instance|handle_crash: |A fatal error has been detected" "$IMPORT_LOG_FILE")"; then
+  sign="$(awk '/previously freed instance/ && freed == "" { freed = $0 }
+    /^ERROR: |FATAL/ { err = $0 }
+    /handle_crash: |A fatal error has been detected/ && crash == "" { crash = $0; crash_err = err }
+    END { if (freed != "") print freed; else if (crash_err != "") print crash_err; else if (crash != "") print crash }' "$IMPORT_LOG_FILE")"
+  if [[ -n "$sign" ]]; then
     echo "the editor run (--editor, the main scene's @Tool scripts) exited $import_status; first sign: $sign"
   else
     echo "the editor run (--editor, the main scene's @Tool scripts) exited $import_status; its log names no crash"
@@ -112,21 +118,27 @@ decode_ok="2,2,2,2:1,1,1,1"
 dict_ok="2,2,2,2,2,2:1,1,1,1,1,1"
 decode_want="array_objects=$decode_ok array_scalars=$decode_ok array_vector2i=$decode_ok array_vector3i=$decode_ok array_longs=$decode_ok dictionary_scalars=$dict_ok dictionary_any=$dict_ok"
 decode_got="$(awk 'sub(/^\[kanama:kt\] DecodeBufferSmoke decode_buffers /, "") { print; exit }' "$DECODE_LOG")"
+# A decode report says so when the editor run died too, so an unrelated editor death is not read as the
+# decode's alone (the editor run is reported on its own when the probe passes).
+import_note=""
+if [[ $import_status -ne 0 ]]; then
+  import_note=" (the editor run also exited $import_status)"
+fi
 if [[ -n "$decode_got" && "$decode_got" != "$decode_want" ]]; then
-  smoke_fail "decode buffers" "wrong reference counts (an element released twice, or kept): got $decode_got, want $decode_want (exit $decode_status)" "$DECODE_LOG"
+  smoke_fail "decode buffers" "wrong reference counts (an element released twice, or kept): got $decode_got, want $decode_want (exit $decode_status)$import_note" "$DECODE_LOG"
 elif [[ -z "$decode_got" ]] && grep -q '^\[kanama:kt\] DecodeBufferSmoke start$' "$DECODE_LOG"; then
-  smoke_fail "decode buffers" "the probe died before its result (exit $decode_status; a decode that releases an element twice frees it under the probe)" "$DECODE_LOG"
+  smoke_fail "decode buffers" "the probe died before its result (exit $decode_status; a decode that releases an element twice frees it under the probe)$import_note" "$DECODE_LOG"
 elif [[ -z "$decode_got" && $import_status -ne 0 ]]; then
   smoke_fail "editor import" "$(import_death)" "$IMPORT_LOG_FILE"
 elif [[ -z "$decode_got" ]]; then
   smoke_fail "decode buffers" "the run exited $decode_status before the probe started" "$DECODE_LOG"
 elif [[ $decode_status -ne 0 ]]; then
-  smoke_fail "decode buffers" "the run exited $decode_status after a correct result" "$DECODE_LOG"
+  smoke_fail "decode buffers" "the run exited $decode_status after a correct result$import_note" "$DECODE_LOG"
 fi
 # The probe's run has its own log, so the main log's leak and bad-call rows don't see it: check it here.
 for decode_absent in "Leaked instance:" "Invalid call\. Nonexistent function"; do
   if grep -Eq -- "$decode_absent" "$DECODE_LOG"; then
-    smoke_fail "decode buffers" "unexpected pattern: $decode_absent" "$DECODE_LOG"
+    smoke_fail "decode buffers" "unexpected pattern: $decode_absent$import_note" "$DECODE_LOG"
   fi
 done
 if [[ $import_status -ne 0 ]]; then

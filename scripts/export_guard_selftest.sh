@@ -35,13 +35,14 @@ fail() {
 }
 
 # config_errors <log>: Godot's configuration errors for a refused export, on one line. Godot prints them
-# under its "due to configuration errors:" line and before the "at:" line of that ERROR, one per line. A skip
-# names them on its own line, the one a caller (gate_red_runs.py's skip_when) reports.
+# under its "due to configuration errors:" line and before the "at:" line of that ERROR, one per line; with
+# no "at:" line, the first five lines stand for them. A skip names them on its own line, the one a caller
+# (gate_red_runs.py's skip_when) reports.
 config_errors() {
   local errors
   errors="$(awk '/due to configuration errors/ { on = 1; next }
     on && /^[[:space:]]*at: / { exit }
-    on && NF { gsub(/^[[:space:]]+|[[:space:]]+$/, ""); printf "%s%s", sep, $0; sep = " | " }' "$1")"
+    on && NF { gsub(/^[[:space:]]+|[[:space:]]+$/, ""); printf "%s%s", sep, $0; sep = " | "; if (++n == 5) exit }' "$1")"
   echo "${errors:-Godot named none}"
 }
 
