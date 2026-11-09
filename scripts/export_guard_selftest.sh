@@ -8,8 +8,8 @@
 #   stale android  — Android APK (no Gradle), when the Android export template is installed;
 #   stale macos    — macOS, when the macOS export template is installed;
 #   min sdk        — Android Gradle build with Min SDK 26 and a script that binds: the guard's Android 13
-#                    rule must stop it (a stand-in build.gradle satisfies Godot's template check; the guard
-#                    ends the export before Gradle would run).
+#                    rule must stop it (a stand-in build.gradle and the template's .build_version satisfy
+#                    Godot's template check; the guard ends the export before Gradle would run).
 # Every red export must print the guard's stable line `Kanama: Export stopped` with the reason, exit
 # non-zero, and leave nothing behind: no file in the export folder and no converted scene in the cache.
 # Godot's Android, iOS and macOS exporters and --export-pack ignore a plugin's error and exit 0, so the
@@ -32,6 +32,17 @@ fail() {
     tail -n 40 "$2" >&2
   fi
   exit 1
+}
+
+# config_errors <log>: Godot's configuration errors for a refused export, on one line. Godot prints them
+# under its "due to configuration errors:" line and before the "at:" line of that ERROR, one per line. A skip
+# names them on its own line, the one a caller (gate_red_runs.py's skip_when) reports.
+config_errors() {
+  local errors
+  errors="$(awk '/due to configuration errors/ { on = 1; next }
+    on && /^[[:space:]]*at: / { exit }
+    on && NF { gsub(/^[[:space:]]+|[[:space:]]+$/, ""); printf "%s%s", sep, $0; sep = " | " }' "$1")"
+  echo "${errors:-Godot named none}"
 }
 
 # The templates folder is the version up to the build name: 4.7.2.stable, 4.8.beta2, 4.8.stable.
@@ -122,8 +133,7 @@ platform_row() {
   project "$name" NotInJar.kt
   export_project "$name" "$preset" "$file" "$mode"
   if grep -q "due to configuration errors" "$work/$name.log"; then
-    echo "[export_guard_selftest] SKIP $name: this editor cannot export $preset at all (configuration errors before the guard runs):"
-    grep -A3 "due to configuration errors" "$work/$name.log" | sed 's/^/    /'
+    echo "[export_guard_selftest] SKIP $name: this editor cannot export $preset at all (configuration errors before the guard runs): $(config_errors "$work/$name.log")"
     return
   fi
   expect_stopped "$name" "res://NotInJar.kt (not in kanama-scripts.jar"
@@ -140,10 +150,13 @@ else
   mkdir -p "$work/min_sdk/android/build"
   : >"$work/min_sdk/android/build/.gdignore"
   printf '// stand-in: the guard stops the export before Gradle runs\n' >"$work/min_sdk/android/build/build.gradle"
+  # The installed template's version, as Godot's "Install Android Build Template" writes it: since 4.8 a build
+  # directory without it (or with another version's) is a configuration error, and the export stops before
+  # the guard runs. The identifier is the templates folder's name (GODOT_VERSION_FULL_CONFIG).
+  printf '%s\n' "$godot_version" >"$work/min_sdk/android/.build_version"
   export_project min_sdk AndroidGradle game.apk debug
   if grep -q "due to configuration errors" "$work/min_sdk.log"; then
-    echo "[export_guard_selftest] SKIP min_sdk: this editor cannot export Android at all (configuration errors before the guard runs):"
-    grep -A3 "due to configuration errors" "$work/min_sdk.log" | sed 's/^/    /'
+    echo "[export_guard_selftest] SKIP min_sdk: this editor cannot export Android at all (configuration errors before the guard runs): $(config_errors "$work/min_sdk.log")"
   else
     [[ "$rc" -ne 0 ]] || fail "the min_sdk export exited 0, expected non-zero" "$work/min_sdk.log"
     grep -qF "$STOP_LINE Android 13 or newer is required, and this preset's Min SDK is 26. Set Min SDK to 33" "$work/min_sdk.log" ||
