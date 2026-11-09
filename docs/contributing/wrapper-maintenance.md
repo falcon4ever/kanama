@@ -96,7 +96,7 @@ unless another file is named.
 |---|---|
 | 1. Names | `WRAPPER_CLASS_ALIASES` in `scripts/wrapper_model.py` (`Object` is `GodotObject`); `camel_name` in `scripts/api_wrapper_candidates.py` and `method_function_name`; `METHOD_NAME_OVERRIDES` (`closeConnection`, `waitBlocking`, ...); `RESERVED_WORDS` and `arg_name` (the `Value` suffix); `PARAMETER_NAME_OVERRIDES` (the `Time` methods); `PROPERTY_NAME_OVERRIDES` (`curveClosed`, `polygonClosed`). |
 | 2. Properties | `render_property`. |
-| 3. Integers | `SIGNED_INT_POLICIES` / `UNSIGNED_INT_POLICIES` and `abi_kind` in `scripts/wrapper_model.py`: an `int32` return writes four bytes on the native ABI; `render_companion_constants` for class constants. |
+| 3. Integers | `SIGNED_INT_POLICIES` / `UNSIGNED_INT_POLICIES` and `abi_kind` in `scripts/wrapper_model.py`: the Kotlin `Int`/`Long` choice follows Godot's declared `meta`, while the ptrcall cell is always an 8-byte int64 (see Wrapper Guardrails); `render_companion_constants` for class constants. |
 | 4. Decimals | `SCALAR_KOTLIN_TYPES` and `FLOAT_POLICIES` in `scripts/wrapper_model.py` (a scalar `float` crosses as a 64-bit double). The component storage is the generated, internal `GodotRealStorage` (`Real.kt`, from `generateKanamaReal` in `build.gradle.kts`): Godot's `real_t`, float32 in the default build and float64 with `-PkanamaPrecision=double`, and float32 for `Color`. The stored bits cross unchanged through `GodotRealSegment.readRaw`/`writeRaw` on desktop and Android and the iOS `ObjectCalls` packing; the Web bridge passes the widened value, which is exact. `real_t` formulas: `types/shared/RealMath.kt` (one source for native and Web), the operators and short methods in `types/BuiltinFormulas.kt` and `types/shared/BuiltinMath.kt`. Transcendental results computed in Kotlin on Web are rounded to `real_t` but not guaranteed to the bit. The engine-computed methods go through an allocation-free call. Engine-checked inputs (`Basis.inverse` of a singular basis, ...) are computed in Kotlin and the exact input Godot's check rejects is handed to the engine, so the error matches GDScript. There is no `Number` overload on the value-type constructors: it boxed every argument, a hidden allocation in a per-frame loop. `-PkanamaPrecision=double` (desktop only) compiles and the JVM tests pass, but it is not supported: the hard-coded 24-byte Variant size and the `Rect2` cell size in `ObjectCalls` assume single precision. |
 | 5. Enums and Bitfields | `godot_enum_model.render_enum_class`, `enum_type_ref`, `kotlin_type` (a `@JvmInline value class`); `GLOBAL_ENUM_RENAMES` in `scripts/godot_enum_model.py`; `determine_prefix`, `enum_value_name`; the frozen prefixes in `scripts/enum_prefix_lock.json`, never recomputed (`locked_prefixes`); `kotlin_enum_default_expression` for defaults; every enum implements `GodotEnumValue`, which the Variant encoders pass as its integer. On Web the generated GDScript proxy declares an enum export with `@export_custom(<hint>, "<hint string>")`, which cannot set `class_name`; a `List` of a Godot enum exports with the hint string `"2/2:<hint>"`. |
 | 6. Nullability | `kotlin_return_type`, `is_required_return`, `requireGodotReturn` in `src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/RequiredReturns.kt`; `object_param_is_nullable` and `NULLABLE_OBJECT_PARAM_OVERRIDES` (each entry cites the Godot source that accepts null); `NON_NULL_FROM_HANDLE_CLASSES` (`Resource.fromHandle`). |
@@ -1447,3 +1447,19 @@ single-precision `real_t` value components are float32 in engine buffers (and in
 value types' storage; `GodotRealSegment.readRaw`/`writeRaw` move them); every helper with a
 scalar float slot must use `JAVA_DOUBLE`, and only `Color` component storage may
 use `JAVA_FLOAT`.
+
+Integers follow the same rule: Godot's `PtrToArg<int32_t>` (and `uint32_t`, the smaller ints and
+enums) converts through `int64_t`, so every scalar integer argument and return cell is an 8-byte
+`JAVA_LONG`, written widened (`toLong()`, a range-checked `uint32` as its unsigned value) and read
+back narrowed (`get(JAVA_LONG, 0).toInt()`). `JAVA_INT` is only the component storage of
+`Vector2i`, `Vector3i` and `Rect2i`. The same holds for a virtual Kanama implements: the engine's
+`r_ret` is `PtrToArg<m_ret>::EncodeT`, an int64 for an `int` or `Error` return and a whole Variant
+for a `Variant` return. A 4-byte cell works by accident (the JVM rounds a native allocation up to
+8 bytes, malloc to 16, and a little-endian read of the low half is the int), so no smoke or memory
+tracker sees it: the audit guards it. An `Array` or `Dictionary` virtual return arrives already constructed
+(Godot's `Array ret;` allocates its storage). On desktop and Android a virtual writes such a
+return only through `BuiltinTypes.writeVirtualReturn(VariantType.<kind>, rRet) { ... }`: the block
+builds the return into a cell of Kanama's own, and only then is Godot's value destroyed and the
+built one moved in, so a throw inside the block leaves Godot's value intact. The iOS shim calls
+`kanama_ios_release_virtual_*_return` right before it builds. A cell Kanama allocated itself is
+uninitialised and is never destroyed.

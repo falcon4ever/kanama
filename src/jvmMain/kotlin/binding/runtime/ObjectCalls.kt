@@ -131,7 +131,6 @@ actual object ObjectCalls {
     val args3: MemorySegment = arena.allocate(ADDRESS, 3)
     val boolCell: MemorySegment = arena.allocate(JAVA_BYTE)
     val byteRet: MemorySegment = arena.allocate(JAVA_BYTE)
-    val intRet: MemorySegment = arena.allocate(JAVA_INT)
     val longRet: MemorySegment = arena.allocate(JAVA_LONG)
     val doubleCell: MemorySegment = arena.allocate(JAVA_DOUBLE)
     val doubleRet: MemorySegment = arena.allocate(JAVA_DOUBLE)
@@ -366,11 +365,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         objCell.set(ADDRESS, 0, objectArg)
         GodotStrings.initString(stringCell, text)
-        intCell.set(JAVA_INT, 0, intArg)
+        intCell.set(JAVA_LONG, 0, intArg.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, objCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
@@ -395,11 +394,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
         objCell.set(ADDRESS, 0, objectArg)
-        intCell.set(JAVA_INT, 0, intArg)
+        intCell.set(JAVA_LONG, 0, intArg.toLong())
         GodotStrings.initString(stringCell, text)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, objCell)
@@ -574,9 +573,9 @@ actual object ObjectCalls {
           }
           arr
         }
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, argsArray, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -645,9 +644,9 @@ actual object ObjectCalls {
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       arr.setAtIndex(ADDRESS, 1, boolCell)
 
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -806,8 +805,8 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val imageCell = arena.allocate(ADDRESS)
-      val widthCell = arena.allocate(JAVA_INT)
-      val heightCell = arena.allocate(JAVA_INT)
+      val widthCell = arena.allocate(JAVA_LONG)
+      val heightCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val inlineAlignCell = arena.allocate(JAVA_LONG)
       val regionCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
@@ -819,8 +818,8 @@ actual object ObjectCalls {
       val textCell = arena.allocate(8L, 8L)
       try {
         imageCell.set(ADDRESS, 0, image)
-        widthCell.set(JAVA_INT, 0, width)
-        heightCell.set(JAVA_INT, 0, height)
+        widthCell.set(JAVA_LONG, 0, width.toLong())
+        heightCell.set(JAVA_LONG, 0, height.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -943,10 +942,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val obj0 = arena.allocate(ADDRESS)
       val obj1 = arena.allocate(ADDRESS)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       obj0.set(ADDRESS, 0, first)
       obj1.set(ADDRESS, 0, second)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, obj0)
       arr.setAtIndex(ADDRESS, 1, obj1)
@@ -1185,8 +1184,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Int> {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -1209,8 +1208,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Float> {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -1437,8 +1436,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Rect2> {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayRect2)
@@ -1802,13 +1801,13 @@ actual object ObjectCalls {
   ): List<T> {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val ret = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(stringCell, text)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
@@ -1855,15 +1854,15 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       val firstBoolCell = arena.allocate(JAVA_BYTE)
       val secondBoolCell = arena.allocate(JAVA_BYTE)
       val ret = arena.allocate(8L, 8L)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
-      thirdCell.set(JAVA_INT, 0, third)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
       firstBoolCell.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       secondBoolCell.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 5)
@@ -1917,16 +1916,16 @@ actual object ObjectCalls {
     wrapper: (MemorySegment) -> T?,
   ): List<T> {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       val firstBoolCell = arena.allocate(JAVA_BYTE)
       val valueCell = arena.allocate(JAVA_DOUBLE)
       val secondBoolCell = arena.allocate(JAVA_BYTE)
       val ret = arena.allocate(8L, 8L)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
-      thirdCell.set(JAVA_INT, 0, third)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
       firstBoolCell.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       valueCell.set(JAVA_DOUBLE, 0, value)
       secondBoolCell.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
@@ -2076,11 +2075,11 @@ actual object ObjectCalls {
   ) {
     val checkedFlags = BuiltinTypes.requireUInt32(flags)
     Arena.ofConfined().use { arena ->
-      val flagsCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
       val methodCell = arena.allocate(8L, 8L)
       val variant = initVariantCell(arena, value)
       try {
-        flagsCell.set(JAVA_INT, 0, checkedFlags)
+        flagsCell.set(JAVA_LONG, 0, checkedFlags)
         GodotStrings.initString(methodCell, method)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, flagsCell)
@@ -2268,9 +2267,9 @@ actual object ObjectCalls {
       try {
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, variant)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -2553,11 +2552,11 @@ actual object ObjectCalls {
       try {
         val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
         val longCell = arena.allocate(JAVA_LONG)
-        val intCell = arena.allocate(JAVA_INT)
+        val intCell = arena.allocate(JAVA_LONG)
         val doubleCell = arena.allocate(JAVA_DOUBLE)
         writeVector2(vectorCell, vector)
         longCell.set(JAVA_LONG, 0, longValue)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         doubleCell.set(JAVA_DOUBLE, 0, doubleValue)
         val arr = arena.allocate(ADDRESS, 5)
         arr.setAtIndex(ADDRESS, 0, variant)
@@ -2625,8 +2624,8 @@ actual object ObjectCalls {
       val keyVariant = initVariantCell(arena, key)
       val maskCell = arena.allocate(JAVA_LONG)
       val imageCell = arena.allocate(ADDRESS)
-      val widthCell = arena.allocate(JAVA_INT)
-      val heightCell = arena.allocate(JAVA_INT)
+      val widthCell = arena.allocate(JAVA_LONG)
+      val heightCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val inlineAlignCell = arena.allocate(JAVA_LONG)
       val regionCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
@@ -2637,8 +2636,8 @@ actual object ObjectCalls {
       try {
         maskCell.set(JAVA_LONG, 0, mask)
         imageCell.set(ADDRESS, 0, image)
-        widthCell.set(JAVA_INT, 0, width)
-        heightCell.set(JAVA_INT, 0, height)
+        widthCell.set(JAVA_LONG, 0, width.toLong())
+        heightCell.set(JAVA_LONG, 0, height.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -2741,8 +2740,8 @@ actual object ObjectCalls {
       try {
         val secondVariant = initVariantCell(arena, secondValue)
         try {
-          val intCell = arena.allocate(JAVA_INT)
-          intCell.set(JAVA_INT, 0, intValue)
+          val intCell = arena.allocate(JAVA_LONG)
+          intCell.set(JAVA_LONG, 0, intValue.toLong())
           val args = arena.allocate(ADDRESS, 3)
           args.setAtIndex(ADDRESS, 0, intCell)
           args.setAtIndex(ADDRESS, 1, firstVariant)
@@ -2929,10 +2928,10 @@ actual object ObjectCalls {
   ): Any? {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       GodotStrings.initString(stringCell, text)
       try {
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
@@ -2999,8 +2998,8 @@ actual object ObjectCalls {
     value: Int,
   ): Any? {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       return readVariantReturn(methodBind, instance, arr, arena)
@@ -3014,8 +3013,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Any?> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       return callArrayReturn(methodBind, instance, arr, BuiltinTypes::readArrayScalars)
@@ -3030,10 +3029,10 @@ actual object ObjectCalls {
     value: Any?,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, variant)
@@ -3051,10 +3050,10 @@ actual object ObjectCalls {
     value: Any?,
   ): Rect2 {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, variant)
@@ -3074,10 +3073,10 @@ actual object ObjectCalls {
     values: List<Any?>,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val array = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initArray(array, values)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
@@ -3096,10 +3095,10 @@ actual object ObjectCalls {
     values: List<Any?>,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val array = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initArray(array, values)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
@@ -3122,12 +3121,12 @@ actual object ObjectCalls {
     value: Any?,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
-        int0.set(JAVA_INT, 0, first)
-        int1.set(JAVA_INT, 0, second)
+        int0.set(JAVA_LONG, 0, first.toLong())
+        int1.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, int1)
@@ -3148,11 +3147,11 @@ actual object ObjectCalls {
     objectArg: MemorySegment,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
       objCell.set(ADDRESS, 0, objectArg)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, int0)
@@ -3171,12 +3170,12 @@ actual object ObjectCalls {
     bytes: ByteArray,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
       try {
-        int0.set(JAVA_INT, 0, first)
-        int1.set(JAVA_INT, 0, second)
+        int0.set(JAVA_LONG, 0, first.toLong())
+        int1.set(JAVA_LONG, 0, second.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, int0)
@@ -3197,12 +3196,12 @@ actual object ObjectCalls {
     values: List<Vector2>,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       try {
-        int0.set(JAVA_INT, 0, first)
-        int1.set(JAVA_INT, 0, second)
+        int0.set(JAVA_LONG, 0, first.toLong())
+        int1.set(JAVA_LONG, 0, second.toLong())
         BuiltinTypes.initPackedVector2Array(packed, values)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, int0)
@@ -3222,11 +3221,11 @@ actual object ObjectCalls {
     second: Int,
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val ret = BuiltinTypes.allocatePackedArray(arena)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, int1)
@@ -3247,13 +3246,13 @@ actual object ObjectCalls {
     second: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
-      val int1 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
       try {
-        int0.set(JAVA_INT, 0, first)
+        int0.set(JAVA_LONG, 0, first.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
-        int1.set(JAVA_INT, 0, second)
+        int1.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, byteArray)
@@ -3273,13 +3272,13 @@ actual object ObjectCalls {
     second: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
-      val int1 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
       try {
-        int0.set(JAVA_INT, 0, first)
+        int0.set(JAVA_LONG, 0, first.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
-        int1.set(JAVA_INT, 0, second)
+        int1.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, int0)
         arr.setAtIndex(ADDRESS, 1, byteArray)
@@ -3330,9 +3329,9 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -3434,11 +3433,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
         GodotStrings.initString(stringCell, text)
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
@@ -3459,11 +3458,11 @@ actual object ObjectCalls {
     value: Any?,
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       val variant = initVariantCell(arena, value)
       try {
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(stringCell, text)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, intCell)
@@ -3719,9 +3718,9 @@ actual object ObjectCalls {
 
   /** Calls [methodBind] with no arguments and uint32 return value. */
   actual fun ptrcallNoArgsRetUInt32(methodBind: MemorySegment, instance: MemorySegment): Long {
-    val ret = ptrcallScratch.get().intRet
+    val ret = ptrcallScratch.get().longRet
     bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
-    return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+    return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
   }
 
   /** Calls [methodBind] with no arguments and RID return value. */
@@ -3733,9 +3732,9 @@ actual object ObjectCalls {
 
   /** Calls [methodBind] with no arguments and int32 return value. */
   actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int {
-    val ret = ptrcallScratch.get().intRet
+    val ret = ptrcallScratch.get().longRet
     bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)
-    return ret.get(JAVA_INT, 0)
+    return ret.get(JAVA_LONG, 0).toInt()
   }
 
   actual fun ptrcallNoArgsRetNodePath(
@@ -3818,9 +3817,9 @@ actual object ObjectCalls {
       ridCell.set(JAVA_LONG, 0, value.value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -3834,9 +3833,9 @@ actual object ObjectCalls {
       ridCell.set(JAVA_LONG, 0, value.value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, ridCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -4187,8 +4186,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4205,8 +4204,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4225,8 +4224,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4249,8 +4248,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4269,8 +4268,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4362,9 +4361,9 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, variant)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -4589,8 +4588,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4607,8 +4606,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4627,8 +4626,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4647,8 +4646,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4666,15 +4665,15 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -4686,9 +4685,9 @@ actual object ObjectCalls {
   ): Any? {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4705,11 +4704,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, indexCell)
@@ -4729,9 +4728,9 @@ actual object ObjectCalls {
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4753,9 +4752,9 @@ actual object ObjectCalls {
   ): Transform2D {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4773,9 +4772,9 @@ actual object ObjectCalls {
   ): Transform3D {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -4796,8 +4795,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val otherCell = arena.allocate(JAVA_LONG)
       otherCell.set(JAVA_LONG, 0, other.value)
       val args = arena.allocate(ADDRESS, 3)
@@ -4817,10 +4816,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       writeTransform2D(transformCell, transform)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -4839,10 +4838,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       writeTransform3D(transformCell, transform)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -4861,10 +4860,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
       GodotRealSegment.writeRaw(vectorCell, 2, vector.rawZ)
@@ -4886,13 +4885,13 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        int0.set(JAVA_INT, 0, first)
-        int1.set(JAVA_INT, 0, second)
+        int0.set(JAVA_LONG, 0, first.toLong())
+        int1.set(JAVA_LONG, 0, second.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -5023,11 +5022,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        intCell.set(JAVA_INT, 0, intArg)
+        intCell.set(JAVA_LONG, 0, intArg.toLong())
         GodotStrings.initString(stringCell, value)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -5055,20 +5054,20 @@ actual object ObjectCalls {
       val secondRidCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, value)
       try {
-        val intCell = arena.allocate(JAVA_INT)
+        val intCell = arena.allocate(JAVA_LONG)
         firstRidCell.set(JAVA_LONG, 0, firstRid.value)
         GodotStrings.initString(stringCell, text)
         secondRidCell.set(JAVA_LONG, 0, secondRid.value)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, firstRidCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
         args.setAtIndex(ADDRESS, 2, secondRidCell)
         args.setAtIndex(ADDRESS, 3, variant)
         args.setAtIndex(ADDRESS, 4, intCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyVariant(variant)
         GodotStrings.destroyString(stringCell)
@@ -5152,10 +5151,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, objCell)
@@ -5486,14 +5485,14 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val rid0 = arena.allocate(JAVA_LONG)
       val rid1 = arena.allocate(JAVA_LONG)
-      val uint0 = arena.allocate(JAVA_INT)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
       rid0.set(JAVA_LONG, 0, firstRid.value)
       rid1.set(JAVA_LONG, 0, secondRid.value)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(third))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(third))
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, rid0)
       args.setAtIndex(ADDRESS, 1, rid1)
@@ -5525,19 +5524,19 @@ actual object ObjectCalls {
       val vector0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val vector1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val vector2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val uint0 = arena.allocate(JAVA_INT)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
-      val uint3 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
+      val uint3 = arena.allocate(JAVA_LONG)
       rid0.set(JAVA_LONG, 0, firstRid.value)
       rid1.set(JAVA_LONG, 0, secondRid.value)
       writeVector3(vector0, firstVector)
       writeVector3(vector1, secondVector)
       writeVector3(vector2, thirdVector)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(firstUInt))
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(secondUInt))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(thirdUInt))
-      uint3.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(fourthUInt))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(firstUInt))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(secondUInt))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(thirdUInt))
+      uint3.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(fourthUInt))
       val args = arena.allocate(ADDRESS, 9)
       args.setAtIndex(ADDRESS, 0, rid0)
       args.setAtIndex(ADDRESS, 1, rid1)
@@ -5568,15 +5567,15 @@ actual object ObjectCalls {
       val longCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val ridCell = arena.allocate(JAVA_LONG)
-      val uint0 = arena.allocate(JAVA_INT)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longValue)
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       ridCell.set(JAVA_LONG, 0, rid.value)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(third))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(third))
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
@@ -5720,7 +5719,7 @@ actual object ObjectCalls {
       val vector = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val color0 = arena.allocate(16L, 4L)
       val color1 = arena.allocate(16L, 4L)
-      val flagsCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeTransform3D(transform, transformValue)
       writeVector3(vector, vectorValue)
@@ -5732,7 +5731,7 @@ actual object ObjectCalls {
       color1.set(JAVA_FLOAT, 4, secondColor.rawG)
       color1.set(JAVA_FLOAT, 8, secondColor.rawB)
       color1.set(JAVA_FLOAT, 12, secondColor.rawA)
-      flagsCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+      flagsCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, transform)
@@ -5756,13 +5755,13 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
       val bool2 = arena.allocate(JAVA_BYTE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       longCell.set(JAVA_LONG, 0, longValue)
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
@@ -6449,13 +6448,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -6485,19 +6484,19 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
-      val uint0 = arena.allocate(JAVA_INT)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
-      val uint3 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
+      val uint3 = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
       colorCell.set(JAVA_FLOAT, 12, color.rawA)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(third))
-      uint3.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(fourth))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(third))
+      uint3.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(fourth))
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, colorCell)
@@ -6597,13 +6596,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val color0 = arena.allocate(16L, 4L)
       val color1 = arena.allocate(16L, 4L)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeVector2(vectorCell, vector)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       color0.set(JAVA_FLOAT, 0, firstColor.rawR)
       color0.set(JAVA_FLOAT, 4, firstColor.rawG)
       color0.set(JAVA_FLOAT, 8, firstColor.rawB)
@@ -6637,14 +6636,14 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeVector2(vectorCell, vector)
-      int0.set(JAVA_INT, 0, firstInt)
-      int1.set(JAVA_INT, 0, secondInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6674,14 +6673,14 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val charCell = arena.allocate(JAVA_INT)
-      val fontSizeCell = arena.allocate(JAVA_INT)
+      val charCell = arena.allocate(JAVA_LONG)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val oversamplingCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeVector2(vectorCell, position)
-      charCell.set(JAVA_INT, 0, char)
-      fontSizeCell.set(JAVA_INT, 0, fontSize)
+      charCell.set(JAVA_LONG, 0, char.toLong())
+      fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6714,16 +6713,16 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val charCell = arena.allocate(JAVA_INT)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val outlineSizeCell = arena.allocate(JAVA_INT)
+      val charCell = arena.allocate(JAVA_LONG)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val outlineSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val oversamplingCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeVector2(vectorCell, position)
-      charCell.set(JAVA_INT, 0, char)
-      fontSizeCell.set(JAVA_INT, 0, fontSize)
-      outlineSizeCell.set(JAVA_INT, 0, outlineSize)
+      charCell.set(JAVA_LONG, 0, char.toLong())
+      fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+      outlineSizeCell.set(JAVA_LONG, 0, outlineSize.toLong())
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6764,7 +6763,7 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
@@ -6776,7 +6775,7 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6826,8 +6825,8 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val outlineSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val outlineSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
@@ -6839,8 +6838,8 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        outlineSizeCell.set(JAVA_INT, 0, outlineSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        outlineSizeCell.set(JAVA_LONG, 0, outlineSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6892,8 +6891,8 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val maxLinesCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val maxLinesCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val breakFlagsCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
@@ -6906,8 +6905,8 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        maxLinesCell.set(JAVA_INT, 0, maxLines)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        maxLinesCell.set(JAVA_LONG, 0, maxLines.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -6962,9 +6961,9 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val maxLinesCell = arena.allocate(JAVA_INT)
-      val outlineSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val maxLinesCell = arena.allocate(JAVA_LONG)
+      val outlineSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val breakFlagsCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
@@ -6977,9 +6976,9 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        maxLinesCell.set(JAVA_INT, 0, maxLines)
-        outlineSizeCell.set(JAVA_INT, 0, outlineSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        maxLinesCell.set(JAVA_LONG, 0, maxLines.toLong())
+        outlineSizeCell.set(JAVA_LONG, 0, outlineSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -7713,9 +7712,9 @@ actual object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -7782,10 +7781,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -7806,11 +7805,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       doubleCell.set(JAVA_DOUBLE, 0, amount)
       val args = arena.allocate(ADDRESS, 4)
@@ -7935,11 +7934,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell0 = arena.allocate(JAVA_INT)
-      val intCell1 = arena.allocate(JAVA_INT)
+      val intCell0 = arena.allocate(JAVA_LONG)
+      val intCell1 = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell0.set(JAVA_INT, 0, first)
-      intCell1.set(JAVA_INT, 0, second)
+      intCell0.set(JAVA_LONG, 0, first.toLong())
+      intCell1.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell0)
@@ -8164,13 +8163,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(JAVA_LONG)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(arg0, text)
         arg1.set(JAVA_LONG, 0, longValue)
-        arg2.set(JAVA_INT, 0, firstInt)
-        arg3.set(JAVA_INT, 0, secondInt)
+        arg2.set(JAVA_LONG, 0, firstInt.toLong())
+        arg3.set(JAVA_LONG, 0, secondInt.toLong())
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
@@ -8200,7 +8199,7 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
       val orientationCell = arena.allocate(JAVA_LONG)
@@ -8208,7 +8207,7 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
         justificationCell.set(JAVA_LONG, 0, justification)
         directionCell.set(JAVA_LONG, 0, direction)
         orientationCell.set(JAVA_LONG, 0, orientation)
@@ -8249,8 +8248,8 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val maxLinesCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val maxLinesCell = arena.allocate(JAVA_LONG)
       val breakFlagsCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
@@ -8259,8 +8258,8 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        maxLinesCell.set(JAVA_INT, 0, maxLines)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        maxLinesCell.set(JAVA_LONG, 0, maxLines.toLong())
         breakFlagsCell.set(JAVA_LONG, 0, breakFlags)
         justificationCell.set(JAVA_LONG, 0, justification)
         directionCell.set(JAVA_LONG, 0, direction)
@@ -8296,10 +8295,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(arg0, text)
-        arg1.set(JAVA_INT, 0, value)
+        arg1.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
@@ -8319,11 +8318,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(stringCell, stringValue)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, textCell)
@@ -8346,12 +8345,12 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(textCell, text)
-        firstIntCell.set(JAVA_INT, 0, firstInt)
-        secondIntCell.set(JAVA_INT, 0, secondInt)
+        firstIntCell.set(JAVA_LONG, 0, firstInt.toLong())
+        secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, firstIntCell)
@@ -8372,11 +8371,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         longCell.set(JAVA_LONG, 0, longValue)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, textCell)
@@ -8397,11 +8396,11 @@ actual object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val retString = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
@@ -8422,10 +8421,10 @@ actual object ObjectCalls {
   ): Vector2i {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, textCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
@@ -8447,11 +8446,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, textCell)
@@ -8735,8 +8734,8 @@ actual object ObjectCalls {
     value: Boolean,
   ): Int {
     val scratch = ptrcallScratch.get()
-    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.intRet)
-    return scratch.intRet.get(JAVA_INT, 0)
+    bindPtrcall(methodBind, instance, scratch.setBoolArg(value), scratch.longRet)
+    return scratch.longRet.get(JAVA_LONG, 0).toInt()
   }
 
   /** Calls [methodBind] with one bool arg and bool return value. */
@@ -9000,10 +8999,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell)
@@ -9024,11 +9023,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell0 = arena.allocate(JAVA_BYTE)
       val boolCell1 = arena.allocate(JAVA_BYTE)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       boolCell0.set(JAVA_BYTE, 0, if (first) 1.toByte() else 0.toByte())
       boolCell1.set(JAVA_BYTE, 0, if (second) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 4)
@@ -9052,11 +9051,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell0 = arena.allocate(ADDRESS)
       val objCell1 = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       objCell0.set(ADDRESS, 0, firstObjectArg)
       objCell1.set(ADDRESS, 0, secondObjectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, objCell0)
@@ -9080,12 +9079,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell0 = arena.allocate(ADDRESS)
       val objCell1 = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell0 = arena.allocate(JAVA_BYTE)
       val boolCell1 = arena.allocate(JAVA_BYTE)
       objCell0.set(ADDRESS, 0, firstObjectArg)
       objCell1.set(ADDRESS, 0, secondObjectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       boolCell0.set(JAVA_BYTE, 0, if (first) 1.toByte() else 0.toByte())
       boolCell1.set(JAVA_BYTE, 0, if (second) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 5)
@@ -9108,17 +9107,17 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell0 = arena.allocate(ADDRESS)
       val objCell1 = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell0.set(ADDRESS, 0, firstObjectArg)
       objCell1.set(ADDRESS, 0, secondObjectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell0)
       arr.setAtIndex(ADDRESS, 1, objCell1)
       arr.setAtIndex(ADDRESS, 2, intCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -9134,12 +9133,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       try {
         objCell.set(ADDRESS, 0, objectArg)
         GodotStrings.initString(stringCell, text)
-        intCell.set(JAVA_INT, 0, intArg)
+        intCell.set(JAVA_LONG, 0, intArg.toLong())
         longCell.set(JAVA_LONG, 0, longArg)
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, objCell)
@@ -9285,11 +9284,11 @@ actual object ObjectCalls {
       val longCell = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
       val vecCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
       objCell.set(ADDRESS, 0, objectArg)
       writeVector2(vecCell, vector2Arg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, objCell)
@@ -9703,10 +9702,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       GodotRealSegment.writeRaw(transform, 0, transformArg.basis.x.rawX)
       GodotRealSegment.writeRaw(transform, 1, transformArg.basis.y.rawX)
       GodotRealSegment.writeRaw(transform, 2, transformArg.basis.z.rawX)
@@ -9806,8 +9805,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       GodotStrings.initString(stringCell, text)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       try {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
@@ -9992,20 +9991,20 @@ actual object ObjectCalls {
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(8L, 8L)
       val arg2 = arena.allocate(8L, 8L)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg3 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(arg0, first)
         GodotStrings.initString(arg1, second)
         GodotStrings.initString(arg2, third)
-        arg3.set(JAVA_INT, 0, value)
+        arg3.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, arg2)
         arr.setAtIndex(ADDRESS, 3, arg3)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(arg0)
         GodotStrings.destroyString(arg1)
@@ -10022,16 +10021,16 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       GodotStrings.initString(stringCell, text)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       try {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, intCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -10046,9 +10045,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       GodotStrings.initString(stringCell, text)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       try {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
@@ -10098,11 +10097,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(8L, 8L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(arg0, first)
         GodotStrings.initString(arg1, second)
-        arg2.set(JAVA_INT, 0, value)
+        arg2.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
@@ -10131,7 +10130,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val double1 = arena.allocate(JAVA_DOUBLE)
       val longCell = arena.allocate(JAVA_LONG)
@@ -10139,7 +10138,7 @@ actual object ObjectCalls {
       try {
         GodotStrings.initString(arg0, first)
         GodotStrings.initString(arg1, second)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         double0.set(JAVA_DOUBLE, 0, firstDouble)
         double1.set(JAVA_DOUBLE, 0, secondDouble)
         longCell.set(JAVA_LONG, 0, longValue)
@@ -10249,17 +10248,17 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
-      val int3 = arena.allocate(JAVA_INT)
-      val int4 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
+      val int3 = arena.allocate(JAVA_LONG)
+      val int4 = arena.allocate(JAVA_LONG)
       GodotStrings.initString(stringCell, text)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
-      int2.set(JAVA_INT, 0, third)
-      int3.set(JAVA_INT, 0, fourth)
-      int4.set(JAVA_INT, 0, fifth)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
+      int2.set(JAVA_LONG, 0, third.toLong())
+      int3.set(JAVA_LONG, 0, fourth.toLong())
+      int4.set(JAVA_LONG, 0, fifth.toLong())
       try {
         val arr = arena.allocate(ADDRESS, 6)
         arr.setAtIndex(ADDRESS, 0, stringCell)
@@ -10334,11 +10333,11 @@ actual object ObjectCalls {
     flags: Long,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       val bytesCell = BuiltinTypes.allocatePackedArray(arena)
       val flagsCell = arena.allocate(JAVA_LONG)
       try {
-        sizeCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(size))
+        sizeCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(size))
         BuiltinTypes.initPackedByteArray(bytesCell, bytes)
         flagsCell.set(JAVA_LONG, 0, flags)
         val args = arena.allocate(ADDRESS, 3)
@@ -10390,11 +10389,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
       val bytesCell = BuiltinTypes.allocatePackedArray(arena)
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       try {
         longCell.set(JAVA_LONG, 0, longArg)
         BuiltinTypes.initPackedByteArray(bytesCell, bytes)
-        sizeCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(size))
+        sizeCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(size))
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, bytesCell)
@@ -10417,12 +10416,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
-      firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, boolCell)
@@ -10442,13 +10441,13 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
-      thirdCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(third))
+      firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
+      thirdCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(third))
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -10467,11 +10466,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val layerCell = arena.allocate(JAVA_INT)
+      val layerCell = arena.allocate(JAVA_LONG)
       val bytesCell = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        layerCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layer))
+        layerCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(layer))
         BuiltinTypes.initPackedByteArray(bytesCell, bytes)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -10494,11 +10493,11 @@ actual object ObjectCalls {
     bytes: ByteArray,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       val formatCell = arena.allocate(JAVA_LONG)
       val bytesCell = BuiltinTypes.allocatePackedArray(arena)
       try {
-        sizeCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(size))
+        sizeCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(size))
         formatCell.set(JAVA_LONG, 0, format)
         BuiltinTypes.initPackedByteArray(bytesCell, bytes)
         val args = arena.allocate(ADDRESS, 3)
@@ -10986,9 +10985,9 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedStringArray(argPacked, values)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argPacked)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, argPacked)
       }
@@ -11145,10 +11144,10 @@ actual object ObjectCalls {
     val checkedCount = BuiltinTypes.requireUInt32(count)
     Arena.ofConfined().use { arena ->
       val argArray = arena.allocate(8L, 8L)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfObjects(argArray, values)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, countCell)
@@ -11172,11 +11171,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val firstArray = arena.allocate(8L, 8L)
       val secondArray = arena.allocate(8L, 8L)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfObjects(firstArray, firstValues)
         BuiltinTypes.initArrayOfObjects(secondArray, secondValues)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, firstArray)
         args.setAtIndex(ADDRESS, 1, secondArray)
@@ -11202,11 +11201,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objectArray = arena.allocate(8L, 8L)
       val ridCell = arena.allocate(JAVA_LONG)
-      val setCell = arena.allocate(JAVA_INT)
+      val setCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfObjects(objectArray, values)
         ridCell.set(JAVA_LONG, 0, rid.value)
-        setCell.set(JAVA_INT, 0, checkedSet)
+        setCell.set(JAVA_LONG, 0, checkedSet)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, objectArray)
         args.setAtIndex(ADDRESS, 1, ridCell)
@@ -11230,11 +11229,11 @@ actual object ObjectCalls {
     val checkedSet = BuiltinTypes.requireUInt32(set)
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val setCell = arena.allocate(JAVA_INT)
+      val setCell = arena.allocate(JAVA_LONG)
       val objectArray = arena.allocate(8L, 8L)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        setCell.set(JAVA_INT, 0, checkedSet)
+        setCell.set(JAVA_LONG, 0, checkedSet)
         BuiltinTypes.initArrayOfObjects(objectArray, values)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -11320,10 +11319,10 @@ actual object ObjectCalls {
   ): List<T> {
     Arena.ofConfined().use { arena ->
       val argArray = arena.allocate(8L, 8L)
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfObjects(argArray, values)
-        sizeCell.set(JAVA_INT, 0, size)
+        sizeCell.set(JAVA_LONG, 0, size.toLong())
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, argArray)
         args.setAtIndex(ADDRESS, 1, sizeCell)
@@ -11421,12 +11420,12 @@ actual object ObjectCalls {
       val firstArray = arena.allocate(8L, 8L)
       val secondArray = arena.allocate(8L, 8L)
       val thirdArray = arena.allocate(8L, 8L)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfObjects(firstArray, firstValues)
         BuiltinTypes.initArrayOfObjects(secondArray, secondValues)
         BuiltinTypes.initArrayOfObjects(thirdArray, thirdValues)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, firstArray)
         args.setAtIndex(ADDRESS, 1, secondArray)
@@ -11497,8 +11496,8 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
       colorCell.set(JAVA_FLOAT, 12, color.rawA)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val objectCell = arena.allocate(ADDRESS)
       objectCell.set(ADDRESS, 0, objectArg)
       try {
@@ -11625,20 +11624,20 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val dict = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val firstDoubleCell = arena.allocate(JAVA_DOUBLE)
       firstDoubleCell.set(JAVA_DOUBLE, 0, firstDouble)
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
       writeTransform2D(transform, transformValue)
-      val secondIntCell = arena.allocate(JAVA_INT)
-      secondIntCell.set(JAVA_INT, 0, secondInt)
-      val thirdIntCell = arena.allocate(JAVA_INT)
-      thirdIntCell.set(JAVA_INT, 0, thirdInt)
-      val fourthIntCell = arena.allocate(JAVA_INT)
-      fourthIntCell.set(JAVA_INT, 0, fourthInt)
-      val fifthIntCell = arena.allocate(JAVA_INT)
-      fifthIntCell.set(JAVA_INT, 0, fifthInt)
+      val secondIntCell = arena.allocate(JAVA_LONG)
+      secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
+      val thirdIntCell = arena.allocate(JAVA_LONG)
+      thirdIntCell.set(JAVA_LONG, 0, thirdInt.toLong())
+      val fourthIntCell = arena.allocate(JAVA_LONG)
+      fourthIntCell.set(JAVA_LONG, 0, fourthInt.toLong())
+      val fifthIntCell = arena.allocate(JAVA_LONG)
+      fifthIntCell.set(JAVA_LONG, 0, fifthInt.toLong())
       val secondDoubleCell = arena.allocate(JAVA_DOUBLE)
       secondDoubleCell.set(JAVA_DOUBLE, 0, secondDouble)
       val longCell = arena.allocate(JAVA_LONG)
@@ -11695,8 +11694,8 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
       colorCell.set(JAVA_FLOAT, 12, color.rawA)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       try {
         BuiltinTypes.initArrayOfRids(firstArray, firstRids)
         BuiltinTypes.initArrayOfRids(secondArray, secondRids)
@@ -12099,7 +12098,7 @@ actual object ObjectCalls {
       val firstStringCell = arena.allocate(8L, 8L)
       val secondLongCell = arena.allocate(JAVA_LONG)
       val secondStringCell = arena.allocate(8L, 8L)
-      val uint32Cell = arena.allocate(JAVA_INT)
+      val uint32Cell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       var firstStringInitialized = false
       var secondStringInitialized = false
@@ -12111,7 +12110,7 @@ actual object ObjectCalls {
         secondLongCell.set(JAVA_LONG, 0, secondLong)
         GodotStrings.initString(secondStringCell, secondText)
         secondStringInitialized = true
-        uint32Cell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(uint32Value))
+        uint32Cell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(uint32Value))
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         val args = arena.allocate(ADDRESS, 7)
         args.setAtIndex(ADDRESS, 0, objectCell)
@@ -12144,7 +12143,7 @@ actual object ObjectCalls {
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
       val secondObjectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         firstObjectCell.set(ADDRESS, 0, firstObject)
         GodotStrings.initString(pathString, path.path)
@@ -12155,7 +12154,7 @@ actual object ObjectCalls {
           args = listOf(pathString),
         )
         secondObjectCell.set(ADDRESS, 0, secondObject)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, firstObjectCell)
         args.setAtIndex(ADDRESS, 1, nodePath)
@@ -12222,14 +12221,14 @@ actual object ObjectCalls {
     thirdBool: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val firstBoolCell = arena.allocate(JAVA_BYTE)
       val secondBoolCell = arena.allocate(JAVA_BYTE)
       val valueCell = arena.allocate(JAVA_DOUBLE)
       val thirdBoolCell = arena.allocate(JAVA_BYTE)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       firstBoolCell.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       secondBoolCell.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       valueCell.set(JAVA_DOUBLE, 0, value)
@@ -12309,10 +12308,10 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val dictionaryArray = arena.allocate(8L, 8L)
-      val compressionCell = arena.allocate(JAVA_INT)
+      val compressionCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfDictionaries(dictionaryArray, values)
-        compressionCell.set(JAVA_INT, 0, compression)
+        compressionCell.set(JAVA_LONG, 0, compression.toLong())
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, dictionaryArray)
         args.setAtIndex(ADDRESS, 1, compressionCell)
@@ -12389,13 +12388,13 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val argArray = arena.allocate(8L, 8L)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       try {
         BuiltinTypes.initArray(argArray, values)
-        int0.set(JAVA_INT, 0, firstInt)
-        int1.set(JAVA_INT, 0, secondInt)
+        int0.set(JAVA_LONG, 0, firstInt.toLong())
+        int1.set(JAVA_LONG, 0, secondInt.toLong())
         boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, argArray)
@@ -12419,16 +12418,16 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val argArray = arena.allocate(8L, 8L)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       try {
-        int0.set(JAVA_INT, 0, intArg)
+        int0.set(JAVA_LONG, 0, intArg.toLong())
         BuiltinTypes.initArray(argArray, values)
-        int1.set(JAVA_INT, 0, firstInt)
-        int2.set(JAVA_INT, 0, secondInt)
+        int1.set(JAVA_LONG, 0, firstInt.toLong())
+        int2.set(JAVA_LONG, 0, secondInt.toLong())
         boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
         val arr = arena.allocate(ADDRESS, 5)
         arr.setAtIndex(ADDRESS, 0, int0)
@@ -12515,9 +12514,9 @@ actual object ObjectCalls {
         GodotStrings.initString(argString, value)
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, argString)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(argString)
       }
@@ -12571,8 +12570,8 @@ actual object ObjectCalls {
         GodotStrings.initString(argString, text)
         val argBool = arena.allocate(JAVA_BYTE)
         argBool.set(JAVA_BYTE, 0, if (flag) 1.toByte() else 0.toByte())
-        val argInt = arena.allocate(JAVA_INT)
-        argInt.set(JAVA_INT, 0, number)
+        val argInt = arena.allocate(JAVA_LONG)
+        argInt.set(JAVA_LONG, 0, number.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, argString)
         arr.setAtIndex(ADDRESS, 1, argBool)
@@ -12627,9 +12626,9 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(arg0)
       }
@@ -12729,9 +12728,9 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(arg0)
       }
@@ -12853,8 +12852,8 @@ actual object ObjectCalls {
       val secondCell = arena.allocate(8L, 8L)
       val thirdCell = arena.allocate(8L, 8L)
       val fourthCell = arena.allocate(8L, 8L)
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       var firstInitialized = false
@@ -12870,8 +12869,8 @@ actual object ObjectCalls {
         thirdInitialized = true
         GodotStrings.initString(fourthCell, fourth)
         fourthInitialized = true
-        firstIntCell.set(JAVA_INT, 0, firstInt)
-        secondIntCell.set(JAVA_INT, 0, secondInt)
+        firstIntCell.set(JAVA_LONG, 0, firstInt.toLong())
+        secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         val args = arena.allocate(ADDRESS, 7)
         args.setAtIndex(ADDRESS, 0, firstCell)
@@ -12948,10 +12947,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_DOUBLE)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_DOUBLE, 0, first)
       arg1.set(JAVA_DOUBLE, 0, second)
-      arg2.set(JAVA_INT, 0, intArg)
+      arg2.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -13105,10 +13104,10 @@ actual object ObjectCalls {
     values: List<Float>,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val argPacked = BuiltinTypes.allocatePackedArray(arena)
       try {
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initPackedFloat32Array(argPacked, values)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, indexCell)
@@ -13329,10 +13328,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val argPacked = BuiltinTypes.allocatePackedArray(arena)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initPackedVector2Array(argPacked, values)
-        intCell.set(JAVA_INT, 0, intArg)
+        intCell.set(JAVA_LONG, 0, intArg.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, argPacked)
         arr.setAtIndex(ADDRESS, 1, intCell)
@@ -13982,8 +13981,8 @@ actual object ObjectCalls {
   /** Calls [methodBind] with one uint32 arg and no return value. */
   actual fun ptrcallWithUInt32Arg(methodBind: MemorySegment, instance: MemorySegment, value: Long) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg0 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
@@ -14019,10 +14018,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, longArg)
       arg1.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
-      arg2.set(JAVA_INT, 0, intArg)
+      arg2.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -14076,9 +14075,9 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(uintArg))
+      uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(uintArg))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, uintCell)
@@ -14096,9 +14095,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(uintArg))
+      uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(uintArg))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, uintCell)
@@ -14123,17 +14122,17 @@ actual object ObjectCalls {
       val long0 = arena.allocate(JAVA_LONG)
       val long1 = arena.allocate(JAVA_LONG)
       val long2 = arena.allocate(JAVA_LONG)
-      val uint0 = arena.allocate(JAVA_INT)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
-      val uint3 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
+      val uint3 = arena.allocate(JAVA_LONG)
       long0.set(JAVA_LONG, 0, firstLong)
       long1.set(JAVA_LONG, 0, secondLong)
       long2.set(JAVA_LONG, 0, thirdLong)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(firstUInt))
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(secondUInt))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(thirdUInt))
-      uint3.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(fourthUInt))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(firstUInt))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(secondUInt))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(thirdUInt))
+      uint3.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(fourthUInt))
       val args = arena.allocate(ADDRESS, 7)
       args.setAtIndex(ADDRESS, 0, long0)
       args.setAtIndex(ADDRESS, 1, long1)
@@ -14164,18 +14163,18 @@ actual object ObjectCalls {
       val long0 = arena.allocate(JAVA_LONG)
       val long1 = arena.allocate(JAVA_LONG)
       val long2 = arena.allocate(JAVA_LONG)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
-      val int3 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
+      val int3 = arena.allocate(JAVA_LONG)
       val long3 = arena.allocate(JAVA_LONG)
       long0.set(JAVA_LONG, 0, firstLong)
       long1.set(JAVA_LONG, 0, secondLong)
       long2.set(JAVA_LONG, 0, thirdLong)
-      int0.set(JAVA_INT, 0, firstInt)
-      int1.set(JAVA_INT, 0, secondInt)
-      int2.set(JAVA_INT, 0, thirdInt)
-      int3.set(JAVA_INT, 0, fourthInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
+      int2.set(JAVA_LONG, 0, thirdInt.toLong())
+      int3.set(JAVA_LONG, 0, fourthInt.toLong())
       long3.set(JAVA_LONG, 0, fourthLong)
       val args = arena.allocate(ADDRESS, 8)
       args.setAtIndex(ADDRESS, 0, long0)
@@ -14300,10 +14299,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
       val ridCell = arena.allocate(JAVA_LONG)
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, first)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, ridCell)
@@ -14315,8 +14314,8 @@ actual object ObjectCalls {
   /** Calls [methodBind] with one int32 arg and no return value. */
   actual fun ptrcallWithIntArg(methodBind: MemorySegment, instance: MemorySegment, value: Int) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, value)
+      val arg0 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
@@ -14330,8 +14329,8 @@ actual object ObjectCalls {
     value: Int,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val ret = arena.allocate(JAVA_BYTE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14347,8 +14346,8 @@ actual object ObjectCalls {
     value: Int,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val ret = arena.allocate(JAVA_DOUBLE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14364,13 +14363,13 @@ actual object ObjectCalls {
     value: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -14381,8 +14380,8 @@ actual object ObjectCalls {
     value: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_LONG)
@@ -14398,13 +14397,13 @@ actual object ObjectCalls {
     value: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -14415,8 +14414,8 @@ actual object ObjectCalls {
     value: Int,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(JAVA_LONG)
@@ -14432,8 +14431,8 @@ actual object ObjectCalls {
     value: Int,
   ): String {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val retString = arena.allocate(8L, 8L)
       try {
         val arr = arena.allocate(ADDRESS, 1)
@@ -14453,8 +14452,8 @@ actual object ObjectCalls {
     value: Int,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
@@ -14470,8 +14469,8 @@ actual object ObjectCalls {
     value: Int,
   ): Vector2i {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 4L)
@@ -14487,8 +14486,8 @@ actual object ObjectCalls {
     value: Int,
   ): String {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 8L)
@@ -14508,8 +14507,8 @@ actual object ObjectCalls {
     value: Int,
   ): NodePath {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(8L, 8L)
@@ -14528,8 +14527,8 @@ actual object ObjectCalls {
     value: Int,
   ): ByteArray {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -14566,8 +14565,8 @@ actual object ObjectCalls {
     value: Long,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val ret = arena.allocate(JAVA_BYTE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14583,8 +14582,8 @@ actual object ObjectCalls {
     value: Long,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val ret = arena.allocate(JAVA_LONG)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14600,13 +14599,13 @@ actual object ObjectCalls {
     value: Long,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
-      val ret = arena.allocate(JAVA_INT)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
+      val ret = arena.allocate(JAVA_LONG)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -14617,8 +14616,8 @@ actual object ObjectCalls {
     value: Long,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val ret = arena.allocate(ADDRESS)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14634,8 +14633,8 @@ actual object ObjectCalls {
     value: Long,
   ): String {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val retString = arena.allocate(8L, 8L)
@@ -14655,8 +14654,8 @@ actual object ObjectCalls {
     value: Long,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val ret = arena.allocate(JAVA_DOUBLE)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
@@ -14672,8 +14671,8 @@ actual object ObjectCalls {
     value: Long,
   ): Vector3 {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
@@ -14693,8 +14692,8 @@ actual object ObjectCalls {
     value: Long,
   ): Transform2D {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
@@ -14710,8 +14709,8 @@ actual object ObjectCalls {
     value: Long,
   ): Transform3D {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
@@ -14727,8 +14726,8 @@ actual object ObjectCalls {
     value: Long,
   ): Projection {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 16, GodotReal.ALIGN_BYTES)
@@ -14743,8 +14742,8 @@ actual object ObjectCalls {
     value: Long,
   ): List<Long> {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -14764,9 +14763,9 @@ actual object ObjectCalls {
     transform: Transform3D,
   ): Transform3D {
     Arena.ofConfined().use { arena ->
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
-      uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       writeTransform3D(transformCell, transform)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, uintCell)
@@ -14786,11 +14785,11 @@ actual object ObjectCalls {
     third: Double,
   ): Projection {
     Arena.ofConfined().use { arena ->
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val double1 = arena.allocate(JAVA_DOUBLE)
       val double2 = arena.allocate(JAVA_DOUBLE)
-      uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       double0.set(JAVA_DOUBLE, 0, first)
       double1.set(JAVA_DOUBLE, 0, second)
       double2.set(JAVA_DOUBLE, 0, third)
@@ -14850,9 +14849,9 @@ actual object ObjectCalls {
       arg0.set(JAVA_LONG, 0, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -14867,9 +14866,9 @@ actual object ObjectCalls {
       arg0.set(JAVA_LONG, 0, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg0)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -15162,8 +15161,8 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
       colorCell.set(JAVA_FLOAT, 12, color.rawA)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val secondCell = arena.allocate(ADDRESS)
       secondCell.set(ADDRESS, 0, secondObject)
       val args = arena.allocate(ADDRESS, 5)
@@ -15209,8 +15208,8 @@ actual object ObjectCalls {
       rect.set(JAVA_INT, 4, value.position.y)
       rect.set(JAVA_INT, 8, value.size.x)
       rect.set(JAVA_INT, 12, value.size.y)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, number)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, number.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, rect)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -15291,8 +15290,8 @@ actual object ObjectCalls {
     value: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(ADDRESS)
@@ -15307,8 +15306,8 @@ actual object ObjectCalls {
     value: Int,
   ): Rect2i {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(16L, 4L)
@@ -15326,8 +15325,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Vector2i> {
     Arena.ofConfined().use { arena ->
-      val argCell = arena.allocate(JAVA_INT)
-      argCell.set(JAVA_INT, 0, value)
+      val argCell = arena.allocate(JAVA_LONG)
+      argCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, argCell)
       return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayVector2i)
@@ -15340,8 +15339,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
-      val argCell = arena.allocate(JAVA_INT)
-      argCell.set(JAVA_INT, 0, value)
+      val argCell = arena.allocate(JAVA_LONG)
+      argCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, argCell)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -15360,8 +15359,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<Vector3i> {
     Arena.ofConfined().use { arena ->
-      val argCell = arena.allocate(JAVA_INT)
-      argCell.set(JAVA_INT, 0, value)
+      val argCell = arena.allocate(JAVA_LONG)
+      argCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, argCell)
       return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayVector3i)
@@ -15374,8 +15373,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<String> {
     Arena.ofConfined().use { arena ->
-      val argCell = arena.allocate(JAVA_INT)
-      argCell.set(JAVA_INT, 0, value)
+      val argCell = arena.allocate(JAVA_LONG)
+      argCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, argCell)
       return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayStringNames)
@@ -15389,8 +15388,8 @@ actual object ObjectCalls {
     value: Int,
   ): Rect2 {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
@@ -15412,9 +15411,9 @@ actual object ObjectCalls {
     value: Rect2,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       writeRect2(rectCell, value)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, indexCell)
@@ -15429,8 +15428,8 @@ actual object ObjectCalls {
     value: Int,
   ): Transform2D {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
@@ -15446,9 +15445,9 @@ actual object ObjectCalls {
     transform: Transform2D,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       writeTransform2D(transformCell, transform)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -15463,8 +15462,8 @@ actual object ObjectCalls {
     value: Int,
   ): Transform3D {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
@@ -15480,8 +15479,8 @@ actual object ObjectCalls {
     value: Int,
   ): Color {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(16L, 4L)
@@ -15503,10 +15502,10 @@ actual object ObjectCalls {
     second: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15522,10 +15521,10 @@ actual object ObjectCalls {
     second: Long,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15541,10 +15540,10 @@ actual object ObjectCalls {
     second: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15560,16 +15559,16 @@ actual object ObjectCalls {
     second: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -15581,10 +15580,10 @@ actual object ObjectCalls {
     second: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15603,11 +15602,11 @@ actual object ObjectCalls {
     third: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      arg1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      arg0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      arg1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       arg2.set(JAVA_DOUBLE, 0, third)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -15625,10 +15624,10 @@ actual object ObjectCalls {
     second: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15646,16 +15645,16 @@ actual object ObjectCalls {
     second: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -15667,10 +15666,10 @@ actual object ObjectCalls {
     second: Int,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15689,11 +15688,11 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -15720,23 +15719,23 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val long0 = arena.allocate(JAVA_LONG)
       val long1 = arena.allocate(JAVA_LONG)
       val long2 = arena.allocate(JAVA_LONG)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       val bool0 = arena.allocate(JAVA_BYTE)
-      val int2 = arena.allocate(JAVA_INT)
+      val int2 = arena.allocate(JAVA_LONG)
       val bool1 = arena.allocate(JAVA_BYTE)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
       long0.set(JAVA_LONG, 0, firstLong)
       long1.set(JAVA_LONG, 0, secondLong)
       long2.set(JAVA_LONG, 0, thirdLong)
       doubleCell.set(JAVA_DOUBLE, 0, value)
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
-      int2.set(JAVA_INT, 0, thirdInt)
+      int2.set(JAVA_LONG, 0, thirdInt.toLong())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 9)
       args.setAtIndex(ADDRESS, 0, int0)
@@ -15766,14 +15765,14 @@ actual object ObjectCalls {
     bytes: ByteArray,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_BYTE)
       val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = BuiltinTypes.allocatePackedArray(arena)
       try {
-        arg0.set(JAVA_INT, 0, first)
-        arg1.set(JAVA_INT, 0, second)
+        arg0.set(JAVA_LONG, 0, first.toLong())
+        arg1.set(JAVA_LONG, 0, second.toLong())
         arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
         arg3.set(JAVA_LONG, 0, mode)
         BuiltinTypes.initPackedByteArray(arg4, bytes)
@@ -15798,12 +15797,12 @@ actual object ObjectCalls {
     third: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15820,19 +15819,19 @@ actual object ObjectCalls {
     third: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -15844,12 +15843,12 @@ actual object ObjectCalls {
     third: Int,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15868,12 +15867,12 @@ actual object ObjectCalls {
     third: Int,
   ): Vector2i {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15892,12 +15891,12 @@ actual object ObjectCalls {
     third: Int,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15917,13 +15916,13 @@ actual object ObjectCalls {
     vector: Vector2,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       writeVector2(arg3, vector)
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -15943,14 +15942,14 @@ actual object ObjectCalls {
     fourth: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15969,14 +15968,14 @@ actual object ObjectCalls {
     fourth: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -15997,14 +15996,14 @@ actual object ObjectCalls {
     fourth: Int,
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16030,15 +16029,15 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
       arg4.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16060,16 +16059,16 @@ actual object ObjectCalls {
     fifth: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      val arg4 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
-      arg4.set(JAVA_INT, 0, fifth)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      val arg4 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
+      arg4.set(JAVA_LONG, 0, fifth.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16090,16 +16089,16 @@ actual object ObjectCalls {
     fifth: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      val arg4 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
-      arg3.set(JAVA_INT, 0, fourth)
-      arg4.set(JAVA_INT, 0, fifth)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      val arg4 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
+      arg3.set(JAVA_LONG, 0, fourth.toLong())
+      arg4.set(JAVA_LONG, 0, fifth.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16120,11 +16119,11 @@ actual object ObjectCalls {
     third: Long,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       arg2.set(JAVA_LONG, 0, third)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16142,11 +16141,11 @@ actual object ObjectCalls {
     text: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       GodotStrings.initString(stringCell, text)
       try {
         val arr = arena.allocate(ADDRESS, 3)
@@ -16168,10 +16167,10 @@ actual object ObjectCalls {
     color: Color,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       // Color components use fixed 32-bit storage, unlike scalar float method args.
       val colorCell = arena.allocate(16L, 4L)
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
@@ -16194,11 +16193,11 @@ actual object ObjectCalls {
     value: Vector3,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       GodotRealSegment.writeRaw(vec, 0, value.rawX)
       GodotRealSegment.writeRaw(vec, 1, value.rawY)
       GodotRealSegment.writeRaw(vec, 2, value.rawZ)
@@ -16218,10 +16217,10 @@ actual object ObjectCalls {
     second: Int,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16238,10 +16237,10 @@ actual object ObjectCalls {
     second: Int,
   ): Color {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16263,10 +16262,10 @@ actual object ObjectCalls {
     second: Int,
   ): Vector3 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16289,11 +16288,11 @@ actual object ObjectCalls {
     value: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       arg2.set(JAVA_DOUBLE, 0, value)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16312,10 +16311,10 @@ actual object ObjectCalls {
     name: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16333,12 +16332,12 @@ actual object ObjectCalls {
     value: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg3 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       GodotRealSegment.writeRaw(arg2, 0, vector.rawX)
       GodotRealSegment.writeRaw(arg2, 1, vector.rawY)
       arg3.set(JAVA_DOUBLE, 0, value)
@@ -16359,11 +16358,11 @@ actual object ObjectCalls {
     vector: Vector2i,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(8L, 4L)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       writeVector2i(arg2, vector)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16381,11 +16380,11 @@ actual object ObjectCalls {
     vector: Vector2i,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(8L, 4L)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       writeVector2i(arg2, vector)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -16406,12 +16405,12 @@ actual object ObjectCalls {
     vector2: Vector2,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(8L, 4L)
       val arg3 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       writeVector2i(arg2, vector2i)
       writeVector2(arg3, vector2)
       val arr = arena.allocate(ADDRESS, 4)
@@ -16431,10 +16430,10 @@ actual object ObjectCalls {
     second: Int,
   ): String {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16455,10 +16454,10 @@ actual object ObjectCalls {
     second: Int,
   ): List<Vector2i> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16473,10 +16472,10 @@ actual object ObjectCalls {
     second: Int,
   ): NodePath {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16497,10 +16496,10 @@ actual object ObjectCalls {
     second: Int,
   ): Vector2i {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16517,10 +16516,10 @@ actual object ObjectCalls {
     second: Int,
   ): Rect2i {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16539,12 +16538,12 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_BYTE)
       val arg3 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       arg2.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       arg3.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 4)
@@ -16552,9 +16551,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -16566,13 +16565,13 @@ actual object ObjectCalls {
     path: NodePath,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
       try {
-        arg0.set(JAVA_INT, 0, first)
-        arg1.set(JAVA_INT, 0, second)
+        arg0.set(JAVA_LONG, 0, first.toLong())
+        arg1.set(JAVA_LONG, 0, second.toLong())
         GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
           type = VariantType.NODE_PATH,
@@ -16599,10 +16598,10 @@ actual object ObjectCalls {
     second: Int,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16620,12 +16619,12 @@ actual object ObjectCalls {
     second: Int,
   ): String {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val retString = arena.allocate(8L, 8L)
       try {
-        arg0.set(JAVA_INT, 0, first)
-        arg1.set(JAVA_INT, 0, second)
+        arg0.set(JAVA_LONG, 0, first.toLong())
+        arg1.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16645,10 +16644,10 @@ actual object ObjectCalls {
     second: Int,
   ): Any? {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16670,10 +16669,10 @@ actual object ObjectCalls {
     second: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16692,12 +16691,12 @@ actual object ObjectCalls {
     longArg: Long,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_BYTE)
       val arg3 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       arg3.set(JAVA_LONG, 0, longArg)
       val arr = arena.allocate(ADDRESS, 4)
@@ -16720,11 +16719,11 @@ actual object ObjectCalls {
     thirdBool: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
       val bool2 = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       bool2.set(JAVA_BYTE, 0, if (thirdBool) 1.toByte() else 0.toByte())
@@ -16749,13 +16748,13 @@ actual object ObjectCalls {
     thirdBool: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
       val bool2 = arena.allocate(JAVA_BYTE)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       bool2.set(JAVA_BYTE, 0, if (thirdBool) 1.toByte() else 0.toByte())
@@ -16779,12 +16778,12 @@ actual object ObjectCalls {
     third: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
-      int2.set(JAVA_INT, 0, third)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
+      int2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, int1)
@@ -16807,16 +16806,16 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val typeCell = arena.allocate(JAVA_LONG)
-      val widthCell = arena.allocate(JAVA_INT)
-      val heightCell = arena.allocate(JAVA_INT)
-      val depthCell = arena.allocate(JAVA_INT)
+      val widthCell = arena.allocate(JAVA_LONG)
+      val heightCell = arena.allocate(JAVA_LONG)
+      val depthCell = arena.allocate(JAVA_LONG)
       val useMipmapsCell = arena.allocate(JAVA_BYTE)
       val imageArray = arena.allocate(8L, 8L)
       try {
         typeCell.set(JAVA_LONG, 0, type)
-        widthCell.set(JAVA_INT, 0, width)
-        heightCell.set(JAVA_INT, 0, height)
-        depthCell.set(JAVA_INT, 0, depth)
+        widthCell.set(JAVA_LONG, 0, width.toLong())
+        heightCell.set(JAVA_LONG, 0, height.toLong())
+        depthCell.set(JAVA_LONG, 0, depth.toLong())
         useMipmapsCell.set(JAVA_BYTE, 0, if (useMipmaps) 1.toByte() else 0.toByte())
         BuiltinTypes.initArrayOfObjects(imageArray, images)
         val args = arena.allocate(ADDRESS, 6)
@@ -16847,16 +16846,16 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val typeCell = arena.allocate(JAVA_LONG)
-      val widthCell = arena.allocate(JAVA_INT)
-      val heightCell = arena.allocate(JAVA_INT)
-      val depthCell = arena.allocate(JAVA_INT)
+      val widthCell = arena.allocate(JAVA_LONG)
+      val heightCell = arena.allocate(JAVA_LONG)
+      val depthCell = arena.allocate(JAVA_LONG)
       val useMipmapsCell = arena.allocate(JAVA_BYTE)
       val imageArray = arena.allocate(8L, 8L)
       try {
         typeCell.set(JAVA_LONG, 0, type)
-        widthCell.set(JAVA_INT, 0, width)
-        heightCell.set(JAVA_INT, 0, height)
-        depthCell.set(JAVA_INT, 0, depth)
+        widthCell.set(JAVA_LONG, 0, width.toLong())
+        heightCell.set(JAVA_LONG, 0, height.toLong())
+        depthCell.set(JAVA_LONG, 0, depth.toLong())
         useMipmapsCell.set(JAVA_BYTE, 0, if (useMipmaps) 1.toByte() else 0.toByte())
         BuiltinTypes.initArrayOfObjects(imageArray, images)
         val args = arena.allocate(ADDRESS, 6)
@@ -16886,15 +16885,15 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
-      val int3 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
+      val int3 = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
-      int2.set(JAVA_INT, 0, third)
-      int3.set(JAVA_INT, 0, fourth)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
+      int2.set(JAVA_LONG, 0, third.toLong())
+      int3.set(JAVA_LONG, 0, fourth.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, int0)
@@ -16916,15 +16915,15 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      val int2 = arena.allocate(JAVA_INT)
-      val int3 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      val int2 = arena.allocate(JAVA_LONG)
+      val int3 = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      int0.set(JAVA_INT, 0, first)
-      int1.set(JAVA_INT, 0, second)
-      int2.set(JAVA_INT, 0, third)
-      int3.set(JAVA_INT, 0, fourth)
+      int0.set(JAVA_LONG, 0, first.toLong())
+      int1.set(JAVA_LONG, 0, second.toLong())
+      int2.set(JAVA_LONG, 0, third.toLong())
+      int3.set(JAVA_LONG, 0, fourth.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, longCell)
       arr.setAtIndex(ADDRESS, 1, int0)
@@ -16951,13 +16950,13 @@ actual object ObjectCalls {
       val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
       val arg2 = arena.allocate(JAVA_DOUBLE)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = arena.allocate(JAVA_DOUBLE)
       val arg5 = arena.allocate(JAVA_DOUBLE)
       arg0.set(JAVA_LONG, 0, longArg)
       arg1.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       arg2.set(JAVA_DOUBLE, 0, firstDouble)
-      arg3.set(JAVA_INT, 0, intArg)
+      arg3.set(JAVA_LONG, 0, intArg.toLong())
       arg4.set(JAVA_DOUBLE, 0, secondDouble)
       arg5.set(JAVA_DOUBLE, 0, thirdDouble)
       val arr = arena.allocate(ADDRESS, 6)
@@ -16979,10 +16978,10 @@ actual object ObjectCalls {
     second: Int,
   ): List<Any?> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -16999,9 +16998,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -17020,9 +17019,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -17039,15 +17038,15 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -17059,12 +17058,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
-      val int1 = arena.allocate(JAVA_INT)
-      int0.set(JAVA_INT, 0, firstInt)
+      val int1 = arena.allocate(JAVA_LONG)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
       objCell.set(ADDRESS, 0, objectArg)
-      int1.set(JAVA_INT, 0, secondInt)
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, objCell)
@@ -17081,10 +17080,10 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       objCell.set(ADDRESS, 0, objectArg)
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -17105,10 +17104,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, objectArg)
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, doubleCell)
@@ -17127,11 +17126,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, objectArg)
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, objCell)
       arr.setAtIndex(ADDRESS, 1, vectorCell)
@@ -17194,8 +17193,8 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val boolCell = arena.allocate(java.lang.foreign.ValueLayout.JAVA_BYTE)
       boolCell.set(
         java.lang.foreign.ValueLayout.JAVA_BYTE,
@@ -17217,8 +17216,8 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intValue))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intValue))
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
@@ -17236,8 +17235,8 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intValue))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intValue))
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
@@ -17259,8 +17258,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intValue))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intValue))
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -17283,8 +17282,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intValue))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intValue))
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -17308,9 +17307,9 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -17328,9 +17327,9 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ): NodePath {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -17352,9 +17351,9 @@ actual object ObjectCalls {
     boolValue: Boolean,
   ): Rect2 {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -17373,12 +17372,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, intValue)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       arg1.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -17396,13 +17395,13 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intValue)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       arg1.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       arg3.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -17422,14 +17421,14 @@ actual object ObjectCalls {
     thirdInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, intValue)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       arg1.set(JAVA_BYTE, 0, if (boolValue) 1.toByte() else 0.toByte())
-      arg2.set(JAVA_INT, 0, secondInt)
-      arg3.set(JAVA_INT, 0, thirdInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
+      arg3.set(JAVA_LONG, 0, thirdInt.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -17449,16 +17448,16 @@ actual object ObjectCalls {
     thirdInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_BYTE)
       val arg2 = arena.allocate(JAVA_BYTE)
-      val arg3 = arena.allocate(JAVA_INT)
-      val arg4 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, intValue)
+      val arg3 = arena.allocate(JAVA_LONG)
+      val arg4 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       arg1.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       arg2.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
-      arg3.set(JAVA_INT, 0, secondInt)
-      arg4.set(JAVA_INT, 0, thirdInt)
+      arg3.set(JAVA_LONG, 0, secondInt.toLong())
+      arg4.set(JAVA_LONG, 0, thirdInt.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -17477,9 +17476,9 @@ actual object ObjectCalls {
     second: Long,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -17496,10 +17495,10 @@ actual object ObjectCalls {
     third: Long,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       arg2.set(JAVA_LONG, 0, third)
       val arr = arena.allocate(ADDRESS, 3)
@@ -17518,19 +17517,19 @@ actual object ObjectCalls {
     third: Long,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       arg2.set(JAVA_LONG, 0, third)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -17541,9 +17540,9 @@ actual object ObjectCalls {
     second: Long,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -17561,9 +17560,9 @@ actual object ObjectCalls {
     second: Long,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -17582,9 +17581,9 @@ actual object ObjectCalls {
     stringValue: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 8L)
-      arg0.set(JAVA_INT, 0, intValue)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       GodotStrings.initString(arg1, stringValue)
       try {
         val arr = arena.allocate(ADDRESS, 2)
@@ -17605,17 +17604,17 @@ actual object ObjectCalls {
     stringValue: String,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 8L)
-      arg0.set(JAVA_INT, 0, intValue)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       GodotStrings.initString(arg1, stringValue)
       try {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, arg0)
         arr.setAtIndex(ADDRESS, 1, arg1)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(arg1)
       }
@@ -17630,20 +17629,20 @@ actual object ObjectCalls {
     value: String,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         GodotStrings.initString(stringCell, value)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, firstCell)
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, stringCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -17657,9 +17656,9 @@ actual object ObjectCalls {
     stringValue: String,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 8L)
-      arg0.set(JAVA_INT, 0, intValue)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       GodotStrings.initString(arg1, stringValue)
       try {
         val arr = arena.allocate(ADDRESS, 2)
@@ -17685,14 +17684,14 @@ actual object ObjectCalls {
     thirdInt: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val string0 = arena.allocate(8L, 8L)
       val string1 = arena.allocate(8L, 8L)
-      val int2 = arena.allocate(JAVA_INT)
-      int0.set(JAVA_INT, 0, firstInt)
-      int1.set(JAVA_INT, 0, secondInt)
-      int2.set(JAVA_INT, 0, thirdInt)
+      val int2 = arena.allocate(JAVA_LONG)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
+      int2.set(JAVA_LONG, 0, thirdInt.toLong())
       GodotStrings.initString(string0, firstString)
       GodotStrings.initString(string1, secondString)
       try {
@@ -17702,9 +17701,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 2, string0)
         arr.setAtIndex(ADDRESS, 3, string1)
         arr.setAtIndex(ADDRESS, 4, int2)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(string1)
         GodotStrings.destroyString(string0)
@@ -17721,13 +17720,13 @@ actual object ObjectCalls {
     secondString: String,
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val string0 = arena.allocate(8L, 8L)
       val string1 = arena.allocate(8L, 8L)
       val ret = arena.allocate(8L, 8L)
-      int0.set(JAVA_INT, 0, firstInt)
-      int1.set(JAVA_INT, 0, secondInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       GodotStrings.initString(string0, firstString)
       GodotStrings.initString(string1, secondString)
       try {
@@ -17850,10 +17849,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       // Scalar Godot float method args use the ABI's 64-bit Variant float slot.
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -17869,10 +17868,10 @@ actual object ObjectCalls {
   ): List<Int> {
     Arena.ofConfined().use { arena ->
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       // Scalar Godot float method args use the ABI's 64-bit Variant float slot.
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -17894,10 +17893,10 @@ actual object ObjectCalls {
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       // Scalar Godot float method args use the ABI's 64-bit Variant float slot.
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, doubleCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -18004,9 +18003,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val boolCell = arena.allocate(JAVA_BYTE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -18022,9 +18021,9 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val boolCell = arena.allocate(JAVA_BYTE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -18042,9 +18041,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val boolCell = arena.allocate(JAVA_BYTE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, boolCell)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -18134,9 +18133,9 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18274,10 +18273,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
       arg1.set(JAVA_LONG, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -18402,9 +18401,9 @@ actual object ObjectCalls {
     second: Long,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18494,9 +18493,9 @@ actual object ObjectCalls {
     second: Long,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, first)
+      arg0.set(JAVA_LONG, 0, first.toLong())
       arg1.set(JAVA_LONG, 0, second)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18557,9 +18556,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18576,9 +18575,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18596,16 +18595,16 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18616,9 +18615,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18636,9 +18635,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): Vector3 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -18662,19 +18661,19 @@ actual object ObjectCalls {
     secondDouble: Double,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, firstDouble)
       arg2.set(JAVA_DOUBLE, 0, secondDouble)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18687,10 +18686,10 @@ actual object ObjectCalls {
     quaternion: Quaternion,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       GodotRealSegment.writeRaw(arg2, 0, quaternion.rawX)
       GodotRealSegment.writeRaw(arg2, 1, quaternion.rawY)
@@ -18700,9 +18699,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18715,10 +18714,10 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -18740,10 +18739,10 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): Any? {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -18767,12 +18766,12 @@ actual object ObjectCalls {
     secondDouble: Double,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val variant = initVariantCell(arena, variantValue)
       val arg3 = arena.allocate(JAVA_DOUBLE)
       try {
-        arg0.set(JAVA_INT, 0, intArg)
+        arg0.set(JAVA_LONG, 0, intArg.toLong())
         arg1.set(JAVA_DOUBLE, 0, firstDouble)
         arg3.set(JAVA_DOUBLE, 0, secondDouble)
         val arr = arena.allocate(ADDRESS, 4)
@@ -18780,9 +18779,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, arg1)
         arr.setAtIndex(ADDRESS, 2, variant)
         arr.setAtIndex(ADDRESS, 3, arg3)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyVariant(variant)
       }
@@ -18802,12 +18801,12 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(JAVA_BYTE)
       val arg4 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       arg2.set(JAVA_LONG, 0, longArg)
       arg3.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
@@ -18818,9 +18817,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18838,12 +18837,12 @@ actual object ObjectCalls {
     secondVector: Vector2,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_DOUBLE)
       val arg3 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg4 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, firstDouble)
       arg2.set(JAVA_DOUBLE, 0, secondDouble)
       GodotRealSegment.writeRaw(arg3, 0, firstVector.rawX)
@@ -18856,9 +18855,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18876,12 +18875,12 @@ actual object ObjectCalls {
     thirdDouble: Double,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val objectCell = arena.allocate(ADDRESS)
       val arg3 = arena.allocate(JAVA_DOUBLE)
       val arg4 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, firstDouble)
       objectCell.set(ADDRESS, 0, objectArg)
       arg3.set(JAVA_DOUBLE, 0, secondDouble)
@@ -18892,9 +18891,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, objectCell)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18907,10 +18906,10 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): Quaternion {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -18937,17 +18936,17 @@ actual object ObjectCalls {
     name: String,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, GodotStrings.makeStringName(name))
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18959,10 +18958,10 @@ actual object ObjectCalls {
     vector: Vector3,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       GodotRealSegment.writeRaw(arg2, 0, vector.rawX)
       GodotRealSegment.writeRaw(arg2, 1, vector.rawY)
@@ -18971,9 +18970,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -18985,10 +18984,10 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): Vector3 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_BYTE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 3)
@@ -19012,9 +19011,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -19036,9 +19035,9 @@ actual object ObjectCalls {
     doubleArg: Double,
   ): List<Vector3> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -19062,8 +19061,8 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val objCell = arena.allocate(ADDRESS)
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -19081,8 +19080,8 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intArg))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intArg))
       val objCell = arena.allocate(ADDRESS)
       objCell.set(ADDRESS, 0, objectArg)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -19099,8 +19098,8 @@ actual object ObjectCalls {
     doubleArg: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intArg))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intArg))
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
       val arr = arena.allocate(ADDRESS, 2)
@@ -19118,8 +19117,8 @@ actual object ObjectCalls {
     transform: Transform2D,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intArg))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intArg))
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
       writeTransform2D(transformCell, transform)
       val arr = arena.allocate(ADDRESS, 2)
@@ -19137,8 +19136,8 @@ actual object ObjectCalls {
     transform: Transform3D,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(intArg))
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(intArg))
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       writeTransform3D(transformCell, transform)
       val arr = arena.allocate(ADDRESS, 2)
@@ -19156,8 +19155,8 @@ actual object ObjectCalls {
     transformArg: Transform3D,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val transform = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       GodotRealSegment.writeRaw(transform, 0, transformArg.basis.x.rawX)
       GodotRealSegment.writeRaw(transform, 1, transformArg.basis.y.rawX)
@@ -19238,11 +19237,11 @@ actual object ObjectCalls {
     c: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(JAVA_DOUBLE)
       val arg2 = arena.allocate(JAVA_DOUBLE)
       val arg3 = arena.allocate(JAVA_DOUBLE)
-      arg0.set(JAVA_INT, 0, intArg)
+      arg0.set(JAVA_LONG, 0, intArg.toLong())
       arg1.set(JAVA_DOUBLE, 0, a)
       arg2.set(JAVA_DOUBLE, 0, b)
       arg3.set(JAVA_DOUBLE, 0, c)
@@ -19585,9 +19584,9 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -19615,8 +19614,8 @@ actual object ObjectCalls {
     value: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
@@ -19675,9 +19674,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
       arr.setAtIndex(ADDRESS, 2, boolCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -19734,8 +19733,8 @@ actual object ObjectCalls {
     third: String,
   ): String {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
@@ -19775,8 +19774,8 @@ actual object ObjectCalls {
     second: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -19794,10 +19793,10 @@ actual object ObjectCalls {
     secondValue: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
-      firstIntCell.set(JAVA_INT, 0, firstValue)
-      secondIntCell.set(JAVA_INT, 0, secondValue)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
+      firstIntCell.set(JAVA_LONG, 0, firstValue.toLong())
+      secondIntCell.set(JAVA_LONG, 0, secondValue.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, firstIntCell)
@@ -19816,10 +19815,10 @@ actual object ObjectCalls {
     secondValue: Int,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
-      firstIntCell.set(JAVA_INT, 0, firstValue)
-      secondIntCell.set(JAVA_INT, 0, secondValue)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
+      firstIntCell.set(JAVA_LONG, 0, firstValue.toLong())
+      secondIntCell.set(JAVA_LONG, 0, secondValue.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       arr.setAtIndex(ADDRESS, 1, firstIntCell)
@@ -19841,11 +19840,11 @@ actual object ObjectCalls {
     enabled: Boolean,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      firstIntCell.set(JAVA_INT, 0, firstValue)
-      secondIntCell.set(JAVA_INT, 0, secondValue)
+      firstIntCell.set(JAVA_LONG, 0, firstValue.toLong())
+      secondIntCell.set(JAVA_LONG, 0, secondValue.toLong())
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
@@ -19869,11 +19868,11 @@ actual object ObjectCalls {
     value: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      firstIntCell.set(JAVA_INT, 0, firstValue)
-      secondIntCell.set(JAVA_INT, 0, secondValue)
+      firstIntCell.set(JAVA_LONG, 0, firstValue.toLong())
+      secondIntCell.set(JAVA_LONG, 0, secondValue.toLong())
       doubleCell.set(JAVA_DOUBLE, 0, value)
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
@@ -19942,9 +19941,9 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -20226,9 +20225,9 @@ actual object ObjectCalls {
         )
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, nodePath)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20287,9 +20286,9 @@ actual object ObjectCalls {
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, longCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.NODE_PATH, nodePath)
         GodotStrings.destroyString(pathString)
@@ -20394,7 +20393,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
-      val intArg = arena.allocate(JAVA_INT)
+      val intArg = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
@@ -20403,7 +20402,7 @@ actual object ObjectCalls {
           constructorIndex = 2,
           args = listOf(pathString),
         )
-        intArg.set(JAVA_INT, 0, value)
+        intArg.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, intArg)
@@ -20454,13 +20453,13 @@ actual object ObjectCalls {
     second: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       try {
-        firstCell.set(JAVA_INT, 0, first)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
@@ -20469,7 +20468,7 @@ actual object ObjectCalls {
           constructorIndex = 2,
           args = listOf(pathString),
         )
-        secondCell.set(JAVA_INT, 0, second)
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, firstCell)
         arr.setAtIndex(ADDRESS, 1, boolCell)
@@ -20495,8 +20494,8 @@ actual object ObjectCalls {
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
@@ -20506,8 +20505,8 @@ actual object ObjectCalls {
           args = listOf(pathString),
         )
         writeRect2(rectCell, rect)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, nodePath)
         arr.setAtIndex(ADDRESS, 1, rectCell)
@@ -20717,8 +20716,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       GodotStrings.initString(stringCell, text)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val boolCell = arena.allocate(JAVA_BYTE)
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       try {
@@ -20823,23 +20822,23 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val variationCoordinatesCell = arena.allocate(8L, 8L)
-      val faceIndexCell = arena.allocate(JAVA_INT)
+      val faceIndexCell = arena.allocate(JAVA_LONG)
       val strengthCell = arena.allocate(JAVA_DOUBLE)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
-      val spacingTopCell = arena.allocate(JAVA_INT)
-      val spacingBottomCell = arena.allocate(JAVA_INT)
-      val spacingSpaceCell = arena.allocate(JAVA_INT)
-      val spacingGlyphCell = arena.allocate(JAVA_INT)
+      val spacingTopCell = arena.allocate(JAVA_LONG)
+      val spacingBottomCell = arena.allocate(JAVA_LONG)
+      val spacingSpaceCell = arena.allocate(JAVA_LONG)
+      val spacingGlyphCell = arena.allocate(JAVA_LONG)
       val baselineOffsetCell = arena.allocate(JAVA_DOUBLE)
       try {
         BuiltinTypes.initDictionary(variationCoordinatesCell, variationCoordinates)
-        faceIndexCell.set(JAVA_INT, 0, faceIndex)
+        faceIndexCell.set(JAVA_LONG, 0, faceIndex.toLong())
         strengthCell.set(JAVA_DOUBLE, 0, strength)
         writeTransform2D(transformCell, transform)
-        spacingTopCell.set(JAVA_INT, 0, spacingTop)
-        spacingBottomCell.set(JAVA_INT, 0, spacingBottom)
-        spacingSpaceCell.set(JAVA_INT, 0, spacingSpace)
-        spacingGlyphCell.set(JAVA_INT, 0, spacingGlyph)
+        spacingTopCell.set(JAVA_LONG, 0, spacingTop.toLong())
+        spacingBottomCell.set(JAVA_LONG, 0, spacingBottom.toLong())
+        spacingSpaceCell.set(JAVA_LONG, 0, spacingSpace.toLong())
+        spacingGlyphCell.set(JAVA_LONG, 0, spacingGlyph.toLong())
         baselineOffsetCell.set(JAVA_DOUBLE, 0, baselineOffset)
         val args = arena.allocate(ADDRESS, 9)
         args.setAtIndex(ADDRESS, 0, variationCoordinatesCell)
@@ -20934,10 +20933,10 @@ actual object ObjectCalls {
     values: Map<String, Any?>,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val dict = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         BuiltinTypes.initDictionary(dict, values)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
@@ -20957,10 +20956,10 @@ actual object ObjectCalls {
     values: Map<String, Any?>,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val dict = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         BuiltinTypes.initDictionary(dict, values)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, intCell)
@@ -21147,8 +21146,8 @@ actual object ObjectCalls {
     intArg: Int,
   ): Map<String, Any?> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(8L, 8L)
@@ -21389,9 +21388,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -21408,9 +21407,9 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -21429,9 +21428,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -21450,9 +21449,9 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -21471,15 +21470,15 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -21492,15 +21491,15 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -21514,18 +21513,18 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_LONG)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_LONG, 0, first)
-      arg1.set(JAVA_INT, 0, second)
-      arg2.set(JAVA_INT, 0, third)
+      arg1.set(JAVA_LONG, 0, second.toLong())
+      arg2.set(JAVA_LONG, 0, third.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -21538,8 +21537,8 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
@@ -21554,8 +21553,8 @@ actual object ObjectCalls {
   ): Any? {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       return readVariantReturn(methodBind, instance, arr, arena)
@@ -21570,10 +21569,10 @@ actual object ObjectCalls {
     variantValue: Any?,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val variant = initVariantCell(arena, variantValue)
       try {
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, intCell)
         arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
@@ -21593,11 +21592,11 @@ actual object ObjectCalls {
     path: NodePath,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val nodePath = arena.allocate(8L, 8L)
       val pathString = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         GodotStrings.initString(pathString, path.path)
         BuiltinTypes.construct(
           type = VariantType.NODE_PATH,
@@ -21624,9 +21623,9 @@ actual object ObjectCalls {
     vector: Vector2,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
       val arr = arena.allocate(ADDRESS, 2)
@@ -21643,8 +21642,8 @@ actual object ObjectCalls {
     vector: Vector2i,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val vecCell = arena.allocate(8L, 4L)
       vecCell.set(JAVA_INT, 0, vector.x)
       vecCell.set(JAVA_INT, 4, vector.y)
@@ -21662,16 +21661,16 @@ actual object ObjectCalls {
     vector: Vector2i,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vecCell = arena.allocate(8L, 4L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       writeVector2i(vecCell, vector)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vecCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -21682,9 +21681,9 @@ actual object ObjectCalls {
     vector: Vector2i,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vecCell = arena.allocate(8L, 4L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       writeVector2i(vecCell, vector)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -21702,9 +21701,9 @@ actual object ObjectCalls {
     vector: Vector2i,
   ): List<Int> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vecCell = arena.allocate(8L, 4L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       writeVector2i(vecCell, vector)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -21726,9 +21725,9 @@ actual object ObjectCalls {
     vector: Vector2i,
   ): List<Any?> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vecCell = arena.allocate(8L, 4L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       writeVector2i(vecCell, vector)
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, intCell)
@@ -21764,8 +21763,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       arr.setAtIndex(ADDRESS, 1, intCell)
       bindPtrcall(methodBind, instance, arr, MemorySegment.NULL)
     }
@@ -21780,12 +21779,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       arr.setAtIndex(ADDRESS, 1, intCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -21796,8 +21795,8 @@ actual object ObjectCalls {
     value: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -21880,9 +21879,9 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 3)
       val int0 = arena.allocate(JAVA_LONG)
-      val int1 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
       int0.set(JAVA_LONG, 0, first)
-      int1.set(JAVA_INT, 0, second)
+      int1.set(JAVA_LONG, 0, second.toLong())
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
@@ -21906,13 +21905,13 @@ actual object ObjectCalls {
       val variant = initVariantCell(arena, value)
       val secondLongCell = arena.allocate(JAVA_LONG)
       val secondStringCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         firstLongCell.set(JAVA_LONG, 0, firstLong)
         GodotStrings.initString(firstStringCell, firstText)
         secondLongCell.set(JAVA_LONG, 0, secondLong)
         GodotStrings.initString(secondStringCell, secondText)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         val args = arena.allocate(ADDRESS, 6)
         args.setAtIndex(ADDRESS, 0, firstLongCell)
         args.setAtIndex(ADDRESS, 1, firstStringCell)
@@ -21947,7 +21946,7 @@ actual object ObjectCalls {
       val colorCell = arena.allocate(16L, 4L)
       val objectCell = arena.allocate(ADDRESS)
       val variant = initVariantCell(arena, variantValue)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         longCell.set(JAVA_LONG, 0, longValue)
         GodotStrings.initString(firstStringCell, firstText)
@@ -21957,7 +21956,7 @@ actual object ObjectCalls {
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
         colorCell.set(JAVA_FLOAT, 12, color.rawA)
         objectCell.set(ADDRESS, 0, objectArg)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         val args = arena.allocate(ADDRESS, 7)
         args.setAtIndex(ADDRESS, 0, longCell)
         args.setAtIndex(ADDRESS, 1, firstStringCell)
@@ -21985,10 +21984,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 3)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
-      int0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      int1.set(JAVA_INT, 0, second)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
+      int0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      int1.set(JAVA_LONG, 0, second.toLong())
       arr.setAtIndex(ADDRESS, 0, int0)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       arr.setAtIndex(ADDRESS, 2, int1)
@@ -22087,10 +22086,10 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
-      val flagsArg = arena.allocate(JAVA_INT)
+      val flagsArg = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        flagsArg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+        flagsArg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, callable)
@@ -22121,7 +22120,7 @@ actual object ObjectCalls {
       val callable = BuiltinTypes.allocateCallable(arena)
       val boundArray = arena.allocate(8L, 8L)
       val boundCallable = BuiltinTypes.allocateCallable(arena)
-      val flagsArg = arena.allocate(JAVA_INT)
+      val flagsArg = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         BuiltinTypes.initArray(boundArray, boundArgs)
@@ -22133,7 +22132,7 @@ actual object ObjectCalls {
           args = listOf(boundArray),
           rReturn = boundCallable,
         )
-        flagsArg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+        flagsArg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
         arr.setAtIndex(ADDRESS, 1, boundCallable)
@@ -22244,10 +22243,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        valueCell.set(JAVA_INT, 0, value)
+        valueCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, callable)
         arr.setAtIndex(ADDRESS, 1, valueCell)
@@ -22291,10 +22290,10 @@ actual object ObjectCalls {
     callableMethod: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
-        valueCell.set(JAVA_INT, 0, value)
+        valueCell.set(JAVA_LONG, 0, value.toLong())
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, valueCell)
@@ -22362,11 +22361,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        valueCell.set(JAVA_INT, 0, value)
+        valueCell.set(JAVA_LONG, 0, value.toLong())
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, ridCell)
@@ -22440,11 +22439,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
         GodotStrings.initString(stringCell, value)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, stringCell)
@@ -22644,7 +22643,7 @@ actual object ObjectCalls {
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         GodotStrings.initString(firstStringCell, firstString)
@@ -22654,7 +22653,7 @@ actual object ObjectCalls {
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 7)
         arr.setAtIndex(ADDRESS, 0, firstStringCell)
         arr.setAtIndex(ADDRESS, 1, secondStringCell)
@@ -22663,9 +22662,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 4, variantCell)
         arr.setAtIndex(ADDRESS, 5, flagsCell)
         arr.setAtIndex(ADDRESS, 6, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -22700,7 +22699,7 @@ actual object ObjectCalls {
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         GodotStrings.initString(firstStringCell, firstString)
@@ -22711,7 +22710,7 @@ actual object ObjectCalls {
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 8)
         arr.setAtIndex(ADDRESS, 0, firstStringCell)
         arr.setAtIndex(ADDRESS, 1, objectCell)
@@ -22721,9 +22720,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 5, variantCell)
         arr.setAtIndex(ADDRESS, 6, flagsCell)
         arr.setAtIndex(ADDRESS, 7, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -22756,7 +22755,7 @@ actual object ObjectCalls {
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
@@ -22766,7 +22765,7 @@ actual object ObjectCalls {
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 7)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
@@ -22775,9 +22774,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 4, variantCell)
         arr.setAtIndex(ADDRESS, 5, flagsCell)
         arr.setAtIndex(ADDRESS, 6, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -22811,7 +22810,7 @@ actual object ObjectCalls {
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
@@ -22822,7 +22821,7 @@ actual object ObjectCalls {
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 8)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, objectCell)
@@ -22832,9 +22831,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 5, variantCell)
         arr.setAtIndex(ADDRESS, 6, flagsCell)
         arr.setAtIndex(ADDRESS, 7, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -23069,14 +23068,14 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val callable = BuiltinTypes.allocateCallable(arena)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val stringCell = arena.allocate(8L, 8L)
       try {
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         boolCell.set(JAVA_BYTE, 0, if (value) 1 else 0)
         GodotStrings.initString(stringCell, text)
         val arr = arena.allocate(ADDRESS, 5)
@@ -23115,9 +23114,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 0, objectCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
         arr.setAtIndex(ADDRESS, 2, callable)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
         GodotStrings.destroyString(stringCell)
@@ -23153,9 +23152,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 1, secondCell)
         arr.setAtIndex(ADDRESS, 2, objectCell)
         arr.setAtIndex(ADDRESS, 3, callable)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
         GodotStrings.destroyString(secondCell)
@@ -23174,11 +23173,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+        valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, ridCell)
@@ -23205,13 +23204,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-        secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+        firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+        secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, callable)
@@ -23542,7 +23541,7 @@ actual object ObjectCalls {
       val modeCell = arena.allocate(JAVA_LONG)
       val packedCell = BuiltinTypes.allocatePackedArray(arena)
       val callable = BuiltinTypes.allocateCallable(arena)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(firstStringCell, firstString)
         GodotStrings.initString(secondStringCell, secondString)
@@ -23551,7 +23550,7 @@ actual object ObjectCalls {
         modeCell.set(JAVA_LONG, 0, mode)
         BuiltinTypes.initPackedStringArray(packedCell, values)
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 8)
         arr.setAtIndex(ADDRESS, 0, firstStringCell)
         arr.setAtIndex(ADDRESS, 1, secondStringCell)
@@ -23599,7 +23598,7 @@ actual object ObjectCalls {
       val packedCell = BuiltinTypes.allocatePackedArray(arena)
       val dictionaryArray = arena.allocate(8L, 8L)
       val callable = BuiltinTypes.allocateCallable(arena)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(firstStringCell, firstString)
         GodotStrings.initString(secondStringCell, secondString)
@@ -23610,7 +23609,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedStringArray(packedCell, values)
         BuiltinTypes.initArrayOfDictionaries(dictionaryArray, dictionaries)
         BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 10)
         arr.setAtIndex(ADDRESS, 0, firstStringCell)
         arr.setAtIndex(ADDRESS, 1, secondStringCell)
@@ -23655,25 +23654,25 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val firstStringCell = arena.allocate(8L, 8L)
       val secondStringCell = arena.allocate(8L, 8L)
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       val firstCallable = BuiltinTypes.allocateCallable(arena)
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         GodotStrings.initString(firstStringCell, firstString)
         GodotStrings.initString(secondStringCell, secondString)
-        firstIntCell.set(JAVA_INT, 0, firstInt)
-        secondIntCell.set(JAVA_INT, 0, secondInt)
+        firstIntCell.set(JAVA_LONG, 0, firstInt.toLong())
+        secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
         BuiltinTypes.initCallable(firstCallable, firstCallableObject, firstCallableMethod)
         BuiltinTypes.initCallable(secondCallable, secondCallableObject, secondCallableMethod)
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 9)
         arr.setAtIndex(ADDRESS, 0, firstStringCell)
         arr.setAtIndex(ADDRESS, 1, secondStringCell)
@@ -23684,9 +23683,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 6, variantCell)
         arr.setAtIndex(ADDRESS, 7, flagsCell)
         arr.setAtIndex(ADDRESS, 8, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -23717,25 +23716,25 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       val firstCallable = BuiltinTypes.allocateCallable(arena)
       val secondCallable = BuiltinTypes.allocateCallable(arena)
       val variantCell = arena.allocate(BuiltinTypes.VARIANT_SIZE, 8L)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       var variantInitialized = false
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
         GodotStrings.initString(stringCell, value)
-        firstIntCell.set(JAVA_INT, 0, firstInt)
-        secondIntCell.set(JAVA_INT, 0, secondInt)
+        firstIntCell.set(JAVA_LONG, 0, firstInt.toLong())
+        secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
         BuiltinTypes.initCallable(firstCallable, firstCallableObject, firstCallableMethod)
         BuiltinTypes.initCallable(secondCallable, secondCallableObject, secondCallableMethod)
         BuiltinTypes.initVariantFromAny(variantCell, data, arena)
         variantInitialized = true
         flagsCell.set(JAVA_LONG, 0, flags)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 9)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, stringCell)
@@ -23746,9 +23745,9 @@ actual object ObjectCalls {
         arr.setAtIndex(ADDRESS, 6, variantCell)
         arr.setAtIndex(ADDRESS, 7, flagsCell)
         arr.setAtIndex(ADDRESS, 8, indexCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, arr, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         if (variantInitialized) {
           BuiltinTypes.destroyVariant(variantCell)
@@ -23954,10 +23953,10 @@ actual object ObjectCalls {
     value: Int,
   ): GodotCallable? {
     Arena.ofConfined().use { arena ->
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
-        valueCell.set(JAVA_INT, 0, value)
+        valueCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 1)
         arr.setAtIndex(ADDRESS, 0, valueCell)
         bindPtrcall(methodBind, instance, arr, callable)
@@ -23996,11 +23995,11 @@ actual object ObjectCalls {
   ): GodotCallable? {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        valueCell.set(JAVA_INT, 0, value)
+        valueCell.set(JAVA_LONG, 0, value.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, ridCell)
         arr.setAtIndex(ADDRESS, 1, valueCell)
@@ -24020,11 +24019,11 @@ actual object ObjectCalls {
   ): GodotCallable? {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val callable = BuiltinTypes.allocateCallable(arena)
       try {
         GodotStrings.initString(stringCell, value)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 2)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, indexCell)
@@ -24253,8 +24252,8 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val arr = arena.allocate(ADDRESS, 2)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
       val ret = arena.allocate(JAVA_BYTE)
@@ -24383,8 +24382,8 @@ actual object ObjectCalls {
     index: Long,
   ): Vector2i {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
-      indexCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(index))
+      val indexCell = arena.allocate(JAVA_LONG)
+      indexCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(index))
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
@@ -24406,14 +24405,14 @@ actual object ObjectCalls {
     d: Long,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val aCell = arena.allocate(JAVA_INT)
-      val bCell = arena.allocate(JAVA_INT)
-      val cCell = arena.allocate(JAVA_INT)
-      val dCell = arena.allocate(JAVA_INT)
-      aCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(a))
-      bCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(b))
-      cCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(c))
-      dCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(d))
+      val aCell = arena.allocate(JAVA_LONG)
+      val bCell = arena.allocate(JAVA_LONG)
+      val cCell = arena.allocate(JAVA_LONG)
+      val dCell = arena.allocate(JAVA_LONG)
+      aCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(a))
+      bCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(b))
+      cCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(c))
+      dCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(d))
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(second))
@@ -24443,19 +24442,19 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val long0 = arena.allocate(JAVA_LONG)
-      val uint0 = arena.allocate(JAVA_INT)
+      val uint0 = arena.allocate(JAVA_LONG)
       val long1 = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(8L, 4L)
-      val uint1 = arena.allocate(JAVA_INT)
-      val uint2 = arena.allocate(JAVA_INT)
+      val uint1 = arena.allocate(JAVA_LONG)
+      val uint2 = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
       long0.set(JAVA_LONG, 0, firstLong)
-      uint0.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(firstUInt))
+      uint0.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(firstUInt))
       long1.set(JAVA_LONG, 0, secondLong)
       writeVector2i(vectorCell, vector)
-      uint1.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(secondUInt))
-      uint2.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(thirdUInt))
+      uint1.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(secondUInt))
+      uint2.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(thirdUInt))
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 10)
@@ -24590,9 +24589,9 @@ actual object ObjectCalls {
     value: Plane,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val plane = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       GodotRealSegment.writeRaw(plane, 0, value.normal.rawX)
       GodotRealSegment.writeRaw(plane, 1, value.normal.rawY)
       GodotRealSegment.writeRaw(plane, 2, value.normal.rawZ)
@@ -24680,7 +24679,7 @@ actual object ObjectCalls {
       val vector = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val color0 = arena.allocate(16L, 4L)
       val color1 = arena.allocate(16L, 4L)
-      val flagsCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
       writeTransform2D(transform, transformValue)
       writeVector2(vector, vectorValue)
       color0.set(JAVA_FLOAT, 0, firstColor.rawR)
@@ -24691,7 +24690,7 @@ actual object ObjectCalls {
       color1.set(JAVA_FLOAT, 4, secondColor.rawG)
       color1.set(JAVA_FLOAT, 8, secondColor.rawB)
       color1.set(JAVA_FLOAT, 12, secondColor.rawA)
-      flagsCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+      flagsCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, transform)
       arr.setAtIndex(ADDRESS, 1, vector)
@@ -24750,9 +24749,9 @@ actual object ObjectCalls {
       GodotRealSegment.writeRaw(arg, 1, value.rawY)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -24816,8 +24815,8 @@ actual object ObjectCalls {
     value: Vector3,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       GodotRealSegment.writeRaw(vec, 0, value.rawX)
       GodotRealSegment.writeRaw(vec, 1, value.rawY)
@@ -24836,9 +24835,9 @@ actual object ObjectCalls {
     value: Vector3,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       GodotRealSegment.writeRaw(vec, 0, value.rawX)
       GodotRealSegment.writeRaw(vec, 1, value.rawY)
       GodotRealSegment.writeRaw(vec, 2, value.rawZ)
@@ -24858,9 +24857,9 @@ actual object ObjectCalls {
     value: Rect2i,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val rect = arena.allocate(16L, 4L)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       rect.set(JAVA_INT, 0, value.position.x)
       rect.set(JAVA_INT, 4, value.position.y)
       rect.set(JAVA_INT, 8, value.size.x)
@@ -25012,8 +25011,8 @@ actual object ObjectCalls {
       val secondBoolCell = arena.allocate(JAVA_BYTE)
       secondBoolCell.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
 
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intValue)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
 
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, vectorCell)
@@ -25035,8 +25034,8 @@ actual object ObjectCalls {
     value: Long,
   ): Vector3 {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value.toInt())
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toInt().toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
@@ -25061,8 +25060,8 @@ actual object ObjectCalls {
     value: Int,
   ): Basis {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 9, GodotReal.ALIGN_BYTES)
@@ -25077,8 +25076,8 @@ actual object ObjectCalls {
     value: Int,
   ): Plane {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
@@ -25174,9 +25173,9 @@ actual object ObjectCalls {
       GodotRealSegment.writeRaw(basis, 8, value.z.rawZ)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, basis)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -25294,7 +25293,7 @@ actual object ObjectCalls {
       val vector = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val color0 = arena.allocate(16L, 4L)
       val color1 = arena.allocate(16L, 4L)
-      val flagsCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
       writeTransform3D(transform, transformValue)
       writeVector3(vector, vectorValue)
       color0.set(JAVA_FLOAT, 0, firstColor.rawR)
@@ -25305,7 +25304,7 @@ actual object ObjectCalls {
       color1.set(JAVA_FLOAT, 4, secondColor.rawG)
       color1.set(JAVA_FLOAT, 8, secondColor.rawB)
       color1.set(JAVA_FLOAT, 12, secondColor.rawA)
-      flagsCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+      flagsCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, transform)
       arr.setAtIndex(ADDRESS, 1, vector)
@@ -25336,13 +25335,13 @@ actual object ObjectCalls {
       val objectCell = arena.allocate(ADDRESS)
       val marginCell = arena.allocate(JAVA_DOUBLE)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val maxCollisionsCell = arena.allocate(JAVA_INT)
+      val maxCollisionsCell = arena.allocate(JAVA_LONG)
       writeTransform3D(transform, transformValue)
       writeVector3(vector, vectorValue)
       objectCell.set(ADDRESS, 0, objectArg)
       marginCell.set(JAVA_DOUBLE, 0, margin)
       boolCell.set(JAVA_BYTE, 0, if (recoveryAsCollision) 1.toByte() else 0.toByte())
-      maxCollisionsCell.set(JAVA_INT, 0, maxCollisions)
+      maxCollisionsCell.set(JAVA_LONG, 0, maxCollisions.toLong())
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, transform)
       args.setAtIndex(ADDRESS, 1, vector)
@@ -25609,11 +25608,11 @@ actual object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg3 = arena.allocate(JAVA_LONG)
       writeVector3(arg0, first)
       writeVector3(arg1, second)
       writeVector3(arg2, third)
-      arg3.set(JAVA_INT, 0, value)
+      arg3.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25672,8 +25671,8 @@ actual object ObjectCalls {
     value: Int,
   ): Quaternion {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
@@ -25754,9 +25753,9 @@ actual object ObjectCalls {
     value: Quaternion,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       GodotRealSegment.writeRaw(q, 0, value.rawX)
       GodotRealSegment.writeRaw(q, 1, value.rawY)
       GodotRealSegment.writeRaw(q, 2, value.rawZ)
@@ -25775,10 +25774,10 @@ actual object ObjectCalls {
     second: Int,
   ): Quaternion {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -25801,11 +25800,11 @@ actual object ObjectCalls {
     value: Quaternion,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val q = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, first)
-      arg1.set(JAVA_INT, 0, second)
+      arg0.set(JAVA_LONG, 0, first.toLong())
+      arg1.set(JAVA_LONG, 0, second.toLong())
       GodotRealSegment.writeRaw(q, 0, value.rawX)
       GodotRealSegment.writeRaw(q, 1, value.rawY)
       GodotRealSegment.writeRaw(q, 2, value.rawZ)
@@ -26123,9 +26122,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 2, arg2)
       arr.setAtIndex(ADDRESS, 3, arg3)
       arr.setAtIndex(ADDRESS, 4, arg4)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -26141,11 +26140,11 @@ actual object ObjectCalls {
       val arg0 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg1 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val arg2 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg3 = arena.allocate(JAVA_LONG)
       writeVector2(arg0, first)
       writeVector2(arg1, second)
       writeVector2(arg2, third)
-      arg3.set(JAVA_INT, 0, value)
+      arg3.set(JAVA_LONG, 0, value.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -26166,9 +26165,9 @@ actual object ObjectCalls {
       vec.set(JAVA_INT, 4, value.y)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -26387,15 +26386,15 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 4L)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(8L, 4L)
-      val arg4 = arena.allocate(JAVA_INT)
+      val arg4 = arena.allocate(JAVA_LONG)
       val arg5 = arena.allocate(8L, 4L)
       writeVector2i(arg0, first)
       writeVector2i(arg1, second)
-      arg2.set(JAVA_INT, 0, firstInt)
+      arg2.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg3, third)
-      arg4.set(JAVA_INT, 0, secondInt)
+      arg4.set(JAVA_LONG, 0, secondInt.toLong())
       writeVector2i(arg5, fourth)
       val arr = arena.allocate(ADDRESS, 6)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -26558,10 +26557,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 4L)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_DOUBLE)
       writeVector2i(arg0, value)
-      arg1.set(JAVA_INT, 0, intValue)
+      arg1.set(JAVA_LONG, 0, intValue.toLong())
       arg2.set(JAVA_DOUBLE, 0, doubleValue)
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -26580,11 +26579,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 4L)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
       writeVector2i(arg0, value)
-      arg1.set(JAVA_INT, 0, firstInt)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg1.set(JAVA_LONG, 0, firstInt.toLong())
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -26601,10 +26600,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(8L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -26620,16 +26619,16 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(8L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -26641,10 +26640,10 @@ actual object ObjectCalls {
   ): Boolean {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(8L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -26662,10 +26661,10 @@ actual object ObjectCalls {
   ): Double {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(8L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -26683,10 +26682,10 @@ actual object ObjectCalls {
   ): Rect2i {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(8L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -26707,10 +26706,10 @@ actual object ObjectCalls {
     flag: Boolean,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(8L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
       boolCell.set(JAVA_BYTE, 0, if (flag) 1.toByte() else 0.toByte())
@@ -26718,9 +26717,9 @@ actual object ObjectCalls {
       arr.setAtIndex(ADDRESS, 0, intCell)
       arr.setAtIndex(ADDRESS, 1, vec)
       arr.setAtIndex(ADDRESS, 2, boolCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -26732,10 +26731,10 @@ actual object ObjectCalls {
     flag: Boolean,
   ): Vector2i {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(8L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
       boolCell.set(JAVA_BYTE, 0, if (flag) 1.toByte() else 0.toByte())
@@ -26757,10 +26756,10 @@ actual object ObjectCalls {
     flag: Boolean,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(8L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
       boolCell.set(JAVA_BYTE, 0, if (flag) 1.toByte() else 0.toByte())
@@ -26782,13 +26781,13 @@ actual object ObjectCalls {
     secondInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(8L, 4L)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, firstInt)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, firstInt.toLong())
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      secondCell.set(JAVA_INT, 0, secondInt)
+      secondCell.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, vec)
@@ -26805,13 +26804,13 @@ actual object ObjectCalls {
     secondInt: Int,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val vec = arena.allocate(8L, 4L)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, firstInt)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, firstInt.toLong())
       vec.set(JAVA_INT, 0, value.x)
       vec.set(JAVA_INT, 4, value.y)
-      secondCell.set(JAVA_INT, 0, secondInt)
+      secondCell.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, firstCell)
       arr.setAtIndex(ADDRESS, 1, vec)
@@ -26830,12 +26829,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ): List<Int> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -26858,12 +26857,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ): List<Any?> {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -26881,13 +26880,13 @@ actual object ObjectCalls {
     values: List<Int>,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = BuiltinTypes.allocatePackedArray(arena)
-      arg0.set(JAVA_INT, 0, firstInt)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       try {
         BuiltinTypes.initPackedInt32Array(arg3, values)
         val arr = arena.allocate(ADDRESS, 4)
@@ -26911,14 +26910,14 @@ actual object ObjectCalls {
     vector: Vector2,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val vec2i = arena.allocate(8L, 4L)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       val vec2 = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      firstCell.set(JAVA_INT, 0, firstInt)
+      firstCell.set(JAVA_LONG, 0, firstInt.toLong())
       vec2i.set(JAVA_INT, 0, value.x)
       vec2i.set(JAVA_INT, 4, value.y)
-      secondCell.set(JAVA_INT, 0, secondInt)
+      secondCell.set(JAVA_LONG, 0, secondInt.toLong())
       GodotRealSegment.writeRaw(vec2, 0, vector.rawX)
       GodotRealSegment.writeRaw(vec2, 1, vector.rawY)
       val arr = arena.allocate(ADDRESS, 4)
@@ -26940,15 +26939,15 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val vec0 = arena.allocate(8L, 4L)
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val vec1 = arena.allocate(8L, 4L)
-      val int1 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
       vec0.set(JAVA_INT, 0, firstVector.x)
       vec0.set(JAVA_INT, 4, firstVector.y)
-      int0.set(JAVA_INT, 0, firstInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
       vec1.set(JAVA_INT, 0, secondVector.x)
       vec1.set(JAVA_INT, 4, secondVector.y)
-      int1.set(JAVA_INT, 0, secondInt)
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, vec0)
       arr.setAtIndex(ADDRESS, 1, int0)
@@ -26992,9 +26991,9 @@ actual object ObjectCalls {
       writeVector3i(vec, value)
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, vec)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -27071,8 +27070,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(12L, 4L)
       writeVector3i(vec, value)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, intCell)
@@ -27191,10 +27190,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val vec = arena.allocate(12L, 4L)
       writeVector3i(vec, vectorArg)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg1.set(JAVA_INT, 0, firstInt)
-      arg2.set(JAVA_INT, 0, secondInt)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg1.set(JAVA_LONG, 0, firstInt.toLong())
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27211,19 +27210,19 @@ actual object ObjectCalls {
     secondInt: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
       arr.setAtIndex(ADDRESS, 2, arg2)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -27235,12 +27234,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ): Boolean {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27259,12 +27258,12 @@ actual object ObjectCalls {
     secondInt: Int,
   ): Rect2 {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       val arr = arena.allocate(ADDRESS, 3)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27284,13 +27283,13 @@ actual object ObjectCalls {
     rect: Rect2,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      arg0.set(JAVA_INT, 0, firstInt)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       writeRect2(arg3, rect)
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -27310,14 +27309,14 @@ actual object ObjectCalls {
     thirdInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, value)
-      arg2.set(JAVA_INT, 0, secondInt)
-      arg3.set(JAVA_INT, 0, thirdInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
+      arg3.set(JAVA_LONG, 0, thirdInt.toLong())
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27336,11 +27335,11 @@ actual object ObjectCalls {
     secondLong: Long,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
       val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(JAVA_LONG)
-      arg0.set(JAVA_INT, 0, intValue)
+      arg0.set(JAVA_LONG, 0, intValue.toLong())
       writeVector2i(arg1, value)
       arg2.set(JAVA_LONG, 0, firstLong)
       arg3.set(JAVA_LONG, 0, secondLong)
@@ -27362,13 +27361,13 @@ actual object ObjectCalls {
     secondVector: Vector2i,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(8L, 4L)
-      arg0.set(JAVA_INT, 0, firstInt)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, firstVector)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       writeVector2i(arg3, secondVector)
       val arr = arena.allocate(ADDRESS, 4)
       arr.setAtIndex(ADDRESS, 0, arg0)
@@ -27389,16 +27388,16 @@ actual object ObjectCalls {
     thirdInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(8L, 4L)
-      val arg4 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg4 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, firstVector)
-      arg2.set(JAVA_INT, 0, secondInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
       writeVector2i(arg3, secondVector)
-      arg4.set(JAVA_INT, 0, thirdInt)
+      arg4.set(JAVA_LONG, 0, thirdInt.toLong())
       val arr = arena.allocate(ADDRESS, 5)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27420,18 +27419,18 @@ actual object ObjectCalls {
     fourthInt: Int,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
       val arg1 = arena.allocate(8L, 4L)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = arena.allocate(8L, 4L)
-      val arg5 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, firstInt)
+      val arg5 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(arg1, firstVector)
-      arg2.set(JAVA_INT, 0, secondInt)
-      arg3.set(JAVA_INT, 0, thirdInt)
+      arg2.set(JAVA_LONG, 0, secondInt.toLong())
+      arg3.set(JAVA_LONG, 0, thirdInt.toLong())
       writeVector2i(arg4, secondVector)
-      arg5.set(JAVA_INT, 0, fourthInt)
+      arg5.set(JAVA_LONG, 0, fourthInt.toLong())
       val arr = arena.allocate(ADDRESS, 6)
       arr.setAtIndex(ADDRESS, 0, arg0)
       arr.setAtIndex(ADDRESS, 1, arg1)
@@ -27503,9 +27502,9 @@ actual object ObjectCalls {
       val arr = arena.allocate(ADDRESS, 2)
       arr.setAtIndex(ADDRESS, 0, vec)
       arr.setAtIndex(ADDRESS, 1, boolCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, arr, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -27561,8 +27560,8 @@ actual object ObjectCalls {
     color: Color,
   ) {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      arg0.set(JAVA_INT, 0, value)
+      val arg0 = arena.allocate(JAVA_LONG)
+      arg0.set(JAVA_LONG, 0, value.toLong())
       val colorCell = arena.allocate(16L, 4L)
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -27582,9 +27581,9 @@ actual object ObjectCalls {
     color: Color,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -27609,14 +27608,14 @@ actual object ObjectCalls {
     secondBool: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val longCell = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
-      int0.set(JAVA_INT, 0, firstInt)
-      int1.set(JAVA_INT, 0, secondInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -27714,9 +27713,9 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -27730,9 +27729,9 @@ actual object ObjectCalls {
       objCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, objCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL
+      return ret.get(JAVA_LONG, 0) and 0xffff_ffffL
     }
   }
 
@@ -27801,8 +27800,8 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       objCell.set(ADDRESS, 0, objectArg)
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, intArg)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, objCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -27849,9 +27848,9 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, arg0)
         args.setAtIndex(ADDRESS, 1, arg1)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(arg0)
         GodotStrings.destroyString(arg1)
@@ -27989,8 +27988,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<String> {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, value)
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
       val ret = BuiltinTypes.allocatePackedArray(arena)
@@ -28320,9 +28319,9 @@ actual object ObjectCalls {
   ): Vector3 {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -28344,9 +28343,9 @@ actual object ObjectCalls {
   ): Vector2 {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -28364,9 +28363,9 @@ actual object ObjectCalls {
   ): Color {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -28391,10 +28390,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -28437,9 +28436,9 @@ actual object ObjectCalls {
     rid: RID,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val ridCell = arena.allocate(JAVA_LONG)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       ridCell.set(JAVA_LONG, 0, rid.value)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, intCell)
@@ -29068,9 +29067,9 @@ actual object ObjectCalls {
       writeRect2(rectCell, value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, rectCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -29080,8 +29079,8 @@ actual object ObjectCalls {
     value: Int,
   ): Vector3i {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, intCell)
       val ret = arena.allocate(12L, 4L)
@@ -29576,8 +29575,8 @@ actual object ObjectCalls {
     value: Int,
   ): List<List<Any?>> {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
-      intCell.set(JAVA_INT, 0, value)
+      val intCell = arena.allocate(JAVA_LONG)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, intCell)
       return callArrayReturn(methodBind, instance, args, BuiltinTypes::readArrayArrays)
@@ -29592,9 +29591,9 @@ actual object ObjectCalls {
   ): List<List<Any?>> {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -29610,9 +29609,9 @@ actual object ObjectCalls {
   ): List<Any?> {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -29647,9 +29646,9 @@ actual object ObjectCalls {
     values: List<Vector2i>,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val array = arena.allocate(8L, 8L)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       try {
         BuiltinTypes.initArray(array, values.map { it as Any? })
         val args = arena.allocate(ADDRESS, 2)
@@ -29672,13 +29671,13 @@ actual object ObjectCalls {
     second: Int,
   ): List<Vector2i> {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(JAVA_INT, 2)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, first)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
       vectorCell.set(JAVA_INT, 0, vector.x)
       vectorCell.set(JAVA_INT, 4, vector.y)
-      secondCell.set(JAVA_INT, 0, second)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -29696,15 +29695,15 @@ actual object ObjectCalls {
     third: Int,
   ): List<Vector2i> {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(JAVA_INT, 2)
-      val thirdCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      val thirdCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       vectorCell.set(JAVA_INT, 0, vector.x)
       vectorCell.set(JAVA_INT, 4, vector.y)
-      thirdCell.set(JAVA_INT, 0, third)
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -29721,10 +29720,10 @@ actual object ObjectCalls {
     bytes: ByteArray,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
       try {
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
@@ -29753,9 +29752,9 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, byteArray)
         args.setAtIndex(ADDRESS, 1, boolCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_BYTE_ARRAY, byteArray)
       }
@@ -29772,14 +29771,14 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val byteArray = BuiltinTypes.allocatePackedArray(arena)
-      val peerCell = arena.allocate(JAVA_INT)
+      val peerCell = arena.allocate(JAVA_LONG)
       val modeCell = arena.allocate(JAVA_LONG)
-      val channelCell = arena.allocate(JAVA_INT)
+      val channelCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initPackedByteArray(byteArray, bytes)
-        peerCell.set(JAVA_INT, 0, peerId)
+        peerCell.set(JAVA_LONG, 0, peerId.toLong())
         modeCell.set(JAVA_LONG, 0, mode)
-        channelCell.set(JAVA_INT, 0, channel)
+        channelCell.set(JAVA_LONG, 0, channel.toLong())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, byteArray)
         args.setAtIndex(ADDRESS, 1, peerCell)
@@ -29801,10 +29800,10 @@ actual object ObjectCalls {
     values: List<String>,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initPackedStringArray(packed, values)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
@@ -29826,11 +29825,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val packed = BuiltinTypes.allocatePackedArray(arena)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, name)
         BuiltinTypes.initPackedStringArray(packed, values)
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packed)
@@ -29850,10 +29849,10 @@ actual object ObjectCalls {
     second: Int,
   ): List<Int> {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -29874,10 +29873,10 @@ actual object ObjectCalls {
     values: List<Int>,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initPackedInt32Array(packed, values)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
@@ -29896,10 +29895,10 @@ actual object ObjectCalls {
     values: List<Vector2>,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         BuiltinTypes.initPackedVector2Array(packed, values)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
@@ -29919,20 +29918,20 @@ actual object ObjectCalls {
     offset: Int,
   ): Int {
     Arena.ofConfined().use { arena ->
-      val frameCell = arena.allocate(JAVA_INT)
+      val frameCell = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
-      val offsetCell = arena.allocate(JAVA_INT)
+      val offsetCell = arena.allocate(JAVA_LONG)
       try {
-        frameCell.set(JAVA_INT, 0, frameCount)
+        frameCell.set(JAVA_LONG, 0, frameCount.toLong())
         BuiltinTypes.initPackedFloat32Array(packed, buffer)
-        offsetCell.set(JAVA_INT, 0, offset)
+        offsetCell.set(JAVA_LONG, 0, offset.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, frameCell)
         args.setAtIndex(ADDRESS, 1, packed)
         args.setAtIndex(ADDRESS, 2, offsetCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_FLOAT32_ARRAY, packed)
       }
@@ -29975,9 +29974,9 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -30325,9 +30324,9 @@ actual object ObjectCalls {
   ): Vector2 {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -30346,11 +30345,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
-      thirdCell.set(JAVA_INT, 0, third)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -30368,10 +30367,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       firstCell.set(JAVA_LONG, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       writeVector2(vectorCell, vector)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
@@ -30390,9 +30389,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -30412,15 +30411,15 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
-      val fourthCell = arena.allocate(JAVA_INT)
-      val fifthCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
+      val fourthCell = arena.allocate(JAVA_LONG)
+      val fifthCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
-      thirdCell.set(JAVA_INT, 0, third)
-      fourthCell.set(JAVA_INT, 0, fourth)
-      fifthCell.set(JAVA_INT, 0, fifth)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
+      fourthCell.set(JAVA_LONG, 0, fourth.toLong())
+      fifthCell.set(JAVA_LONG, 0, fifth.toLong())
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -30440,9 +30439,9 @@ actual object ObjectCalls {
     includeInternal: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       boolCell.set(JAVA_BYTE, 0, if (includeInternal) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, valueCell)
@@ -30489,9 +30488,9 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, indexCell)
@@ -30510,11 +30509,11 @@ actual object ObjectCalls {
   ): Rect2 {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val columnCell = arena.allocate(JAVA_INT)
-      val buttonCell = arena.allocate(JAVA_INT)
+      val columnCell = arena.allocate(JAVA_LONG)
+      val buttonCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      columnCell.set(JAVA_INT, 0, column)
-      buttonCell.set(JAVA_INT, 0, buttonIndex)
+      columnCell.set(JAVA_LONG, 0, column.toLong())
+      buttonCell.set(JAVA_LONG, 0, buttonIndex.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, columnCell)
@@ -30552,10 +30551,10 @@ actual object ObjectCalls {
     useProxies: Boolean,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val layerCell = arena.allocate(JAVA_INT)
+      val layerCell = arena.allocate(JAVA_LONG)
       val coordsCell = arena.allocate(JAVA_INT, 2)
       val boolCell = arena.allocate(JAVA_BYTE)
-      layerCell.set(JAVA_INT, 0, layer)
+      layerCell.set(JAVA_LONG, 0, layer.toLong())
       writeVector2i(coordsCell, coords)
       boolCell.set(JAVA_BYTE, 0, if (useProxies) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 3)
@@ -30576,10 +30575,10 @@ actual object ObjectCalls {
     pattern: MemorySegment,
   ) {
     Arena.ofConfined().use { arena ->
-      val layerCell = arena.allocate(JAVA_INT)
+      val layerCell = arena.allocate(JAVA_LONG)
       val coordsCell = arena.allocate(JAVA_INT, 2)
       val objectCell = arena.allocate(ADDRESS)
-      layerCell.set(JAVA_INT, 0, layer)
+      layerCell.set(JAVA_LONG, 0, layer.toLong())
       writeVector2i(coordsCell, coords)
       objectCell.set(ADDRESS, 0, pattern)
       val args = arena.allocate(ADDRESS, 3)
@@ -30599,13 +30598,13 @@ actual object ObjectCalls {
     objectArg: MemorySegment,
   ) {
     Arena.ofConfined().use { arena ->
-      val int0 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
       val coordsCell = arena.allocate(JAVA_INT, 2)
-      val int1 = arena.allocate(JAVA_INT)
+      val int1 = arena.allocate(JAVA_LONG)
       val objCell = arena.allocate(ADDRESS)
-      int0.set(JAVA_INT, 0, firstInt)
+      int0.set(JAVA_LONG, 0, firstInt.toLong())
       writeVector2i(coordsCell, coords)
-      int1.set(JAVA_INT, 0, secondInt)
+      int1.set(JAVA_LONG, 0, secondInt.toLong())
       objCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, int0)
@@ -30658,9 +30657,9 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val coordsCell = arena.allocate(JAVA_INT, 2)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       writeVector2i(coordsCell, coords)
-      intCell.set(JAVA_INT, 0, alternativeTile)
+      intCell.set(JAVA_LONG, 0, alternativeTile.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, coordsCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -30697,9 +30696,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, objectCell)
@@ -30786,12 +30785,12 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val offsetCell = arena.allocate(JAVA_INT)
-      val endCell = arena.allocate(JAVA_INT)
+      val offsetCell = arena.allocate(JAVA_LONG)
+      val endCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        offsetCell.set(JAVA_INT, 0, offset)
-        endCell.set(JAVA_INT, 0, end)
+        offsetCell.set(JAVA_LONG, 0, offset.toLong())
+        endCell.set(JAVA_LONG, 0, end.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, offsetCell)
@@ -30818,15 +30817,15 @@ actual object ObjectCalls {
       val textCell = arena.allocate(8L, 8L)
       val replacementCell = arena.allocate(8L, 8L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val offsetCell = arena.allocate(JAVA_INT)
-      val endCell = arena.allocate(JAVA_INT)
+      val offsetCell = arena.allocate(JAVA_LONG)
+      val endCell = arena.allocate(JAVA_LONG)
       val ret = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(textCell, text)
         GodotStrings.initString(replacementCell, replacement)
         boolCell.set(JAVA_BYTE, 0, if (all) 1.toByte() else 0.toByte())
-        offsetCell.set(JAVA_INT, 0, offset)
-        endCell.set(JAVA_INT, 0, end)
+        offsetCell.set(JAVA_LONG, 0, offset.toLong())
+        endCell.set(JAVA_LONG, 0, end.toLong())
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, textCell)
         args.setAtIndex(ADDRESS, 1, replacementCell)
@@ -30901,12 +30900,12 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       objectCell.set(ADDRESS, 0, objectArg)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, objectCell)
@@ -30971,13 +30970,13 @@ actual object ObjectCalls {
       val secondCell = arena.allocate(8L, 8L)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       val thirdCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(firstCell, first)
         GodotStrings.initString(secondCell, second)
         BuiltinTypes.initPackedStringArray(packed, values)
         GodotStrings.initString(thirdCell, third)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, secondCell)
@@ -31150,10 +31149,10 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, indexCell)
@@ -31175,11 +31174,11 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       try {
         GodotStrings.initString(stringCell, text)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         objectCell.set(ADDRESS, 0, objectArg)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, stringCell)
@@ -31202,14 +31201,14 @@ actual object ObjectCalls {
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
-        thirdCell.set(JAVA_INT, 0, third)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
+        thirdCell.set(JAVA_LONG, 0, third.toLong())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
@@ -31286,9 +31285,9 @@ actual object ObjectCalls {
     objectArg: MemorySegment,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       objectCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, valueCell)
@@ -31332,10 +31331,10 @@ actual object ObjectCalls {
     value: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       val valueCell = arena.allocate(JAVA_DOUBLE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       objectCell.set(ADDRESS, 0, objectArg)
       valueCell.set(JAVA_DOUBLE, 0, value)
       val args = arena.allocate(ADDRESS, 3)
@@ -31354,9 +31353,9 @@ actual object ObjectCalls {
     name: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       objectCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, indexCell)
@@ -31374,10 +31373,10 @@ actual object ObjectCalls {
     enabled: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       // Color component storage is fixed 32-bit, unlike scalar Godot floats.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -31402,12 +31401,12 @@ actual object ObjectCalls {
     expression: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val minCell = arena.allocate(JAVA_DOUBLE)
       val maxCell = arena.allocate(JAVA_DOUBLE)
       val stepCell = arena.allocate(JAVA_DOUBLE)
       val boolCell = arena.allocate(JAVA_BYTE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       minCell.set(JAVA_DOUBLE, 0, min)
       maxCell.set(JAVA_DOUBLE, 0, max)
       stepCell.set(JAVA_DOUBLE, 0, step)
@@ -31436,7 +31435,7 @@ actual object ObjectCalls {
     fourthBool: Boolean,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val bool0 = arena.allocate(JAVA_BYTE)
       val bool1 = arena.allocate(JAVA_BYTE)
@@ -31444,7 +31443,7 @@ actual object ObjectCalls {
       val longCell = arena.allocate(JAVA_LONG)
       val bool2 = arena.allocate(JAVA_BYTE)
       val bool3 = arena.allocate(JAVA_BYTE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       double0.set(JAVA_DOUBLE, 0, firstDouble)
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
@@ -31478,16 +31477,16 @@ actual object ObjectCalls {
     description: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val columnCell = arena.allocate(JAVA_INT)
+      val columnCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
-      val idCell = arena.allocate(JAVA_INT)
+      val idCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val tooltipCell = arena.allocate(8L, 8L)
       val descriptionCell = arena.allocate(8L, 8L)
       try {
-        columnCell.set(JAVA_INT, 0, column)
+        columnCell.set(JAVA_LONG, 0, column.toLong())
         objectCell.set(ADDRESS, 0, texture)
-        idCell.set(JAVA_INT, 0, id)
+        idCell.set(JAVA_LONG, 0, id.toLong())
         boolCell.set(JAVA_BYTE, 0, if (disabled) 1.toByte() else 0.toByte())
         GodotStrings.initString(tooltipCell, tooltip)
         GodotStrings.initString(descriptionCell, description)
@@ -31516,10 +31515,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val kindCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       kindCell.set(JAVA_LONG, 0, kind)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, kindCell)
@@ -31543,12 +31542,12 @@ actual object ObjectCalls {
       val firstCell = arena.allocate(JAVA_LONG)
       val secondCell = arena.allocate(JAVA_LONG)
       val valueCell = arena.allocate(JAVA_DOUBLE)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       firstCell.set(JAVA_LONG, 0, firstRid.value)
       secondCell.set(JAVA_LONG, 0, secondRid.value)
       valueCell.set(JAVA_DOUBLE, 0, value)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, firstCell)
@@ -31570,10 +31569,10 @@ actual object ObjectCalls {
     second: Rect2,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val firstCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val secondCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       writeRect2(firstCell, first)
       writeRect2(secondCell, second)
       val args = arena.allocate(ADDRESS, 3)
@@ -31622,14 +31621,14 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val firstRidCell = arena.allocate(JAVA_LONG)
       val secondRidCell = arena.allocate(JAVA_LONG)
-      val firstIndexCell = arena.allocate(JAVA_INT)
+      val firstIndexCell = arena.allocate(JAVA_LONG)
       val thirdRidCell = arena.allocate(JAVA_LONG)
-      val secondIndexCell = arena.allocate(JAVA_INT)
+      val secondIndexCell = arena.allocate(JAVA_LONG)
       firstRidCell.set(JAVA_LONG, 0, firstRid.value)
       secondRidCell.set(JAVA_LONG, 0, secondRid.value)
-      firstIndexCell.set(JAVA_INT, 0, firstIndex)
+      firstIndexCell.set(JAVA_LONG, 0, firstIndex.toLong())
       thirdRidCell.set(JAVA_LONG, 0, thirdRid.value)
-      secondIndexCell.set(JAVA_INT, 0, secondIndex)
+      secondIndexCell.set(JAVA_LONG, 0, secondIndex.toLong())
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, firstRidCell)
       args.setAtIndex(ADDRESS, 1, secondRidCell)
@@ -31654,16 +31653,16 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val typeCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
         writeRect2(rectCell, rect)
         typeCell.set(JAVA_LONG, 0, type)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
-        thirdCell.set(JAVA_INT, 0, third)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
+        thirdCell.set(JAVA_LONG, 0, third.toLong())
         val args = arena.allocate(ADDRESS, 6)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, rectCell)
@@ -31854,14 +31853,14 @@ actual object ObjectCalls {
       val objectCell = arena.allocate(ADDRESS)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val sizeCell = arena.allocate(JAVA_DOUBLE)
       try {
         objectCell.set(ADDRESS, 0, objectArg)
         writeVector2(vectorCell, position)
         GodotStrings.initString(stringCell, text)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -31896,16 +31895,16 @@ actual object ObjectCalls {
       val objectCell = arena.allocate(ADDRESS)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val stringCell = arena.allocate(8L, 8L)
-      val int0 = arena.allocate(JAVA_INT)
-      val int1 = arena.allocate(JAVA_INT)
+      val int0 = arena.allocate(JAVA_LONG)
+      val int1 = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val sizeCell = arena.allocate(JAVA_DOUBLE)
       try {
         objectCell.set(ADDRESS, 0, objectArg)
         writeVector2(vectorCell, position)
         GodotStrings.initString(stringCell, text)
-        int0.set(JAVA_INT, 0, firstIndex)
-        int1.set(JAVA_INT, 0, secondIndex)
+        int0.set(JAVA_LONG, 0, firstIndex.toLong())
+        int1.set(JAVA_LONG, 0, secondIndex.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -31947,7 +31946,7 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
@@ -31959,7 +31958,7 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -32009,8 +32008,8 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val outlineSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val outlineSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val justificationCell = arena.allocate(JAVA_LONG)
       val directionCell = arena.allocate(JAVA_LONG)
@@ -32022,8 +32021,8 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        outlineSizeCell.set(JAVA_INT, 0, outlineSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        outlineSizeCell.set(JAVA_LONG, 0, outlineSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -32075,8 +32074,8 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val maxLinesCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val maxLinesCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val breakFlagsCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
@@ -32089,8 +32088,8 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        maxLinesCell.set(JAVA_INT, 0, maxLines)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        maxLinesCell.set(JAVA_LONG, 0, maxLines.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -32145,9 +32144,9 @@ actual object ObjectCalls {
       val stringCell = arena.allocate(8L, 8L)
       val alignmentCell = arena.allocate(JAVA_LONG)
       val widthCell = arena.allocate(JAVA_DOUBLE)
-      val fontSizeCell = arena.allocate(JAVA_INT)
-      val maxLinesCell = arena.allocate(JAVA_INT)
-      val outlineSizeCell = arena.allocate(JAVA_INT)
+      val fontSizeCell = arena.allocate(JAVA_LONG)
+      val maxLinesCell = arena.allocate(JAVA_LONG)
+      val outlineSizeCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val breakFlagsCell = arena.allocate(JAVA_LONG)
       val justificationCell = arena.allocate(JAVA_LONG)
@@ -32160,9 +32159,9 @@ actual object ObjectCalls {
         GodotStrings.initString(stringCell, text)
         alignmentCell.set(JAVA_LONG, 0, alignment)
         widthCell.set(JAVA_DOUBLE, 0, width)
-        fontSizeCell.set(JAVA_INT, 0, fontSize)
-        maxLinesCell.set(JAVA_INT, 0, maxLines)
-        outlineSizeCell.set(JAVA_INT, 0, outlineSize)
+        fontSizeCell.set(JAVA_LONG, 0, fontSize.toLong())
+        maxLinesCell.set(JAVA_LONG, 0, maxLines.toLong())
+        outlineSizeCell.set(JAVA_LONG, 0, outlineSize.toLong())
         colorCell.set(JAVA_FLOAT, 0, color.rawR)
         colorCell.set(JAVA_FLOAT, 4, color.rawG)
         colorCell.set(JAVA_FLOAT, 8, color.rawB)
@@ -32609,9 +32608,9 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       writeVector2(vectorCell, vector)
-      valueCell.set(JAVA_INT, 0, value)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, vectorCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -32630,10 +32629,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
       val durationCell = arena.allocate(JAVA_DOUBLE)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
       durationCell.set(JAVA_DOUBLE, 0, duration)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, objectCell)
@@ -32652,10 +32651,10 @@ actual object ObjectCalls {
     duration: Double,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       val durationCell = arena.allocate(JAVA_DOUBLE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       objectCell.set(ADDRESS, 0, objectArg)
       durationCell.set(JAVA_DOUBLE, 0, duration)
       val args = arena.allocate(ADDRESS, 4)
@@ -32674,8 +32673,8 @@ actual object ObjectCalls {
     value: Int,
   ): Double {
     Arena.ofConfined().use { arena ->
-      val valueCell = arena.allocate(JAVA_INT)
-      valueCell.set(JAVA_INT, 0, value)
+      val valueCell = arena.allocate(JAVA_LONG)
+      valueCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(name))
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -33296,7 +33295,7 @@ actual object ObjectCalls {
       val firstDoubleCell = arena.allocate(JAVA_DOUBLE)
       val secondDoubleCell = arena.allocate(JAVA_DOUBLE)
       val thirdDoubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val fourthDoubleCell = arena.allocate(JAVA_DOUBLE)
       val boolCell = arena.allocate(JAVA_BYTE)
@@ -33304,7 +33303,7 @@ actual object ObjectCalls {
       firstDoubleCell.set(JAVA_DOUBLE, 0, firstDouble)
       secondDoubleCell.set(JAVA_DOUBLE, 0, secondDouble)
       thirdDoubleCell.set(JAVA_DOUBLE, 0, thirdDouble)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -33344,7 +33343,7 @@ actual object ObjectCalls {
       val secondDoubleCell = arena.allocate(JAVA_DOUBLE)
       val thirdDoubleCell = arena.allocate(JAVA_DOUBLE)
       val fourthDoubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val fifthDoubleCell = arena.allocate(JAVA_DOUBLE)
       val boolCell = arena.allocate(JAVA_BYTE)
@@ -33353,7 +33352,7 @@ actual object ObjectCalls {
       secondDoubleCell.set(JAVA_DOUBLE, 0, secondDouble)
       thirdDoubleCell.set(JAVA_DOUBLE, 0, thirdDouble)
       fourthDoubleCell.set(JAVA_DOUBLE, 0, fourthDouble)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
@@ -33551,9 +33550,9 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, objectCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -33570,11 +33569,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
         objectCell.set(ADDRESS, 0, objectArg)
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, objectCell)
@@ -33631,12 +33630,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val firstString = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       val secondString = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(firstString, firstText)
         objectCell.set(ADDRESS, 0, objectArg)
-        uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(uintValue))
+        uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(uintValue))
         GodotStrings.initString(secondString, secondText)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, firstString)
@@ -33665,13 +33664,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val languageCell = arena.allocate(8L, 8L)
       val variant = initVariantCell(arena, variantValue)
       try {
         GodotStrings.initString(stringCell, text)
         objectCell.set(ADDRESS, 0, objectArg)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(languageCell, language)
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, stringCell)
@@ -33702,13 +33701,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val languageCell = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(stringCell, text)
         objectCell.set(ADDRESS, 0, objectArg)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         writeRect2(rectCell, rect)
         GodotStrings.initString(languageCell, language)
         val args = arena.allocate(ADDRESS, 5)
@@ -33771,12 +33770,12 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val secondCell = arena.allocate(8L, 8L)
       val boolCell = arena.allocate(JAVA_BYTE)
       try {
         GodotStrings.initString(firstCell, first)
-        intCell.set(JAVA_INT, 0, value)
+        intCell.set(JAVA_LONG, 0, value.toLong())
         GodotStrings.initString(secondCell, second)
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         val args = arena.allocate(ADDRESS, 4)
@@ -34019,12 +34018,12 @@ actual object ObjectCalls {
     text: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val stringCell = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         longCell.set(JAVA_LONG, 0, mode)
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         GodotStrings.initString(stringCell, text)
@@ -34049,14 +34048,14 @@ actual object ObjectCalls {
     text: String,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
-        firstCell.set(JAVA_INT, 0, index)
+        firstCell.set(JAVA_LONG, 0, index.toLong())
         longCell.set(JAVA_LONG, 0, mode)
-        secondCell.set(JAVA_INT, 0, value)
+        secondCell.set(JAVA_LONG, 0, value.toLong())
         GodotStrings.initString(stringCell, text)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, firstCell)
@@ -34080,14 +34079,14 @@ actual object ObjectCalls {
   ): Vector2i {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val flagsCell = arena.allocate(JAVA_INT)
-      val lineCell = arena.allocate(JAVA_INT)
-      val columnCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
+      val lineCell = arena.allocate(JAVA_LONG)
+      val columnCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        flagsCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
-        lineCell.set(JAVA_INT, 0, line)
-        columnCell.set(JAVA_INT, 0, column)
+        flagsCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
+        lineCell.set(JAVA_LONG, 0, line.toLong())
+        columnCell.set(JAVA_LONG, 0, column.toLong())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, flagsCell)
@@ -34211,7 +34210,7 @@ actual object ObjectCalls {
       val textureCell = arena.allocate(JAVA_LONG)
       val srcRectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val colorCell = arena.allocate(16L, 4L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val double1 = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
@@ -34222,7 +34221,7 @@ actual object ObjectCalls {
       colorCell.set(JAVA_FLOAT, 4, color.rawG)
       colorCell.set(JAVA_FLOAT, 8, color.rawB)
       colorCell.set(JAVA_FLOAT, 12, color.rawA)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       double0.set(JAVA_DOUBLE, 0, firstDouble)
       double1.set(JAVA_DOUBLE, 0, secondDouble)
       val args = arena.allocate(ADDRESS, 8)
@@ -34311,7 +34310,7 @@ actual object ObjectCalls {
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val screenRectCell = arena.allocate(16L, 4L)
       val bool0 = arena.allocate(JAVA_BYTE)
-      val layerCell = arena.allocate(JAVA_INT)
+      val layerCell = arena.allocate(JAVA_LONG)
       val bool1 = arena.allocate(JAVA_BYTE)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val double0 = arena.allocate(JAVA_DOUBLE)
@@ -34325,7 +34324,7 @@ actual object ObjectCalls {
       screenRectCell.set(JAVA_INT, 8, screenRect.size.x)
       screenRectCell.set(JAVA_INT, 12, screenRect.size.y)
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
-      layerCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layer))
+      layerCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(layer))
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
       writeVector2(vectorCell, vector)
       double0.set(JAVA_DOUBLE, 0, firstDouble)
@@ -34360,11 +34359,11 @@ actual object ObjectCalls {
       val firstCell = arena.allocate(JAVA_LONG)
       val secondCell = arena.allocate(JAVA_LONG)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first.value)
       secondCell.set(JAVA_LONG, 0, second.value)
       writeRect2(rectCell, rect)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -34488,13 +34487,13 @@ actual object ObjectCalls {
     second: Int,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val pointCell = arena.allocate(8L, 4L)
-      val secondCell = arena.allocate(JAVA_INT)
-      firstCell.set(JAVA_INT, 0, first)
+      val secondCell = arena.allocate(JAVA_LONG)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
       pointCell.set(JAVA_INT, 0, point.x)
       pointCell.set(JAVA_INT, 4, point.y)
-      secondCell.set(JAVA_INT, 0, second)
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, pointCell)
@@ -34743,9 +34742,9 @@ actual object ObjectCalls {
       arg.set(JAVA_DOUBLE, 0, value)
       val args = arena.allocate(ADDRESS, 1)
       args.setAtIndex(ADDRESS, 0, arg)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -34851,11 +34850,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(8L, 8L)
       val arg1 = arena.allocate(8L, 8L)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(arg0, first)
         GodotStrings.initString(arg1, second)
-        arg2.set(JAVA_INT, 0, value)
+        arg2.set(JAVA_LONG, 0, value.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, arg0)
         args.setAtIndex(ADDRESS, 1, arg1)
@@ -34879,15 +34878,15 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val arg1 = arena.allocate(JAVA_INT)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg1 = arena.allocate(JAVA_LONG)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        arg1.set(JAVA_INT, 0, first)
-        arg2.set(JAVA_INT, 0, second)
-        arg3.set(JAVA_INT, 0, third)
+        arg1.set(JAVA_LONG, 0, first.toLong())
+        arg2.set(JAVA_LONG, 0, second.toLong())
+        arg3.set(JAVA_LONG, 0, third.toLong())
         arg4.set(JAVA_LONG, 0, value)
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, stringCell)
@@ -34970,9 +34969,9 @@ actual object ObjectCalls {
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         GodotStrings.destroyString(stringCell)
       }
@@ -34993,9 +34992,9 @@ actual object ObjectCalls {
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, arg0)
       args.setAtIndex(ADDRESS, 1, arg1)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -35007,9 +35006,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, value)
+      intCell.set(JAVA_LONG, 0, value.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -35028,10 +35027,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, index)
+      intCell.set(JAVA_LONG, 0, index.toLong())
       longCell.set(JAVA_LONG, 0, value)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -35050,10 +35049,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, index)
+      intCell.set(JAVA_LONG, 0, index.toLong())
       objectCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -35073,14 +35072,14 @@ actual object ObjectCalls {
     bytes: ByteArray,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
-      val arg0 = arena.allocate(JAVA_INT)
-      val arg1 = arena.allocate(JAVA_INT)
+      val arg0 = arena.allocate(JAVA_LONG)
+      val arg1 = arena.allocate(JAVA_LONG)
       val arg2 = arena.allocate(JAVA_BYTE)
       val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = BuiltinTypes.allocatePackedArray(arena)
       try {
-        arg0.set(JAVA_INT, 0, first)
-        arg1.set(JAVA_INT, 0, second)
+        arg0.set(JAVA_LONG, 0, first.toLong())
+        arg1.set(JAVA_LONG, 0, second.toLong())
         arg2.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
         arg3.set(JAVA_LONG, 0, mode)
         BuiltinTypes.initPackedByteArray(arg4, bytes)
@@ -35118,9 +35117,9 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, packedCell)
         args.setAtIndex(ADDRESS, 2, boolCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, packedCell)
         GodotStrings.destroyString(stringCell)
@@ -35506,7 +35505,7 @@ actual object ObjectCalls {
       val fromCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val toCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val layersCell = arena.allocate(JAVA_INT)
+      val layersCell = arena.allocate(JAVA_LONG)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
@@ -35515,7 +35514,7 @@ actual object ObjectCalls {
         GodotRealSegment.writeRaw(toCell, 0, to.rawX)
         GodotRealSegment.writeRaw(toCell, 1, to.rawY)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
-        layersCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layers))
+        layersCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(layers))
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, fromCell)
@@ -35544,7 +35543,7 @@ actual object ObjectCalls {
       val fromCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val toCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val layersCell = arena.allocate(JAVA_INT)
+      val layersCell = arena.allocate(JAVA_LONG)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
@@ -35555,7 +35554,7 @@ actual object ObjectCalls {
         GodotRealSegment.writeRaw(toCell, 1, to.rawY)
         GodotRealSegment.writeRaw(toCell, 2, to.rawZ)
         boolCell.set(JAVA_BYTE, 0, if (optimize) 1.toByte() else 0.toByte())
-        layersCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(layers))
+        layersCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(layers))
         val args = arena.allocate(ADDRESS, 5)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, fromCell)
@@ -35759,11 +35758,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_DOUBLE)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      val arg2 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
       val arg3 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_DOUBLE, 0, first)
       arg1.set(JAVA_DOUBLE, 0, second)
-      arg2.set(JAVA_INT, 0, count)
+      arg2.set(JAVA_LONG, 0, count.toLong())
       arg3.set(JAVA_LONG, 0, axis)
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, arg0)
@@ -35786,13 +35785,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val arg0 = arena.allocate(JAVA_DOUBLE)
       val arg1 = arena.allocate(JAVA_DOUBLE)
-      val arg2 = arena.allocate(JAVA_INT)
-      val arg3 = arena.allocate(JAVA_INT)
+      val arg2 = arena.allocate(JAVA_LONG)
+      val arg3 = arena.allocate(JAVA_LONG)
       val arg4 = arena.allocate(JAVA_LONG)
       arg0.set(JAVA_DOUBLE, 0, first)
       arg1.set(JAVA_DOUBLE, 0, second)
-      arg2.set(JAVA_INT, 0, firstCount)
-      arg3.set(JAVA_INT, 0, secondCount)
+      arg2.set(JAVA_LONG, 0, firstCount.toLong())
+      arg3.set(JAVA_LONG, 0, secondCount.toLong())
       arg4.set(JAVA_LONG, 0, axis)
       val args = arena.allocate(ADDRESS, 5)
       args.setAtIndex(ADDRESS, 0, arg0)
@@ -35812,9 +35811,9 @@ actual object ObjectCalls {
   ): List<Vector2> {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, count)
+      intCell.set(JAVA_LONG, 0, count.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -35830,9 +35829,9 @@ actual object ObjectCalls {
   ): List<Vector3> {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      intCell.set(JAVA_INT, 0, count)
+      intCell.set(JAVA_LONG, 0, count.toLong())
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, intCell)
@@ -35886,14 +35885,14 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val fromCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       val toCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val maskCell = arena.allocate(JAVA_INT)
+      val maskCell = arena.allocate(JAVA_LONG)
       val excludeCell = arena.allocate(8L, 8L)
       try {
         GodotRealSegment.writeRaw(fromCell, 0, from.rawX)
         GodotRealSegment.writeRaw(fromCell, 1, from.rawY)
         GodotRealSegment.writeRaw(toCell, 0, to.rawX)
         GodotRealSegment.writeRaw(toCell, 1, to.rawY)
-        maskCell.set(JAVA_INT, 0, checkedMask)
+        maskCell.set(JAVA_LONG, 0, checkedMask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, fromCell)
@@ -35957,7 +35956,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val fromCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
       val toCell = arena.allocate(GodotReal.SIZE_BYTES * 3, GodotReal.ALIGN_BYTES)
-      val maskCell = arena.allocate(JAVA_INT)
+      val maskCell = arena.allocate(JAVA_LONG)
       val excludeCell = arena.allocate(8L, 8L)
       try {
         GodotRealSegment.writeRaw(fromCell, 0, from.rawX)
@@ -35966,7 +35965,7 @@ actual object ObjectCalls {
         GodotRealSegment.writeRaw(toCell, 0, to.rawX)
         GodotRealSegment.writeRaw(toCell, 1, to.rawY)
         GodotRealSegment.writeRaw(toCell, 2, to.rawZ)
-        maskCell.set(JAVA_INT, 0, checkedMask)
+        maskCell.set(JAVA_LONG, 0, checkedMask)
         BuiltinTypes.initArrayOfRids(excludeCell, exclude)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, fromCell)
@@ -35991,9 +35990,9 @@ actual object ObjectCalls {
     context: String,
   ): String {
     Arena.ofConfined().use { arena ->
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       val ret = arena.allocate(8L, 8L)
-      countCell.set(JAVA_INT, 0, count)
+      countCell.set(JAVA_LONG, 0, count.toLong())
       try {
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(first))
@@ -36015,10 +36014,10 @@ actual object ObjectCalls {
     text: String,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       try {
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(stringCell, text)
         val args = arena.allocate(ADDRESS, 2)
         args.setAtIndex(ADDRESS, 0, intCell)
@@ -36040,13 +36039,13 @@ actual object ObjectCalls {
     secondInt: Int,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
-      val secondCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
       try {
-        firstCell.set(JAVA_INT, 0, firstInt)
+        firstCell.set(JAVA_LONG, 0, firstInt.toLong())
         GodotStrings.initString(stringCell, text)
-        secondCell.set(JAVA_INT, 0, secondInt)
+        secondCell.set(JAVA_LONG, 0, secondInt.toLong())
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, stringCell)
@@ -36068,11 +36067,11 @@ actual object ObjectCalls {
     objectArg: MemorySegment,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val stringCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
       try {
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(stringCell, text)
         objectCell.set(ADDRESS, 0, objectArg)
         val args = arena.allocate(ADDRESS, 3)
@@ -36098,11 +36097,11 @@ actual object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val ret = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(stringCell, text)
-        indexCell.set(JAVA_INT, 0, index)
+        indexCell.set(JAVA_LONG, 0, index.toLong())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, stringCell)
         args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(firstName))
@@ -36150,11 +36149,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
-      firstCell.set(JAVA_INT, 0, firstInt)
-      secondCell.set(JAVA_INT, 0, secondInt)
+      firstCell.set(JAVA_LONG, 0, firstInt.toLong())
+      secondCell.set(JAVA_LONG, 0, secondInt.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -36197,11 +36196,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val otherCell = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         GodotStrings.initString(otherCell, other)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, textCell)
@@ -36226,11 +36225,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       try {
         GodotStrings.initString(textCell, text)
-        intCell.set(JAVA_INT, 0, intValue)
+        intCell.set(JAVA_LONG, 0, intValue.toLong())
         objectCell.set(ADDRESS, 0, objectArg)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, textCell)
@@ -36255,14 +36254,14 @@ actual object ObjectCalls {
   ): String {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val ret = arena.allocate(8L, 8L)
       try {
         GodotStrings.initString(stringCell, text)
-        firstCell.set(JAVA_INT, 0, firstInt)
-        secondCell.set(JAVA_INT, 0, secondInt)
+        firstCell.set(JAVA_LONG, 0, firstInt.toLong())
+        secondCell.set(JAVA_LONG, 0, secondInt.toLong())
         boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, stringCell)
@@ -36505,11 +36504,11 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -36529,11 +36528,11 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-      secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+      firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+      secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -36553,13 +36552,13 @@ actual object ObjectCalls {
   ): ByteArray {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
-        secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
+        firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
+        secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, firstCell)
@@ -36590,9 +36589,9 @@ actual object ObjectCalls {
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -36647,10 +36646,10 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       doubleCell.set(JAVA_DOUBLE, 0, doubleValue)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
@@ -36671,10 +36670,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val textureCell = arena.allocate(JAVA_LONG)
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       textureCell.set(JAVA_LONG, 0, texture.value)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
@@ -36693,9 +36692,9 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, index)
+      intCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, GodotStrings.makeStringName(name))
@@ -36741,13 +36740,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val double1 = arena.allocate(JAVA_DOUBLE)
       val double2 = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       boolCell.set(JAVA_BYTE, 0, if (enabled) 1.toByte() else 0.toByte())
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       double0.set(JAVA_DOUBLE, 0, first)
       double1.set(JAVA_DOUBLE, 0, second)
       double2.set(JAVA_DOUBLE, 0, third)
@@ -37060,7 +37059,7 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val bool0 = arena.allocate(JAVA_BYTE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val double0 = arena.allocate(JAVA_DOUBLE)
       val longCell = arena.allocate(JAVA_LONG)
       val bool1 = arena.allocate(JAVA_BYTE)
@@ -37071,7 +37070,7 @@ actual object ObjectCalls {
       val double4 = arena.allocate(JAVA_DOUBLE)
       ridCell.set(JAVA_LONG, 0, rid.value)
       bool0.set(JAVA_BYTE, 0, if (firstBool) 1.toByte() else 0.toByte())
-      intCell.set(JAVA_INT, 0, intValue)
+      intCell.set(JAVA_LONG, 0, intValue.toLong())
       double0.set(JAVA_DOUBLE, 0, firstDouble)
       longCell.set(JAVA_LONG, 0, longValue)
       bool1.set(JAVA_BYTE, 0, if (secondBool) 1.toByte() else 0.toByte())
@@ -37296,10 +37295,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeRect2(rectCell, rect)
-      intCell.set(JAVA_INT, 0, index)
+      intCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, rectCell)
@@ -37319,12 +37318,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val firstCell = arena.allocate(JAVA_LONG)
       val secondCell = arena.allocate(JAVA_LONG)
-      val firstIntCell = arena.allocate(JAVA_INT)
-      val secondIntCell = arena.allocate(JAVA_INT)
+      val firstIntCell = arena.allocate(JAVA_LONG)
+      val secondIntCell = arena.allocate(JAVA_LONG)
       firstCell.set(JAVA_LONG, 0, first.value)
       secondCell.set(JAVA_LONG, 0, second.value)
-      firstIntCell.set(JAVA_INT, 0, firstInt)
-      secondIntCell.set(JAVA_INT, 0, secondInt)
+      firstIntCell.set(JAVA_LONG, 0, firstInt.toLong())
+      secondIntCell.set(JAVA_LONG, 0, secondInt.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, firstCell)
       args.setAtIndex(ADDRESS, 1, secondCell)
@@ -37342,11 +37341,11 @@ actual object ObjectCalls {
     radius: Double,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val radiusCell = arena.allocate(JAVA_DOUBLE)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       radiusCell.set(JAVA_DOUBLE, 0, radius)
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, firstCell)
@@ -37524,11 +37523,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridArray = arena.allocate(8L, 8L)
       val objectArray = arena.allocate(8L, 8L)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfRids(ridArray, ridValues)
         BuiltinTypes.initArrayOfObjects(objectArray, objectValues)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridArray)
         args.setAtIndex(ADDRESS, 1, objectArray)
@@ -37554,11 +37553,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridArray = arena.allocate(8L, 8L)
       val formatCell = arena.allocate(JAVA_LONG)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfRids(ridArray, ridValues)
         formatCell.set(JAVA_LONG, 0, format)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 3)
         args.setAtIndex(ADDRESS, 0, ridArray)
         args.setAtIndex(ADDRESS, 1, formatCell)
@@ -37585,12 +37584,12 @@ actual object ObjectCalls {
       val ridArray = arena.allocate(8L, 8L)
       val objectArray = arena.allocate(8L, 8L)
       val formatCell = arena.allocate(JAVA_LONG)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initArrayOfRids(ridArray, ridValues)
         BuiltinTypes.initArrayOfObjects(objectArray, objectValues)
         formatCell.set(JAVA_LONG, 0, format)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, ridArray)
         args.setAtIndex(ADDRESS, 1, objectArray)
@@ -37616,12 +37615,12 @@ actual object ObjectCalls {
   ): RID {
     val checkedCount = BuiltinTypes.requireUInt32(count)
     Arena.ofConfined().use { arena ->
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       val formatCell = arena.allocate(JAVA_LONG)
       val ridArray = arena.allocate(8L, 8L)
       val offsetsArray = BuiltinTypes.allocatePackedArray(arena)
       try {
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         formatCell.set(JAVA_LONG, 0, format)
         BuiltinTypes.initArrayOfRids(ridArray, ridValues)
         BuiltinTypes.initPackedInt64Array(offsetsArray, offsets)
@@ -37653,13 +37652,13 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val drawListCell = arena.allocate(JAVA_LONG)
       val vertexFormatCell = arena.allocate(JAVA_LONG)
-      val vertexCountCell = arena.allocate(JAVA_INT)
+      val vertexCountCell = arena.allocate(JAVA_LONG)
       val vertexBufferArray = arena.allocate(8L, 8L)
       val offsetsArray = BuiltinTypes.allocatePackedArray(arena)
       try {
         drawListCell.set(JAVA_LONG, 0, drawList)
         vertexFormatCell.set(JAVA_LONG, 0, vertexFormat)
-        vertexCountCell.set(JAVA_INT, 0, checkedVertexCount)
+        vertexCountCell.set(JAVA_LONG, 0, checkedVertexCount)
         BuiltinTypes.initArrayOfRids(vertexBufferArray, vertexBuffers)
         BuiltinTypes.initPackedInt64Array(offsetsArray, offsets)
         val args = arena.allocate(ADDRESS, 5)
@@ -37694,17 +37693,17 @@ actual object ObjectCalls {
       val drawFlagsCell = arena.allocate(JAVA_LONG)
       val clearColorArray = BuiltinTypes.allocatePackedArray(arena)
       val clearDepthCell = arena.allocate(JAVA_DOUBLE)
-      val clearStencilCell = arena.allocate(JAVA_INT)
+      val clearStencilCell = arena.allocate(JAVA_LONG)
       val regionCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
-      val breadcrumbCell = arena.allocate(JAVA_INT)
+      val breadcrumbCell = arena.allocate(JAVA_LONG)
       try {
         framebufferCell.set(JAVA_LONG, 0, framebuffer.value)
         drawFlagsCell.set(JAVA_LONG, 0, drawFlags)
         BuiltinTypes.initPackedColorArray(clearColorArray, clearColorValues)
         clearDepthCell.set(JAVA_DOUBLE, 0, clearDepthValue)
-        clearStencilCell.set(JAVA_INT, 0, checkedClearStencil)
+        clearStencilCell.set(JAVA_LONG, 0, checkedClearStencil)
         writeRect2(regionCell, region)
-        breadcrumbCell.set(JAVA_INT, 0, checkedBreadcrumb)
+        breadcrumbCell.set(JAVA_LONG, 0, checkedBreadcrumb)
         val args = arena.allocate(ADDRESS, 7)
         args.setAtIndex(ADDRESS, 0, framebufferCell)
         args.setAtIndex(ADDRESS, 1, drawFlagsCell)
@@ -37741,27 +37740,27 @@ actual object ObjectCalls {
     val checkedClearStencil = BuiltinTypes.requireUInt32(clearStencil)
     Arena.ofConfined().use { arena ->
       val framebufferCell = arena.allocate(JAVA_LONG)
-      val splitsCell = arena.allocate(JAVA_INT)
+      val splitsCell = arena.allocate(JAVA_LONG)
       val initialColorActionCell = arena.allocate(JAVA_LONG)
       val finalColorActionCell = arena.allocate(JAVA_LONG)
       val initialDepthActionCell = arena.allocate(JAVA_LONG)
       val finalDepthActionCell = arena.allocate(JAVA_LONG)
       val clearColorArray = BuiltinTypes.allocatePackedArray(arena)
       val clearDepthCell = arena.allocate(JAVA_DOUBLE)
-      val clearStencilCell = arena.allocate(JAVA_INT)
+      val clearStencilCell = arena.allocate(JAVA_LONG)
       val regionCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val storageTextureArray = arena.allocate(8L, 8L)
       val ret = BuiltinTypes.allocatePackedArray(arena)
       try {
         framebufferCell.set(JAVA_LONG, 0, framebuffer.value)
-        splitsCell.set(JAVA_INT, 0, checkedSplits)
+        splitsCell.set(JAVA_LONG, 0, checkedSplits)
         initialColorActionCell.set(JAVA_LONG, 0, initialColorAction)
         finalColorActionCell.set(JAVA_LONG, 0, finalColorAction)
         initialDepthActionCell.set(JAVA_LONG, 0, initialDepthAction)
         finalDepthActionCell.set(JAVA_LONG, 0, finalDepthAction)
         BuiltinTypes.initPackedColorArray(clearColorArray, clearColorValues)
         clearDepthCell.set(JAVA_DOUBLE, 0, clearDepth)
-        clearStencilCell.set(JAVA_INT, 0, checkedClearStencil)
+        clearStencilCell.set(JAVA_LONG, 0, checkedClearStencil)
         writeRect2(regionCell, region)
         BuiltinTypes.initArrayOfRids(storageTextureArray, storageTextures)
         val args = arena.allocate(ADDRESS, 11)
@@ -37798,13 +37797,13 @@ actual object ObjectCalls {
     val checkedSize = BuiltinTypes.requireUInt32(size)
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val offsetCell = arena.allocate(JAVA_INT)
-      val sizeCell = arena.allocate(JAVA_INT)
+      val offsetCell = arena.allocate(JAVA_LONG)
+      val sizeCell = arena.allocate(JAVA_LONG)
       val dataArray = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
-        offsetCell.set(JAVA_INT, 0, checkedOffset)
-        sizeCell.set(JAVA_INT, 0, checkedSize)
+        offsetCell.set(JAVA_LONG, 0, checkedOffset)
+        sizeCell.set(JAVA_LONG, 0, checkedSize)
         BuiltinTypes.initPackedByteArray(dataArray, data)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -37831,13 +37830,13 @@ actual object ObjectCalls {
   ): RID {
     val checkedSize = BuiltinTypes.requireUInt32(size)
     Arena.ofConfined().use { arena ->
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       val formatCell = arena.allocate(JAVA_LONG)
       val dataArray = BuiltinTypes.allocatePackedArray(arena)
       val restartCell = arena.allocate(JAVA_BYTE)
       val creationBitsCell = arena.allocate(JAVA_LONG)
       try {
-        sizeCell.set(JAVA_INT, 0, checkedSize)
+        sizeCell.set(JAVA_LONG, 0, checkedSize)
         formatCell.set(JAVA_LONG, 0, format)
         BuiltinTypes.initPackedByteArray(dataArray, data)
         restartCell.set(JAVA_BYTE, 0, if (useRestartIndices) 1.toByte() else 0.toByte())
@@ -37867,12 +37866,12 @@ actual object ObjectCalls {
   ): RID {
     val checkedSize = BuiltinTypes.requireUInt32(size)
     Arena.ofConfined().use { arena ->
-      val sizeCell = arena.allocate(JAVA_INT)
+      val sizeCell = arena.allocate(JAVA_LONG)
       val dataArray = BuiltinTypes.allocatePackedArray(arena)
       val usageCell = arena.allocate(JAVA_LONG)
       val creationBitsCell = arena.allocate(JAVA_LONG)
       try {
-        sizeCell.set(JAVA_INT, 0, checkedSize)
+        sizeCell.set(JAVA_LONG, 0, checkedSize)
         BuiltinTypes.initPackedByteArray(dataArray, data)
         usageCell.set(JAVA_LONG, 0, usage)
         creationBitsCell.set(JAVA_LONG, 0, creationBits)
@@ -37903,12 +37902,12 @@ actual object ObjectCalls {
       val dataArray = BuiltinTypes.allocatePackedArray(arena)
       val pathCell = arena.allocate(8L, 8L)
       val stateCell = arena.allocate(ADDRESS)
-      val flagsCell = arena.allocate(JAVA_INT)
+      val flagsCell = arena.allocate(JAVA_LONG)
       try {
         BuiltinTypes.initPackedByteArray(dataArray, data)
         GodotStrings.initString(pathCell, path)
         stateCell.set(ADDRESS, 0, state)
-        flagsCell.set(JAVA_INT, 0, checkedFlags)
+        flagsCell.set(JAVA_LONG, 0, checkedFlags)
         val args = arena.allocate(ADDRESS, 4)
         args.setAtIndex(ADDRESS, 0, dataArray)
         args.setAtIndex(ADDRESS, 1, pathCell)
@@ -37990,15 +37989,15 @@ actual object ObjectCalls {
     val checkedThird = BuiltinTypes.requireUInt32(third)
     val checkedFourth = BuiltinTypes.requireUInt32(fourth)
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
-      val fourthCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
+      val fourthCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
-      firstCell.set(JAVA_INT, 0, checkedFirst)
-      secondCell.set(JAVA_INT, 0, checkedSecond)
-      thirdCell.set(JAVA_INT, 0, checkedThird)
-      fourthCell.set(JAVA_INT, 0, checkedFourth)
+      firstCell.set(JAVA_LONG, 0, checkedFirst)
+      secondCell.set(JAVA_LONG, 0, checkedSecond)
+      thirdCell.set(JAVA_LONG, 0, checkedThird)
+      fourthCell.set(JAVA_LONG, 0, checkedFourth)
       objectCell.set(ADDRESS, 0, objectArg)
       val args = arena.allocate(ADDRESS, 7)
       args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(firstName))
@@ -38104,18 +38103,18 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objectCell = arena.allocate(ADDRESS)
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       val modeCell = arena.allocate(JAVA_LONG)
-      val fourthCell = arena.allocate(JAVA_INT)
+      val fourthCell = arena.allocate(JAVA_LONG)
       objectCell.set(ADDRESS, 0, objectArg)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      firstCell.set(JAVA_INT, 0, checkedFirst)
-      secondCell.set(JAVA_INT, 0, checkedSecond)
-      thirdCell.set(JAVA_INT, 0, checkedThird)
+      firstCell.set(JAVA_LONG, 0, checkedFirst)
+      secondCell.set(JAVA_LONG, 0, checkedSecond)
+      thirdCell.set(JAVA_LONG, 0, checkedThird)
       modeCell.set(JAVA_LONG, 0, mode)
-      fourthCell.set(JAVA_INT, 0, checkedFourth)
+      fourthCell.set(JAVA_LONG, 0, checkedFourth)
       val args = arena.allocate(ADDRESS, 7)
       args.setAtIndex(ADDRESS, 0, objectCell)
       args.setAtIndex(ADDRESS, 1, ridCell)
@@ -38189,7 +38188,7 @@ actual object ObjectCalls {
       val thirdObjectCell = arena.allocate(ADDRESS)
       val fourthObjectCell = arena.allocate(ADDRESS)
       val flagsCell = arena.allocate(JAVA_LONG)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       val objectArray = arena.allocate(8L, 8L)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
@@ -38201,7 +38200,7 @@ actual object ObjectCalls {
         thirdObjectCell.set(ADDRESS, 0, thirdObject)
         fourthObjectCell.set(ADDRESS, 0, fourthObject)
         flagsCell.set(JAVA_LONG, 0, flags)
-        countCell.set(JAVA_INT, 0, checkedCount)
+        countCell.set(JAVA_LONG, 0, checkedCount)
         BuiltinTypes.initArrayOfObjects(objectArray, values)
         val args = arena.allocate(ADDRESS, 11)
         args.setAtIndex(ADDRESS, 0, ridCell)
@@ -38312,7 +38311,7 @@ actual object ObjectCalls {
       val bonesCell = BuiltinTypes.allocatePackedArray(arena)
       val weightsCell = BuiltinTypes.allocatePackedArray(arena)
       val textureCell = arena.allocate(JAVA_LONG)
-      val countCell = arena.allocate(JAVA_INT)
+      val countCell = arena.allocate(JAVA_LONG)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
         BuiltinTypes.initPackedInt32Array(indicesCell, indices)
@@ -38322,7 +38321,7 @@ actual object ObjectCalls {
         BuiltinTypes.initPackedInt32Array(bonesCell, bones)
         BuiltinTypes.initPackedFloat32Array(weightsCell, weights)
         textureCell.set(JAVA_LONG, 0, texture.value)
-        countCell.set(JAVA_INT, 0, count)
+        countCell.set(JAVA_LONG, 0, count.toLong())
         val args = arena.allocate(ADDRESS, 9)
         args.setAtIndex(ADDRESS, 0, ridCell)
         args.setAtIndex(ADDRESS, 1, indicesCell)
@@ -38372,9 +38371,9 @@ actual object ObjectCalls {
         args.setAtIndex(ADDRESS, 2, outputCell)
         args.setAtIndex(ADDRESS, 3, readStderrCell)
         args.setAtIndex(ADDRESS, 4, openConsoleCell)
-        val ret = arena.allocate(JAVA_INT)
+        val ret = arena.allocate(JAVA_LONG)
         bindPtrcall(methodBind, instance, args, ret)
-        return ret.get(JAVA_INT, 0)
+        return ret.get(JAVA_LONG, 0).toInt()
       } finally {
         BuiltinTypes.destroyTyped(VariantType.ARRAY, outputCell)
         BuiltinTypes.destroyTyped(VariantType.PACKED_STRING_ARRAY, argumentsCell)
@@ -38399,14 +38398,14 @@ actual object ObjectCalls {
       val argumentsCell = BuiltinTypes.allocatePackedArray(arena)
       val thirdCell = arena.allocate(8L, 8L)
       val outputCell = arena.allocate(8L, 8L)
-      val portCell = arena.allocate(JAVA_INT)
+      val portCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(firstCell, first)
         GodotStrings.initString(secondCell, second)
         BuiltinTypes.initPackedStringArray(argumentsCell, arguments)
         GodotStrings.initString(thirdCell, third)
         BuiltinTypes.initArray(outputCell, output)
-        portCell.set(JAVA_INT, 0, port)
+        portCell.set(JAVA_LONG, 0, port.toLong())
         val args = arena.allocate(ADDRESS, 6)
         args.setAtIndex(ADDRESS, 0, firstCell)
         args.setAtIndex(ADDRESS, 1, secondCell)
@@ -38436,11 +38435,11 @@ actual object ObjectCalls {
     arguments: List<Any?>,
   ): Long {
     Arena.ofConfined().use { arena ->
-      val peerIdCell = arena.allocate(JAVA_INT)
+      val peerIdCell = arena.allocate(JAVA_LONG)
       val objectCell = arena.allocate(ADDRESS)
       val argumentsCell = arena.allocate(8L, 8L)
       try {
-        peerIdCell.set(JAVA_INT, 0, peerId)
+        peerIdCell.set(JAVA_LONG, 0, peerId.toLong())
         objectCell.set(ADDRESS, 0, objectArg)
         BuiltinTypes.initArray(argumentsCell, arguments)
         val args = arena.allocate(ADDRESS, 4)
@@ -38472,25 +38471,25 @@ actual object ObjectCalls {
     drawStyleBox: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val slotCell = arena.allocate(JAVA_INT)
+      val slotCell = arena.allocate(JAVA_LONG)
       val leftEnabledCell = arena.allocate(JAVA_BYTE)
-      val leftTypeCell = arena.allocate(JAVA_INT)
+      val leftTypeCell = arena.allocate(JAVA_LONG)
       val leftColorCell = arena.allocate(16L, 4L)
       val rightEnabledCell = arena.allocate(JAVA_BYTE)
-      val rightTypeCell = arena.allocate(JAVA_INT)
+      val rightTypeCell = arena.allocate(JAVA_LONG)
       val rightColorCell = arena.allocate(16L, 4L)
       val leftIconCell = arena.allocate(ADDRESS)
       val rightIconCell = arena.allocate(ADDRESS)
       val drawStyleBoxCell = arena.allocate(JAVA_BYTE)
-      slotCell.set(JAVA_INT, 0, slot)
+      slotCell.set(JAVA_LONG, 0, slot.toLong())
       leftEnabledCell.set(JAVA_BYTE, 0, if (leftEnabled) 1.toByte() else 0.toByte())
-      leftTypeCell.set(JAVA_INT, 0, leftType)
+      leftTypeCell.set(JAVA_LONG, 0, leftType.toLong())
       leftColorCell.set(JAVA_FLOAT, 0, leftColor.rawR)
       leftColorCell.set(JAVA_FLOAT, 4, leftColor.rawG)
       leftColorCell.set(JAVA_FLOAT, 8, leftColor.rawB)
       leftColorCell.set(JAVA_FLOAT, 12, leftColor.rawA)
       rightEnabledCell.set(JAVA_BYTE, 0, if (rightEnabled) 1.toByte() else 0.toByte())
-      rightTypeCell.set(JAVA_INT, 0, rightType)
+      rightTypeCell.set(JAVA_LONG, 0, rightType.toLong())
       rightColorCell.set(JAVA_FLOAT, 0, rightColor.rawR)
       rightColorCell.set(JAVA_FLOAT, 4, rightColor.rawG)
       rightColorCell.set(JAVA_FLOAT, 8, rightColor.rawB)
@@ -38837,21 +38836,21 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val firstSizeCell = arena.allocate(JAVA_INT)
+      val firstSizeCell = arena.allocate(JAVA_LONG)
       val rectCell = arena.allocate(GodotReal.SIZE_BYTES * 4, GodotReal.ALIGN_BYTES)
       val firstColorCell = arena.allocate(16L, 4L)
-      val secondSizeCell = arena.allocate(JAVA_INT)
+      val secondSizeCell = arena.allocate(JAVA_LONG)
       val secondColorCell = arena.allocate(16L, 4L)
       try {
         GodotStrings.initString(stringCell, text)
         objectCell.set(ADDRESS, 0, objectArg)
-        firstSizeCell.set(JAVA_INT, 0, firstSize)
+        firstSizeCell.set(JAVA_LONG, 0, firstSize.toLong())
         writeRect2(rectCell, rect)
         firstColorCell.set(JAVA_FLOAT, 0, firstColor.rawR)
         firstColorCell.set(JAVA_FLOAT, 4, firstColor.rawG)
         firstColorCell.set(JAVA_FLOAT, 8, firstColor.rawB)
         firstColorCell.set(JAVA_FLOAT, 12, firstColor.rawA)
-        secondSizeCell.set(JAVA_INT, 0, secondSize)
+        secondSizeCell.set(JAVA_LONG, 0, secondSize.toLong())
         secondColorCell.set(JAVA_FLOAT, 0, secondColor.rawR)
         secondColorCell.set(JAVA_FLOAT, 4, secondColor.rawG)
         secondColorCell.set(JAVA_FLOAT, 8, secondColor.rawB)
@@ -38924,10 +38923,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
       writeVector2(vectorCell, vector)
-      intCell.set(JAVA_INT, 0, index)
+      intCell.set(JAVA_LONG, 0, index.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -39292,14 +39291,14 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val textCell = arena.allocate(8L, 8L)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val firstFlagCell = arena.allocate(JAVA_BYTE)
       val secondFlagCell = arena.allocate(JAVA_BYTE)
       try {
         GodotStrings.initString(textCell, text)
-        firstCell.set(JAVA_INT, 0, first)
-        secondCell.set(JAVA_INT, 0, second)
+        firstCell.set(JAVA_LONG, 0, first.toLong())
+        secondCell.set(JAVA_LONG, 0, second.toLong())
         firstFlagCell.set(JAVA_BYTE, 0, if (firstFlag) 1.toByte() else 0.toByte())
         secondFlagCell.set(JAVA_BYTE, 0, if (secondFlag) 1.toByte() else 0.toByte())
         val args = arena.allocate(ADDRESS, 5)
@@ -39344,11 +39343,11 @@ actual object ObjectCalls {
     persistent: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 6, GodotReal.ALIGN_BYTES)
       val amountCell = arena.allocate(JAVA_DOUBLE)
       val persistentCell = arena.allocate(JAVA_BYTE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       writeTransform2D(transformCell, transform)
       amountCell.set(JAVA_DOUBLE, 0, amount)
       persistentCell.set(JAVA_BYTE, 0, if (persistent) 1.toByte() else 0.toByte())
@@ -39370,11 +39369,11 @@ actual object ObjectCalls {
     persistent: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val indexCell = arena.allocate(JAVA_INT)
+      val indexCell = arena.allocate(JAVA_LONG)
       val transformCell = arena.allocate(GodotReal.SIZE_BYTES * 12, GodotReal.ALIGN_BYTES)
       val amountCell = arena.allocate(JAVA_DOUBLE)
       val persistentCell = arena.allocate(JAVA_BYTE)
-      indexCell.set(JAVA_INT, 0, index)
+      indexCell.set(JAVA_LONG, 0, index.toLong())
       writeTransform3D(transformCell, transform)
       amountCell.set(JAVA_DOUBLE, 0, amount)
       persistentCell.set(JAVA_BYTE, 0, if (persistent) 1.toByte() else 0.toByte())
@@ -39434,8 +39433,8 @@ actual object ObjectCalls {
     value: Long,
   ): Vector2 {
     Arena.ofConfined().use { arena ->
-      val arg = arena.allocate(JAVA_INT)
-      arg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      val arg = arena.allocate(JAVA_LONG)
+      arg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val arr = arena.allocate(ADDRESS, 1)
       arr.setAtIndex(ADDRESS, 0, arg)
       val ret = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
@@ -39455,9 +39454,9 @@ actual object ObjectCalls {
     vector: Vector2,
   ) {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
       val args = arena.allocate(ADDRESS, 2)
@@ -39568,18 +39567,18 @@ actual object ObjectCalls {
   ): Int {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       val args = arena.allocate(ADDRESS, 3)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
       args.setAtIndex(ADDRESS, 2, secondCell)
-      val ret = arena.allocate(JAVA_INT)
+      val ret = arena.allocate(JAVA_LONG)
       bindPtrcall(methodBind, instance, args, ret)
-      return ret.get(JAVA_INT, 0)
+      return ret.get(JAVA_LONG, 0).toInt()
     }
   }
 
@@ -39598,12 +39597,12 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val boolCell = arena.allocate(JAVA_BYTE)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       boolCell.set(JAVA_BYTE, 0, if (boolArg) 1.toByte() else 0.toByte())
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
@@ -39630,9 +39629,9 @@ actual object ObjectCalls {
   ): RID {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -39654,9 +39653,9 @@ actual object ObjectCalls {
   ): Long {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val valueCell = arena.allocate(JAVA_INT)
+      val valueCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      valueCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      valueCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, valueCell)
@@ -39680,13 +39679,13 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
       ridCell.set(JAVA_LONG, 0, rid.value)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
-      thirdCell.set(JAVA_INT, 0, third)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
+      thirdCell.set(JAVA_LONG, 0, third.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, ridCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -39749,10 +39748,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val doubleCell = arena.allocate(JAVA_DOUBLE)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, obj)
       doubleCell.set(JAVA_DOUBLE, 0, doubleArg)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, objCell)
       args.setAtIndex(ADDRESS, 1, doubleCell)
@@ -39777,11 +39776,11 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val objCell = arena.allocate(ADDRESS)
       val vectorCell = arena.allocate(GodotReal.SIZE_BYTES * 2, GodotReal.ALIGN_BYTES)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       objCell.set(ADDRESS, 0, obj)
       GodotRealSegment.writeRaw(vectorCell, 0, vector.rawX)
       GodotRealSegment.writeRaw(vectorCell, 1, vector.rawY)
-      intCell.set(JAVA_INT, 0, intArg)
+      intCell.set(JAVA_LONG, 0, intArg.toLong())
       val args = arena.allocate(ADDRESS, 4)
       args.setAtIndex(ADDRESS, 0, objCell)
       args.setAtIndex(ADDRESS, 1, vectorCell)
@@ -39805,13 +39804,13 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ) {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       longCell.set(JAVA_LONG, 0, longArg)
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
@@ -39843,13 +39842,13 @@ actual object ObjectCalls {
     boolArg: Boolean,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val firstCell = arena.allocate(JAVA_INT)
-      val secondCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
+      val secondCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
       val colorCell = arena.allocate(16L, 4L)
       val boolCell = arena.allocate(JAVA_BYTE)
-      firstCell.set(JAVA_INT, 0, first)
-      secondCell.set(JAVA_INT, 0, second)
+      firstCell.set(JAVA_LONG, 0, first.toLong())
+      secondCell.set(JAVA_LONG, 0, second.toLong())
       longCell.set(JAVA_LONG, 0, longArg)
       // Color components are fixed 32-bit floats, unlike scalar float ptrcall slots.
       colorCell.set(JAVA_FLOAT, 0, color.rawR)
@@ -39885,17 +39884,17 @@ actual object ObjectCalls {
   ) {
     Arena.ofConfined().use { arena ->
       val longCell = arena.allocate(JAVA_LONG)
-      val firstCell = arena.allocate(JAVA_INT)
+      val firstCell = arena.allocate(JAVA_LONG)
       val ridCell = arena.allocate(JAVA_LONG)
-      val secondCell = arena.allocate(JAVA_INT)
-      val thirdCell = arena.allocate(JAVA_INT)
-      val fourthCell = arena.allocate(JAVA_INT)
+      val secondCell = arena.allocate(JAVA_LONG)
+      val thirdCell = arena.allocate(JAVA_LONG)
+      val fourthCell = arena.allocate(JAVA_LONG)
       longCell.set(JAVA_LONG, 0, longArg)
-      firstCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(first))
+      firstCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(first))
       ridCell.set(JAVA_LONG, 0, rid.value)
-      secondCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(second))
-      thirdCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(third))
-      fourthCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(fourth))
+      secondCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(second))
+      thirdCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(third))
+      fourthCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(fourth))
       val args = arena.allocate(ADDRESS, 6)
       args.setAtIndex(ADDRESS, 0, longCell)
       args.setAtIndex(ADDRESS, 1, firstCell)
@@ -39918,9 +39917,9 @@ actual object ObjectCalls {
     longArg: Long,
   ): RID {
     Arena.ofConfined().use { arena ->
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
-      intCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(value))
+      intCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(value))
       longCell.set(JAVA_LONG, 0, longArg)
       val args = arena.allocate(ADDRESS, 2)
       args.setAtIndex(ADDRESS, 0, intCell)
@@ -39966,10 +39965,10 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val stringCell = arena.allocate(8L, 8L)
       val variant = initVariantCell(arena, value)
-      val intCell = arena.allocate(JAVA_INT)
+      val intCell = arena.allocate(JAVA_LONG)
       try {
         GodotStrings.initString(stringCell, text)
-        intCell.set(JAVA_INT, 0, index)
+        intCell.set(JAVA_LONG, 0, index.toLong())
         val arr = arena.allocate(ADDRESS, 3)
         arr.setAtIndex(ADDRESS, 0, stringCell)
         arr.setAtIndex(ADDRESS, 1, variant)
@@ -40239,12 +40238,12 @@ actual object ObjectCalls {
     Arena.ofConfined().use { arena ->
       val ridCell = arena.allocate(JAVA_LONG)
       val longCell = arena.allocate(JAVA_LONG)
-      val uintCell = arena.allocate(JAVA_INT)
+      val uintCell = arena.allocate(JAVA_LONG)
       val packed = BuiltinTypes.allocatePackedArray(arena)
       try {
         ridCell.set(JAVA_LONG, 0, rid.value)
         longCell.set(JAVA_LONG, 0, longArg)
-        uintCell.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(uintArg))
+        uintCell.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(uintArg))
         BuiltinTypes.initPackedInt32Array(packed, values)
         val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, ridCell)

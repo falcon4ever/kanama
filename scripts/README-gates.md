@@ -197,9 +197,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:2034` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:2099` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:2150` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2173` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:2238` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2289` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:605` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -280,12 +280,12 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/ios_visual_smoke.sh:3251` | `DEVELOPER_DIR="$xcode_developer_dir" xcrun simctl launch "$device_udid" "$bundle_id" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
 | `scripts/local_ci.sh:57` | `write_timings_json FAIL \|\| true` | justified: this runs inside the failure banner; the run is already red and the exit code is the original one. |
 | `scripts/local_ci.sh:216` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:754` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
-| `scripts/local_ci.sh:757` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:759` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/local_ci.sh:800` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:816` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/local_ci.sh:829` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:759` | `ldd "$linux_native" >&2 \|\| true` | justified: diagnostics on a path that already exits 1 just below |
+| `scripts/local_ci.sh:762` | `if command -v readelf >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:764` | `readelf -d "$linux_native" >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/local_ci.sh:805` | `if command -v cmake >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:821` | `if command -v mkdocs >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/local_ci.sh:834` | `if command -v node >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/measure_edit_loop.py:98` | `except OSError:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/measure_edit_loop.py:111` | `except ProcessLookupError:` | justified: cleanup after the verdict; the process already exited |
 | `scripts/measure_edit_loop.py:115` | `except subprocess.TimeoutExpired:` | justified: escalated to SIGKILL on the next line |
@@ -307,27 +307,27 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/record_gate_evidence.py:40` | `except (OSError, subprocess.CalledProcessError) as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/runtime_smoke.sh:30` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/runtime_smoke.sh:40` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar -PkanamaApiExercise=true >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:282` | `grep -A 12 "Program crashed" "$API_EXERCISE_LOG" >&2 \|\| true` | justified: diagnostics before the verdict; a crash without Godot's crash banner still fails below |
-| `scripts/runtime_smoke.sh:716` | `wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:789` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
-| `scripts/runtime_smoke.sh:946` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:950` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
-| `scripts/runtime_smoke.sh:952` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:955` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
-| `scripts/runtime_smoke.sh:956` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
-| `scripts/runtime_smoke.sh:959` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
-| `scripts/runtime_smoke.sh:960` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
-| `scripts/runtime_smoke.sh:969` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/runtime_smoke.sh:977` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
+| `scripts/runtime_smoke.sh:315` | `grep -A 12 "Program crashed" "$API_EXERCISE_LOG" >&2 \|\| true` | justified: diagnostics before the verdict; a crash without Godot's crash banner still fails below |
+| `scripts/runtime_smoke.sh:749` | `wts_color_errors="$(grep -c 'Invalid color name: kanama_not_a_color' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:822` | `freed_errors="$(grep -c '^SCRIPT ERROR: .*previously freed instance' "$LOG_FILE" \|\| true)"` | justified: grep -c exits 1 when the count is 0 (and still prints 0); the count itself is checked on the next line. |
+| `scripts/runtime_smoke.sh:979` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:983` | `kill -TERM "$sigterm_pid" 2>/dev/null \|\| true` | justified: it may have exited already; its exit status decides below |
+| `scripts/runtime_smoke.sh:985` | `kill -0 "$sigterm_pid" 2>/dev/null \|\| break` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:988` | `if kill -0 "$sigterm_pid" 2>/dev/null; then` | justified: liveness probe (`kill -0`); the exit status is the test |
+| `scripts/runtime_smoke.sh:989` | `kill -KILL "$sigterm_pid" 2>/dev/null \|\| true` | justified: the hang itself fails the leg (sigterm_rc=hang) |
+| `scripts/runtime_smoke.sh:992` | `set +e` | justified: the status of the wait below is the verdict, checked against 143 |
+| `scripts/runtime_smoke.sh:993` | `wait "$sigterm_pid" 2>/dev/null` | justified: its status is captured on the next line and checked |
+| `scripts/runtime_smoke.sh:1002` | `elif compgen -G "$SIGTERM_ERR_DIR/hs_err_*" >/dev/null \|\| grep -q "A fatal error has been detected" "$SIGTERM_` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
+| `scripts/runtime_smoke.sh:1010` | `cat "$SIGTERM_ERR_DIR"/hs_err_* 2>/dev/null \| head -n 40 >&2 \|\| true` | justified: diagnostics only; the leg fails just below |
 | `scripts/scene_connection_lint.py:103` | `except OSError:` | justified: an unreadable script registers no methods, so every connection to it is reported missing |
 | `scripts/store_addon_editor_smoke.sh:43` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/store_addon_editor_smoke.sh:59` | `grep -E "project_setup\|kanama:tools\|kanama\]\|SCRIPT ERROR\|ERROR:\|at: " "$log" >&2 \|\| true` | justified: the tail below |
 | `scripts/store_addon_editor_smoke.sh:65` | `grep -E "\[kanama:tools\] (Running\|Build JDK\|Set Up)" "$log" \|\| true` | justified: context lines for the log only |
 | `scripts/tool_smoke.sh:31` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `scripts/tool_smoke.sh:39` | `"$ROOT_DIR/gradlew" -p "$ROOT_DIR" syncExampleAddonJar >/dev/null` | justified: stdout only; stderr and the exit status are kept, so errexit still fails the script |
-| `scripts/tool_smoke.sh:147` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
-| `scripts/tool_smoke.sh:279` | `mode=$(cat "$control/mode" 2>/dev/null \|\| echo ok)` | justified: no mode file means the default mode, ok |
-| `scripts/tool_smoke.sh:307` | `kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null \|\| true` | justified: clean-up only; the check itself asserts the plugin ended it |
+| `scripts/tool_smoke.sh:148` | `if command -v cygpath >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
+| `scripts/tool_smoke.sh:280` | `mode=$(cat "$control/mode" 2>/dev/null \|\| echo ok)` | justified: no mode file means the default mode, ok |
+| `scripts/tool_smoke.sh:308` | `kill "$(cat "$LOOP_CONTROL/hang.pid")" 2>/dev/null \|\| true` | justified: clean-up only; the check itself asserts the plugin ended it |
 | `scripts/upgrade_godot.sh:156` | `restore="$(git -C "$ROOT_DIR" diff --name-only --diff-filter=MDT HEAD \| grep -vxF "$pins" \|\| true)"` | justified: grep -v exits 1 when every changed file is a pin file, which leaves nothing to restore. |
 | `scripts/upgrade_godot.sh:168` | `left="$(git -C "$ROOT_DIR" status --porcelain \| grep -vc '^??' \|\| true)"` | justified: grep -c prints 0 and exits 1 when no tracked change is left, which is the reset's goal. |
 | `scripts/upgrade_godot.sh:212` | `BIN_VERSION="$(run_with_timeout "${KANAMA_GODOT_DUMP_TIMEOUT:-300}" "$GODOT_BIN" --version 2>/dev/null \| grep ` | justified: a binary that prints no version leaves BIN_VERSION empty, which fails the pin comparison just below. |
@@ -656,7 +656,18 @@ that build itself resolves; the rest goes back to being fetched by the cases, wi
 | `audit_generator_object_policy.py` | the shell generator stops excluding `Object` | `- generate_api_shell_wrappers.UNSAFE_DEFAULT_EXCLUDES is missing: Object` | green |
 | `audit_generator_shape_policy.py` | a Dictionary-argument helper stops using the explicit initializer | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:658: ptrcallWithObjectAndDictionaryArg for ('Object', 'Dictionary') -> void: Dictionary argument is not initialized through BuiltinTypes.initDiction` | green |
 | `audit_godot_object_script_paths.py` | GodotObject.set stops calling the Object.set bind | `- GodotObject.set must call the Object.set MethodBind` | green |
-| `audit_ptrcall_helper_layouts.py` | a uint32 helper reads a 64-bit slot | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:3614: ptrcallNoArgsRetUInt32 uses JAVA_LONG but helper shape has no int64/enum/bitfield/RID slot` | green |
+| `audit_ptrcall_helper_layouts.py (int return cell)` | an int32-return helper goes back to a 4-byte JAVA_INT return cell the engine writes 8 bytes into | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:3736: allocates a 4-byte scalar cell `allocate(JAVA_INT)`; every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE) / - src/jvmMain/` | green |
+| `audit_ptrcall_helper_layouts.py (int argument cell)` | an int32 argument is written as 4 bytes into its 8-byte cell, leaving the engine's upper half unwritten | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:372: ptrcallWithObjectStringAndIntArgs reads or writes `intCell` as a lone 4-byte JAVA_INT (it is passed to the ptrcall): Godot's ptrcall carries a ` | green |
+| `audit_ptrcall_helper_layouts.py (unparsed helper int argument)` | ptrcallWithFiveIntArgs (a helper the shape parser skips) writes its first int argument as 4 bytes | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:16067: ptrcallWithFiveIntArgs reads or writes `arg0` as a lone 4-byte JAVA_INT (it is passed to the ptrcall): Godot's ptrcall carries a scalar int32` | green |
+| `audit_ptrcall_helper_layouts.py (virtual int return)` | ScriptExtension._get_member_line writes its int return as 4 bytes into the engine's int64 cell | `- src/jvmMain/kotlin/binding/KanamaScript.kt:1369: a virtual writes its return through `rRet.reinterpret(4).set(JAVA_INT`; an int/enum/Error virtual return is an 8-byte int64 cell (PtrToArg<m_ret>::En` | green |
+| `audit_ptrcall_helper_layouts.py (virtual Array return leak)` | ScriptExtension._get_members builds its Array over the engine's constructed return cell (a leak per call) | `- src/jvmMain/kotlin/binding/KanamaScript.kt:1178: callGetMembers builds an Array/Dictionary into the engine's default-constructed return cell `rRet` directly; use BuiltinTypes.writeVirtualReturn (bui` | green |
+| `audit_ptrcall_helper_layouts.py (virtual return released before a lookup)` | _get_members destroys the engine's Array, then looks up its script: a throw there leaves Godot a freed Array | `- src/jvmMain/kotlin/binding/KanamaScript.kt:1178: callGetMembers destroys the engine's default-constructed return cell `rRet` directly; use BuiltinTypes.writeVirtualReturn (building over it leaks, a ` | green |
+| `audit_ptrcall_helper_layouts.py (writeVirtualReturn destroys before it builds)` | writeVirtualReturn destroys Godot's value before the build: a build that throws hands Godot freed storage | `- src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt:239: writeVirtualReturn runs destroyTyped(type, rRet) -> build(built) -> MemorySegment.copy(built, ..., rRet...); it must build first, then destroy` | green |
+| `audit_ptrcall_helper_layouts.py (virtual return of the wrong type)` | _get_constants declares an Array return while it builds a Dictionary: the engine's Dictionary would be destroyed as an Array | `- src/jvmMain/kotlin/binding/KanamaScript.kt:1168: callGetConstants declares writeVirtualReturn(VariantType.ARRAY) but its block builds DICTIONARY: the engine's cell would be destroyed as the wrong ty` | green |
+| `audit_ptrcall_helper_layouts.py (iOS shim virtual Array leak)` | the iOS shim's ARRAY_EMPTY virtual builds its Array over the engine's constructed return cell | `- ios/bootstrap/kanama_ios_shim.c:8335: a virtual builds an empty array over the engine's default-constructed return cell without a kanama_ios_release_virtual_array_return(ret); statement right before` | green |
+| `audit_ptrcall_helper_layouts.py (one-value allocateFrom cell)` | an int32 argument cell goes back to a 4-byte `allocateFrom(JAVA_INT, value)` | `- src/jvmMain/kotlin/binding/runtime/ObjectCalls.kt:3001: allocates a 4-byte scalar cell with `allocateFrom(JAVA_INT, value)`; every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE)` | green |
+| `audit_ptrcall_helper_layouts.py (iOS shim ptrcall return)` | the iOS shim's register_script_language call takes its Error return in a 4-byte stack cell | `- ios/bootstrap/kanama_ios_shim.c:5050: a ptrcall return cell is 4 bytes (`ret`); Godot's ptrcall uses an 8-byte int64/double` | green |
+| `audit_ptrcall_helper_layouts.py (iOS shim virtual return)` | the iOS shim's `_reload` virtual writes its Error return as 4 bytes | `- ios/bootstrap/kanama_ios_shim.c:8353: a virtual writes a 4-byte integer/float return; Godot's ptrcall uses an 8-byte int64/double` | green |
 | `audit_replicated_script_properties.py` | a scene replicates a property its Kotlin script does not export | `example_project/zz_redrun.tscn:.: zz_redrun.kt does not expose replicated property 'health'` | green |
 | `audit_runtime_node_lookups.py` | a per-frame callback resolves a node path | `[runtime_node_lookup] FAIL / example_project/zz_redrun.kt:5: function tick contains runtime required node lookup: self.requireAs("Child", ::Node)` | green |
 | `audit_singleton_refcounted_policy.py` | the Engine wrapper loses registerSingleton | `[singleton_refcounted] Engine.registerSingleton wrapper not found` | green |
