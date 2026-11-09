@@ -275,6 +275,10 @@ typedef enum {
     KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG,
     KANAMA_IOS_VIRTUAL_RESOURCE_GET_TYPE,
     KANAMA_IOS_VIRTUAL_RESOURCE_LOAD,
+    // _placeholder_instance_create returns GDExtensionPtr<void>: an 8-byte pointer cell.
+    KANAMA_IOS_VIRTUAL_NULL_POINTER,
+    // _get_doc_class_name returns a StringName, not a String.
+    KANAMA_IOS_VIRTUAL_STRING_NAME_KANAMA,
 } KanamaIosVirtualId;
 
 typedef struct {
@@ -5040,9 +5044,11 @@ static int32_t kanama_ios_godot_ptrcall_object_arg_ret_int(
     const GDExtensionConstTypePtr args[1] = {
         (GDExtensionConstTypePtr)&object_cell,
     };
-    int32_t ret = -1;
+    // An Error return: ptrcall encodes every integer return as int64 (PtrToArg<int32_t> converts
+    // through int64_t), so the engine writes 8 bytes here.
+    int64_t ret = -1;
     g_object_method_bind_ptrcall(method_bind, instance, args, &ret);
-    return ret;
+    return (int32_t)ret;
 }
 
 static void kanama_ios_godot_ptrcall_object_bool_arg(
@@ -8190,13 +8196,13 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
         return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_BASE_TYPE;
     }
     if (kanama_ios_string_name_eq(name, g_name__instance_create)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_INSTANCE_CREATE;
-    if (kanama_ios_string_name_eq(name, g_name__placeholder_instance_create)) return (void *)KANAMA_IOS_VIRTUAL_VARIANT_NIL;
+    if (kanama_ios_string_name_eq(name, g_name__placeholder_instance_create)) return (void *)KANAMA_IOS_VIRTUAL_NULL_POINTER;
     if (kanama_ios_string_name_eq(name, g_name__has_source_code)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
     if (kanama_ios_string_name_eq(name, g_name__get_source_code)) return (void *)KANAMA_IOS_VIRTUAL_STRING_SOURCE;
     if (kanama_ios_string_name_eq(name, g_name__set_source_code)) return (void *)KANAMA_IOS_VIRTUAL_VOID;
     if (kanama_ios_string_name_eq(name, g_name__reload)) return (void *)KANAMA_IOS_VIRTUAL_INT_ZERO;
     if (kanama_ios_string_name_eq(name, g_name__get_global_name)) return (void *)KANAMA_IOS_VIRTUAL_STRING_NAME_EMPTY;
-    if (kanama_ios_string_name_eq(name, g_name__get_doc_class_name)) return (void *)KANAMA_IOS_VIRTUAL_STRING_NAME;
+    if (kanama_ios_string_name_eq(name, g_name__get_doc_class_name)) return (void *)KANAMA_IOS_VIRTUAL_STRING_NAME_KANAMA;
     if (kanama_ios_string_name_eq(name, g_name__inherits_script)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
     if (kanama_ios_string_name_eq(name, g_name__has_method)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_HAS_METHOD;
     if (kanama_ios_string_name_eq(name, g_name__has_static_method)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
@@ -8217,7 +8223,7 @@ static void *kanama_ios_virtual_for_script(GDExtensionConstStringNamePtr name) {
     if (kanama_ios_string_name_eq(name, g_name__get_script_property_list)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_script_signal_list)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_constants)) return (void *)KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY;
-    if (kanama_ios_string_name_eq(name, g_name__get_members)) return (void *)KANAMA_IOS_VIRTUAL_PACKED_EMPTY;
+    if (kanama_ios_string_name_eq(name, g_name__get_members)) return (void *)KANAMA_IOS_VIRTUAL_ARRAY_EMPTY;
     if (kanama_ios_string_name_eq(name, g_name__get_rpc_config)) return (void *)KANAMA_IOS_VIRTUAL_SCRIPT_RPC_CONFIG;
     if (kanama_ios_string_name_eq(name, g_name__instance_has)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_FALSE;
     if (kanama_ios_string_name_eq(name, g_name__is_placeholder_fallback_enabled)) return (void *)KANAMA_IOS_VIRTUAL_BOOL_TRUE;
@@ -8269,6 +8275,24 @@ static GDExtensionObjectPtr kanama_ios_construct_extension_object(KanamaIosClass
     return g_classdb_construct_object((GDExtensionConstStringNamePtr)class_name);
 }
 
+// A virtual's Array or Dictionary return cell is Godot's own `PtrToArg<m_ret>::EncodeT ret;`, already
+// default-constructed, and those constructors allocate their storage: destroy it before building the
+// return in its place, or every call leaks that allocation (godot-cpp assigns into the cell instead).
+// Only for a virtual's return cell; a cell the shim allocated itself is uninitialised memory.
+static void kanama_ios_release_virtual_array_return(GDExtensionTypePtr ret) {
+    if (g_array_destructor == NULL) {
+        g_array_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_ARRAY);
+    }
+    if (g_array_destructor != NULL) g_array_destructor(ret);
+}
+
+static void kanama_ios_release_virtual_dictionary_return(GDExtensionTypePtr ret) {
+    if (g_dictionary_destructor == NULL) {
+        g_dictionary_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
+    }
+    if (g_dictionary_destructor != NULL) g_dictionary_destructor(ret);
+}
+
 static void kanama_ios_call_virtual_with_data(
     GDExtensionClassInstancePtr instance,
     GDExtensionConstStringNamePtr name,
@@ -8308,9 +8332,11 @@ static void kanama_ios_call_virtual_with_data(
             kanama_ios_init_empty_packed_string_array(ret);
             break;
         case KANAMA_IOS_VIRTUAL_ARRAY_EMPTY:
+            kanama_ios_release_virtual_array_return(ret);
             kanama_ios_init_empty_array(ret);
             break;
         case KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY:
+            kanama_ios_release_virtual_dictionary_return(ret);
             kanama_ios_init_empty_dictionary(ret);
             break;
         case KANAMA_IOS_VIRTUAL_VARIANT_NIL:
@@ -8322,11 +8348,18 @@ static void kanama_ios_call_virtual_with_data(
         case KANAMA_IOS_VIRTUAL_BOOL_FALSE:
             *((uint8_t *)ret) = 0;
             break;
+        // An int/Error virtual return is PtrToArg<m_ret>::EncodeT, an int64 for every integer type.
         case KANAMA_IOS_VIRTUAL_INT_ZERO:
-            *((int32_t *)ret) = 0;
+            *((int64_t *)ret) = 0;
             break;
         case KANAMA_IOS_VIRTUAL_INT_NEGATIVE_ONE:
-            *((int32_t *)ret) = -1;
+            *((int64_t *)ret) = -1;
+            break;
+        case KANAMA_IOS_VIRTUAL_NULL_POINTER:
+            *((void **)ret) = NULL;
+            break;
+        case KANAMA_IOS_VIRTUAL_STRING_NAME_KANAMA:
+            kanama_ios_init_string_name((uint64_t *)ret, "Kanama");
             break;
         case KANAMA_IOS_VIRTUAL_VOID:
             break;

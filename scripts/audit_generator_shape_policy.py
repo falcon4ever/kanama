@@ -275,8 +275,10 @@ def audit_shape(function_text: str, args: tuple[str, ...], ret: str) -> list[str
         errors.append("uint32 argument helper does not range-check through BuiltinTypes.requireUInt32")
 
     if ret == "uint32":
-        if "JAVA_INT" not in function_text:
-            errors.append("uint32 return helper does not use a 32-bit return slot")
+        # Godot's ptrcall writes a uint32 return as an int64 (PtrToArg<uint32_t> converts through
+        # int64_t), so the return cell is 8 bytes.
+        if "JAVA_LONG" not in function_text:
+            errors.append("uint32 return helper does not use a 64-bit return slot")
         if "0xffffffffl" not in normalized_text:
             errors.append("uint32 return helper does not widen through an unsigned 32-bit mask")
 

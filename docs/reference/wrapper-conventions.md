@@ -97,8 +97,11 @@ val ready: Long = Node.NOTIFICATION_READY   // a class constant: const val, Long
 
 Godot's `int` is `Int` when Godot declares it as an 8-, 16- or 32-bit value
 (`meta` `int8`, `int16`, `int32`, `char32`, `uint8` or `uint16` in Godot's API
-description), and `Long` otherwise. The width is exact on purpose: an `int32`
-return is four bytes. Class integer constants that are not enum values are
+description), and `Long` otherwise: the Kotlin type follows the width Godot
+declares, so a value that fits an `Int` never makes you convert. Under the hood
+every scalar integer argument or return crosses to the engine in an 8-byte
+cell, whatever its declared width; the components of a `Vector2i` or `Rect2i`
+and the elements of a `PackedInt32Array` stay 4 bytes each. Class integer constants that are not enum values are
 `const val NAME: Long` on the companion, under Godot's name.
 
 ## 4. Decimals

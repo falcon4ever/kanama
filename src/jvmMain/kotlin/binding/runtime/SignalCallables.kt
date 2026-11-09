@@ -103,7 +103,7 @@ object SignalCallables {
     flags: Long,
   ): Long =
     withCallable(receiverInstanceId, id) { frame ->
-      frame.flagsArg.set(JAVA_INT, 0, BuiltinTypes.requireUInt32(flags))
+      frame.flagsArg.set(JAVA_LONG, 0, BuiltinTypes.requireUInt32(flags))
       frame.args.setAtIndex(ADDRESS, 0, GodotStrings.makeStringName(signal))
       frame.args.setAtIndex(ADDRESS, 1, frame.callable)
       frame.args.setAtIndex(ADDRESS, 2, frame.flagsArg)

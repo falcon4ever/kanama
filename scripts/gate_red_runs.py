@@ -1124,10 +1124,97 @@ case("audit_generator_shape_policy.py", py("audit_generator_shape_policy.py"),
 case("audit_godot_object_script_paths.py", py("audit_godot_object_script_paths.py"),
      [Edit(f"{COMMON}/api/GodotObject.kt", "ptrcallWithStringNameAndVariantArg(Binds.objectSetBind", "ptrcallWithStringNameAndVariantArgX(Binds.objectSetBind")],
      "must call the Object.set MethodBind", "GodotObject.set stops calling the Object.set bind")
-case("audit_ptrcall_helper_layouts.py", py("audit_ptrcall_helper_layouts.py"),
-     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "    return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL\n  }\n\n  /** Calls [methodBind] with no arguments and RID return value. */",
-           "    return ret.get(JAVA_LONG, 0).toLong() and 0xffff_ffffL\n  }\n\n  /** Calls [methodBind] with no arguments and RID return value. */")],
-     "uses JAVA_LONG", "a uint32 helper reads a 64-bit slot")
+# Godot's ptrcall carries every scalar int (int32/uint32 too) in an 8-byte int64 cell and a float in a double:
+# a 4-byte cell is overflowed by the engine's return write or read past its end as an argument. The allocators
+# round the block up (the JVM to 8 bytes, malloc to 16), which hides it from every smoke and from the JVM's native
+# memory tracking; only the layout audit sees it.
+INT_RET_HELPER = ("  /** Calls [methodBind] with no arguments and int32 return value. */\n"
+                  "  actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int {\n")
+case("audit_ptrcall_helper_layouts.py (int return cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           INT_RET_HELPER + "    val ret = ptrcallScratch.get().longRet\n    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)\n"
+           "    return ret.get(JAVA_LONG, 0).toInt()\n",
+           INT_RET_HELPER + "    Arena.ofConfined().use { arena ->\n      val ret = arena.allocate(JAVA_INT)\n"
+           "      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)\n      return ret.get(JAVA_INT, 0)\n    }\n")],
+     "allocates a 4-byte scalar cell", "an int32-return helper goes back to a 4-byte JAVA_INT return cell the engine writes 8 bytes into")
+case("audit_ptrcall_helper_layouts.py (int argument cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           "        GodotStrings.initString(stringCell, text)\n        intCell.set(JAVA_LONG, 0, intArg.toLong())\n"
+           "        val arr = arena.allocate(ADDRESS, 3)\n        arr.setAtIndex(ADDRESS, 0, objCell)\n        arr.setAtIndex(ADDRESS, 1, stringCell)\n",
+           "        GodotStrings.initString(stringCell, text)\n        intCell.set(JAVA_INT, 0, intArg)\n"
+           "        val arr = arena.allocate(ADDRESS, 3)\n        arr.setAtIndex(ADDRESS, 0, objCell)\n        arr.setAtIndex(ADDRESS, 1, stringCell)\n")],
+     "as a lone 4-byte JAVA_INT", "an int32 argument is written as 4 bytes into its 8-byte cell, leaving the engine's upper half unwritten")
+# ptrcallWithFiveIntArgs is one of the helpers whose name the shape parser does not read: the lone-cell scan
+# covers every function body, so its int argument written as 4 bytes must still go red.
+FIVE_INT_CELLS = ("    fifth: Int,\n  ) {\n    Arena.ofConfined().use { arena ->\n" + "".join(
+    f"      val arg{i} = arena.allocate(JAVA_LONG)\n" for i in range(5)))
+case("audit_ptrcall_helper_layouts.py (unparsed helper int argument)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", FIVE_INT_CELLS + "      arg0.set(JAVA_LONG, 0, first.toLong())\n",
+           FIVE_INT_CELLS + "      arg0.set(JAVA_INT, 0, first)\n")],
+     "ptrcallWithFiveIntArgs reads or writes `arg0` as a lone 4-byte JAVA_INT",
+     "ptrcallWithFiveIntArgs (a helper the shape parser skips) writes its first int argument as 4 bytes")
+case("audit_ptrcall_helper_layouts.py (virtual int return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt",
+           "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+           "      rRet.reinterpret(8).set(JAVA_LONG, 0, -1L)\n",
+           "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+           "      rRet.reinterpret(4).set(JAVA_INT, 0, -1)\n")],
+     "a virtual writes its return through", "ScriptExtension._get_member_line writes its int return as 4 bytes into the engine's int64 cell")
+# A virtual's Array/Dictionary return cell is Godot's default-constructed `Array ret;` (its constructor allocates):
+# building the return over it leaks one allocation per call, and destroying it before a build that can throw hands
+# Godot freed storage to copy and destroy again. No smoke notices either; the audit allows only writeVirtualReturn.
+KS_VT = "net.multigesture.kanama.binding.runtime.VariantType"
+MEMBERS_FUN = "    fun callGetMembers(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+MEMBERS_BODY = (f"      BuiltinTypes.writeVirtualReturn(\n        {KS_VT}.ARRAY,\n        rRet,\n      ) {{\n"
+                f"        BuiltinTypes.construct({KS_VT}.ARRAY, it)\n      }}\n    }}\n")
+case("audit_ptrcall_helper_layouts.py (virtual Array return leak)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", MEMBERS_FUN + MEMBERS_BODY,
+           MEMBERS_FUN + f"      BuiltinTypes.construct({KS_VT}.ARRAY, rRet)\n    }}\n")],
+     "callGetMembers builds an Array/Dictionary into the engine's default-constructed return cell `rRet` directly",
+     "ScriptExtension._get_members builds its Array over the engine's constructed return cell (a leak per call)")
+case("audit_ptrcall_helper_layouts.py (virtual return released before a lookup)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", MEMBERS_FUN + MEMBERS_BODY,
+           MEMBERS_FUN + f"      BuiltinTypes.destroyTyped({KS_VT}.ARRAY, rRet)\n"
+           "      val script = ObjectRegistry.get(instance.address()) as? KanamaScript\n"
+           f"      BuiltinTypes.construct({KS_VT}.ARRAY, rRet)\n    }}\n")],
+     "callGetMembers destroys the engine's default-constructed return cell `rRet` directly",
+     "_get_members destroys the engine's Array, then looks up its script: a throw there leaves Godot a freed Array")
+CONSTANTS_FUN = ("    fun callGetConstants(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+                 "      BuiltinTypes.writeVirtualReturn(\n")
+WVR_BUILD = ("      val built = arena.allocate(CONTAINER_SIZE, 8L)\n      try {\n        build(built)\n      } catch (error: Throwable) {\n"
+             "        if (built.get(JAVA_LONG, 0L) != 0L) destroyTyped(type, built)\n        throw error\n      }\n")
+case("audit_ptrcall_helper_layouts.py (writeVirtualReturn destroys before it builds)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/BuiltinTypes.kt", WVR_BUILD + "      destroyTyped(type, rRet)\n",
+           "      val built = arena.allocate(CONTAINER_SIZE, 8L)\n      destroyTyped(type, rRet)\n" + WVR_BUILD[len("      val built = arena.allocate(CONTAINER_SIZE, 8L)\n"):])],
+     "writeVirtualReturn runs destroyTyped(type, rRet) -> build(built)",
+     "writeVirtualReturn destroys Godot's value before the build: a build that throws hands Godot freed storage")
+case("audit_ptrcall_helper_layouts.py (virtual return of the wrong type)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", CONSTANTS_FUN + f"        {KS_VT}.DICTIONARY,\n",
+           CONSTANTS_FUN + f"        {KS_VT}.ARRAY,\n")],
+     "callGetConstants declares writeVirtualReturn(VariantType.ARRAY) but its block builds DICTIONARY",
+     "_get_constants declares an Array return while it builds a Dictionary: the engine's Dictionary would be destroyed as an Array")
+case("audit_ptrcall_helper_layouts.py (iOS shim virtual Array leak)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           "            kanama_ios_release_virtual_array_return(ret);\n            kanama_ios_init_empty_array(ret);\n",
+           "            kanama_ios_init_empty_array(ret);\n")],
+     "a virtual builds an empty array over the engine's default-constructed return cell without a kanama_ios_release_virtual_array_return(ret)",
+     "the iOS shim's ARRAY_EMPTY virtual builds its Array over the engine's constructed return cell")
+case("audit_ptrcall_helper_layouts.py (one-value allocateFrom cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           "      val intCell = arena.allocate(JAVA_LONG)\n      intCell.set(JAVA_LONG, 0, value.toLong())\n"
+           "      val arr = arena.allocate(ADDRESS, 1)\n      arr.setAtIndex(ADDRESS, 0, intCell)\n      return readVariantReturn(",
+           "      val intCell = arena.allocateFrom(JAVA_INT, value)\n"
+           "      val arr = arena.allocate(ADDRESS, 1)\n      arr.setAtIndex(ADDRESS, 0, intCell)\n      return readVariantReturn(")],
+     "allocates a 4-byte scalar cell with `allocateFrom(JAVA_INT, value)`",
+     "an int32 argument cell goes back to a 4-byte `allocateFrom(JAVA_INT, value)`")
+case("audit_ptrcall_helper_layouts.py (iOS shim ptrcall return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           "    int64_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n",
+           "    int32_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n")],
+     "a ptrcall return cell is 4 bytes", "the iOS shim's register_script_language call takes its Error return in a 4-byte stack cell")
+case("audit_ptrcall_helper_layouts.py (iOS shim virtual return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c", "            *((int64_t *)ret) = 0;\n", "            *((int32_t *)ret) = 0;\n")],
+     "a virtual writes a 4-byte integer/float return", "the iOS shim's `_reload` virtual writes its Error return as 4 bytes")
 case("audit_replicated_script_properties.py", py("audit_replicated_script_properties.py", "example_project"),
      [Create("example_project/zz_redrun.kt", "class ZzRedRun\n"),
       Create("example_project/zz_redrun.tscn",
@@ -1468,7 +1555,7 @@ case("runtime_smoke.sh (API exercise pair rows)", ["bash", "scripts/runtime_smok
            "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
      "API EXERCISE FAIL: ptrcallNoArgsRetVector3 ptrcallWithVector3Arg", "ptrcallWithVector3Arg writes x and y into each other's slot: the API exercise's Vector3 property-pair row must fail, not pass",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_INT, 0, checkedMask)\n"
+RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_LONG, 0, checkedMask)\n"
             "        BuiltinTypes.initArrayOfRids(excludeCell, exclude)\n        val args = arena.allocate(ADDRESS, 4)\n")
 case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, fromCell)\n        args.setAtIndex(ADDRESS, 1, toCell)\n",

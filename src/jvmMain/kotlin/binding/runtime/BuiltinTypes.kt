@@ -85,11 +85,16 @@ object BuiltinTypes {
     return value.toInt()
   }
 
-  fun requireUInt32(value: Long): Int {
+  /**
+   * Range-checks a Godot `uint32` argument and returns it unchanged, ready for its ptrcall cell:
+   * Godot's `PtrToArg<uint32_t>` reads every integer argument from an 8-byte int64 cell, so the
+   * checked value is written with `JAVA_LONG`, never as a 32-bit bit pattern.
+   */
+  fun requireUInt32(value: Long): Long {
     require(value in 0L..0xffff_ffffL) {
       "Value $value is outside Godot uint32 range 0..4294967295"
     }
-    return value.toInt()
+    return value
   }
 
   private val getPtrConstructor by lazy {
@@ -213,6 +218,39 @@ object BuiltinTypes {
   /** Destroy an initialized builtin-typed value in-place. */
   fun destroyTyped(type: VariantType, valuePtr: MemorySegment) {
     ptrDestructor(type).invoke(valuePtr)
+  }
+
+  /** An Array or a Dictionary is one pointer to its shared storage. */
+  private const val CONTAINER_SIZE: Long = 8L
+
+  /**
+   * Writes a GDExtension virtual's Array or Dictionary return. [rRet] is Godot's own
+   * `PtrToArg<m_ret>::EncodeT ret;`, already default-constructed, and those constructors allocate
+   * their storage, so building the return over it leaked that allocation on every call (godot-cpp
+   * assigns into the cell instead). [build] constructs the return into a cell of Kanama's own; only
+   * once it has returned is Godot's value destroyed and the built one moved into [rRet] (a pointer
+   * move, which hands over its ownership). A [build] that throws leaves Godot's value untouched, so
+   * containment can swallow the error without Godot reading freed storage or destroying it twice; a
+   * container [build] had already constructed is destroyed before the error goes on. That test
+   * relies on the build cell being zeroed (an arena allocation is), so a non-null pointer means
+   * [build] constructed into it. Only for a virtual's return cell, which Godot constructed: a cell
+   * Kanama allocated holds no constructed value and must never be destroyed.
+   */
+  fun writeVirtualReturn(type: VariantType, rRet: MemorySegment, build: (MemorySegment) -> Unit) {
+    require(type == VariantType.ARRAY || type == VariantType.DICTIONARY) {
+      "writeVirtualReturn is for the Array/Dictionary cells Godot default-constructs, not $type"
+    }
+    Arena.ofConfined().use { arena ->
+      val built = arena.allocate(CONTAINER_SIZE, 8L)
+      try {
+        build(built)
+      } catch (error: Throwable) {
+        if (built.get(JAVA_LONG, 0L) != 0L) destroyTyped(type, built)
+        throw error
+      }
+      destroyTyped(type, rRet)
+      MemorySegment.copy(built, 0L, rRet.reinterpret(CONTAINER_SIZE), 0L, CONTAINER_SIZE)
+    }
   }
 
   /** Initialize [dest] as a Variant containing nil. */
