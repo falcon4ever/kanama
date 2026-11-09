@@ -36,6 +36,29 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
     }
 
     /**
+     * Creates a new spatial context that handles entities for the provided capability configurations.
+     * `capability_configurations` is an array of `OpenXRSpatialCapabilityConfigurationBaseHeader` with
+     * the needed capability configuration data. `next` is an optional parameter that can contain
+     * additional information for creating our spatial context. Note: This is an asynchronous method
+     * and returns an `OpenXRFutureResult` object with which to track the status, discarding this
+     * object will not cancel the creation process. On success `user_callback` will be called if
+     * specified. The result data for this function is the `RID` for our spatial context - the argument
+     * will be the OpenXR result code (as an integer). On failure `failed_callback` will be called if
+     * specified. The OpenXR result code will be supplied as an integer - the arguments will be the
+     * OpenXR result code (as an integer) and a boolean indicating whether requesting the result
+     * failed, or the execution failed.
+     *
+     * Generated from Godot docs: OpenXRSpatialEntityExtension.create_spatial_context
+     */
+    fun createSpatialContext(capabilityConfigurations: List<OpenXRSpatialCapabilityConfigurationBaseHeader>, next: OpenXRStructureBase? = null, userCallback: GodotCallable, failedCallback: GodotCallable): OpenXRFutureResult? {
+        val ret = OpenXRFutureResult.wrapOwned(ObjectCalls.ptrcallWithObjectListObjectTwoCallableArgsRetObject(Binds.createSpatialContextBind, segment, capabilityConfigurations, next?.requireOpenHandle() ?: NULL_SEGMENT, userCallback.target.segment, userCallback.method, failedCallback.target.segment, failedCallback.method))
+        ObjectCalls.keepReachable(next)
+        ObjectCalls.keepReachable(userCallback)
+        ObjectCalls.keepReachable(failedCallback)
+        return ret
+    }
+
+    /**
      * Returns `true` if the spatial context finished its creation and is ready to be used.
      *
      * Generated from Godot docs: OpenXRSpatialEntityExtension.get_spatial_context_ready
@@ -493,6 +516,11 @@ class OpenXRSpatialEntityExtension(handle: GodotHandle) : OpenXRExtensionWrapper
         @JvmField
         val supportsComponentTypeBind =
             ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "supports_component_type", SUPPORTS_COMPONENT_TYPE_HASH)
+
+        private const val CREATE_SPATIAL_CONTEXT_HASH = 1586751596L
+        @JvmField
+        val createSpatialContextBind =
+            ObjectCalls.getMethodBind("OpenXRSpatialEntityExtension", "create_spatial_context", CREATE_SPATIAL_CONTEXT_HASH)
 
         private const val GET_SPATIAL_CONTEXT_READY_HASH = 4155700596L
         @JvmField

@@ -7,6 +7,7 @@ import net.multigesture.kanama.binding.runtime.NULL_SEGMENT
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.binding.runtime.RawSegment
 import net.multigesture.kanama.types.AABB
+import net.multigesture.kanama.types.Quaternion
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Transform3D
 import net.multigesture.kanama.types.Vector3
@@ -1830,6 +1831,30 @@ object PhysicsServer3D {
     @JvmStatic
     fun generic6dofJointGetFlag(joint: RID, axis: Vector3.Axis, flag: PhysicsServer3D.G6DOFJointAxisFlag): Boolean {
         return ObjectCalls.ptrcallWithRIDTwoLongArgsRetBool(Binds.generic6dofJointGetFlagBind, singleton, joint, axis.value, flag.value)
+    }
+
+    /**
+     * Sets the target angular orientation of a generic 6DOF joint as a body-space quaternion
+     * describing the desired orientation of body B relative to body A. Note: Only for Jolt backend.
+     * Other 3D physics backends may ignore this value.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation
+     */
+    @JvmStatic
+    fun generic6dofJointSetAngularTargetRotation(joint: RID, targetRotation: Quaternion) {
+        ObjectCalls.ptrcallWithRIDAndQuaternionArgs(Binds.generic6dofJointSetAngularTargetRotationBind, singleton, joint, targetRotation)
+    }
+
+    /**
+     * Returns the target angular orientation of a generic 6DOF joint as a body-space quaternion
+     * describing the desired orientation of body B relative to body A. Note: Only for Jolt backend.
+     * Other 3D physics backends return the identity quaternion.
+     *
+     * Generated from Godot docs: PhysicsServer3D.generic_6dof_joint_get_angular_target_rotation
+     */
+    @JvmStatic
+    fun generic6dofJointGetAngularTargetRotation(joint: RID): Quaternion {
+        return ObjectCalls.ptrcallWithRIDArgRetQuaternion(Binds.generic6dofJointGetAngularTargetRotationBind, singleton, joint)
     }
 
     /**
@@ -3900,6 +3925,16 @@ object PhysicsServer3D {
         @JvmField
         val generic6dofJointGetFlagBind =
             ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_flag", GENERIC_6DOF_JOINT_GET_FLAG_HASH)
+
+        private const val GENERIC_6DOF_JOINT_SET_ANGULAR_TARGET_ROTATION_HASH = 514574805L
+        @JvmField
+        val generic6dofJointSetAngularTargetRotationBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_set_angular_target_rotation", GENERIC_6DOF_JOINT_SET_ANGULAR_TARGET_ROTATION_HASH)
+
+        private const val GENERIC_6DOF_JOINT_GET_ANGULAR_TARGET_ROTATION_HASH = 3909263396L
+        @JvmField
+        val generic6dofJointGetAngularTargetRotationBind =
+            ObjectCalls.getMethodBind("PhysicsServer3D", "generic_6dof_joint_get_angular_target_rotation", GENERIC_6DOF_JOINT_GET_ANGULAR_TARGET_ROTATION_HASH)
 
         private const val FREE_RID_HASH = 2722037293L
         @JvmField

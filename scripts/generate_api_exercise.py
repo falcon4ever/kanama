@@ -243,6 +243,9 @@ class Rules:
         return None
 
     def site(self, site: Site) -> Verdict:
+        scene = getattr(self.policy, "SCENE_ROWS", {}).get((site.cls, site.method))
+        if scene is not None:
+            return Verdict(scene[0], f"{scene[1]} (SCENE_ROWS)", row="scene")
         verdict = self._site(site)
         override = self.policy.METHOD_OVERRIDES.get((site.cls, site.method))
         if override is None or verdict.case == "E":
@@ -1512,6 +1515,11 @@ ARG_SEQUENCES = {
     ),
 }
 ARG_LISTS = {
+    # A symmetric frustum: Projection.create_frustum_aspect(1, 1, 0.1, 100), rounded so a Float32 cell keeps it.
+    "typedarray::Projection": (
+        "listOf(Projection(Vector4(1.0, 0.0, 0.0, 0.0), Vector4(0.0, 1.0, 0.0, 0.0), "
+        "Vector4(0.0, 0.0, -1.0, -1.0), Vector4(0.0, 0.0, -0.25, 0.0)))"
+    ),
     "PackedVector2Array": "listOf(Vector2(0.0, 0.0), Vector2(4.0, 0.0), Vector2(4.0, 4.0), Vector2(0.0, 4.0))",
     "PackedVector3Array": "listOf(Vector3(0.0, 0.0, 0.0), Vector3(1.0, 0.0, 0.0), Vector3(0.0, 1.0, 0.0), Vector3(0.0, 0.0, 1.0))",
     "typedarray::Plane": (
@@ -1787,8 +1795,8 @@ class RowGenerator:
             elif row.case in "ABDF":
                 chosen.append((row.site, row.verdict))
             for site, verdict in chosen:
-                if verdict.row == "factory":
-                    continue  # every factory method gets its own row below
+                if verdict.row in ("factory", "scene"):
+                    continue  # every factory and scene method gets its own row below
                 try:
                     if verdict.case == "F":
                         out.append(self.reach_row_for(helper, site, verdict, by_helper[helper]))
@@ -1850,6 +1858,7 @@ class RowGenerator:
                 out.append(self.factory_row(sorted(factories[key]), site, verdict))
             except LiteralError as error:
                 self.failures.append(f"factory row {site.cls}.{site.method}: {error}")
+        out += self.scene_rows()
         out += self.type_rows()
         receivers = {r.verdict.target or r.site.cls for r in out if r.case == "F"}
         for kind, helpers in typed_array_kinds(self.inv).items():
@@ -1869,6 +1878,31 @@ class RowGenerator:
             row = self.inv.rows.get(helper)
             if row is None or row.case != "F":
                 self.failures.append(f"HAND_ROOT_REACH names {helper}, which is not a reach-only (F) helper: delete the entry")
+        return out
+
+    # -- the scene rows --
+
+    def scene_rows(self) -> list[ExerciseRow]:
+        """One row per SCENE_ROWS method, labelled with the helpers its calls in the tree use."""
+        table = getattr(self.policy, "SCENE_ROWS", {})
+        helpers: dict[tuple[str, str], list[str]] = collections.defaultdict(list)
+        sites: dict[tuple[str, str], Site] = {}
+        for helper, site in self.inv.sites:
+            if (site.cls, site.method) in table:
+                if helper not in helpers[(site.cls, site.method)]:
+                    helpers[(site.cls, site.method)].append(helper)
+                sites[(site.cls, site.method)] = site
+        out = []
+        for key in sorted(table):
+            case, reason, body = table[key]
+            if key not in sites:
+                self.failures.append(f"SCENE_ROWS names {key[0]}.{key[1]}, which no wrapper calls: delete the entry")
+                continue
+            if case not in "BDF":
+                self.failures.append(f"SCENE_ROWS[{key[0]}.{key[1]}] is case {case}; a scene row is B, D or F")
+                continue
+            verdict = Verdict(case, f"{reason} (SCENE_ROWS)", row="scene")
+            out.append(ExerciseRow(case, sorted(helpers[key]), sites[key], verdict, f"{key[0]}.{key[1]}", list(body)))
         return out
 
     # -- the Variant type rows (case T) --

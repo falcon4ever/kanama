@@ -16,9 +16,9 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | --- | ---: |
 | API classes | 1069 |
 | Classes with generated output | 874 |
-| Classes with complete method generation | 774 |
-| Methods generated | 15669/17203 (91.1%) |
-| Methods skipped | 1534 |
+| Classes with complete method generation | 785 |
+| Methods generated | 15696/17203 (91.2%) |
+| Methods skipped | 1507 |
 | Properties generated | 4199/4270 (98.3%) |
 | Signals generated | 518/518 (100.0%) |
 
@@ -28,11 +28,10 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | --- | ---: |
 | Virtual/internal | 1448 |
 | Other | 49 |
-| Missing helper shape | 23 |
-| Array / typed array | 6 |
-| Blocked object wrapper | 4 |
-| Packed array | 2 |
+| Missing helper shape | 5 |
 | Dictionary | 2 |
+| Blocked object wrapper | 2 |
+| Packed array | 1 |
 
 ## Missing Helper Shapes
 
@@ -40,22 +39,10 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 
 | Shape | Count |
 | --- | ---: |
-| `args=('Object', 'Object') return=bool` | 12 |
 | `args=('int32', 'enum', 'String') return=String` | 2 |
 | `args=('int32', 'int32', 'int32', 'int32') return=bool` | 2 |
-| `args=('StringName', 'float', 'float', 'float') return=typedarray::Projection` | 2 |
-| `args=('StringName',) return=TypedTransform3DArray` | 2 |
-| `args=('int32',) return=TypedRect2Array` | 1 |
-| `args=('Rect2i', 'int32') return=void` | 1 |
-| `args=('String', 'String', 'PackedStringArray') return=void` | 1 |
 | `args=('String', 'String') return=Object` | 1 |
 | `args=('String', 'PackedStringArray') return=TypedObjectArray::FuzzySearchMatch` | 1 |
-| `args=('bool', 'bool', 'float') return=enum` | 1 |
-| `args=('int32', 'int32', 'int32') return=float` | 1 |
-| `args=('RID', 'Quaternion') return=void` | 1 |
-| `args=('RID',) return=Quaternion` | 1 |
-| `args=('Object', 'RID', 'uint32', 'uint32', 'uint32', 'enum', 'uint32') return=RID` | 1 |
-| `args=('RID', 'typedarray::Projection', 'TypedTransform3DArray') return=void` | 1 |
 
 ## Top Skip Reasons
 
@@ -63,25 +50,12 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | --- | ---: |
 | `internal/virtual callback methods are not emitted as public wrappers` | 1448 |
 | `root Object methods are exposed through the hand-shaped GodotObject policy` | 49 |
-| `unsupported helper shape args=('Object', 'Object') return=bool` | 12 |
-| `object argument wrapper Callable is ownership/builtin-sensitive and must stay unsupported` | 2 |
 | `by design: Dictionary->Dictionary passthrough via the generic Map<String, Any?> helper silently drops non-String keys; shape reverted in 27b06fe6 (editor-LSP only)` | 2 |
 | `ownership-sensitive RefCounted lifetime method is hand-shaped` | 2 |
 | `unsupported helper shape args=('int32', 'enum', 'String') return=String` | 2 |
 | `unsupported helper shape args=('int32', 'int32', 'int32', 'int32') return=bool` | 2 |
-| `unsupported helper shape args=('StringName', 'float', 'float', 'float') return=typedarray::Projection` | 2 |
-| `unsupported helper shape args=('StringName',) return=TypedTransform3DArray` | 2 |
-| `unsupported helper shape args=('int32',) return=TypedRect2Array` | 1 |
-| `unsupported helper shape args=('Rect2i', 'int32') return=void` | 1 |
-| `unsupported helper shape args=('String', 'String', 'PackedStringArray') return=void` | 1 |
 | `unsupported helper shape args=('String', 'String') return=Object` | 1 |
 | `unsupported helper shape args=('String', 'PackedStringArray') return=TypedObjectArray::FuzzySearchMatch` | 1 |
-| `unsupported helper shape args=('bool', 'bool', 'float') return=enum` | 1 |
-| `unsupported helper shape args=('int32', 'int32', 'int32') return=float` | 1 |
-| `unsupported helper shape args=('RID', 'Quaternion') return=void` | 1 |
-| `unsupported helper shape args=('RID',) return=Quaternion` | 1 |
-| `unsupported helper shape args=('Object', 'RID', 'uint32', 'uint32', 'uint32', 'enum', 'uint32') return=RID` | 1 |
-| `unsupported helper shape args=('RID', 'typedarray::Projection', 'TypedTransform3DArray') return=void` | 1 |
 
 ## Complete Method Classes
 
@@ -89,12 +63,16 @@ These classes have every method covered by the conservative generator. Promotion
 
 | Class | Methods | Properties | Signals |
 | --- | ---: | ---: | ---: |
+| RenderingServer | 542/542 | 1/1 | 2/2 |
+| DisplayServer | 290/290 | 0/0 | 1/1 |
 | TextServer | 245/245 | 0/0 | 0/0 |
 | Environment | 188/188 | 93/93 | 0/0 |
+| PhysicsServer3D | 177/177 | 0/0 | 0/0 |
 | NavigationServer3D | 154/154 | 0/0 | 3/3 |
 | BaseMaterial3D | 154/154 | 132/132 | 0/0 |
 | RichTextLabel | 147/147 | 34/34 | 4/4 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 |
+| RenderingDevice | 135/135 | 0/0 | 0/0 |
 | Viewport | 130/130 | 50/50 | 2/2 |
 | TreeItem | 125/125 | 4/4 | 0/0 |
 | PhysicsServer2D | 119/119 | 0/0 | 0/0 |
@@ -106,12 +84,14 @@ These classes have every method covered by the conservative generator. Promotion
 | CPUParticles3D | 90/90 | 77/77 | 1/1 |
 | NavigationAgent3D | 86/86 | 33/33 | 6/6 |
 | ItemList | 85/85 | 18/18 | 5/5 |
+| Input | 85/85 | 5/5 | 1/1 |
 | Animation | 85/85 | 4/4 | 0/0 |
 | OS | 84/84 | 3/3 | 0/0 |
 | SpringBoneSimulator3D | 83/83 | 3/3 | 0/0 |
 | NavigationAgent2D | 80/80 | 30/30 | 6/6 |
 | CPUParticles2D | 77/77 | 69/69 | 1/1 |
 | Theme | 76/76 | 3/3 | 0/0 |
+| Image | 76/76 | 0/1 | 0/0 |
 | AccessibilityServer | 75/75 | 0/0 | 0/0 |
 | EditorInterface | 74/74 | 2/2 | 0/0 |
 | Tree | 72/72 | 16/16 | 15/15 |
@@ -133,25 +113,13 @@ These classes have every method covered by the conservative generator. Promotion
 | AnimationPlayer | 56/56 | 13/13 | 2/2 |
 | TileData | 54/54 | 11/11 | 1/1 |
 | TabContainer | 53/53 | 13/13 | 7/7 |
-| OpenXRAPIExtension | 52/52 | 0/0 | 0/0 |
-| Camera2D | 52/52 | 28/28 | 0/0 |
-| PhysicsDirectBodyState3D | 50/50 | 16/16 | 0/0 |
-| FileDialog | 50/50 | 25/25 | 4/4 |
-| AudioStreamPlayer3D | 50/50 | 22/22 | 1/1 |
-| Area3D | 50/50 | 22/22 | 8/8 |
 
 ## Near Ready Classes
 
 | Class | Methods | Properties | Signals | Skips |
 | --- | ---: | ---: | ---: | ---: |
-| RenderingServer | 541/542 (99.8%) | 1/1 | 2/2 | 1 |
 | Window | 141/142 (99.3%) | 42/42 | 16/16 | 1 |
-| RenderingDevice | 134/135 (99.3%) | 0/0 | 0/0 | 1 |
-| DisplayServer | 287/290 (99.0%) | 0/0 | 1/1 | 3 |
 | CanvasItem | 93/94 (98.9%) | 16/16 | 4/4 | 1 |
-| PhysicsServer3D | 175/177 (98.9%) | 0/0 | 0/0 | 2 |
-| Input | 84/85 (98.8%) | 5/5 | 1/1 | 1 |
-| Image | 75/76 (98.7%) | 0/1 | 0/0 | 1 |
 | RigidBody3D | 61/62 (98.4%) | 23/23 | 5/5 | 1 |
 | RigidBody2D | 60/61 (98.4%) | 23/23 | 5/5 | 1 |
 | GraphNode | 42/43 (97.7%) | 3/3 | 2/2 | 1 |
@@ -160,19 +128,16 @@ These classes have every method covered by the conservative generator. Promotion
 | CodeEdit | 114/117 (97.4%) | 22/22 | 5/5 | 3 |
 | PhysicalBone3D | 38/39 (97.4%) | 16/16 | 0/0 | 1 |
 | TileMap | 61/63 (96.8%) | 5/5 | 1/1 | 2 |
-| OpenXRSpatialEntityExtension | 25/26 (96.2%) | 0/0 | 1/1 | 1 |
 | Range | 23/24 (95.8%) | 10/10 | 2/2 | 1 |
 | GraphEdit | 75/79 (94.9%) | 25/25 | 19/19 | 4 |
 | TileMapLayer | 55/58 (94.8%) | 13/13 | 1/1 | 3 |
 | EditorProperty | 35/37 (94.6%) | 12/12 | 13/13 | 2 |
 | AStarGrid2D | 33/35 (94.3%) | 9/9 | 0/0 | 2 |
-| XRInterface | 28/30 (93.3%) | 4/4 | 1/1 | 2 |
 | CompositorEffect | 14/15 (93.3%) | 7/7 | 0/0 | 1 |
 | Control | 187/201 (93.0%) | 61/63 | 10/10 | 14 |
 | BaseButton | 24/26 (92.3%) | 10/10 | 4/4 | 2 |
 | PrimitiveMesh | 12/13 (92.3%) | 5/5 | 0/0 | 1 |
 | VisualInstance3D | 12/13 (92.3%) | 3/3 | 0/0 | 1 |
-| XRServer | 22/24 (91.7%) | 4/4 | 7/7 | 2 |
 | CollisionObject3D | 32/35 (91.4%) | 6/6 | 3/3 | 3 |
 | Node | 121/133 (91.0%) | 14/14 | 11/11 | 12 |
 | AStar2D | 25/28 (89.3%) | 1/1 | 0/0 | 3 |
@@ -193,19 +158,19 @@ These classes have every method covered by the conservative generator. Promotion
 
 | Class | Methods | Properties | Signals | Skips |
 | --- | ---: | ---: | ---: | ---: |
-| RenderingServer | 541/542 | 1/1 | 2/2 | 1 |
-| DisplayServer | 287/290 | 0/0 | 1/1 | 3 |
+| RenderingServer | 542/542 | 1/1 | 2/2 | 0 |
+| DisplayServer | 290/290 | 0/0 | 1/1 | 0 |
 | TextEdit | 251/257 | 48/48 | 7/7 | 6 |
 | TextServer | 245/245 | 0/0 | 0/0 | 0 |
 | Environment | 188/188 | 93/93 | 0/0 | 0 |
 | Control | 187/201 | 61/63 | 10/10 | 14 |
-| PhysicsServer3D | 175/177 | 0/0 | 0/0 | 2 |
+| PhysicsServer3D | 177/177 | 0/0 | 0/0 | 0 |
 | BaseMaterial3D | 154/154 | 132/132 | 0/0 | 0 |
 | NavigationServer3D | 154/154 | 0/0 | 3/3 | 0 |
 | RichTextLabel | 147/147 | 34/34 | 4/4 | 0 |
 | Window | 141/142 | 42/42 | 16/16 | 1 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 | 0 |
-| RenderingDevice | 134/135 | 0/0 | 0/0 | 1 |
+| RenderingDevice | 135/135 | 0/0 | 0/0 | 0 |
 | Viewport | 130/130 | 50/50 | 2/2 | 0 |
 | TreeItem | 125/125 | 4/4 | 0/0 | 0 |
 | Node | 121/133 | 14/14 | 11/11 | 12 |
@@ -218,12 +183,12 @@ These classes have every method covered by the conservative generator. Promotion
 
 Godot gives these parameters a default value that the generator cannot write as a Kotlin default argument, so the generated parameter is **required** (Rule 9 of the [Generated API Conventions](../wrapper-conventions.md#9-defaults-and-overloads)). Giving one a default later is not a source break. A new row here is a new required parameter in a signature, and a row that disappears gained its default.
 
-231 parameters, by Godot default:
+233 parameters, by Godot default:
 
 | Godot default | Parameters |
 | --- | ---: |
 | Color: `Color(1, 1, 1, 1)` | 52 |
-| Callable: `Callable()` | 49 |
+| Callable: `Callable()` | 51 |
 | RID: `RID()` | 15 |
 | Vector3: `Vector3(0, 0, 0)` | 15 |
 | Rect2: `Rect2(0, 0, 0, 0)` | 10 |
@@ -366,6 +331,8 @@ Godot gives these parameters a default value that the generator cannot write as 
 | OpenXRSpatialAnchorCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `persistence_context` | `RID()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `failed_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `user_callback` | `Callable()` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities` | `user_callback` | `Callable()` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `user_callback` | `Callable()` |
 | OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |

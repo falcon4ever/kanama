@@ -1604,6 +1604,9 @@ object BuiltinTypes {
   fun readArrayRect2(src: MemorySegment): List<Rect2> =
     readArrayScalars(src).mapNotNull { it as? Rect2 }
 
+  fun readArrayProjection(src: MemorySegment): List<Projection> =
+    readArrayScalars(src).mapNotNull { it as? Projection }
+
   fun readArrayTransform3D(src: MemorySegment): List<Transform3D> =
     readArrayScalars(src).mapNotNull { it as? Transform3D }
 

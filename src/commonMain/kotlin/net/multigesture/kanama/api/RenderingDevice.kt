@@ -50,6 +50,25 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
+     * Creates a shared texture using the specified `view` and the texture information from
+     * `with_texture`'s `layer` and `mipmap`. The number of included mipmaps from the original texture
+     * can be controlled using the `mipmaps` parameter. The `layers` parameter controls the number of
+     * included layers from the original texture for 2D texture arrays, and must be `0` for all other
+     * texture types. If `layers` is `0` for a 2D texture array, `layer` must also be `0`, and all
+     * available layers will be included. Only relevant for textures with multiple layers, such as 3D
+     * textures, texture arrays and cubemaps. For single-layer textures, use `texture_create_shared`.
+     * For 2D textures (which only have one layer), `layer` must be `0`. This will be freed
+     * automatically when the `with_texture` is freed.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_create_shared_from_slice
+     */
+    fun textureCreateSharedFromSlice(view: RDTextureView?, withTexture: RID, layer: Long, mipmap: Long, mipmaps: Long = 1L, sliceType: RenderingDevice.TextureSliceType = RenderingDevice.TextureSliceType.SLICE_2D, layers: Long = 0L): RID {
+        val ret = ObjectCalls.ptrcallWithObjectRIDThreeUInt32LongUInt32ArgsRetRID(Binds.textureCreateSharedFromSliceBind, segment, view?.requireOpenHandle() ?: NULL_SEGMENT, withTexture, layer, mipmap, mipmaps, sliceType.value, layers)
+        ObjectCalls.keepReachable(view)
+        return ret
+    }
+
+    /**
      * Returns an RID for an existing `image` (`VkImage`) with the given `type`, `format`, `samples`,
      * `usage_flags`, `width`, `height`, `depth`, `layers`, and `mipmaps`. This can be used to allow
      * Godot to render onto foreign images.
@@ -5675,6 +5694,11 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         @JvmField
         val textureCreateSharedBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared", TEXTURE_CREATE_SHARED_HASH)
+
+        private const val TEXTURE_CREATE_SHARED_FROM_SLICE_HASH = 1274035419L
+        @JvmField
+        val textureCreateSharedFromSliceBind =
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_create_shared_from_slice", TEXTURE_CREATE_SHARED_FROM_SLICE_HASH)
 
         private const val TEXTURE_CREATE_FROM_EXTENSION_HASH = 3732868568L
         @JvmField

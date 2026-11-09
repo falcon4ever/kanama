@@ -859,6 +859,15 @@ case("generate_api_exercise.py --check (row arguments of no row)", API_EXERCISE_
      [Edit("scripts/api_exercise_policy.py", '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n',
            '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n    ("ClassDB", "class_get_enum_list_red_run"): (\'"Node"\',),\n')],
      "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B, D or F row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
+case("generate_api_exercise.py --check (scene row of no call)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("XRInterface", "get_camera_offsets"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n',
+           '    ("XRInterface", "get_camera_offsets"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n'
+           '    ("XRInterface", "get_camera_offsets_red_run"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n')],
+     "SCENE_ROWS names XRInterface.get_camera_offsets_red_run, which no wrapper calls", "a `SCENE_ROWS` entry names a method no wrapper calls (renamed or gone): its row would run nothing")
+case("generate_api_exercise.py --check (scene row case)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '        "F",\n        "a real 6DOF joint; the read-back is the getter\'s row",\n',
+           '        "A",\n        "a real 6DOF joint; the read-back is the getter\'s row",\n')],
+     "a scene row is B, D or F", "a `SCENE_ROWS` entry claims a case its row cannot be: the case decides which verdict calls it counts under")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", KNOWN_FINDINGS_OPEN,
            KNOWN_FINDINGS_OPEN + '("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run"),')],

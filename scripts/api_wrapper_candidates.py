@@ -208,8 +208,8 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "RID",
         "RID.EMPTY",
     ),
-    (("Object", "RID", "uint32", "uint32", "uint32", "enum"), "RID"): CallShape(
-        "ptrcallWithObjectRIDThreeUInt32LongArgsRetRID",
+    (("Object", "RID", "uint32", "uint32", "uint32", "enum", "uint32"), "RID"): CallShape(
+        "ptrcallWithObjectRIDThreeUInt32LongUInt32ArgsRetRID",
         "RID",
         "RID.EMPTY",
     ),
@@ -710,6 +710,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "MemorySegment",
         "MemorySegment.NULL",
     ),
+    (("String", "String", "PackedStringArray"), "void"): CallShape("ptrcallWithTwoStringPackedStringListArgs", "Unit"),
     (("String", "String", "String"), "void"): CallShape("ptrcallWithThreeStringArgs", "Unit"),
     (("String", "String", "String"), "enum"): CallShape("ptrcallWithThreeStringArgsRetLong", "Long", "0L"),
     (("String", "String", "String", "String", "String", "enum"), "void"): CallShape(
@@ -1019,6 +1020,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
     (("bool", "int32"), "enum"): CallShape("ptrcallWithBoolAndIntArgsRetLong", "Long", "0L"),
     (("bool", "bool"), "void"): CallShape("ptrcallWithTwoBoolArgs", "Unit"),
     (("bool", "bool"), "String"): CallShape("ptrcallWithTwoBoolArgsRetString", "String", '""'),
+    (("bool", "bool", "float"), "enum"): CallShape("ptrcallWithTwoBoolDoubleArgsRetLong", "Long", "0L"),
     (("int64",), "void"): CallShape("ptrcallWithLongArg", "Unit"),
     (("int32",), "void"): CallShape("ptrcallWithIntArg", "Unit"),
     (("uint32",), "void"): CallShape("ptrcallWithUInt32Arg", "Unit"),
@@ -1128,6 +1130,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
     (("int32",), "Quaternion"): CallShape("ptrcallWithIntArgRetQuaternion", "Quaternion", "Quaternion.IDENTITY"),
     (("int32",), "Rect2"): CallShape("ptrcallWithIntArgRetRect2", "Rect2", "Rect2.ZERO"),
     (("int32",), "Rect2i"): CallShape("ptrcallWithIntArgRetRect2i", "Rect2i", "Rect2i.ZERO"),
+    (("int32",), "TypedRect2Array"): CallShape("ptrcallWithIntArgRetRect2List", "List<Rect2>", "emptyList()"),
     (("int32",), "Transform2D"): CallShape("ptrcallWithIntArgRetTransform2D", "Transform2D", "Transform2D.IDENTITY"),
     (("int32", "Transform2D"), "void"): CallShape("ptrcallWithIntAndTransform2DArg", "Unit"),
     (("int32", "Transform2D", "float", "bool"), "void"): CallShape(
@@ -1805,6 +1808,22 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
     ),
     (("TypedTransform3DArray",), "void"): CallShape("ptrcallWithTransform3DListArg", "Unit"),
     (("RID", "TypedTransform3DArray"), "void"): CallShape("ptrcallWithRIDAndTransform3DListArgs", "Unit"),
+    (("RID", "TypedProjectionArray", "TypedTransform3DArray"), "void"): CallShape(
+        "ptrcallWithRIDProjectionListTransform3DListArgs",
+        "Unit",
+    ),
+    (("StringName",), "TypedTransform3DArray"): CallShape(
+        "ptrcallWithStringNameArgRetTransform3DList",
+        "List<Transform3D>",
+        "emptyList()",
+    ),
+    (("StringName", "float", "float", "float"), "TypedProjectionArray"): CallShape(
+        "ptrcallWithStringNameThreeDoubleArgsRetProjectionList",
+        "List<Projection>",
+        "emptyList()",
+    ),
+    (("RID",), "Quaternion"): CallShape("ptrcallWithRIDArgRetQuaternion", "Quaternion", "Quaternion.IDENTITY"),
+    (("RID", "Quaternion"), "void"): CallShape("ptrcallWithRIDAndQuaternionArgs", "Unit"),
     (("int32", "Rect2", "Rect2"), "void"): CallShape("ptrcallWithIntRect2Rect2Args", "Unit"),
     (("String", "Rect2", "enum", "int32", "int32", "int32"), "void"): CallShape(
         "ptrcallWithStringRect2LongThreeIntArgs",
@@ -2182,6 +2201,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
     ),
     (("int32", "int32", "int32"), "void"): CallShape("ptrcallWithThreeIntArgs", "Unit"),
     (("int32", "int32", "int32"), "int32"): CallShape("ptrcallWithThreeIntArgsRetInt", "Int", "0"),
+    (("int32", "int32", "int32"), "float"): CallShape("ptrcallWithThreeIntArgsRetDouble", "Double", "0.0"),
     (("int32", "int32", "int32"), "Vector2"): CallShape("ptrcallWithThreeIntArgsRetVector2", "Vector2", "Vector2.ZERO"),
     (("int32", "int32", "int32"), "Vector2i"): CallShape("ptrcallWithThreeIntArgsRetVector2i", "Vector2i", "Vector2i.ZERO"),
     (("int32", "int32", "int32", "Vector2"), "void"): CallShape("ptrcallWithThreeIntAndVector2Arg", "Unit"),
@@ -2610,6 +2630,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "emptyList()",
     ),
     (("Rect2i", "Color"), "void"): CallShape("ptrcallWithRect2iAndColorArg", "Unit"),
+    (("Rect2i", "int32"), "void"): CallShape("ptrcallWithRect2iAndIntArg", "Unit"),
     (("Rect2i", "Object", "Color", "int32", "Object"), "void"): CallShape(
         "ptrcallWithRect2iObjectColorIntObjectArgs",
         "Unit",
@@ -3332,6 +3353,7 @@ CALL_SHAPES: dict[tuple[tuple[str, ...], str], CallShape] = {
         "Unit",
     ),
     (("Object", "Object"), "void"): CallShape("ptrcallWithTwoObjectArgs", "Unit"),
+    (("Object", "Object"), "bool"): CallShape("ptrcallWithTwoObjectArgsRetBool", "Boolean", "false"),
     (("Object", "Object"), "Object"): CallShape(
         "ptrcallWithTwoObjectArgsRetObject",
         "MemorySegment",

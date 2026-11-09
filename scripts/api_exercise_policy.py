@@ -35,6 +35,9 @@ lives here, and only here:
     Variant path answers) for the T rows, and the paths a type has no row on, with the reason.
   * REACH_RECEIVERS / HAND_ROOT_REACH / REACH_AFTER -- the reach (F) rows' valid receivers where a fresh
     instance is not one, the calls of the hand-written GodotObject root, and what a row does after its call.
+  * SCENE_ROWS -- methods no rule can reach or answer on a fresh object (a query needs a world, a target
+    rotation a real joint), or on a class the exclusions remove but that is safe to call on this one
+    method: each spells its row's Kotlin, against the hand-written worlds in exercise/ApiExerciseScenes.kt.
 
 `generate_api_exercise.py --check` fails when an entry here names a class or method the API lacks,
 when an entry matches nothing or no longer applies (a METHOD_OVERRIDES entry whose case the class
@@ -741,5 +744,273 @@ REACH_AFTER: dict[tuple[str, str], tuple[str, str]] = {
         "r.track(ResourceLoader.loadThreadedGet(a0))",
         "a request keeps its load token (a RefCounted) until load_threaded_get collects it: without that it "
         "leaks at exit (found by the runtime smoke's leak check)",
+    ),
+}
+
+# ---- scene rows ------------------------------------------------------------------------------------------
+
+
+def _into(dim: str, method: str, query: str, result: str, reads: tuple[str, ...], set_reads: tuple[str, ...]) -> tuple:
+    """One physics `*_into` row: the wrapper fills [result] from [query] on the row's world, `Object.call`
+    fills a second one from the same query. Both hit; every read agrees; each of [set_reads] is not its type's
+    zero, so a result a call left untouched fails; neither object changed its reference count."""
+    camel = method.split("_")[0] + "".join(word.title() for word in method.split("_")[1:])
+    lines = [
+        f"val w = r.physics{dim}()",
+        f"val q = w.{query}()",
+        f"val a = r.track({result}.create())",
+        f"val b = r.track({result}.create())",
+        "val queryRefs = q.getReferenceCount()",
+        "val resultRefs = a.getReferenceCount()",
+        f"val got = w.state.{camel}(q, a)",
+        "r.wrapperValue(got, false)",
+        "r.sameReferences(q, queryRefs)",
+        "r.sameReferences(a, resultRefs)",
+    ]
+    lines += [f"r.wrapperValue(a.{read}, false)" for read in set_reads]
+    lines.append("r.oracle()")
+    lines.append(f'val oracle = r.track(w.state.call("{method}", q, b))')
+    lines += [f'r.readBack(a.{read}, b.{read}, "{read}")' for read in reads]
+    lines.append("r.sameAsCall(got, oracle)")
+    return ("B", "fills its result object from a query on a world with one static box", tuple(lines))
+
+
+def _into_rows(dim: str) -> dict[tuple[str, str], tuple]:
+    owner = f"PhysicsDirectSpaceState{dim}"
+    collider = ("getColliderRid()", "getColliderId()", "getColliderShape()", "getCollider()")
+    listed = ("getIntersectionCount()", "getColliderRid(0)", "getColliderId(0)", "getColliderShape(0)", "getCollider(0)")
+    shared = ("getIntersectionCount()", "getColliderRid(0)", "getColliderId(0)", "getCollider(0)")
+    ray_extra = ("getColliderFaceIndex()",) if dim == "3D" else ()
+    return {
+        (owner, "intersect_ray_into"): _into(
+            dim, "intersect_ray_into", "rayQuery", f"PhysicsIntersectRayResult{dim}",
+            ("getPosition()", "getNormal()", *collider, *ray_extra),
+            ("getPosition()", "getNormal()", "getColliderRid()", "getColliderId()", "getCollider()"),
+        ),
+        (owner, "intersect_point_into"): _into(
+            dim, "intersect_point_into", "pointQuery", f"PhysicsIntersectPointResult{dim}", listed, shared,
+        ),
+        (owner, "intersect_shape_into"): _into(
+            dim, "intersect_shape_into", "overlapQuery", f"PhysicsIntersectShapeResult{dim}", listed, shared,
+        ),
+        (owner, "cast_motion_into"): _into(
+            dim, "cast_motion_into", "castQuery", f"PhysicsCastMotionResult{dim}",
+            ("getSafeFraction()", "getUnsafeFraction()"), ("getSafeFraction()", "getUnsafeFraction()"),
+        ),
+        (owner, "collide_shape_into"): _into(
+            dim, "collide_shape_into", "touchQuery", f"PhysicsCollideShapeResult{dim}",
+            ("getCollisionCount()", "getPointOnQueriedShape(0)", "getPointOnCollidingShape(0)"),
+            ("getCollisionCount()", "getPointOnQueriedShape(0)", "getPointOnCollidingShape(0)"),
+        ),
+        (owner, "get_rest_info_into"): _into(
+            dim, "get_rest_info_into", "touchQuery", f"PhysicsGetRestInfoResult{dim}",
+            ("getPoint()", "getNormal()", *collider[:3], "getColliderVelocity()"),
+            ("getPoint()", "getNormal()", "getColliderRid()", "getColliderId()"),
+        ),
+    }
+
+
+def _xr(owner: str, method: str, args: str) -> tuple:
+    """An XR read on the interface that needs no headset, initialized for the row. Godot answers two views."""
+    camel = method.split("_")[0] + "".join(word.title() for word in method.split("_")[1:])
+    if owner == "XRServer":
+        receiver, oracle = "XRServer", 'r.singleton("XRServer")'
+    else:
+        receiver, oracle = "i", "i"
+    return (
+        "B" if owner == "XRInterface" else "D",
+        "an XR read: a fresh or uninitialized interface answers an empty list",
+        (
+            "val i = r.xrInterface()",
+            "if (i == null) {",
+            '  r.weakBecause("this build has no Native mobile XR interface")',
+            "} else {",
+            f"  val got = {receiver}.{camel}({args})",
+            "  r.wrapperValue(got, false)",
+            "  r.oracle()",
+            f'  val oracle = r.track({oracle}.call("{method}", {args}))',
+            "  r.sameAsCall(got, oracle)",
+            "}",
+        ),
+    )
+
+
+_XR_PROJECTIONS = '"head", 1.5, 0.1, 100.0'
+_XR_OFFSETS = '"head"'
+_TARGET = "Quaternion(0.0, 0.0, 0.6, 0.8)"
+
+# (class, method) -> (case, reason, the row's Kotlin). The case is the one the row's checks amount to: B or D
+# compares with `Object.call`, F only returns. A row ends in the same verdict calls as its case's generated
+# rows. An exclusion does not apply to a method listed here: its reason says why this method is safe where
+# the class as a whole is not.
+SCENE_ROWS: dict[tuple[str, str], tuple[str, str, tuple[str, ...]]] = {
+    **_into_rows("2D"),
+    **_into_rows("3D"),
+    ("Image", "generate_mipmaps"): (
+        "B",
+        "a real image: the mipmaps are the result, the Error of a fresh empty image is the failure path",
+        (
+            "val o = r.track(checkNotNull(Image.createEmpty(8, 8, false, Image.Format.RGBA8)))",
+            "val p = r.track(checkNotNull(Image.createEmpty(8, 8, false, Image.Format.RGBA8)))",
+            "val got = o.generateMipmaps(true, true, 0.25)",
+            "r.wrapperValue(o.hasMipmaps(), false)",
+            "r.oracle()",
+            'val oracle = p.call("generate_mipmaps", true, true, 0.25)',
+            'r.readBack(got, oracle, "generate_mipmaps")',
+            "r.sameAsCall(o.hasMipmaps(), p.hasMipmaps())",
+        ),
+    ),
+    ("PhysicsServer3D", "generic_6dof_joint_get_angular_target_rotation"): (
+        "D",
+        "a real 6DOF joint: a fresh one answers with an engine error. Only Jolt keeps the target",
+        (
+            "val j = r.joint6dof()",
+            'val s = r.singleton("PhysicsServer3D")',
+            f"val target = {_TARGET}",
+            "PhysicsServer3D.generic6dofJointSetAngularTargetRotation(j.joint, target)",
+            "val got = PhysicsServer3D.generic6dofJointGetAngularTargetRotation(j.joint)",
+            'if (ProjectSettings.getSetting("physics/3d/physics_engine") == "Jolt Physics") {',
+            '  r.readBack(got, target, "the target just set")',
+            "}",
+            "r.oracle()",
+            's.call("generic_6dof_joint_set_angular_target_rotation", j.joint, target)',
+            'val oracle = s.call("generic_6dof_joint_get_angular_target_rotation", j.joint)',
+            "r.sameAsCall(got, oracle)",
+        ),
+    ),
+    ("PhysicsServer3D", "generic_6dof_joint_set_angular_target_rotation"): (
+        "F",
+        "a real 6DOF joint; the read-back is the getter's row",
+        (
+            "val j = r.joint6dof()",
+            f"PhysicsServer3D.generic6dofJointSetAngularTargetRotation(j.joint, {_TARGET})",
+            "r.reached()",
+        ),
+    ),
+    ("RenderingServer", "camera_set_xr_projections"): (
+        "F",
+        "two views with offsets, the shape a headset uses; the server has no getter for them",
+        (
+            "var camera = RID(0L)",
+            "try {",
+            "  camera = RenderingServer.cameraCreate()",
+            "  val view = Projection(Vector4(1.0, 0.0, 0.0, 0.0), Vector4(0.0, 1.0, 0.0, 0.0), "
+            "Vector4(0.0, 0.0, -1.0, -1.0), Vector4(0.0, 0.0, -0.25, 0.0))",
+            "  val left = Transform3D(Transform3D.IDENTITY.basis, Vector3(-0.03, 0.0, 0.0))",
+            "  val right = Transform3D(Transform3D.IDENTITY.basis, Vector3(0.03, 0.0, 0.0))",
+            "  RenderingServer.cameraSetXrProjections(camera, listOf(view, view), listOf(left, right))",
+            "  r.reached()",
+            "} finally {",
+            "  if (camera.value != 0L) RenderingServer.freeRid(camera)",
+            "}",
+        ),
+    ),
+    ("XRInterface", "get_camera_projections"): _xr("XRInterface", "get_camera_projections", _XR_PROJECTIONS),
+    ("XRInterface", "get_camera_offsets"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),
+    ("XRServer", "get_camera_projections"): _xr("XRServer", "get_camera_projections", _XR_PROJECTIONS),
+    ("XRServer", "get_camera_offsets"): _xr("XRServer", "get_camera_offsets", _XR_OFFSETS),
+    ("DisplayServer", "get_display_cutouts"): (
+        "D",
+        "a read of the screen, safe on every host: empty, so weak, without a notch",
+        (
+            'val s = r.singleton("DisplayServer")',
+            "val got = DisplayServer.getDisplayCutouts(-1)",
+            "r.oracle()",
+            'val oracle = r.track(s.call("get_display_cutouts", -1))',
+            "r.sameAsCall(got, oracle)",
+        ),
+    ),
+    ("DisplayServer", "window_set_ime_rect"): (
+        "F",
+        "a hint for where the IME draws: nothing shows while no text field has focus",
+        (
+            "DisplayServer.windowSetImeRect(Rect2i(Vector2i(1, 2), Vector2i(3, 4)), 0)",
+            "r.reached()",
+        ),
+    ),
+    ("Input", "get_joy_touchpad_finger_pressure"): (
+        "D",
+        "a read of a device no host has: -1, which a no-op cannot answer",
+        (
+            'val s = r.singleton("Input")',
+            "val got = Input.getJoyTouchpadFingerPressure(7, 3, 5)",
+            "r.oracle()",
+            'val oracle = s.call("get_joy_touchpad_finger_pressure", 7, 3, 5)',
+            "r.sameAsCall(got, oracle)",
+        ),
+    ),
+    ("RenderingDevice", "texture_create_shared_from_slice"): (
+        "B",
+        "a slice of a real texture: weak where the renderer has no RenderingDevice (headless, Compatibility)",
+        (
+            "val rd = RenderingServer.getRenderingDevice()",
+            "if (rd == null) {",
+            '  r.weakBecause("this renderer has no RenderingDevice")',
+            "} else {",
+            "  val format = r.track(RDTextureFormat.create())",
+            "  format.width = 4L",
+            "  format.height = 4L",
+            "  format.format = RenderingDevice.DataFormat.R8G8B8A8_UNORM",
+            "  format.usageBits = RenderingDevice.TextureUsageBits(129L)",
+            "  val view = r.track(RDTextureView.create())",
+            "  val texture = rd.textureCreate(format, view, emptyList())",
+            "  if (texture.value == 0L) {",
+            '    r.weakBecause("the RenderingDevice made no texture")',
+            "  } else {",
+            "    try {",
+            "      val got = rd.textureCreateSharedFromSlice(view, texture, 0L, 0L, 1L, "
+            "RenderingDevice.TextureSliceType.SLICE_2D, 1L)",
+            "      r.wrapperValue(got, false)",
+            "      if (got.value != 0L) rd.freeRid(got)",
+            "      r.oracle()",
+            '      val oracle = rd.call("texture_create_shared_from_slice", view, texture, 0L, 0L, 1L, 0L, 1L) as RID',
+            "      r.wrapperValue(oracle, false)",
+            "      if (oracle.value != 0L) rd.freeRid(oracle)",
+            "      r.sameAsCall(got.value != 0L, oracle.value != 0L)",
+            "    } finally {",
+            "      rd.freeRid(texture)",
+            "    }",
+            "  }",
+            "}",
+        ),
+    ),
+    ("EditorExportPlugin", "add_apple_embedded_platform_spm_package"): (
+        "F",
+        "instantiable only in the editor: weak in a game. The plugin only stores the package",
+        (
+            'if (!ClassDB.canInstantiate("EditorExportPlugin")) {',
+            '  r.weakBecause("EditorExportPlugin can only be instantiated by the editor")',
+            "} else {",
+            '  val o = r.ref(EditorExportPlugin(r.construct("EditorExportPlugin")))',
+            '  o.addAppleEmbeddedPlatformSpmPackage("https://example.org/kanama", "1.0.0", listOf("Kanama"))',
+            "  r.reached()",
+            "}",
+        ),
+    ),
+    ("DisplayServer", "send_toast_notification"): (
+        "F",
+        "only Windows shows a toast, so a Windows host skips the call; elsewhere Godot answers "
+        "INVALID_NOTIFICATION_ID (-1), which a no-op cannot",
+        (
+            'if (OS.getName() == "Windows") {',
+            '  r.weakBecause("a Windows desktop would show the toast")',
+            "} else {",
+            '  val got = DisplayServer.sendToastNotification("Kanama", "API exercise", null, r.noopCallable())',
+            '  r.readBack(got, -1, "send_toast_notification")',
+            "  r.reached()",
+            "}",
+        ),
+    ),
+    ("OpenXRSpatialEntityExtension", "create_spatial_context"): (
+        "F",
+        "needs OpenXR on, or the singleton is missing (weak); without a running session Godot answers null",
+        (
+            'if (!Engine.hasSingleton("OpenXRSpatialEntityExtension")) {',
+            '  r.weakBecause("OpenXR is off: no OpenXRSpatialEntityExtension singleton")',
+            "} else {",
+            '  val e = OpenXRSpatialEntityExtension(checkNotNull(Engine.getSingleton("OpenXRSpatialEntityExtension")).handle)',
+            "  r.reached(e.createSpatialContext(emptyList(), null, r.noopCallable(), r.noopCallable()))",
+            "}",
+        ),
     ),
 }
