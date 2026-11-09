@@ -67,6 +67,13 @@ scripts rewrite your old annotations, export hints and enum constants.
 
 ### Details
 
+#### Fixed — the Kanama Tools scripts are free of GDScript warnings
+
+A project that turns on GDScript warnings for `res://addons` no longer sees warnings from Kanama Tools, and the Kotlin
+syntax highlighter no longer fails to load there: with that setting on, Godot treated one inferred `Variant` in it as an
+error. The plugin calls the `EditorInterface` singleton directly instead of `get_editor_interface()`, and the
+exported-scene check drops an unused variable.
+
 #### Changed — Godot 4.8 beta 2
 
 `main` now builds against Godot 4.8 beta 2, and 0.5.0 ships on 4.8 stable. The 0.4.0 release stays on Godot 4.7.2. The API
