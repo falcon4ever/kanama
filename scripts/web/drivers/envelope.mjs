@@ -20,6 +20,20 @@ const SCHEMA_VERSION = 1;
 // scripts/web/tpsdemo_slow_page_selftest.mjs proves both.
 export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;
 
+/**
+ * The page did not answer one evaluate within PAGE_EVALUATE_TIMEOUT_MS: its main thread is frozen, or
+ * one frame outlasted the limit. A read helper that retries a null answer (a one-shot miss under host
+ * load) rethrows this one instead: retrying a page that does not answer only multiplies the limit,
+ * and the run then ends at the driver's hard stop with no result, or with a message that blames the
+ * read.
+ */
+export class PageTimeoutError extends Error {
+  constructor(timeoutMs) {
+    super(`CDP Runtime.evaluate timed out after ${timeoutMs}ms: the page did not answer (a frozen main thread, or one frame longer than the limit)`);
+    this.name = "PageTimeoutError";
+  }
+}
+
 // Protocol 37: a RefCounted handle lives while a Kotlin wrapper of it is reachable, so after a
 // teardown a handle that a freed script's dropped wrapper still holds goes when the browser collects
 // that wrapper (desktop's late release), on the next frame of a proxy that still runs (a smoke

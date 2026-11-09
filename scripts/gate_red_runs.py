@@ -1876,6 +1876,9 @@ case("web/tpsdemo_slow_page_selftest.mjs (input hold)", ["node", "scripts/web/tp
 case("web/tpsdemo_slow_page_selftest.mjs (hold from the press)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS", "snap.physicsCalls >= baseline.physicsCalls + HOLD_PHYSICS_CALLS")],
      "(a slow runner): move_forward was held for", "tpsdemo counts the hold from the settled baseline again: on a slow page the frames between that sample and the press shorten the hold (CI: 0.65 m)")
+case("web/tpsdemo_slow_page_selftest.mjs (read retry on a frozen page)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait\n", "")],
+     "freezes once the level is up: a frozen page must fail, got error \"could not read the player's global position\"", "tpsdemo's position read retries a page that does not answer again: five 60 s waits, then a message that blames the read")
 case("web/tpsdemo_slow_page_selftest.mjs (teardown samples)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "(snap) => snap.liveHandles === 0, { minSamples: 3 });", "(snap) => snap.liveHandles === 0);")],
      "(a slow runner): checks red: fullTeardownToZero", "tpsdemo's teardown window closes on its first sample again: on a slow page that is the frame still holding the level")

@@ -21,7 +21,7 @@ import os from "node:os";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
-import { PAGE_EVALUATE_TIMEOUT_MS } from "./drivers/envelope.mjs";
+import { PAGE_EVALUATE_TIMEOUT_MS, PageTimeoutError } from "./drivers/envelope.mjs";
 import { runTpsdemo } from "./drivers/demos/tpsdemo.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -225,7 +225,7 @@ async function runScenario(pageOptions) {
       if (Number.isFinite(answerAt)) page.queued.push(source);
       virtualNow = asked + PAGE_EVALUATE_TIMEOUT_MS;
       timeouts += 1;
-      throw new Error(`CDP Runtime.evaluate timed out after ${PAGE_EVALUATE_TIMEOUT_MS}ms`);
+      throw new PageTimeoutError(PAGE_EVALUATE_TIMEOUT_MS);
     }
     page.advanceTo(answerAt);
     longestWait = Math.max(longestWait, answerAt - asked);
@@ -262,10 +262,12 @@ const redChecks = (result) => Object.entries(result.checks).filter(([, ok]) => o
 // The hosted runner's Chrome: quick menu frames, a long first level frame (shader compiles), long
 // level frames, quick frames once the level is gone.
 const runner = (levelMs) => ({ menuMs: 700, compileMs: 30_000, levelMs, tornMs: 400 });
-const afterLevelReady = (state) => state.phase === "level" && state.levelFrames >= 3;
+const afterLevelReady = (state) => state.phase === "level" && state.levelFrames >= 1;
 const midHold = (state) => state.pressed && state.steps > 30;
 
-// [label, page, expected: { red: [checks] (empty: all green), throws: text the error must carry }]
+// [label, page, expected: { red: [checks] (empty: all green), throws: text the error must carry,
+// maxTimeouts: evaluates allowed to time out before the driver gives up (a read retry must not wait
+// out the limit again and again on a page that does not answer) }]
 const scenarios = [
   ["a fast page (a workstation, Firefox on the runner)", {}, { red: [] }],
   ["the runner's Chrome, 11 s frames (a fast runner)", runner(11_000), { red: [] }],
@@ -274,7 +276,7 @@ const scenarios = [
   ["a slow page whose input moves nothing", { ...runner(23_000), moveIgnored: true }, { red: ["playerMovedOnInput"] }],
   ["a slow page whose physics stops when the hold starts", { ...runner(23_000), physicsStopsOnPress: true }, { red: ["playerMovedOnInput"] }],
   ["a slow page whose teardown leaks", { ...runner(23_000), teardownLeak: 12 }, { red: ["fullTeardownToZero"] }],
-  ["a slow page that freezes once the level is up", { ...runner(23_000), freeze: afterLevelReady }, { throws: "" }],
+  ["a slow page that freezes once the level is up", { ...runner(23_000), freeze: afterLevelReady }, { throws: "the page did not answer", maxTimeouts: 2 }],
   ["a slow page that freezes during the input hold", { ...runner(23_000), freeze: midHold }, { throws: "timed out" }],
   ["a fast page that freezes once the level is up", { freeze: afterLevelReady }, { throws: "" }],
   ["a fast page that freezes during the teardown", { freeze: (state) => state.phase === "torn" }, { throws: "timed out", orRed: ["fullTeardownToZero"] }],
@@ -289,6 +291,9 @@ for (const [label, page, expected] of scenarios) {
     const red = result ? redChecks(result) : [];
     const failed = error ? String(error.message ?? error).includes(expected.throws) : (expected.orRed ?? []).some((name) => red.includes(name));
     expect(failed, `${label}: a frozen page must fail, got ${error ? `error "${error.message}"` : `checks red: [${red.join(", ")}]`}`);
+    if (expected.maxTimeouts !== undefined) {
+      expect(timeouts <= expected.maxTimeouts, `${label}: ${timeouts} evaluates timed out before the driver gave up, expected at most ${expected.maxTimeouts}`);
+    }
     console.log(`  ${label}: failed in ${seconds}s (${error ? error.message.split("\n")[0] : `red=[${red.join(",")}]`}), ${timeouts} timed-out evaluate(s)`);
     continue;
   }

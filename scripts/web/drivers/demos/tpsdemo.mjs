@@ -9,7 +9,7 @@
 // run under that window. Smoke.smoke_teardown releases the cached scenes and the
 // settings ConfigFile, then frees the scene root and the Smoke autoload, draining every live handle to zero.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, PageTimeoutError } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -75,7 +75,8 @@ async function playerPosition(evaluate) {
       const x = bridge.immediateNoArgsVector3X(138, handle);
       return { x, y: bridge.immediateNoArgsVector3Y(), z: bridge.immediateNoArgsVector3Z() };
     })()`);
-  } catch {
+  } catch (error) {
+    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait
     return null;
   }
 }
@@ -84,10 +85,12 @@ async function playerPosition(evaluate) {
 // mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
 // BOUNDED and the caller's null handling is unchanged, so a position that STAYS
 // unreadable (dead bridge, freed player) still fails exactly as loudly as before.
-async function playerPositionRetry(evaluate, attempts = 5) {
+// A page that does not answer at all (PageTimeoutError) is not retried, and no retry starts past
+// the deadline: either would only multiply the evaluate limit.
+async function playerPositionRetry(evaluate, deadline, attempts = 5) {
   for (let attempt = 1; ; attempt += 1) {
     const position = await playerPosition(evaluate);
-    if (position || attempt >= attempts) return position;
+    if (position || attempt >= attempts || Date.now() >= deadline) return position;
     trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
     await delay(250);
   }
@@ -217,7 +220,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
     (snap) => snap.physicsCalls >= level.physicsCalls + 120,
   );
   const baseline = settled.last ?? level;
-  const startPosition = await playerPositionRetry(evaluate);
+  const startPosition = await playerPositionRetry(evaluate, deadline);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`settled: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
@@ -229,7 +232,8 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
   // one frame takes 11-31 s and runs at most 8 physics steps, so 4 s covered two frames and the player
   // moved about 0.3 m. 200 physics calls are 40 steps of the five physics scripts: a fast page gets
   // there in under a second, a slow one in about five frames. A page whose physics stops still ends
-  // the hold, at HOLD_MAX_MS, and fails physicsFramesAdvanced and playerMovedOnInput.
+  // the hold, at HOLD_MAX_MS, and fails playerMovedOnInput (on a slow page physicsFramesAdvanced can
+  // stay green: the frames between the settled sample and the press already add their 40 calls).
   const HOLD_MIN_MS = 4_000;
   const HOLD_PHYSICS_CALLS = 200;
   const HOLD_MAX_MS = 240_000;
@@ -243,7 +247,7 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
     (snap) => Date.now() - holdStart >= HOLD_MIN_MS && snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS,
   );
   await action(87, "move_forward");
-  const runPosition = await playerPositionRetry(evaluate);
+  const runPosition = await playerPositionRetry(evaluate, deadline);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? baseline;
   const displacement = runPosition

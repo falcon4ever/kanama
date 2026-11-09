@@ -45,6 +45,7 @@ import {
   collectPerformance,
   mergeExercisedMembers,
   PAGE_EVALUATE_TIMEOUT_MS,
+  PageTimeoutError,
 } from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike, starter: runStarter };
@@ -275,7 +276,7 @@ async function main() {
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           pendingCalls.delete(id);
-          reject(new Error(`CDP ${method} timed out after ${timeoutMs}ms`));
+          reject(method === "Runtime.evaluate" ? new PageTimeoutError(timeoutMs) : new Error(`CDP ${method} timed out after ${timeoutMs}ms`));
         }, timeoutMs);
         pendingCalls.set(id, {
           resolve: (value) => {
