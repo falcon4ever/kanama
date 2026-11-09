@@ -780,6 +780,63 @@ case("ios_device_gate.sh --check-results (--start-at plan, row missing)", IOS_RE
 case("ios_device_gate.sh --check-results (--start-at plan, skipped demo not SKIP)", IOS_RESULTS_START_AT_CHECK,
      [Edit(IOS_RESULTS_START_AT, "Starter-Kit-Racing\tSKIP", "Starter-Kit-Racing\tPASS")],
      "comes before --start-at Starter-Kit-FPS but its row is PASS, not SKIP", "a demo before the --start-at demo has a PASS row: the rows are not the ones this plan writes")
+# The gate's app cleanup (4.8 beta 2 rehearsal), replayed over saved `devicectl device info apps` listings: three
+# Kanama apps (the free account's limit); devicectl's shape with two other developers' apps and one Kanama app; and a
+# listing that names teams, where two non-Kanama apps of this team and one Kanama app fill the slots. The old order
+# (every other Kanama app removed before each install) leaves the phone with none, and iOS drops the trust in the
+# developer; so does dropping the last-Kanama-app guard or the "after" guard; no room made passes the limit; and
+# counting other developers' apps toward the limit warns of a full phone that is not full.
+IOS_CLEANUP_LISTING = "scripts/fixtures/ios_installed_apps.json"
+IOS_CLEANUP_CHECK = ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", IOS_CLEANUP_LISTING]
+IOS_CLEANUP_BEFORE = '    before)\n      [[ "$keep_installed" -eq 1 ]] && return 0\n'
+case("ios_device_gate.sh --check-cleanup-plan (uninstall before install)", IOS_CLEANUP_CHECK,
+     [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      printf \'%s\\n\' ${removable[@]+"${removable[@]}"}\n      return 0\n')],
+     "would leave the phone with no Kanama app", "the old order returns: every other Kanama app is removed before the next install, and the phone holds none in between")
+case("ios_device_gate.sh --check-cleanup-plan (no room made)", IOS_CLEANUP_CHECK,
+     [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      return 0\n')],
+     "although the plan could have removed another Kanama app first", "a phone already holding three apps of this team gets a fourth although the gate could have removed a Kanama app: the install is refused")
+case("ios_device_gate.sh --check-cleanup-plan (after a failed step)", IOS_CLEANUP_CHECK,
+     [Edit("scripts/ios_device_gate.sh", '      [[ "$keep_installed" -eq 1 ]] || return 0  # justified: removing nothing never costs the trust; the step\'s own row is the verdict\n', "")],
+     "no Kanama app (failed steps, after", "the after-step cleanup runs although the step never installed its app: every Kanama app goes")
+case("ios_device_gate.sh --check-cleanup-plan (last Kanama app)",
+     ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", "scripts/fixtures/ios_installed_apps_shared_team.json"],
+     [Edit("scripts/ios_device_gate.sh", 'if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" || "$kanama" -le 1 ]]; then', 'if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" ]]; then')],
+     "would leave the phone with no Kanama app", "this team's other apps fill the phone and the gate removes its last Kanama app to make room, instead of warning",
+     env={"KANAMA_IOS_TEAM": "TEAM000000"})
+case("ios_device_gate.sh --check-cleanup-plan (other developers' apps)",
+     ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", "scripts/fixtures/ios_installed_apps_other_teams.json"],
+     [Edit("scripts/ios_device_gate.sh", '    [[ "${app##*@}" == "ours" ]] && count=$((count + 1))\n', '    count=$((count + 1))\n')],
+     "only this team's apps count toward the limit", "other developers' apps are counted toward the free account's three: the gate warns of a full phone that has room")
+# A refused launch fails at once with what to do on the phone (4.8 beta 2 rehearsal): the saved launch output is
+# replayed as a console stream that stays open, so a wait that only ended on its timeout (120 s) would outlast the
+# case's own 60 s. The trust text is devicectl's own, captured from an iPhone that no longer trusted the developer.
+IOS_LAUNCH_LOG = "scripts/fixtures/ios_launch_console.log"
+IOS_LAUNCH_CHECK = ["bash", "scripts/ios_visual_smoke.sh", "--check-launch-wait", IOS_LAUNCH_LOG]
+IOS_LAUNCH_OK = "Launched application with net.multigesture.kanama.iosvisualsmoke bundle identifier.\n"
+IOS_LAUNCH_UNTRUSTED = (
+    "ERROR: The application failed to launch. (com.apple.dt.CoreDeviceError error 10002 (0x2712))\n"
+    "       BundleIdentifier = net.multigesture.kanama.iosvisualsmoke\n"
+    "           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace) for reason: Security "
+    "(\"Unable to launch net.multigesture.kanama.iosvisualsmoke because it has an invalid code signature, inadequate "
+    "entitlements or its profile has not been explicitly trusted by the user\").\n"
+    "           BSErrorCodeDescription = RequestDenied\n")
+IOS_LAUNCH_LOCKED = (
+    "ERROR: The application failed to launch. (com.apple.dt.CoreDeviceError error 10002 (0x2712))\n"
+    "           NSLocalizedFailureReason = The request was denied by service delegate (SBMainWorkspace) for reason: Locked "
+    "(\"Unable to launch net.multigesture.kanama.iosvisualsmoke because the device was not, or could not be, unlocked\").\n"
+    "           BSErrorCodeDescription = RequestDenied\n")
+IOS_LAUNCH_SCENE_INIT = "[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms\n"
+case("ios_visual_smoke.sh --check-launch-wait (developer not trusted)", IOS_LAUNCH_CHECK,
+     [Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_OK, IOS_LAUNCH_UNTRUSTED), Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_SCENE_INIT, "")],
+     "Settings > General > VPN & Device Management", "the phone no longer trusts the developer: the launch must fail at once and say what to tap, not wait 120 s for a loader line",
+     env={"KANAMA_IOS_LAUNCH_TIMEOUT": "120"}, timeout=60)
+case("ios_visual_smoke.sh --check-launch-wait (bare RequestDenied)", IOS_LAUNCH_CHECK,
+     [Edit("scripts/ios_visual_smoke.sh", "'The application failed to launch|BSErrorCodeDescription = RequestDenied'", "'failed to launch|RequestDenied'")],
+     "iOS refused the launch", "the refusal match loosens to the bare word: a healthy launch whose log carries a generated name ending in RequestDenied is read as refused")
+case("ios_visual_smoke.sh --check-launch-wait (device locked)", IOS_LAUNCH_CHECK,
+     [Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_OK, IOS_LAUNCH_LOCKED), Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_SCENE_INIT, "")],
+     "the device is locked", "a locked phone refuses the launch: it fails at once with the unlock message, not the trust one",
+     env={"KANAMA_IOS_LAUNCH_TIMEOUT": "120"}, timeout=60)
 case("check_jdk_locations_parity.py", py("check_jdk_locations_parity.py"),
      [Edit("bootstrap/bootstrap.c", '{"linux", "/usr/lib64/jvm", "", ""},', '{"linux", "/usr/lib65/jvm", "", ""},')],
      "differs from bootstrap/bootstrap.c", "one JDK location row differs between bootstrap.c and the plugins")
@@ -2053,7 +2110,42 @@ case("gate_red_runs_selftest.py (signal while starting)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "        if SIGNALLED is not None:\n            stop_now(SIGNALLED)\n", "")],
      "signal at start: the gate's TERM cleanup did not run", "a Ctrl-C that lands inside Popen() is dropped again: the case it was starting runs on, and the harness with it")
 
+case("gate_red_runs.py --check-mutations", ["python3", "scripts/gate_red_runs.py", "--check-mutations"],
+     [Edit("templates/starter/addons/kanama_tools/plugin.gd", '(dir_name == "build" or dir_name == "android")', '(folder == "build" or folder == "android")')],
+     "is not in templates/starter/addons/kanama_tools/plugin.gd", "a variable a slow case edits is renamed (#414 renamed `name` to `dir_name`): the stale mutation must fail local_ci, not the next nightly")
+
 #CASES-END
+
+def check_mutations(cases: list[Case]) -> int:
+    """Every Edit and Append a case names must still apply to the files as they are now.
+
+    The slow cases only run in the nightly, so a rename in a file they edit (a GDScript warning fix renaming
+    `name` to `dir_name`) used to surface there, a day later, as "cannot apply the mutation". This reads the
+    tracked files only: a path under build/ is written by the case's own `pre` step, and a callable mutation
+    list is built when its case runs, so both are left to the run itself."""
+    tracked = set(subprocess.run(["git", "-C", str(SRC), "ls-files"], capture_output=True, text=True, check=True).stdout.splitlines())
+    problems: list[str] = []
+    checked = 0
+    for c in cases:
+        if callable(c.mutations):
+            continue
+        for mutation in c.mutations:
+            if not isinstance(mutation, (Edit, Append)) or mutation.path not in tracked:
+                continue
+            checked += 1
+            path = SRC / mutation.path
+            if not path.exists():
+                problems.append(f"{c.gate}: {mutation.path} is tracked but missing from the checkout")
+            elif isinstance(mutation, Edit) and mutation.old not in path.read_text(encoding="utf-8", errors="replace"):
+                problems.append(f"{c.gate}: `{mutation.old[:60]!r}` is not in {mutation.path} (the file changed; update the case)")
+    if problems:
+        print("gate_red_runs --check-mutations: FAIL", file=sys.stderr)
+        for problem in problems:
+            print(f"- {problem}", file=sys.stderr)
+        return 1
+    print(f"gate_red_runs --check-mutations: PASS {checked} edit(s) in {len(cases)} case(s) still apply")
+    return 0
+
 
 def main() -> int:
     global DEADLINE, WORK, STARTING
@@ -2066,7 +2158,11 @@ def main() -> int:
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
     parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
     parser.add_argument("--deadline-minutes", type=float, help="stop after this many minutes: the unrun cases are named and fail the run")
+    parser.add_argument("--check-mutations", action="store_true",
+                        help="run no case: check that every case's fixed edits still apply to this checkout, slow cases included (seconds; local_ci runs it)")
     args = parser.parse_args()
+    if args.check_mutations:
+        return check_mutations(CASES)
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
 

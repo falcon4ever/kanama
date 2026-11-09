@@ -206,6 +206,7 @@ the scene checker is in the checkout's `scripts/` folder.
 | Xcode reports no signing team. | Set the team in the preset, or under **Signing & Capabilities** in Xcode. |
 | Xcode cannot create a provisioning profile. | Sign in to your Apple Developer account in Xcode and allow provisioning updates, or create the profile in the Apple Developer portal. |
 | The iPhone is not a valid run destination. | Connect and trust it, turn on Developer Mode, and check that `xcrun devicectl list devices` lists it. |
+| The app installs but will not open, and the launch error says its profile `has not been explicitly trusted by the user`. | On the phone, open **Settings > General > VPN & Device Management**, tap your Apple Development entry and trust it. With a free Apple account the phone forgets that trust when the last app you signed is removed, so keep one installed. |
 | Scenes load without their script property values, such as a `PackedScene` export that is `null` in `_ready`. | The export log shows `[kanama:kt] WARNING: no Kotlin class bound for res://...`. Run `buildIosScripts` again, delete `.godot/exported`, and export again. |
 | The export stops with `Kanama: Export stopped:`. | A scene uses a Kotlin script that the editor cannot load. Run `buildIosScripts` and export again. See [Export Guard](../getting-started/editor-workflow.md#export-guard). |
 | Godot warns about a missing iOS GDExtension library. | Run `buildIosScripts` again, and check that `addons/kanama/kanama.gdextension` has `ios.debug.arm64` and `ios.release.arm64` entries. |

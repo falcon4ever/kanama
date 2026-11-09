@@ -15,6 +15,7 @@ CONSOLE_SECONDS=30
 DEVICE_LABEL="${KANAMA_IOS_DEVICE_LABEL:-}"
 START_AT=""
 CHECK_RESULTS=""
+CHECK_CLEANUP_PLAN=""
 CLEAN_INSTALLED=1
 GATE_BUNDLE_ID="${KANAMA_IOS_GATE_BUNDLE_ID:-net.multigesture.kanama.devicegate}"
 # Task 111: the demos runner reads this for the launch stage (see its usage); default on.
@@ -58,10 +59,12 @@ Options:
   --demos-only                 Run only the nine-demo matrix.
   --start-at NAME              Start the demo matrix at NAME. Useful for
                                resuming after an interrupted run.
-  --keep-installed             Do not uninstall older Kanama gate apps before
-                               each step. By default the gate removes older
-                               known Kanama gate apps before installing the
-                               next one, but leaves the active app installed.
+  --keep-installed             Do not uninstall older Kanama gate apps. By
+                               default each step installs its app first and
+                               then removes the other known Kanama apps (before
+                               it only to stay within a free account's three
+                               apps), so the phone always keeps one and with it
+                               the trust in the developer.
   --pause-seconds N            Warning countdown before each device launch.
   --build-jobs N               Build the demo apps N at a time (default 1). Each job builds in
                                its own throwaway worktree of this repo at HEAD (the tree must be
@@ -80,6 +83,11 @@ Options:
                                and exit; with --fresh-only / --demos-only / --start-at it judges that plan
                                (an unknown --start-at exits 2, as a run does). Needs no device or
                                environment (the verdict's red runs, task 138 item 10).
+  --check-cleanup-plan FILE    Only replay the gate's app cleanup over a saved
+                               `devicectl device info apps --json-output` listing
+                               and exit: FAIL when a step would leave the phone
+                               with no Kanama app or more than three developer
+                               apps. No device.
   --help, -h                   Show this help.
 
 The script reads private device/signing values only from the environment. Do not
@@ -145,6 +153,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --check-results)
       CHECK_RESULTS="${2:-}"
+      shift 2
+      ;;
+    --check-cleanup-plan)
+      CHECK_CLEANUP_PLAN="${2:-}"
       shift 2
       ;;
     --help|-h)
@@ -295,6 +307,196 @@ results_verdict() {
   fi
 }
 
+# Which apps the gate removes, and when. With a free Apple account (the usual way to run this gate) iOS trusts the
+# developer only while at least one app that developer signed is installed: when the last one leaves the phone the
+# trust goes with it, and every later launch is refused ("its profile has not been explicitly trusted by the user")
+# until someone taps Settings > General > VPN & Device Management on the phone. The account also allows at most
+# three apps from its team on one device; other developers' apps do not use those slots. The gate used to uninstall
+# every known Kanama app before each step, which left the phone with none between the uninstall and the install.
+# The order now, for a step that installs KEEP:
+#   before  only to make room: when KEEP is not installed yet and the phone already holds IOS_FREE_APP_LIMIT apps of
+#           this team, remove other known Kanama apps until one fewer remain, but never the last Kanama app. When
+#           that is not enough (the team's other apps fill the slots), warn: the install will be refused, and only
+#           a person can say which of those apps may go. A reinstall of KEEP needs no room.
+#   after   once KEEP is on the phone, remove the other known Kanama apps; KEEP stays. When the step did not install
+#           KEEP (a failed build), leave everything as it is.
+# Only bundles the gate knows (the starter, the demos, the gate id) are ever removed. Which apps are this team's:
+# a listing that names each app's team (`teamIdentifier`) is compared with KANAMA_IOS_TEAM; devicectl's listing
+# names none (Xcode 27), and then the known Kanama bundles are this team's and every other app another team's.
+# The apps are passed as `<bundle id>@ours` / `<bundle id>@other` (apps_from_listing). Prints the bundle ids to
+# uninstall, one per line, in order; the warning goes to stderr.
+IOS_FREE_APP_LIMIT=3
+all_gate_bundles=("$fresh_bundle" "${demo_bundles[@]}" "$GATE_BUNDLE_ID")
+
+is_gate_bundle() {
+  local candidate="$1" bundle_id
+  for bundle_id in "${all_gate_bundles[@]}"; do
+    [[ "$candidate" == "$bundle_id" ]] && return 0
+  done
+  return 1
+}
+
+cleanup_plan() {
+  local phase="$1" keep="$2"
+  shift 2
+  local count=0 keep_installed=0 app bundle_id
+  local -a removable=()
+  for app in "$@"; do
+    bundle_id="${app%@*}"
+    [[ "${app##*@}" == "ours" ]] && count=$((count + 1))
+    if [[ "$bundle_id" == "$keep" ]]; then
+      keep_installed=1
+    elif [[ "${app##*@}" == "ours" ]] && is_gate_bundle "$bundle_id"; then
+      removable+=("$bundle_id")
+    fi
+  done
+  case "$phase" in
+    before)
+      [[ "$keep_installed" -eq 1 ]] && return 0
+      local kanama=${#removable[@]}
+      for bundle_id in ${removable[@]+"${removable[@]}"}; do
+        # Never the last Kanama app: the trust leaves with it.
+        if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" || "$kanama" -le 1 ]]; then
+          break
+        fi
+        echo "$bundle_id"
+        count=$((count - 1))
+        kanama=$((kanama - 1))
+      done
+      if [[ "$count" -ge "$IOS_FREE_APP_LIMIT" ]]; then
+        echo "[ios_device_gate] warning: cannot make room for $keep: the phone holds $count apps from this team (the free account's limit is $IOS_FREE_APP_LIMIT) and the gate keeps the last Kanama app, so the install will be refused. Remove one of this team's other apps from the phone by hand, then re-run." >&2
+      fi
+      ;;
+    after)
+      # The step did not install KEEP (a failed build): leave every app where it is.
+      [[ "$keep_installed" -eq 1 ]] || return 0  # justified: removing nothing never costs the trust; the step's own row is the verdict
+      for bundle_id in ${removable[@]+"${removable[@]}"}; do
+        echo "$bundle_id"
+      done
+      ;;
+  esac
+}
+
+# The developer apps in a `devicectl device info apps --json-output` file, one `<bundle id>@ours|other` per line
+# (see cleanup_plan for which apps are this team's). TEAM is KANAMA_IOS_TEAM, empty when unset.
+apps_from_listing() {
+  python3 - "$1" "${KANAMA_IOS_TEAM:-${KANAMA_IOS_DEVELOPMENT_TEAM:-}}" "${all_gate_bundles[@]}" <<'PY'
+import json
+import sys
+
+listing, team, known = sys.argv[1], sys.argv[2], set(sys.argv[3:])
+with open(listing, encoding="utf-8") as handle:
+    apps = json.load(handle)["result"]["apps"]
+for app in apps:
+    bundle = app.get("bundleIdentifier")
+    if not bundle or not app.get("builtByDeveloper", True):
+        continue  # justified: an app with no bundle id, or one no developer installed, takes no slot of the free account
+    app_team = app.get("teamIdentifier")
+    ours = (app_team == team) if (app_team and team) else bundle in known
+    print(f"{bundle}@{'ours' if ours else 'other'}")
+PY
+}
+
+# `--check-cleanup-plan APPS_JSON` (no device): replays a whole gate run over a saved `devicectl device info apps`
+# listing with the plan above (the fresh starter, then every demo under the gate id), once with every step installing
+# its app and once with every step failing before its install. It fails when a step would leave the phone with no
+# Kanama app of this team, when an install would pass the team's limit although the plan could have made room, and
+# when the plan's "cannot make room" warning is missing where room cannot be made or printed where it can. An
+# install the phone has no room for is refused there too, so the replay then goes on without it.
+cleanup_plan_verdict() {
+  local listing="$1" initial outcome keep app bundle_id step_problems=0 warnings
+  local -a phone=() next=() steps=("$fresh_bundle")
+  if ! initial="$(apps_from_listing "$listing")"; then
+    echo "[ios_device_gate] could not read the app listing $listing" >&2
+    return 1
+  fi
+  warnings="$(mktemp "${TMPDIR:-/tmp}/kanama_ios_plan.XXXXXX")"
+  for bundle_id in "${demo_bundles[@]}"; do steps+=("$GATE_BUNDLE_ID"); done
+  for outcome in installed failed; do
+    phone=()
+    for app in $initial; do phone+=("$app"); done
+    if [[ "$(ours_kanama_count ${phone[@]+"${phone[@]}"})" -eq 0 ]]; then
+      echo "[ios_device_gate] the listing $listing holds no Kanama app of this team; the plan check needs at least one" >&2
+      rm -f "$warnings"
+      return 1
+    fi
+    for keep in "${steps[@]}"; do
+      local phase
+      for phase in before install after; do
+        if [[ "$phase" == "install" ]]; then
+          if [[ "$outcome" == "installed" ]] && ! printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -qxF "$keep@ours"; then
+            local ours kanama_others
+            ours="$(printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -c '@ours$' || true)"  # justified: grep -c prints 0 and exits 1 when no line matches
+            kanama_others="$(ours_kanama_count ${phone[@]+"${phone[@]}"})"
+            if [[ "$ours" -lt "$IOS_FREE_APP_LIMIT" ]]; then
+              phone+=("$keep@ours")
+            elif [[ "$kanama_others" -gt 1 ]]; then
+              echo "[ios_device_gate] the install of $keep would make $((ours + 1)) apps from this team ($outcome steps), more than the free account's $IOS_FREE_APP_LIMIT, although the plan could have removed another Kanama app first: the install is refused" >&2
+              step_problems=$((step_problems + 1))
+              break 2
+            fi  # else: no room the gate may make; iOS refuses the install, and the plan must have said so (below)
+          fi
+        else
+          local removals
+          removals="$(cleanup_plan "$phase" "$keep" ${phone[@]+"${phone[@]}"} 2>"$warnings")"
+          if [[ "$phase" == "before" ]]; then
+            local need_warning=0
+            if ! printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -qxF "$keep@ours" &&
+               [[ "$(printf '%s\n' ${phone[@]+"${phone[@]}"} | grep -c '@ours$' || true)" -ge "$IOS_FREE_APP_LIMIT" ]] &&  # justified: grep -c prints 0 and exits 1 when no line matches
+               [[ "$(ours_kanama_count ${phone[@]+"${phone[@]}"})" -le 1 ]]; then
+              need_warning=1
+            fi
+          fi
+          next=()
+          for app in ${phone[@]+"${phone[@]}"}; do
+            printf '%s\n' "$removals" | grep -qxF "${app%@*}" || next+=("$app")
+          done
+          phone=(${next[@]+"${next[@]}"})
+        fi
+        if [[ "$(ours_kanama_count ${phone[@]+"${phone[@]}"})" -eq 0 ]]; then
+          echo "[ios_device_gate] the cleanup would leave the phone with no Kanama app ($outcome steps, $phase $keep): iOS then drops the trust in the developer and refuses every launch" >&2
+          step_problems=$((step_problems + 1))
+          break 2
+        fi
+        # Judged after the removals, so a plan that removes the last Kanama app is named for that first.
+        if [[ "$phase" == "before" ]]; then
+          if [[ "$need_warning" -eq 1 ]] && ! grep -q 'cannot make room' "$warnings"; then
+            echo "[ios_device_gate] no 'cannot make room' warning for $keep ($outcome steps) although this team's other apps fill the phone: the install fails with no hint of what to remove" >&2
+            step_problems=$((step_problems + 1))
+            break 2
+          fi
+          if [[ "$need_warning" -eq 0 ]] && grep -q 'cannot make room' "$warnings"; then
+            echo "[ios_device_gate] a 'cannot make room' warning for $keep ($outcome steps) although the phone has room for it or the gate can make some: only this team's apps count toward the limit" >&2
+            step_problems=$((step_problems + 1))
+            break 2
+          fi
+        fi
+      done
+    done
+  done
+  rm -f "$warnings"
+  [[ "$step_problems" -eq 0 ]]
+}
+
+# How many of the given `<bundle id>@ours|other` apps are known Kanama bundles of this team.
+ours_kanama_count() {
+  local app n=0
+  for app in "$@"; do
+    if [[ "${app##*@}" == "ours" ]] && is_gate_bundle "${app%@*}"; then n=$((n + 1)); fi
+  done
+  echo "$n"
+}
+
+if [[ -n "$CHECK_CLEANUP_PLAN" ]]; then
+  if [[ ! -f "$CHECK_CLEANUP_PLAN" ]]; then
+    echo "[ios_device_gate] --check-cleanup-plan: no such file: $CHECK_CLEANUP_PLAN" >&2
+    exit 2
+  fi
+  cleanup_plan_verdict "$CHECK_CLEANUP_PLAN" || exit 1
+  echo "[ios_device_gate] cleanup plan: PASS (a Kanama app stays on the phone, room is made whenever the gate may make it, and a full phone is named; $CHECK_CLEANUP_PLAN)"
+  exit 0
+fi
+
 if [[ -n "$CHECK_RESULTS" ]]; then
   if [[ ! -f "$CHECK_RESULTS" ]]; then
     echo "[ios_device_gate] --check-results: no such file: $CHECK_RESULTS" >&2
@@ -405,6 +607,17 @@ warn_before_launch() {
   fi
 }
 
+# A launch refused because the phone does not trust the developer refuses every later step too, until someone
+# re-trusts it on the phone: stop the matrix instead of building every demo to the same refusal. The step's own log
+# carries the message (ios_visual_smoke.sh and the demos runner print "VPN & Device Management" with what to tap).
+stop_on_untrusted_developer() {
+  local log_path="$1"
+  if [[ -f "$log_path" ]] && grep -q 'VPN & Device Management' "$log_path"; then
+    echo "[ios_device_gate] iOS refused the launch, most likely because the phone does not trust the developer. On the phone open Settings > General > VPN & Device Management, trust the Apple Development entry, then re-run (--start-at resumes the matrix). Stopping here; see $log_path" >&2
+    exit 1
+  fi
+}
+
 # Task 105: the runner writes the demo's device console to <output-dir>/<App>/console.log; keep a
 # copy beside the step log so the summary's log column and the crash evidence sit together.
 keep_console_log() {
@@ -422,25 +635,42 @@ append_result() {
   printf '%s\t%s\t%s\t%s\n' "$name" "$status" "$elapsed" "$log_path" >>"$RESULTS_TSV"
 }
 
-all_gate_bundles=("$fresh_bundle" "${demo_bundles[@]}")
-
 uninstall_bundle() {
   local bundle_id="$1"
-  if [[ "$CLEAN_INSTALLED" -ne 1 ]]; then
-    return
-  fi
+  echo "[ios_device_gate] uninstalling $bundle_id"
   DEVELOPER_DIR="$XCODE_DEVELOPER_DIR" xcrun devicectl device uninstall app \
     --device "$DEVICE_ID" \
-    "$bundle_id" >/dev/null 2>&1 || true  # justified: the bundle is usually not installed; the next install and launch are the checks
+    "$bundle_id" >/dev/null 2>&1 || true  # justified: best-effort tidying; the next install and launch are the checks
 }
 
-uninstall_other_gate_bundles() {
-  local keep_bundle="$1"
-  local bundle_id
-  for bundle_id in "${all_gate_bundles[@]}" "$GATE_BUNDLE_ID"; do
-    if [[ "$bundle_id" != "$keep_bundle" ]]; then
-      uninstall_bundle "$bundle_id"
-    fi
+# The developer-built apps on the phone, one `<bundle id>@ours|other` per line, from `devicectl device info apps` (it
+# lists only apps a developer installed). Returns 1 when the phone cannot be listed.
+installed_developer_apps() {
+  local listing
+  listing="$(mktemp "${TMPDIR:-/tmp}/kanama_ios_apps.XXXXXX")"
+  if ! DEVELOPER_DIR="$XCODE_DEVELOPER_DIR" xcrun devicectl device info apps --device "$DEVICE_ID" \
+       --json-output "$listing" >/dev/null 2>&1; then  # justified: the status is the answer; the caller warns and skips the cleanup
+    rm -f "$listing"
+    return 1
+  fi
+  local status=0
+  apps_from_listing "$listing" || status=$?
+  rm -f "$listing"
+  return "$status"
+}
+
+# Remove or keep apps around a step: run `cleanup_plan before|after KEEP` and uninstall what it names. Skipped with
+# --keep-installed, and (with a warning) when the phone cannot be listed: removing nothing never costs the trust.
+tidy_gate_apps() {
+  local phase="$1" keep="$2" installed bundle_id
+  [[ "$CLEAN_INSTALLED" -eq 1 ]] || return 0  # justified: --keep-installed asks for no cleanup; the steps' rows are the verdict
+  if ! installed="$(installed_developer_apps)"; then
+    echo "[ios_device_gate] warning: could not list the apps on the phone; leaving them as they are ($phase $keep)" >&2
+    return 0
+  fi
+  # shellcheck disable=SC2086  # one app per line, no spaces
+  for bundle_id in $(cleanup_plan "$phase" "$keep" $installed); do
+    uninstall_bundle "$bundle_id"
   done
 }
 
@@ -545,7 +775,7 @@ fi
 echo "[ios_device_gate] private device/team values are read from environment only."
 
 if [[ "$RUN_FRESH" -eq 1 ]]; then
-  uninstall_other_gate_bundles "$fresh_bundle"
+  tidy_gate_apps before "$fresh_bundle"
   fresh_args=(
     "$ROOT_DIR/scripts/ios_visual_smoke.sh"
     --godot "$GODOT_BIN"
@@ -559,6 +789,8 @@ if [[ "$RUN_FRESH" -eq 1 ]]; then
   # justified: run_step records the FAIL itself; keep going so the demo matrix still runs
   # and the final aggregation below decides the overall exit status.
   run_step "fresh-starter-project" "$OUTPUT_DIR/fresh-starter.log" "${fresh_args[@]}" || true
+  tidy_gate_apps after "$fresh_bundle"
+  stop_on_untrusted_developer "$OUTPUT_DIR/fresh-starter.log"
 fi
 
 # Demo matrix, serial (the original path): build + install + launch per demo, in order.
@@ -581,7 +813,7 @@ run_demo_matrix_serial() {
       exit 1
     fi
     demo_run_path="$(prepare_demo_copy "$demo_path" "${demo_apps[$i]}")"
-    uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
+    tidy_gate_apps before "$GATE_BUNDLE_ID"
     # justified: run_step records the FAIL itself; the final aggregation below decides the exit status.
     run_step \
       "${demo_names[$i]}" \
@@ -593,6 +825,8 @@ run_demo_matrix_serial() {
       "${demo_apps[$i]}" \
       "$OUTPUT_DIR/${demo_apps[$i]}" || true  # justified: run_step already recorded the FAIL row
     keep_console_log "${demo_apps[$i]}"
+    tidy_gate_apps after "$GATE_BUNDLE_ID"
+    stop_on_untrusted_developer "$OUTPUT_DIR/${demo_apps[$i]}.log"
   done
 }
 
@@ -699,7 +933,7 @@ run_demo_matrix_parallel() {
       # justified: the demo was just recorded as a FAIL row (no build result at all).
       continue
     fi
-    uninstall_other_gate_bundles "$GATE_BUNDLE_ID"
+    tidy_gate_apps before "$GATE_BUNDLE_ID"
     # justified: run_step records the FAIL itself; the final aggregation below decides the exit status.
     KANAMA_IOS_RUN_STAGE=launch run_step \
       "${demo_names[$idx]}" \
@@ -711,6 +945,8 @@ run_demo_matrix_parallel() {
       "$app" \
       "$OUTPUT_DIR/$app" || true  # justified: run_step already recorded the FAIL row
     keep_console_log "$app"
+    tidy_gate_apps after "$GATE_BUNDLE_ID"
+    stop_on_untrusted_developer "$OUTPUT_DIR/$app.log"
   done
 }
 
