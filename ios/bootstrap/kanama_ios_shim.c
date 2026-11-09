@@ -3579,6 +3579,15 @@ static int64_t kanama_ios_encode_typed_elem(uint8_t *elem_variant, int32_t elem_
             kanama_ios_pod_record(v, 48, out_buf, buf_size, total);
             return 48;
         }
+        case KANAMA_IOS_PT_PROJECTION: {
+            // Godot 4.8: Array[Projection] (XR). 16x float32, column-major.
+            float v[16];
+            memset(v, 0, sizeof(v));
+            int32_t raw_index = kanama_ios_raw_value_index_by_pt(KANAMA_IOS_PT_PROJECTION);
+            if (raw_index >= 0) kanama_ios_raw_value_from_variant(raw_index, elem_variant, v);
+            kanama_ios_pod_record(v, 64, out_buf, buf_size, total);
+            return 64;
+        }
         case KANAMA_IOS_PT_PACKED_BYTE_ARRAY: {
             KANAMA_IOS_PACKED_ARRAY_STORAGE(cell);
             kanama_ios_cache_packed_byte_methods();

@@ -212,6 +212,34 @@ class Image(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
+     * Generates mipmaps for the image. Mipmaps are precalculated lower-resolution copies of the image
+     * that are automatically used if the image needs to be scaled down when rendered. They help
+     * improve image quality and performance when rendering. This method returns an error if the image
+     * is compressed, in a custom format, or if the image's width/height is `0`. Enabling `renormalize`
+     * when generating mipmaps for normal map textures will make sure all resulting vector values are
+     * normalized. It is possible to check if the image has mipmaps by calling `has_mipmaps` or
+     * `get_mipmap_count`. Calling `generate_mipmaps` on an image that already has mipmaps will replace
+     * existing mipmaps in the image. If `preserve_alpha_test_coverage` is `true` it automatically
+     * adjusts alpha values to maintain consistent coverage when alpha testing is used. This is
+     * especially useful for hair, foliage, or other alpha-tested materials, as it prevents fading or
+     * popping artifacts across mipmap levels (LODs). This option is intended for color textures and
+     * clamps the alpha channel in the 0.0 - 1.0 range. The `alpha_test_threshold` parameter is the
+     * alpha threshold used when preserving alpha test coverage across mipmap levels. The coverage is
+     * measured at mipmap 0 using the setting and the lower mipmaps are adjusted to match that
+     * coverage. Higher values preserve more detail, lower values create softer edges. Note that this
+     * threshold is independent from the `Alpha Scissor Threshold` set on the material and they both
+     * may need to be tuned for optimal results.
+     *
+     * Generated from Godot docs: Image.generate_mipmaps
+     */
+    fun generateMipmaps(renormalize: Boolean = false, preserveAlphaTestCoverage: Boolean = false, alphaTestThreshold: Double = 0.5): GodotError {
+        checkOpen()
+        val ret = GodotError(ObjectCalls.ptrcallWithTwoBoolDoubleArgsRetLong(Binds.generateMipmapsBind, segment, renormalize, preserveAlphaTestCoverage, alphaTestThreshold))
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * Removes the image's mipmaps.
      *
      * Generated from Godot docs: Image.clear_mipmaps
@@ -1766,6 +1794,11 @@ class Image(handle: GodotHandle) : Resource(handle) {
         @JvmField
         val flipYBind =
             ObjectCalls.getMethodBind("Image", "flip_y", FLIP_Y_HASH)
+
+        private const val GENERATE_MIPMAPS_HASH = 991832544L
+        @JvmField
+        val generateMipmapsBind =
+            ObjectCalls.getMethodBind("Image", "generate_mipmaps", GENERATE_MIPMAPS_HASH)
 
         private const val CLEAR_MIPMAPS_HASH = 3218959716L
         @JvmField
