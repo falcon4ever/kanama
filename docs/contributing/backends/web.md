@@ -1277,6 +1277,20 @@ Browser-specific notes:
   plus every gameplay and teardown invariant.
 - **Firefox** collects console errors through BiDi `log.entryAdded`.
 - **Chrome** collects CDP console/exception events and is the intended CI path.
+  On the hosted Linux runner it draws on SwiftShader (ANGLE on SwiftShader's
+  Vulkan; no flag reaches the runner's Mesa), and a heavy 3D level is slow
+  there: measured per frame on 2026-11-08, one frame of tpsdemo's level (about
+  9,500 draw calls) took 9-19 s under Godot 4.7.2 and 11-31 s under 4.8 beta 2,
+  depending on the runner, with the page's main thread blocked in a WebGL call
+  that waits for the GPU process. Firefox runs the same export at about 55 fps on
+  the same runner. A page answers an evaluate only between two frames, so the
+  Chrome driver gives `Runtime.evaluate` `PAGE_EVALUATE_TIMEOUT_MS` (60 s, in
+  `scripts/web/drivers/envelope.mjs`; other CDP commands keep 20 s), and the
+  tpsdemo driver waits for frames, not only for wall time: its input hold runs
+  until 200 physics calls as well as 4 s, its teardown reads at least three
+  samples. `scripts/web/tpsdemo_slow_page_selftest.mjs` drives it on a fake page
+  with these frame times, and on one that freezes, which must still fail inside
+  the cell's budget.
 
 The two WorkerThreadPool `PagedAllocator` lines printed after a `get_tree().quit()`
 from `_process` are an upstream Godot 4.7 shutdown diagnostic — reproduced by an

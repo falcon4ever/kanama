@@ -44,6 +44,7 @@ import {
   collectPayload,
   collectPerformance,
   mergeExercisedMembers,
+  PAGE_EVALUATE_TIMEOUT_MS,
 } from "./envelope.mjs";
 
 const DEMOS = { match3: runMatch3, bunnymark: runBunnymark, dodge: runDodge, web3d: runWeb3d, platformer: runPlatformer, squash: runSquash, fps: runFps, charactercontroller: runCharactercontroller, thirdperson: runThirdperson, racing: runRacing, citybuilder: runCitybuilder, tpsdemo: runTpsdemo, soak: runSoak, visibilityprobe: runVisibilityprobe, spike: runSpike, starter: runStarter };
@@ -265,15 +266,17 @@ async function main() {
 
     // Per-call timeout: a CDP command whose response is dropped (e.g. a race
     // with navigation destroying the execution context) must surface as an
-    // error, never hang the whole driver past the smoke budget.
+    // error, never hang the whole driver past the smoke budget. An evaluate
+    // waits for the page's current frame to end, so it gets the page's limit
+    // (PAGE_EVALUATE_TIMEOUT_MS, which says why), every other command 20 s.
     const CALL_TIMEOUT_MS = 20_000;
-    const call = (method, params = {}) => {
+    const call = (method, params = {}, timeoutMs = CALL_TIMEOUT_MS) => {
       const id = nextId++;
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           pendingCalls.delete(id);
-          reject(new Error(`CDP ${method} timed out after ${CALL_TIMEOUT_MS}ms`));
-        }, CALL_TIMEOUT_MS);
+          reject(new Error(`CDP ${method} timed out after ${timeoutMs}ms`));
+        }, timeoutMs);
         pendingCalls.set(id, {
           resolve: (value) => {
             clearTimeout(timer);
@@ -288,11 +291,18 @@ async function main() {
       });
     };
     const evaluate = async (expression) => {
-      const result = await call("Runtime.evaluate", {
-        expression,
-        returnByValue: true,
-        awaitPromise: true,
-      });
+      const startedEvaluate = Date.now();
+      const result = await call(
+        "Runtime.evaluate",
+        { expression, returnByValue: true, awaitPromise: true },
+        PAGE_EVALUATE_TIMEOUT_MS,
+      );
+      // A slow answer is a long frame (the page runs scripts only between frames): the driver log
+      // says so, so a red cell shows how close the page came to the limit.
+      const answeredMs = Date.now() - startedEvaluate;
+      if (answeredMs > 10_000 && process.env.KANAMA_WEB_SMOKE_DEBUG === "1") {
+        process.stderr.write(`[chrome_cdp] the page answered an evaluate after ${(answeredMs / 1000).toFixed(1)}s (a long frame)\n`);
+      }
       if (result.exceptionDetails) {
         throw new Error(
           result.exceptionDetails.exception?.description ?? result.exceptionDetails.text,
