@@ -163,7 +163,7 @@ jobs:
   # scripts/gate_red_runs.py in a throwaway worktree. --strict makes a skipped case a failure; the one case
   # that needs a Godot docs checkout (sync_kdoc) is skipped on purpose here, by name. The Godot/Gradle smokes
   # run nightly (gate-red-runs-nightly.yml). Not part of local_ci.sh: it takes several minutes, so CI splits the
-  # cases over three parallel shards (--shard K/3, every third case).
+  # cases over four parallel shards (--shard K/4, every fourth case; three hit the 30-minute limit in Nov 2026).
   gate-red-runs:
     name: gate red runs (fast set)
     needs: changes
@@ -173,7 +173,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
+        shard: [1, 2, 3, 4]
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -186,7 +186,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-        run: python3 scripts/gate_red_runs.py --strict --allow-skip sync_kdoc --shard ${{ matrix.shard }}/3
+        run: python3 scripts/gate_red_runs.py --strict --allow-skip sync_kdoc --shard ${{ matrix.shard }}/4
 
   # The GDExtension header is platform-independent; dump it once here and share
   # it (matches package.yml). The iOS C shim needs it to compile; the Android

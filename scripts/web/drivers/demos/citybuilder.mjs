@@ -10,7 +10,7 @@
 // smoke_teardown releases hydrated structure assets, frees the Audio autoload
 // and the scene root, draining every live handle to zero.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, PageTimeoutError } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Cells the authored sample city occupies -- 122 structures in `sample map/map.tres`,
@@ -74,7 +74,8 @@ async function usedCells(evaluate) {
       });
       return { count: cells.length, items };
     })()`);
-  } catch {
+  } catch (error) {
+    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait
     return null;
   }
 }
@@ -83,10 +84,12 @@ async function usedCells(evaluate) {
 // mid-frame) -- the same one-shot flake shape kanama#170's validation caught on the
 // op-138 position reads. Retries are BOUNDED and the caller's null handling is
 // unchanged, so a grid that STAYS unreadable still fails exactly as loudly as before.
-async function usedCellsRetry(evaluate, attempts = 5) {
+// A page that does not answer at all (PageTimeoutError) is not retried, and no retry starts past
+// the deadline: either would only multiply the evaluate limit.
+async function usedCellsRetry(evaluate, deadline, attempts = 5) {
   for (let attempt = 1; ; attempt += 1) {
     const cells = await usedCells(evaluate);
-    if (cells || attempt >= attempts) return cells;
+    if (cells || attempt >= attempts || Date.now() >= deadline) return cells;
     trace(`grid read null (attempt ${attempt}/${attempts}); retrying`);
     await delay(250);
   }
@@ -188,7 +191,7 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline, export
     (snap) => snap.processCalls >= ready.processCalls + 30,
   );
   const baseline = settledStart.last ?? ready;
-  const baselineCells = await usedCellsRetry(evaluate);
+  const baselineCells = await usedCellsRetry(evaluate, deadline);
   if (!baselineCells) throw new Error("could not read the GridMap used cells");
   const selectorStart = await selectorPosition(evaluate);
   trace(`baseline: cells=${baselineCells.count} selector=${JSON.stringify(selectorStart)}`);
@@ -255,7 +258,7 @@ export async function runCitybuilder({ url, evaluate, navigate, deadline, export
   // fresh empty map -- a no-op on desktop and Web alike. The smoke skipping key 8 is what
   // let that survive: the one input that would have failed was the one never pressed.
   await tap("load_resources");
-  const sampleCells = await usedCellsRetry(evaluate);
+  const sampleCells = await usedCellsRetry(evaluate, deadline);
   trace(`sample map: cells=${sampleCells?.count} (expected ${SAMPLE_MAP_CELLS})`);
 
   // Full teardown: smoke_teardown releases hydrated structure assets, frees

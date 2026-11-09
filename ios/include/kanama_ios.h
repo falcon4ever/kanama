@@ -443,7 +443,7 @@ enum {
  * Typed ptrcall (same arg contract as kanama_ios_godot_ptrcall) whose return is a
  * PackedStringArray (blob_kind KANAMA_IOS_BLOB_PACKED_STRING_ARRAY) or a typed builtin Array
  * (KANAMA_IOS_BLOB_TYPED_ARRAY; elem_kind is the KANAMA_IOS_PT_* element selector: INT32/INT64,
- * PLANE, RID, VECTOR2I, VECTOR3I, VECTOR2, VECTOR3, RECT2, TRANSFORM3D, PACKED_BYTE_ARRAY,
+ * PLANE, RID, VECTOR2I, VECTOR3I, VECTOR2, VECTOR3, RECT2, TRANSFORM3D, PROJECTION, PACKED_BYTE_ARRAY,
  * PACKED_VECTOR2_ARRAY, PACKED_STRING_ARRAY, STRING, STRING_NAME, NODE_PATH), serialized to the
  * length-prefixed blob the no-arg read-backs use. The method runs ONCE. When the blob fits
  * buf_size it is written to out_buf; otherwise it is parked in a single pending slot and the

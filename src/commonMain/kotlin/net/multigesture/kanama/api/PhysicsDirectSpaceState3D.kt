@@ -118,6 +118,106 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
         return ret
     }
 
+    /**
+     * Intersects a ray in a given space. Ray position and other parameters are defined through
+     * `PhysicsRayQueryParameters3D`. If the ray hits a shape, this method returns `true` and writes
+     * the intersection information into the `PhysicsIntersectRayResult3D` object passed in `result`.
+     * If nothing is hit, it returns `false`.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_ray_into
+     */
+    fun intersectRayInto(parameters: PhysicsRayQueryParameters3D, result: PhysicsIntersectRayResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.intersectRayIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
+    /**
+     * Checks whether a point is inside any solid shape. Position and other parameters are defined
+     * through `PhysicsPointQueryParameters3D`. If one or more shapes overlap the point, this method
+     * returns `true` and writes the intersection data into the `PhysicsIntersectPointResult3D` object
+     * passed in `result`. If no intersections are found, it returns `false`. The number of
+     * intersections can be limited using `PhysicsIntersectPointResult3D.max_intersections`, to reduce
+     * the processing time.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_point_into
+     */
+    fun intersectPointInto(parameters: PhysicsPointQueryParameters3D, result: PhysicsIntersectPointResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.intersectPointIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
+    /**
+     * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
+     * against the space. If one or more shapes are found to intersect, this method returns `true` and
+     * writes the intersection data into the `PhysicsIntersectShapeResult3D` object passed in `result`.
+     * If no shapes are found to intersect, it returns `false`. The number of intersections can be
+     * limited using `PhysicsIntersectShapeResult3D.max_intersections`, to reduce the processing time.
+     * Note: This method does not take into account the `motion` property of the object.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.intersect_shape_into
+     */
+    fun intersectShapeInto(parameters: PhysicsShapeQueryParameters3D, result: PhysicsIntersectShapeResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.intersectShapeIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
+    /**
+     * Checks how far a `Shape3D` can move without colliding. All the parameters for the query,
+     * including the shape and the motion, are supplied through a `PhysicsShapeQueryParameters3D`
+     * object. If the query is successful, this method returns `true` and writes the motion results
+     * into the `PhysicsCastMotionResult3D` object passed in `result`. If no collision occurs, it
+     * returns `false`. Note: Any `Shape3D`s that the shape is already colliding with e.g. inside of,
+     * will be ignored. Use `collide_shape_into` to determine the `Shape3D`s that the shape is already
+     * colliding with.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.cast_motion_into
+     */
+    fun castMotionInto(parameters: PhysicsShapeQueryParameters3D, result: PhysicsCastMotionResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.castMotionIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
+    /**
+     * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
+     * against the space. If intersections are found, this method returns `true` and writes the
+     * collision points into the `PhysicsCollideShapeResult3D` object passed in `result`. If no
+     * intersections are found, it returns `false`. The number of returned results can be limited using
+     * `PhysicsCollideShapeResult3D.max_collisions`, to reduce the processing time. Note: This method
+     * does not take into account the `motion` property of the object.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.collide_shape_into
+     */
+    fun collideShapeInto(parameters: PhysicsShapeQueryParameters3D, result: PhysicsCollideShapeResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.collideShapeIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
+    /**
+     * Checks the intersections of a shape, given through a `PhysicsShapeQueryParameters3D` object,
+     * against the space. If the shape collides with one or more shapes, this method returns `true` and
+     * writes the nearest collision information into the `PhysicsGetRestInfoResult3D` object passed in
+     * `result`. If no collisions occur, it returns `false`. Note: This method does not take into
+     * account the `motion` property of the object.
+     *
+     * Generated from Godot docs: PhysicsDirectSpaceState3D.get_rest_info_into
+     */
+    fun getRestInfoInto(parameters: PhysicsShapeQueryParameters3D, result: PhysicsGetRestInfoResult3D): Boolean {
+        val ret = ObjectCalls.ptrcallWithTwoObjectArgsRetBool(Binds.getRestInfoIntoBind, segment, parameters.requireOpenHandle(), result.requireOpenHandle())
+        ObjectCalls.keepReachable(parameters)
+        ObjectCalls.keepReachable(result)
+        return ret
+    }
+
     companion object {
         @JvmStatic
         fun fromHandle(handle: GodotHandle): PhysicsDirectSpaceState3D? =
@@ -157,5 +257,35 @@ open class PhysicsDirectSpaceState3D(handle: GodotHandle) : GodotObject(handle) 
         @JvmField
         val getRestInfoBind =
             ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "get_rest_info", GET_REST_INFO_HASH)
+
+        private const val INTERSECT_RAY_INTO_HASH = 1101524092L
+        @JvmField
+        val intersectRayIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_ray_into", INTERSECT_RAY_INTO_HASH)
+
+        private const val INTERSECT_POINT_INTO_HASH = 4224456912L
+        @JvmField
+        val intersectPointIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_point_into", INTERSECT_POINT_INTO_HASH)
+
+        private const val INTERSECT_SHAPE_INTO_HASH = 2386936143L
+        @JvmField
+        val intersectShapeIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "intersect_shape_into", INTERSECT_SHAPE_INTO_HASH)
+
+        private const val CAST_MOTION_INTO_HASH = 1750186052L
+        @JvmField
+        val castMotionIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "cast_motion_into", CAST_MOTION_INTO_HASH)
+
+        private const val COLLIDE_SHAPE_INTO_HASH = 117908487L
+        @JvmField
+        val collideShapeIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "collide_shape_into", COLLIDE_SHAPE_INTO_HASH)
+
+        private const val GET_REST_INFO_INTO_HASH = 383425697L
+        @JvmField
+        val getRestInfoIntoBind =
+            ObjectCalls.getMethodBind("PhysicsDirectSpaceState3D", "get_rest_info_into", GET_REST_INFO_INTO_HASH)
     }
 }

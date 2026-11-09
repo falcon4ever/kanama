@@ -197,9 +197,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1950` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:2015` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:2066` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:1968` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:2033` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2084` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:602` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -478,8 +478,8 @@ on the committed branch (`--markdown`): the fast set (253 cases) took about 25 m
 with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
 
 **CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
-every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over three
-parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes each).
+every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over four
+parallel shards (`--shard 1/4` … `4/4`, every fourth case; about 15 to 20 minutes each).
 `gate-red-runs-nightly.yml` runs `--slow` nightly; it installs the Android export template and Godot's Android settings
 (the runner's SDK, a debug keystore) so the export guard's real Android exports run there too. It is not part of `local_ci.sh` (it takes minutes).
 Its twelve shards are sized for the slowest runner: hosted runners differ by a factor of 1.9, and the whole `--slow` set
@@ -590,6 +590,8 @@ that build itself resolves; the rest goes back to being fetched by the cases, wi
 | `generate_api_exercise.py --check (known finding names no row)` | a KNOWN_FINDINGS entry names a row the generator does not write (renamed or gone): it would hide nothing and stay forever | `[api_exercise] FAIL KNOWN_FINDINGS names A CharFXTransform.font_red_run, which is not a generated row; delete or fix the entry / [api_exercise] FAIL src/commonMain/kotlin/net/multigesture/kanama/exerc` | green |
 | `generate_api_exercise.py --check (RID source no row takes)` | a `RID_ARG_SOURCES` entry names a RID argument no row passes (renamed or gone): it would make and free a RID for nothing | `[api_exercise] FAIL RID_ARG_SOURCES names TextServer argument `red_run`, which no B or D row of TextServer takes: delete the entry / [api_exercise] FAIL docs/reference/generated/api-exercise.md is sta` | green |
 | `generate_api_exercise.py --check (row arguments of no row)` | a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused | `[api_exercise] FAIL ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B or D row: delete the entry / [api_exercise] FAIL docs/reference/generated/api-exercise.md is stale: regenerate ` | green |
+| `generate_api_exercise.py --check (scene row of no call)` | a `SCENE_ROWS` entry names a method no wrapper calls (renamed or gone): its row would run nothing | `[api_exercise] FAIL SCENE_ROWS names XRInterface.get_camera_offsets_red_run, which no wrapper calls: delete the entry` | green |
+| `generate_api_exercise.py --check (scene row case)` | a `SCENE_ROWS` entry claims a case its row cannot be: the case decides which verdict calls it counts under | `[api_exercise] FAIL SCENE_ROWS[PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation] is case A; a scene row is B, D or F` | green |
 | `generate_api_exercise.py --check (rule order)` | the case ranking puts property pairs before statics: the toy-API fixture and the committed page both catch it | `[api_exercise] FAIL scripts/fixtures/api_exercise/rules.expected.txt does not match the rules run on the fixture API (a classification rule changed); review the diff of --write-fixture / [api_exercise` | green |
 | `generate_web_exercise.py --check (shape without a row)` | a Web call shape of the contract has no exercise row (here: the row names a shape the contract lacks) | `UTILITY_NOARGS_VOID: the contract shape has no exercise row / UTILITY_NOARGS_VOID_RED_RUN: not a contract shape` | green |
 | `generate_web_exercise.py --check (rows hand-edited)` | a generated Web exercise row is edited by hand (an oracle row made a reach row): the committed probe must be the generator's | `[web_exercise] FAIL stale: web-runtime/src/web3dSmoke/web/kotlin-src/ApiExerciseProbe.kt (run python3 scripts/generate_web_exercise.py)` | green |

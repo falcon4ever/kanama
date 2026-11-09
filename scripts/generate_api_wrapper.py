@@ -255,6 +255,7 @@ SCALAR_KOTLIN_TYPES = {
     "TypedPackedStringArray": "List<List<String>>",
     "TypedPackedVector2Array": "List<List<Vector2>>",
     "TypedPlaneArray": "List<Plane>",
+    "TypedProjectionArray": "List<Projection>",
     "TypedRect2Array": "List<Rect2>",
     "TypedTransform3DArray": "List<Transform3D>",
     "TypedVector2Array": "List<Vector2>",
@@ -624,6 +625,7 @@ IOS_ARG_KINDS = {
     "TypedStringNameArray",
     "TypedNodePathArray",
     "TypedVector2iArray",
+    "TypedProjectionArray",
     "TypedTransform3DArray",
     "TypedPlaneArray",
     "TypedPackedVector2Array",
@@ -1913,6 +1915,8 @@ def kotlin_default_expression(default_value: str | None, logical_kind: str) -> s
         return "null"
     if logical_kind in {"Array", "PackedStringArray"} and default_value == "[]":
         return "emptyList()"
+    if logical_kind == "TypedTransform3DArray" and default_value == "Array[Transform3D]([])":
+        return "emptyList()"
     if logical_kind == "Dictionary" and default_value == "{}":
         return "emptyMap()"
     if logical_kind == "Vector2" and default_value in {"Vector2(0, 0)", "Vector2(0.0, 0.0)"}:
@@ -2277,6 +2281,7 @@ def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape 
     if logical_return == "int32":
         callable_int_helpers = {
             ("Object", "String", "Callable"): "ptrcallWithObjectStringCallableArgsRetInt",
+            ("String", "String", "Object", "Callable"): "ptrcallWithTwoStringObjectCallableArgsRetInt",
             ("String", "String", "Callable", "Callable", "Variant", "enum", "int32"): (
                 "ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt"
             ),
@@ -2312,11 +2317,13 @@ def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape 
         return CallShape("ptrcallWithObjectRIDCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
     if logical_return == "Object" and method.return_type == "OpenXRFutureResult":
         if (
-            len(logical_args) == 3
+            len(logical_args) == 4
             and typed_object_array_element(logical_args[0])
-            and logical_args[1:] == ("Object", "Callable")
+            and logical_args[1:] == ("Object", "Callable", "Callable")
         ):
-            return CallShape("ptrcallWithObjectListObjectCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
+            return CallShape(
+                "ptrcallWithObjectListObjectTwoCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL"
+            )
         if logical_args == ("RID", "PackedInt64Array", "Object", "Callable"):
             return CallShape("ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
         if (
@@ -5963,6 +5970,7 @@ IOS_TYPED_ARRAY_ARGS = {
     "TypedStringNameArray": ("List<String>", "packTypedStringNameArrayDesc"),
     "TypedNodePathArray": ("List<NodePath>", "packTypedNodePathArrayDesc"),
     "TypedVector2iArray": ("List<Vector2i>", "packTypedVector2iArrayDesc"),
+    "TypedProjectionArray": ("List<Projection>", "packTypedProjectionArrayDesc"),
     "TypedTransform3DArray": ("List<Transform3D>", "packTypedTransform3DArrayDesc"),
     "TypedPlaneArray": ("List<Plane>", "packTypedPlaneArrayDesc"),
     "TypedPackedVector2Array": ("List<List<Vector2>>", "packTypedPackedVector2ListArrayDesc"),
@@ -6381,6 +6389,7 @@ IOS_ARRAY_BLOB_RETURNS = {
     "typedarray::Vector2": ("ptrcallRetTypedVector2List", "List<Vector2>"),
     "typedarray::Vector3": ("ptrcallRetTypedVector3List", "List<Vector3>"),
     "typedarray::Rect2": ("ptrcallRetTypedRect2List", "List<Rect2>"),
+    "typedarray::Projection": ("ptrcallRetTypedProjectionList", "List<Projection>"),
     "typedarray::Transform3D": ("ptrcallRetTypedTransform3DList", "List<Transform3D>"),
     "typedarray::PackedVector2Array": ("ptrcallRetTypedPackedVector2ListList", "List<List<Vector2>>"),
     "typedarray::PackedByteArray": ("ptrcallRetTypedByteArrayList", "List<ByteArray>"),
