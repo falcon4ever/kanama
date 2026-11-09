@@ -1888,6 +1888,15 @@ case("web/dodge_restart_selftest.mjs (restart every run)", ["node", "scripts/web
 case("web/dodge_restart_selftest.mjs (forced collection)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "const takeCollected = () => snapshot(collecting(evaluate));", "const takeCollected = take;")],
      "healthy: checks red: noPerMobHandleRetention", "dodge's between-rounds trough stops forcing a collection: a mob's dropped SpriteFrames wrapper reads as a retained handle until the browser collects on its own (CI: 4 over 7 mobs)")
+case("web/dodge_restart_selftest.mjs (late collector)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "if (reference && !settled && samples > 0 && keys && startKeys) {", "if (false) {")],
+     "the collector runs after the next round's first mob (Safari): checks red: noPerMobHandleRetention", "dodge's retention trough stops following a round's leftover handles past the next round's first mob: a collector that runs late (Safari, which no page can force) reads as one handle retained per mob (1.0 in 6 of 10 local Safari runs)")
+case("web/dodge_restart_selftest.mjs (late collector, leak)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "Math.min(byKind[kind], (reference[kind] ?? 0) + (left[kind] ?? 0))", "Math.min(byKind[kind], reference[kind] ?? 0)")],
+     "one handle leaked per mob: noPerMobHandleRetention must be false", "dodge's extended retention trough stops counting the round's own handles still live: a real one-handle-per-mob leak settles there and passes")
+case("web/dodge_restart_selftest.mjs (late collector, slot reuse)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", 'push(index + "." + (slot.generation ?? 0));', "push(String(index));")],
+     "slot reuse): worstHandleRetentionPerMobX100 is", "dodge's extended retention trough keys a handle by its slot alone again: the bridge reuses a freed slot under a new generation, so a next-round mob in an old round's slot counts as retained and a leaked handle in a slot live at the round's start goes uncounted")
 case("web/dodge_restart_selftest.mjs (instant kill)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some((hit) => hit.mobs === 0),", "noHitBeforeFirstMob: true,")],
      "hit before round 1's first mob: noHitBeforeFirstMob must be false", "dodge stops failing a build where the player is hit before a round spawned a mob (resuming the round would hide it)")

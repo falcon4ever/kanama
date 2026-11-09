@@ -580,7 +580,12 @@ fallback). Because a freed script's dropped wrappers release its handles only on
 collects them, every demo driver's teardown check asks the page to collect before each poll
 (`collecting` in `scripts/web/drivers/envelope.mjs`: `gc()` on Chrome, an allocation burst on
 Firefox), so does dodge's per-mob retention trough between rounds, and match3's mid-game bound leaves
-out the RefCounted handles still pinned (`rcPinned`).
+out the RefCounted handles still pinned (`rcPinned`). Safari has no `gc()` and the burst does not
+reliably make it collect within the 2 seconds before dodge's next round spawns its first mob, so when
+a round's leftovers are still live then, the trough keeps following those handles by identity (the
+ones live at that moment that were not live when the round began) for up to 15 seconds of collecting
+polls while the next round plays. A late collector reads 0 per mob; a real leak never falls and reads
+1.0.
 
 The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
 `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,
