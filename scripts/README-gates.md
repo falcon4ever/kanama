@@ -478,8 +478,8 @@ on the committed branch (`--markdown`): the fast set (253 cases) took about 25 m
 with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
 
 **CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
-every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over three
-parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes each).
+every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over four
+parallel shards (`--shard 1/4` … `4/4`, every fourth case; about 15 to 20 minutes each).
 `gate-red-runs-nightly.yml` runs `--slow` nightly; it installs the Android export template and Godot's Android settings
 (the runner's SDK, a debug keystore) so the export guard's real Android exports run there too. It is not part of `local_ci.sh` (it takes minutes).
 Its twelve shards are sized for the slowest runner: hosted runners differ by a factor of 1.9, and the whole `--slow` set
