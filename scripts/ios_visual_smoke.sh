@@ -171,14 +171,14 @@ fi
 launch_refusal_verdict() {
   local reason
   if grep -Eqs 'has not been explicitly trusted|invalid code signature, inadequate entitlements' "$@"; then
-    echo "[ios_visual_smoke] iOS refused the launch: the developer that signed this app is not trusted on the phone. On the phone open Settings > General > VPN & Device Management, tap the Apple Development entry under Developer App and Trust it, then re-run. (A free Apple account loses this trust whenever its last app leaves the phone.)" >&2
+    echo "[ios_visual_smoke] iOS refused the launch, most likely because the phone does not trust the developer that signed this app (devicectl gives the same reason for a bad signature). On the phone open Settings > General > VPN & Device Management, tap the Apple Development entry under Developer App and Trust it, then re-run. (A free Apple account loses this trust whenever its last app leaves the phone.)" >&2
     return 1
   fi
   if grep -Eqs 'could not be, unlocked' "$@"; then
     echo "[ios_visual_smoke] iOS refused the launch: the device is locked. Unlock it and keep it awake (Settings > Display & Brightness > Auto-Lock: Never), then re-run." >&2
     return 1
   fi
-  if grep -Eqs 'failed to launch|RequestDenied' "$@"; then
+  if grep -Eqs 'The application failed to launch|BSErrorCodeDescription = RequestDenied' "$@"; then
     # justified: the reason line only decorates the message; the return 1 below is the verdict.
     reason="$(grep -Ehos 'Unable to launch[^(]*' "$@" | head -n 1 || true)"
     echo "[ios_visual_smoke] iOS refused the launch: ${reason:-see the launch log}" >&2

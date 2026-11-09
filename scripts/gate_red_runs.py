@@ -780,17 +780,33 @@ case("ios_device_gate.sh --check-results (--start-at plan, row missing)", IOS_RE
 case("ios_device_gate.sh --check-results (--start-at plan, skipped demo not SKIP)", IOS_RESULTS_START_AT_CHECK,
      [Edit(IOS_RESULTS_START_AT, "Starter-Kit-Racing\tSKIP", "Starter-Kit-Racing\tPASS")],
      "comes before --start-at Starter-Kit-FPS but its row is PASS, not SKIP", "a demo before the --start-at demo has a PASS row: the rows are not the ones this plan writes")
-# The gate's app cleanup (4.8 beta 2 rehearsal), replayed over a saved `devicectl device info apps` listing (three
-# Kanama apps, the free account's limit): the old order, every other Kanama app removed before each install, leaves
-# the phone with none and iOS drops the trust in the developer; no room made before the install passes the limit.
-IOS_CLEANUP_CHECK = ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", "scripts/fixtures/ios_installed_apps.json"]
+# The gate's app cleanup (4.8 beta 2 rehearsal), replayed over saved `devicectl device info apps` listings: three
+# Kanama apps (the free account's limit); devicectl's shape with two other developers' apps and one Kanama app; and a
+# listing that names teams, where two non-Kanama apps of this team and one Kanama app fill the slots. The old order
+# (every other Kanama app removed before each install) leaves the phone with none, and iOS drops the trust in the
+# developer; so does dropping the last-Kanama-app guard or the "after" guard; no room made passes the limit; and
+# counting other developers' apps toward the limit warns of a full phone that is not full.
+IOS_CLEANUP_LISTING = "scripts/fixtures/ios_installed_apps.json"
+IOS_CLEANUP_CHECK = ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", IOS_CLEANUP_LISTING]
 IOS_CLEANUP_BEFORE = '    before)\n      [[ "$keep_installed" -eq 1 ]] && return 0\n'
 case("ios_device_gate.sh --check-cleanup-plan (uninstall before install)", IOS_CLEANUP_CHECK,
      [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      printf \'%s\\n\' ${removable[@]+"${removable[@]}"}\n      return 0\n')],
      "would leave the phone with no Kanama app", "the old order returns: every other Kanama app is removed before the next install, and the phone holds none in between")
 case("ios_device_gate.sh --check-cleanup-plan (no room made)", IOS_CLEANUP_CHECK,
      [Edit("scripts/ios_device_gate.sh", IOS_CLEANUP_BEFORE, '    before)\n      return 0\n')],
-     "more than the free account's 3", "a phone already holding three developer apps gets a fourth: the install is refused")
+     "although the plan could have removed another Kanama app first", "a phone already holding three apps of this team gets a fourth although the gate could have removed a Kanama app: the install is refused")
+case("ios_device_gate.sh --check-cleanup-plan (after a failed step)", IOS_CLEANUP_CHECK,
+     [Edit("scripts/ios_device_gate.sh", '      [[ "$keep_installed" -eq 1 ]] || return 0  # justified: removing nothing never costs the trust; the step\'s own row is the verdict\n', "")],
+     "no Kanama app (failed steps, after", "the after-step cleanup runs although the step never installed its app: every Kanama app goes")
+case("ios_device_gate.sh --check-cleanup-plan (last Kanama app)",
+     ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", "scripts/fixtures/ios_installed_apps_shared_team.json"],
+     [Edit("scripts/ios_device_gate.sh", 'if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" || "$kanama" -le 1 ]]; then', 'if [[ "$count" -lt "$IOS_FREE_APP_LIMIT" ]]; then')],
+     "would leave the phone with no Kanama app", "this team's other apps fill the phone and the gate removes its last Kanama app to make room, instead of warning",
+     env={"KANAMA_IOS_TEAM": "TEAM000000"})
+case("ios_device_gate.sh --check-cleanup-plan (other developers' apps)",
+     ["bash", "scripts/ios_device_gate.sh", "--check-cleanup-plan", "scripts/fixtures/ios_installed_apps_other_teams.json"],
+     [Edit("scripts/ios_device_gate.sh", '    [[ "${app##*@}" == "ours" ]] && count=$((count + 1))\n', '    count=$((count + 1))\n')],
+     "only this team's apps count toward the limit", "other developers' apps are counted toward the free account's three: the gate warns of a full phone that has room")
 # A refused launch fails at once with what to do on the phone (4.8 beta 2 rehearsal): the saved launch output is
 # replayed as a console stream that stays open, so a wait that only ended on its timeout (120 s) would outlast the
 # case's own 60 s. The trust text is devicectl's own, captured from an iPhone that no longer trusted the developer.
@@ -814,6 +830,9 @@ case("ios_visual_smoke.sh --check-launch-wait (developer not trusted)", IOS_LAUN
      [Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_OK, IOS_LAUNCH_UNTRUSTED), Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_SCENE_INIT, "")],
      "Settings > General > VPN & Device Management", "the phone no longer trusts the developer: the launch must fail at once and say what to tap, not wait 120 s for a loader line",
      env={"KANAMA_IOS_LAUNCH_TIMEOUT": "120"}, timeout=60)
+case("ios_visual_smoke.sh --check-launch-wait (bare RequestDenied)", IOS_LAUNCH_CHECK,
+     [Edit("scripts/ios_visual_smoke.sh", "'The application failed to launch|BSErrorCodeDescription = RequestDenied'", "'failed to launch|RequestDenied'")],
+     "iOS refused the launch", "the refusal match loosens to the bare word: a healthy launch whose log carries a generated name ending in RequestDenied is read as refused")
 case("ios_visual_smoke.sh --check-launch-wait (device locked)", IOS_LAUNCH_CHECK,
      [Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_OK, IOS_LAUNCH_LOCKED), Edit(IOS_LAUNCH_LOG, IOS_LAUNCH_SCENE_INIT, "")],
      "the device is locked", "a locked phone refuses the launch: it fails at once with the unlock message, not the trust one",

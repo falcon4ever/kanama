@@ -286,8 +286,10 @@ attempt, so use a name such as `release/0.5.0-cut`. The steps:
    the current Godot pin. Run the ones that do not. A device gate needs the
    phone unlocked, and an iOS device gate needs Xcode signed in to an Apple
    account. A free Apple account allows only three apps on a device at a time,
-   and the phone trusts the developer only while one of them is installed:
-   `scripts/ios_device_gate.sh` installs each app before it removes the others.
+   and the phone trusts the developer only while one of them is installed.
+   `scripts/ios_device_gate.sh` installs each app before it removes the others;
+   when the phone is full it may remove one other Kanama app first, never the
+   last one, and it says so when your other apps fill the phone.
    If a run says the developer is not trusted, trust it on the phone under
    Settings > General > VPN & Device Management and run it again. The
    ledger fails the build when an accepted-stale entry's date has passed

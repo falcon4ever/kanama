@@ -18,7 +18,8 @@
 # KANAMA_GRADLE_ARGS. Godot's export runs the template's own gradlew with the environment the editor inherits from
 # this script, and GRADLE_OPTS' -Dorg.gradle.daemon=false is Gradle's documented switch for a build whose command
 # line we do not own; as the template's org.gradle.jvmargs differ from the client's, that build then runs in a
-# single-use daemon that exits with it. Never `gradlew --stop`: it would stop every daemon on the machine.
+# single-use daemon that exits with it, and it starts no Kotlin compile daemon (checked with ps on a dodge run).
+# Never `gradlew --stop`: it would stop every daemon on the machine.
 KANAMA_GRADLE_ARGS=(--no-daemon -Pkotlin.compiler.execution.strategy=in-process)
 export GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false"
 
