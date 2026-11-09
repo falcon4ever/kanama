@@ -29,13 +29,21 @@ releases follow the same runbook; the diff is just smaller.
 
 ## What You Need
 
-- The new Godot editor binary for your machine, and its export templates
-  (`.tpz`).
-- `JEXTRACT_HOME` pointing at a jextract 25+ install.
-- A Godot **source checkout at the matching tag**: KDoc is synced from its
-  `doc/classes`, and the script checks the checkout's `version.py` against the
-  pin. Never sync from `master`, or from a tree of another build. A prerelease
-  takes the commit of that build: its `version.py` says `beta` without the number.
+- The Godot editor and export templates from the `godot-builds` release for
+  the new version (`Godot_v<version>-stable_macos.universal.zip` on macOS,
+  `Godot_v<version>-stable_export_templates.tpz`; `<version>` is the dash form
+  the workflows use, such as `4.8-stable`, and a prerelease is `4.8-beta2`).
+  `GODOT_VERSION=<version> scripts/download_godot_macos.sh <zip>` downloads the
+  macOS editor.
+- `JEXTRACT_HOME` pointing at a jextract 25+ install, unpacked from the OpenJDK
+  jextract downloads.
+- A Godot **source checkout at the matching tag**:
+  `git clone --depth 1 --branch <version> https://github.com/godotengine/godot.git`
+  (`<version>` as above, such as `4.7.2-stable`). KDoc is synced from its
+  `doc/classes` (`--godot-docs`), and the script checks the checkout's
+  `version.py` against the pin. Never sync from `master`, or from a tree of
+  another build. A prerelease takes the commit of that build: its `version.py`
+  says `beta` without the number.
 - A clean working tree apart from the pin edit, so the bump diff stays
   reviewable.
 
@@ -160,15 +168,19 @@ These steps need a person or a device, so the script prints them and stops:
   `python3 scripts/generate_builtin_ops.py --record-parity <log>`, then `--write`.
   Each entry draws its inputs from a stream of its own, keyed by its name, so the
   other rows do not move, and the output is ktfmt-clean.
-- Re-run the platform smoke and device gates per the release-gate matrix (§6) in
-  the internal task repo, and record each run in `evidence/gates.json`.
+- Re-run the platform smoke and device gates listed in the "Local-only gates"
+  table of the [Gates Index](../reference/generated/gates.md), and record each
+  run in `evidence/gates.json` with `scripts/record_gate_evidence.py`.
+  [Device and Browser Runs](device-runs.md) says how to run them.
   **Support claims move only after the matching gate passes**; the upgrade
   tooling never edits support wording.
 - Re-import the demos with the new editor, commit the `.import` churn in the demos
   repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
 - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
   badges and version wording, templates (the release kit's Godot version is already
-  moved, step 6), and companion demo defaults. The demos' synced
+  moved, step 6), and companion demo defaults. Find the pages with
+  `git grep -n -I -E '<old Godot>|beta ?[0-9]' -- README.md docs/index.md docs/getting-started docs/exporting docs/reference/version-support.md docs/contributing/wrapper-maintenance.md`;
+  [Cutting a Release](release.md#cutting-a-release) lists them. The demos' synced
   `kanama.gdextension` copies take the new `compatibility_minimum` when the demos
   re-sync the addon.
 - Bump the KDoc docs-pin commit hash in

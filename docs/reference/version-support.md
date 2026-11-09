@@ -32,7 +32,7 @@ to 0.5.0; see [Godot Version](#godot-version).
 promised for your own game. Each status is for release 0.4.0 on Godot 4.7.2, and
 the runs behind it are on
 [Platform Evidence](../contributing/platform-evidence.md). The device and
-browser runs for Godot 4.8 happen before 0.5.0 is released.
+browser runs for Godot 4.8 are not part of those statuses.
 
 A desktop export carries its own Java runtime, and you can build it for any
 of the four desktop platforms from any of them. What does not work on
