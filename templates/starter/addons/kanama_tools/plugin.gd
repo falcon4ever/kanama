@@ -159,7 +159,7 @@ func _enter_tree() -> void:
     _ensure_project_settings()
     _ensure_editor_settings()
     _sync_runtime_jdk_hint()
-    get_editor_interface().get_editor_settings().settings_changed.connect(_on_editor_settings_changed)
+    EditorInterface.get_editor_settings().settings_changed.connect(_on_editor_settings_changed)
     call_deferred("_run_java_preflight")
     add_tool_menu_item(MENU_BUILD_SYNC, _on_build_sync_pressed)
     add_tool_menu_item(MENU_OPEN_KOTLIN_SOURCES, _on_open_kotlin_sources_pressed)
@@ -172,7 +172,7 @@ func _enter_tree() -> void:
     _export_guard = KanamaExportGuard.new()
     add_export_plugin(_export_guard)
     _install_toolbar_buttons()
-    var filesystem := get_editor_interface().get_resource_filesystem()
+    var filesystem := EditorInterface.get_resource_filesystem()
     if filesystem != null and not filesystem.filesystem_changed.is_connected(_on_filesystem_changed):
         filesystem.filesystem_changed.connect(_on_filesystem_changed)
     _warn_old_build_on_save_setting()
@@ -189,10 +189,10 @@ func _exit_tree() -> void:
     if FileAccess.file_exists(EDITOR_PID_FILE):
         DirAccess.remove_absolute(ProjectSettings.globalize_path(EDITOR_PID_FILE))
     _finish_pending_editor_docs()
-    var editor_settings := get_editor_interface().get_editor_settings()
+    var editor_settings := EditorInterface.get_editor_settings()
     if editor_settings != null and editor_settings.settings_changed.is_connected(_on_editor_settings_changed):
         editor_settings.settings_changed.disconnect(_on_editor_settings_changed)
-    var filesystem := get_editor_interface().get_resource_filesystem()
+    var filesystem := EditorInterface.get_resource_filesystem()
     if filesystem != null and filesystem.filesystem_changed.is_connected(_on_filesystem_changed):
         filesystem.filesystem_changed.disconnect(_on_filesystem_changed)
     remove_tool_menu_item(MENU_BUILD_SYNC)
@@ -218,7 +218,7 @@ func _exit_tree() -> void:
 # restarts that thread just before a failing --export-* quits. Asking for the docs here (the plugin
 # leaves while the editor still runs) waits for the thread, so its queued call runs in this frame.
 func _finish_pending_editor_docs() -> void:
-    var script_editor := get_editor_interface().get_script_editor()
+    var script_editor := EditorInterface.get_script_editor()
     if script_editor != null:
         script_editor.update_docs_from_script(get_script())
 
@@ -310,7 +310,7 @@ func _check_addon_version() -> void:
     if message.is_empty():
         return
     push_error(message)
-    var base_control := get_editor_interface().get_base_control()
+    var base_control := EditorInterface.get_base_control()
     if base_control == null:
         return
     var dialog := ConfirmationDialog.new()
@@ -461,7 +461,7 @@ func _refresh_developer_mode_controls() -> void:
 func _register_kotlin_syntax_highlighter() -> void:
     if _kotlin_syntax_highlighter != null:
         return
-    var script_editor := get_editor_interface().get_script_editor()
+    var script_editor := EditorInterface.get_script_editor()
     if script_editor == null:
         call_deferred("_register_kotlin_syntax_highlighter")
         return
@@ -474,7 +474,7 @@ func _register_kotlin_syntax_highlighter() -> void:
 func _unregister_kotlin_syntax_highlighter() -> void:
     if _kotlin_syntax_highlighter == null:
         return
-    var script_editor := get_editor_interface().get_script_editor()
+    var script_editor := EditorInterface.get_script_editor()
     if script_editor != null:
         script_editor.unregister_syntax_highlighter(_kotlin_syntax_highlighter)
     _kotlin_syntax_highlighter = null
@@ -483,7 +483,7 @@ func _unregister_kotlin_syntax_highlighter() -> void:
 ## 'kanama/build/jdk_path' is an EditorSettings entry (Editor > Editor Settings > Kanama > Build):
 ## a JDK path belongs to the machine, not to the project that is shared through version control.
 func _ensure_editor_settings() -> void:
-    var settings := get_editor_interface().get_editor_settings()
+    var settings := EditorInterface.get_editor_settings()
     if not settings.has_setting(SETTING_BUILD_JDK_PATH):
         settings.set_setting(SETTING_BUILD_JDK_PATH, "")
     settings.add_property_info({
@@ -716,12 +716,12 @@ func _kt_scan_roots() -> Array:
 # generated registrar .kt files there on every build, so watching it made each save build twice) and
 # Godot's android/ build template. A build/ or android/ folder deeper in the sources is compiled, so
 # it is watched.
-static func _is_kt_scan_skipped_dir(parent_path: String, name: String) -> bool:
-    if name.begins_with("."):
+static func _is_kt_scan_skipped_dir(parent_path: String, dir_name: String) -> bool:
+    if dir_name.begins_with("."):
         return true
-    if FileAccess.file_exists(parent_path.path_join(name).path_join(".gdignore")):
+    if FileAccess.file_exists(parent_path.path_join(dir_name).path_join(".gdignore")):
         return true
-    return parent_path == "res://" and (name == "build" or name == "android")
+    return parent_path == "res://" and (dir_name == "build" or dir_name == "android")
 
 
 func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
@@ -730,16 +730,16 @@ func _collect_kt_mtimes_recursive(dir_path: String, sink: Dictionary) -> void:
         return
     dir.list_dir_begin()
     while true:
-        var name := dir.get_next()
-        if name.is_empty():
+        var entry_name := dir.get_next()
+        if entry_name.is_empty():
             break
-        if name == "." or name == "..":
+        if entry_name == "." or entry_name == "..":
             continue
-        var child := dir_path.path_join(name)
+        var child := dir_path.path_join(entry_name)
         if dir.current_is_dir():
-            if not _is_kt_scan_skipped_dir(dir_path, name):
+            if not _is_kt_scan_skipped_dir(dir_path, entry_name):
                 _collect_kt_mtimes_recursive(child, sink)
-        elif name.to_lower().ends_with(".kt"):
+        elif entry_name.to_lower().ends_with(".kt"):
             sink[child] = FileAccess.get_modified_time(child)
     dir.list_dir_end()
 
@@ -1122,21 +1122,21 @@ func get_build_status() -> String:
 
 static func status_color(status: String) -> Color:
     var theme: Theme = EditorInterface.get_editor_theme() if Engine.is_editor_hint() else null
-    var name := ""
+    var color_name := ""
     var fallback := Color(0.6, 0.6, 0.6)
     match status:
         STATUS_CURRENT:
-            name = "success_color"
+            color_name = "success_color"
             fallback = Color(0.45, 0.95, 0.5)
         STATUS_STALE, STATUS_BUILDING:
-            name = "warning_color"
+            color_name = "warning_color"
             fallback = Color(1.0, 0.87, 0.4)
         STATUS_FAILED:
-            name = "error_color"
+            color_name = "error_color"
             fallback = Color(1.0, 0.47, 0.42)
-    if name.is_empty() or theme == null or not theme.has_color(name, "Editor"):
+    if color_name.is_empty() or theme == null or not theme.has_color(color_name, "Editor"):
         return fallback
-    return theme.get_color(name, "Editor")
+    return theme.get_color(color_name, "Editor")
 
 
 func _status_tooltip(status: String) -> String:
@@ -1197,7 +1197,7 @@ func _render_build_output() -> void:
             result = String(_last_build["reason"])
         text = "%s %s at %s.\n\n%s" % [_last_build["label"], result, _last_build["finished"], _last_build["output"]]
     if _output_dialog == null:
-        var base_control := get_editor_interface().get_base_control()
+        var base_control := EditorInterface.get_base_control()
         if base_control == null:
             return
         _output_dialog = AcceptDialog.new()
@@ -1511,19 +1511,19 @@ static func jdk_install_candidates(os_name: String, home_dir: String, program_fi
         var names: Array = []
         dir.list_dir_begin()
         while true:
-            var name := dir.get_next()
-            if name.is_empty():
+            var child_name := dir.get_next()
+            if child_name.is_empty():
                 break
-            if name == "." or name == "..":
+            if child_name == "." or child_name == "..":
                 continue
-            if not String(entry[2]).is_empty() and not name.begins_with(String(entry[2])):
+            if not String(entry[2]).is_empty() and not child_name.begins_with(String(entry[2])):
                 continue
             if dir.current_is_dir():
-                names.append(name)
+                names.append(child_name)
         dir.list_dir_end()
         names.sort()
-        for name in names:
-            var path := String(entry[0]).path_join(String(name))
+        for child_name in names:
+            var path := String(entry[0]).path_join(String(child_name))
             if not String(entry[1]).is_empty():
                 path = path.path_join(String(entry[1]))
             result.append(path)
@@ -1701,7 +1701,7 @@ func _on_setup_project_pressed() -> void:
         lines.append("Existing files were kept. Press Build Scripts to build your Kotlin scripts.")
     var message := "\n".join(lines)
     print("[kanama:tools] Set Up Kanama Project: %s" % message.replace("\n", " "))
-    var filesystem := get_editor_interface().get_resource_filesystem()
+    var filesystem := EditorInterface.get_resource_filesystem()
     if filesystem != null:
         filesystem.scan()
     # The files the setup added are not a save to build: Build Scripts does that when asked.
@@ -1712,7 +1712,7 @@ func _on_setup_project_pressed() -> void:
 
 
 func _show_setup_result(message: String) -> void:
-    var base_control := get_editor_interface().get_base_control()
+    var base_control := EditorInterface.get_base_control()
     if base_control == null:
         return
     var dialog := AcceptDialog.new()
@@ -1834,10 +1834,7 @@ static func _desktop_jvm_relative_path(os_name: String) -> String:
 
 
 func _show_java_preflight_dialog(message: String) -> void:
-    var editor := get_editor_interface()
-    if editor == null:
-        return
-    var base_control := editor.get_base_control()
+    var base_control := EditorInterface.get_base_control()
     if base_control == null:
         return
     var dialog := AcceptDialog.new()
@@ -1876,7 +1873,7 @@ func _wait_for_runtime_reload() -> void:
             push_warning("[kanama:tools] The Kanama runtime could not load the new build of your scripts; see the Output panel. The scene keeps the build it runs.")
             return
         await get_tree().process_frame
-    push_warning("[kanama:tools] The Kanama runtime did not load the rebuilt kanama-scripts.jar within %d s; reloading the scene anyway." % (RUNTIME_RELOAD_WAIT_MSEC / 1000))
+    push_warning("[kanama:tools] The Kanama runtime did not load the rebuilt kanama-scripts.jar within %d s; reloading the scene anyway." % int(RUNTIME_RELOAD_WAIT_MSEC / 1000.0))
 
 
 func _queue_reload_edited_scene() -> void:
@@ -1888,11 +1885,7 @@ func _reload_edited_scene_async() -> void:
     await get_tree().process_frame
     await get_tree().process_frame
 
-    var editor := get_editor_interface()
-    if editor == null:
-        return
-
-    var root := editor.get_edited_scene_root()
+    var root := EditorInterface.get_edited_scene_root()
     if root == null:
         return
 
@@ -1901,12 +1894,8 @@ func _reload_edited_scene_async() -> void:
         return
     await _wait_for_runtime_reload()
     # The user may have switched scenes meanwhile: the built scene is reloaded while it is still open.
-    if not editor.get_open_scenes().has(scene_path):
+    if not EditorInterface.get_open_scenes().has(scene_path):
         return
 
-    if editor.has_method("reload_scene_from_path"):
-        editor.reload_scene_from_path(scene_path)
-        print("[kanama:tools] Reloaded scene after sync: %s" % scene_path)
-    else:
-        editor.open_scene_from_path(scene_path)
-        print("[kanama:tools] Reopened scene after sync: %s" % scene_path)
+    EditorInterface.reload_scene_from_path(scene_path)
+    print("[kanama:tools] Reloaded scene after sync: %s" % scene_path)
