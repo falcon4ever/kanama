@@ -836,7 +836,7 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callIntZero(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    rRet.reinterpret(4).set(JAVA_INT, 0, 0)
+    rRet.reinterpret(8).set(JAVA_LONG, 0, 0L)
   }
 
   @JvmStatic

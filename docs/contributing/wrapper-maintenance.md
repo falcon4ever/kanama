@@ -1447,3 +1447,13 @@ single-precision `real_t` value components are float32 in engine buffers (and in
 value types' storage; `GodotRealSegment.readRaw`/`writeRaw` move them); every helper with a
 scalar float slot must use `JAVA_DOUBLE`, and only `Color` component storage may
 use `JAVA_FLOAT`.
+
+Integers follow the same rule: Godot's `PtrToArg<int32_t>` (and `uint32_t`, the smaller ints and
+enums) converts through `int64_t`, so every scalar integer argument and return cell is an 8-byte
+`JAVA_LONG`, written widened (`toLong()`, a range-checked `uint32` as its unsigned value) and read
+back narrowed (`get(JAVA_LONG, 0).toInt()`). `JAVA_INT` is only the component storage of
+`Vector2i`, `Vector3i` and `Rect2i`. The same holds for a virtual Kanama implements: the engine's
+`r_ret` is `PtrToArg<m_ret>::EncodeT`, an int64 for an `int` or `Error` return and a whole Variant
+for a `Variant` return. A 4-byte cell works by accident (the JVM rounds a native allocation up to
+8 bytes, malloc to 16, and a little-endian read of the low half is the int), so no smoke or memory
+tracker sees it: the audit guards it.

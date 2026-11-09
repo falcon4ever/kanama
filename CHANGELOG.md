@@ -67,6 +67,15 @@ scripts rewrite your old annotations, export hints and enum constants.
 
 ### Details
 
+#### Fixed — integer and float engine calls use Godot's 8-byte cells
+
+Godot passes every integer argument and return of an engine method (also `int32`, `uint32` and enums) as 8 bytes, and
+Kanama asked for 4-byte cells for them on desktop and Android: the engine wrote 8 bytes into each int return and read 8
+from each int argument. It went unnoticed because the allocators round such a small block up to at least 8 bytes (the
+JVM's to its word size), so the values came out right; nothing guaranteed it. Kanama's own script virtuals and the iOS
+shim had the same mistake in a few returns, one of them a 4-byte stack cell on iOS, and a script's method argument
+count, which Godot asks the script for when no instance answers, reached it as a garbled value instead of an int.
+
 #### Added — the Godot 4.8 methods the API was missing
 
 Godot 4.8's new methods on classes Kanama already wraps are now in the Kotlin API on desktop, Android and iOS: the

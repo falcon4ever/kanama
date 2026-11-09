@@ -6,10 +6,16 @@ match `extension_api.json`. This audit checks the helper implementations
 themselves for impossible primitive slot choices, especially the bugs that are
 easy to reintroduce while adding generator shapes:
 
-- explicit Godot `int32` helpers must not write 64-bit integer slots,
-- `int64`/enum/bitfield/RID helpers must not write 32-bit integer slots,
+- every scalar integer slot is a 64-bit cell: Godot's ptrcall encodes `int32`/`uint32` (and
+  the smaller ints and enums) as int64 (`PtrToArg<int32_t>` converts through `int64_t`, in
+  `core/variant/method_ptrcall.h`), so a 4-byte `JAVA_INT` argument cell is read past its end
+  and a 4-byte return cell is overflowed by the engine's 8-byte write; `JAVA_INT` is left for
+  the components of `Vector2i`/`Vector3i`/`Rect2i`, and no 4-byte scalar cell is allocated,
 - scalar Godot `float` helpers use the 64-bit ptrcall float slot,
-- `Color` component helpers remain fixed 32-bit component storage.
+- `Color` component helpers remain fixed 32-bit component storage,
+- a Kanama virtual (`rRet`, the engine's `PtrToArg<m_ret>::EncodeT`) never writes an integer
+  return as 4 bytes, on desktop/Android or in the iOS shim, and the shim's own ptrcalls use no
+  4-byte integer return cell.
 
 The float/Color rules absorbed `audit_scalar_float_abi.py` (retired in task 99): that
 script name-matched 30 `ptrcall*Float*` helpers, 20 of them packed-array helpers, while
@@ -36,8 +42,29 @@ SET_INDEX_RE = re.compile(
 )
 TO_INT_RE = re.compile(r"\.\s*toInt\(\)")
 
+IOS_SHIM = ROOT / "ios/bootstrap/kanama_ios_shim.c"
+JVM_BINDING = ROOT / "src/jvmMain/kotlin/binding"
+
 INT64_KINDS = {"int64", "enum", "bitfield", "rid"}
-INT32_KINDS = {"int32", "uint32", "vector2i", "vector3i", "rect2i"}
+# Scalar ints Godot's ptrcall carries in an int64 cell.
+SCALAR_INT32_KINDS = {"int32", "uint32"}
+# 32-bit components inside a builtin value: the only legitimate JAVA_INT storage in a helper.
+INT_VECTOR_KINDS = {"vector2i", "vector3i", "rect2i"}
+# A 4-byte scalar cell anywhere in ObjectCalls (an Int/Float/Short layout allocated alone).
+SCALAR_4BYTE_ALLOC_RE = re.compile(
+    r"\ballocate\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT|JAVA_CHAR)\s*\)"
+    r"|\ballocate\(\s*[24]L?\s*(?:,\s*[124]L?\s*)?\)",
+)
+INT_ACCESS_RE = re.compile(r"(?P<cell>[\w.]+)\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?JAVA_INT,\s*(?P<offset>\w+)")
+# A bool virtual return is one byte (uint8); an integer or float one never fits in 2 or 4.
+VIRTUAL_NARROW_RET_RE = re.compile(
+    r"\brRet(?:\.reinterpret\(\s*\w+\s*\))?\.set\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT)\b"
+    r"|\brRet\.reinterpret\(\s*[24]L?\s*\)",
+)
+SHIM_NARROW_VIRTUAL_RET_RE = re.compile(r"\*\(\(\s*(?:int32_t|uint32_t|int16_t|uint16_t|float)\s*\*\s*\)\s*ret\s*\)\s*=")
+SHIM_NARROW_PTRCALL_RET_RE = re.compile(
+    r"\b(?:int32_t|uint32_t|int16_t|uint16_t|float)\s+(?P<name>\w+)\s*=[^;]*;\s*\n\s*g_object_method_bind_ptrcall\([^;]*&(?P=name)\s*\)",
+)
 ARRAY_KINDS = {
     "array",
     "typed_object_array",
@@ -227,23 +254,31 @@ def audit_helper(helper: PtrcallHelper) -> list[str]:
     kinds = set(helper.shape.arg_kinds)
     kinds.add(helper.shape.return_kind)
 
-    expects_int64 = bool(kinds & INT64_KINDS)
-    expects_int32 = bool(kinds & INT32_KINDS)
+    expects_long = bool(kinds & (INT64_KINDS | SCALAR_INT32_KINDS))
+    expects_int_vector = bool(kinds & INT_VECTOR_KINDS)
     expects_float = "float" in kinds
     expects_color = "color" in kinds
 
     errors: list[str] = []
     location = f"{OBJECT_CALLS.relative_to(ROOT)}:{helper.line}: {helper.name}"
 
-    if uses_java_long(helper.body) and not expects_int64:
-        errors.append(f"{location} uses JAVA_LONG but helper shape has no int64/enum/bitfield/RID slot")
-    if uses_java_int(helper.body) and not expects_int32:
-        errors.append(f"{location} uses JAVA_INT but helper shape has no int32/integer-vector slot")
+    if uses_java_long(helper.body) and not expects_long:
+        errors.append(f"{location} uses JAVA_LONG but helper shape has no integer/enum/bitfield/RID slot")
+    if uses_java_int(helper.body) and not expects_int_vector:
+        errors.append(
+            f"{location} uses JAVA_INT but helper shape has no Vector2i/Vector3i/Rect2i slot "
+            "(a scalar int32/uint32 ptrcall slot is an int64 cell)",
+        )
+    for cell in scalar_int_cells(helper.body):
+        errors.append(
+            f"{location} reads or writes `{cell}` as a lone 4-byte JAVA_INT: Godot's ptrcall carries "
+            "a scalar int32/uint32 in an 8-byte int64 cell",
+        )
     if uses_java_float(helper.body) and not expects_color:
         errors.append(f"{location} uses JAVA_FLOAT outside Color component storage")
 
-    if "int32" in kinds and not uses_java_int(helper.body):
-        errors.append(f"{location} has an int32 slot but does not use JAVA_INT")
+    if (kinds & SCALAR_INT32_KINDS) and not uses_java_long(helper.body):
+        errors.append(f"{location} has an int32/uint32 slot but does not use a JAVA_LONG (int64) cell")
     if "uint32" in helper.shape.arg_kinds and "BuiltinTypes.requireUInt32(" not in helper.body:
         errors.append(f"{location} has a uint32 arg slot but does not range-check with BuiltinTypes.requireUInt32")
     if (kinds & INT64_KINDS) and not uses_java_long(helper.body):
@@ -253,6 +288,49 @@ def audit_helper(helper: PtrcallHelper) -> list[str]:
     if expects_color and not uses_java_float(helper.body):
         errors.append(f"{location} has a Color slot but does not use JAVA_FLOAT component storage")
 
+    return errors
+
+
+def scalar_int_cells(body: str) -> list[str]:
+    """Cells a helper touches with JAVA_INT only at offset 0: a scalar in a 4-byte slot."""
+    offsets: dict[str, set[str]] = {}
+    for match in INT_ACCESS_RE.finditer(body):
+        offsets.setdefault(match.group("cell"), set()).add(match.group("offset"))
+    return sorted(cell for cell, seen in offsets.items() if seen == {"0"})
+
+
+def audit_scalar_allocations(content: str) -> list[str]:
+    errors: list[str] = []
+    for match in SCALAR_4BYTE_ALLOC_RE.finditer(content):
+        line = content.count("\n", 0, match.start()) + 1
+        errors.append(
+            f"{OBJECT_CALLS.relative_to(ROOT)}:{line}: allocates a 4-byte scalar cell `{match.group(0)}`; "
+            "every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE)",
+        )
+    return errors
+
+
+def audit_virtual_returns() -> list[str]:
+    errors: list[str] = []
+    for path in sorted(JVM_BINDING.rglob("*.kt")):
+        text = path.read_text(encoding="utf-8")
+        for match in VIRTUAL_NARROW_RET_RE.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            errors.append(
+                f"{path.relative_to(ROOT)}:{line}: a virtual writes its return through `{match.group(0)}`; "
+                "an int/enum/Error virtual return is an 8-byte int64 cell (PtrToArg<m_ret>::EncodeT)",
+            )
+    if IOS_SHIM.exists():
+        text = IOS_SHIM.read_text(encoding="utf-8")
+        for regex, what in (
+            (SHIM_NARROW_VIRTUAL_RET_RE, "a virtual writes a 4-byte integer/float return"),
+            (SHIM_NARROW_PTRCALL_RET_RE, "a ptrcall return cell is 4 bytes"),
+        ):
+            for match in regex.finditer(text):
+                line = text.count("\n", 0, match.start()) + 1
+                errors.append(
+                    f"{IOS_SHIM.relative_to(ROOT)}:{line}: {what}; Godot's ptrcall uses an 8-byte int64/double",
+                )
     return errors
 
 
@@ -268,11 +346,11 @@ def audit_narrowing(
         if narrowing_count == 0:
             continue
         location = f"{OBJECT_CALLS.relative_to(ROOT)}:{helper.line}: {helper.name}"
-        if "int32" in helper.shape.arg_kinds:
+        if "int32" in helper.shape.arg_kinds or helper.shape.return_kind == "int32":
             intentional += narrowing_count
         else:
             errors.append(
-                f"{location} narrows with toInt() but helper shape has no explicit int32 argument",
+                f"{location} narrows with toInt() but helper shape has no explicit int32 argument or return",
             )
 
     for helper in expression_helpers:
@@ -391,7 +469,8 @@ def variable_layouts(body: str, name: str) -> set[str]:
     elif int_offsets == {0, 4, 8, 12}:
         layouts.add("rect2i")
     elif 0 in int_offsets:
-        layouts.add("int32")
+        # A lone 4-byte int: no ptrcall slot has this layout (scalar ints are int64 cells).
+        layouts.add("int32_4byte")
 
     real_indices = {
         int(match.group("index"))
@@ -435,7 +514,7 @@ def slot_compatible(expected: str, layouts: set[str]) -> bool:
         return True
     if expected in layouts:
         return True
-    if expected == "uint32" and "int32" in layouts:
+    if expected in SCALAR_INT32_KINDS and "int64" in layouts:
         return True
     if expected in {"enum", "bitfield", "rid"} and "int64" in layouts:
         return True
@@ -495,6 +574,8 @@ def main() -> int:
         slot_skipped += result.skipped
     narrowing = audit_narrowing(helpers, expression_helpers)
     errors.extend(narrowing.errors)
+    errors.extend(audit_scalar_allocations(content))
+    errors.extend(audit_virtual_returns())
 
     if errors:
         print("[ptrcall_helper_layout_audit] FAIL", file=sys.stderr)

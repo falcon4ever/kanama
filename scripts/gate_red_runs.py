@@ -1064,10 +1064,41 @@ case("audit_generator_shape_policy.py", py("audit_generator_shape_policy.py"),
 case("audit_godot_object_script_paths.py", py("audit_godot_object_script_paths.py"),
      [Edit(f"{COMMON}/api/GodotObject.kt", "ptrcallWithStringNameAndVariantArg(Binds.objectSetBind", "ptrcallWithStringNameAndVariantArgX(Binds.objectSetBind")],
      "must call the Object.set MethodBind", "GodotObject.set stops calling the Object.set bind")
-case("audit_ptrcall_helper_layouts.py", py("audit_ptrcall_helper_layouts.py"),
-     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", "    return ret.get(JAVA_INT, 0).toLong() and 0xffff_ffffL\n  }\n\n  /** Calls [methodBind] with no arguments and RID return value. */",
-           "    return ret.get(JAVA_LONG, 0).toLong() and 0xffff_ffffL\n  }\n\n  /** Calls [methodBind] with no arguments and RID return value. */")],
-     "uses JAVA_LONG", "a uint32 helper reads a 64-bit slot")
+# Godot's ptrcall carries every scalar int (int32/uint32 too) in an 8-byte int64 cell and a float in a double:
+# a 4-byte cell is overflowed by the engine's return write or read past its end as an argument. The allocators
+# round the block up (the JVM to 8 bytes, malloc to 16), which hides it from every smoke and from the JVM's native
+# memory tracking; only the layout audit sees it.
+INT_RET_HELPER = ("  /** Calls [methodBind] with no arguments and int32 return value. */\n"
+                  "  actual fun ptrcallNoArgsRetInt(methodBind: MemorySegment, instance: MemorySegment): Int {\n")
+case("audit_ptrcall_helper_layouts.py (int return cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           INT_RET_HELPER + "    val ret = ptrcallScratch.get().longRet\n    bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)\n"
+           "    return ret.get(JAVA_LONG, 0).toInt()\n",
+           INT_RET_HELPER + "    Arena.ofConfined().use { arena ->\n      val ret = arena.allocate(JAVA_INT)\n"
+           "      bindPtrcall(methodBind, instance, MemorySegment.NULL, ret)\n      return ret.get(JAVA_INT, 0)\n    }\n")],
+     "allocates a 4-byte scalar cell", "an int32-return helper goes back to a 4-byte JAVA_INT return cell the engine writes 8 bytes into")
+case("audit_ptrcall_helper_layouts.py (int argument cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           "        GodotStrings.initString(stringCell, text)\n        intCell.set(JAVA_LONG, 0, intArg.toLong())\n"
+           "        val arr = arena.allocate(ADDRESS, 3)\n        arr.setAtIndex(ADDRESS, 0, objCell)\n        arr.setAtIndex(ADDRESS, 1, stringCell)\n",
+           "        GodotStrings.initString(stringCell, text)\n        intCell.set(JAVA_INT, 0, intArg)\n"
+           "        val arr = arena.allocate(ADDRESS, 3)\n        arr.setAtIndex(ADDRESS, 0, objCell)\n        arr.setAtIndex(ADDRESS, 1, stringCell)\n")],
+     "as a lone 4-byte JAVA_INT", "an int32 argument is written as 4 bytes into its 8-byte cell, leaving the engine's upper half unwritten")
+case("audit_ptrcall_helper_layouts.py (virtual int return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt",
+           "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+           "      rRet.reinterpret(8).set(JAVA_LONG, 0, -1L)\n",
+           "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+           "      rRet.reinterpret(4).set(JAVA_INT, 0, -1)\n")],
+     "a virtual writes its return through", "ScriptExtension._get_member_line writes its int return as 4 bytes into the engine's int64 cell")
+case("audit_ptrcall_helper_layouts.py (iOS shim ptrcall return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           "    int64_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n",
+           "    int32_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n")],
+     "a ptrcall return cell is 4 bytes", "the iOS shim's register_script_language call takes its Error return in a 4-byte stack cell")
+case("audit_ptrcall_helper_layouts.py (iOS shim virtual return)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c", "            *((int64_t *)ret) = 0;\n", "            *((int32_t *)ret) = 0;\n")],
+     "a virtual writes a 4-byte integer/float return", "the iOS shim's `_reload` virtual writes its Error return as 4 bytes")
 case("audit_replicated_script_properties.py", py("audit_replicated_script_properties.py", "example_project"),
      [Create("example_project/zz_redrun.kt", "class ZzRedRun\n"),
       Create("example_project/zz_redrun.tscn",
@@ -1395,7 +1426,7 @@ case("runtime_smoke.sh (API exercise pair rows)", ["bash", "scripts/runtime_smok
            "      GodotRealSegment.writeRaw(vec, 0, value.rawY)\n      GodotRealSegment.writeRaw(vec, 1, value.rawX)\n")],
      "API EXERCISE FAIL: ptrcallNoArgsRetVector3 ptrcallWithVector3Arg", "ptrcallWithVector3Arg writes x and y into each other's slot: the API exercise's Vector3 property-pair row must fail, not pass",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_INT, 0, checkedMask)\n"
+RAY_ARGS = ("        GodotRealSegment.writeRaw(toCell, 1, to.rawY)\n        maskCell.set(JAVA_LONG, 0, checkedMask)\n"
             "        BuiltinTypes.initArrayOfRids(excludeCell, exclude)\n        val args = arena.allocate(ADDRESS, 4)\n")
 case("runtime_smoke.sh (API exercise static arguments)", ["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit(JVM_OBJECT_CALLS, RAY_ARGS + "        args.setAtIndex(ADDRESS, 0, fromCell)\n        args.setAtIndex(ADDRESS, 1, toCell)\n",

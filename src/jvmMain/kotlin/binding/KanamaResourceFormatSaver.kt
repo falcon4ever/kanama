@@ -232,7 +232,7 @@ object KanamaResourceFormatSaver {
       System.err.println(
         "[kanama:kt] ResourceFormatSaver._save reject: invalid object or extension"
       )
-      rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
+      rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_CANT_CREATE.toLong())
       return
     }
 
@@ -242,7 +242,7 @@ object KanamaResourceFormatSaver {
       System.err.println(
         "[kanama:kt] ResourceFormatSaver._save reject: Script.get_source_code bind missing"
       )
-      rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
+      rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_CANT_CREATE.toLong())
       return
     }
     val savedSource = ObjectCalls.ptrcallNoArgsRetString(getSourceBind, resourceObj)
@@ -251,7 +251,7 @@ object KanamaResourceFormatSaver {
       System.err.println(
         "[kanama:kt] ResourceFormatSaver._save reject: globalize_path failed for $path"
       )
-      rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
+      rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_CANT_CREATE.toLong())
       return
     }
     try {
@@ -271,12 +271,12 @@ object KanamaResourceFormatSaver {
       System.err.println(
         "[kanama:kt] ResourceFormatSaver._save wrote $absolute bytes=${source.length}"
       )
-      rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_OK)
+      rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_OK.toLong())
     } catch (t: Throwable) {
       System.err.println(
         "[kanama:kt] ResourceFormatSaver._save failed: ${t::class.qualifiedName}: ${t.message}"
       )
-      rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_CANT_CREATE)
+      rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_CANT_CREATE.toLong())
     }
   }
 
@@ -316,7 +316,7 @@ object KanamaResourceFormatSaver {
   @JvmStatic
   fun callSetUid(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
     // UIDs for .kt scripts are optional for now.
-    rRet.reinterpret(4).set(JAVA_INT, 0, ERROR_OK)
+    rRet.reinterpret(8).set(JAVA_LONG, 0, ERROR_OK.toLong())
   }
 
   @JvmStatic

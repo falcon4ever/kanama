@@ -85,11 +85,16 @@ object BuiltinTypes {
     return value.toInt()
   }
 
-  fun requireUInt32(value: Long): Int {
+  /**
+   * Range-checks a Godot `uint32` argument and returns it unchanged, ready for its ptrcall cell:
+   * Godot's `PtrToArg<uint32_t>` reads every integer argument from an 8-byte int64 cell, so the
+   * checked value is written with `JAVA_LONG`, never as a 32-bit bit pattern.
+   */
+  fun requireUInt32(value: Long): Long {
     require(value in 0L..0xffff_ffffL) {
       "Value $value is outside Godot uint32 range 0..4294967295"
     }
-    return value.toInt()
+    return value
   }
 
   private val getPtrConstructor by lazy {
