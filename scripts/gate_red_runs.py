@@ -1488,7 +1488,7 @@ case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runti
            "  fun shutdown() {\n    return\n    stopping = true\n")],
      "self-test quick quit: shutdown did not stop the worker", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the leak is a race (most runs on macOS, none seen on Linux CI), so the smoke holds every run to shutdown's own `stopped N worker(s), 0 still running` line",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-case("OwnedReleasesTest (low frame rate drain)",["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
+case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
            "    drain(budget = null, sinceLastDrain = sinceLastDrain)\n", "    drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)\n")],
      "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
