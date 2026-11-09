@@ -164,6 +164,8 @@ open the project. Otherwise Godot refuses to load the addon:
 xattr -dr com.apple.quarantine /path/to/your-project
 ```
 
-On **Windows**, run the PowerShell setup script,
-`.\addons\kanama\setup-kanama-project.ps1` (with `-Force` in place of
-`--force`), and `.\gradlew.bat` wherever this page says `./gradlew`.
+On **Windows**, run the PowerShell setup script with
+`powershell -ExecutionPolicy Bypass -File .\addons\kanama\setup-kanama-project.ps1`
+(with `-Force` in place of `--force`; a downloaded zip carries a mark that
+makes PowerShell refuse unsigned scripts otherwise), and use `.\gradlew.bat`
+wherever this page says `./gradlew`.
