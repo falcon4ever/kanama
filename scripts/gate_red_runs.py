@@ -1551,8 +1551,8 @@ case("tool_smoke.sh (build on save on by default)", ["bash", "scripts/tool_smoke
      "build on save is off by default", "the plugin creates the Build On Save editor setting switched off: a fresh editor must build on save",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (build on save builds once)", ["bash", "scripts/tool_smoke.sh", GODOT],
-     plugin_edit('    return parent_path == "res://" and (name == "build" or name == "android")',
-                 '    return parent_path == "res://" and name == "android"')
+     plugin_edit('    return parent_path == "res://" and (dir_name == "build" or dir_name == "android")',
+                 '    return parent_path == "res://" and dir_name == "android"')
      + plugin_edit("func _kt_scan_roots() -> Array:\n    var roots: Array = []\n",
                    'func _kt_scan_roots() -> Array:\n    if true:\n        return ["res://"]\n    var roots: Array = []\n'),
      "the watcher took the build's own output under build/ for a save", "the watcher scans the whole project, Gradle's build/ included, again: the .kt files KSP writes there make every build start another one",
