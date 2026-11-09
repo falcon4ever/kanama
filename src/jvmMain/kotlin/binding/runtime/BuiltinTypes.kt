@@ -220,19 +220,30 @@ object BuiltinTypes {
     ptrDestructor(type).invoke(valuePtr)
   }
 
+  /** An Array or a Dictionary is one pointer to its shared storage. */
+  private const val CONTAINER_SIZE: Long = 8L
+
   /**
-   * Empties a GDExtension virtual's Array or Dictionary return cell before Kanama builds its return
-   * in place. The cell is Godot's own `PtrToArg<m_ret>::EncodeT ret;`, already default-constructed,
-   * and an Array's or Dictionary's default constructor allocates its storage: constructing over it
-   * without this leaked that allocation on every call (godot-cpp assigns into the cell instead).
-   * Only for a virtual's return cell: a cell Kanama allocated itself is uninitialised memory, never
-   * destroyed.
+   * Writes a GDExtension virtual's Array or Dictionary return. [rRet] is Godot's own
+   * `PtrToArg<m_ret>::EncodeT ret;`, already default-constructed, and those constructors allocate
+   * their storage, so building the return over it leaked that allocation on every call (godot-cpp
+   * assigns into the cell instead). [build] constructs the return into a cell of Kanama's own; only
+   * once it has returned is Godot's value destroyed and the built one moved into [rRet] (a pointer
+   * move, which hands over its ownership). A [build] that throws leaves Godot's value untouched, so
+   * containment can swallow the error without Godot reading freed storage or destroying it twice.
+   * Only for a virtual's return cell: a cell Kanama allocated is uninitialised memory and must
+   * never be destroyed.
    */
-  fun releaseVirtualReturn(type: VariantType, rRet: MemorySegment) {
+  fun writeVirtualReturn(type: VariantType, rRet: MemorySegment, build: (MemorySegment) -> Unit) {
     require(type == VariantType.ARRAY || type == VariantType.DICTIONARY) {
-      "releaseVirtualReturn is for the Array/Dictionary cells Godot default-constructs, not $type"
+      "writeVirtualReturn is for the Array/Dictionary cells Godot default-constructs, not $type"
     }
-    destroyTyped(type, rRet)
+    Arena.ofConfined().use { arena ->
+      val built = arena.allocate(CONTAINER_SIZE, 8L)
+      build(built)
+      destroyTyped(type, rRet)
+      MemorySegment.copy(built, 0L, rRet.reinterpret(CONTAINER_SIZE), 0L, CONTAINER_SIZE)
+    }
   }
 
   /** Initialize [dest] as a Variant containing nil. */

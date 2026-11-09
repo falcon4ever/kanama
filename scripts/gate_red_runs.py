@@ -1100,16 +1100,46 @@ case("audit_ptrcall_helper_layouts.py (virtual int return)", py("audit_ptrcall_h
            "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
            "      rRet.reinterpret(4).set(JAVA_INT, 0, -1)\n")],
      "a virtual writes its return through", "ScriptExtension._get_member_line writes its int return as 4 bytes into the engine's int64 cell")
-# A virtual's Array return cell is Godot's default-constructed `Array ret;` (its constructor allocates): building the
-# return over it without destroying it first leaks one allocation per call, which no smoke notices.
+# A virtual's Array/Dictionary return cell is Godot's default-constructed `Array ret;` (its constructor allocates):
+# building the return over it leaks one allocation per call, and destroying it before a build that can throw hands
+# Godot freed storage to copy and destroy again. No smoke notices either; the audit allows only writeVirtualReturn.
+KS_VT = "net.multigesture.kanama.binding.runtime.VariantType"
 MEMBERS_FUN = "    fun callGetMembers(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+MEMBERS_BODY = (f"      BuiltinTypes.writeVirtualReturn(\n        {KS_VT}.ARRAY,\n        rRet,\n      ) {{\n"
+                f"        BuiltinTypes.construct({KS_VT}.ARRAY, it)\n      }}\n    }}\n")
 case("audit_ptrcall_helper_layouts.py (virtual Array return leak)", py("audit_ptrcall_helper_layouts.py"),
-     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt",
-           MEMBERS_FUN + "      BuiltinTypes.releaseVirtualReturn(\n        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,\n"
-           "        rRet,\n      )\n",
-           MEMBERS_FUN)],
-     "callGetMembers builds an Array/Dictionary return over the engine's default-constructed cell",
-     "ScriptExtension._get_members builds its Array over the engine's constructed return cell without destroying it")
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", MEMBERS_FUN + MEMBERS_BODY,
+           MEMBERS_FUN + f"      BuiltinTypes.construct({KS_VT}.ARRAY, rRet)\n    }}\n")],
+     "callGetMembers builds an Array/Dictionary into the engine's default-constructed return cell `rRet` directly",
+     "ScriptExtension._get_members builds its Array over the engine's constructed return cell (a leak per call)")
+case("audit_ptrcall_helper_layouts.py (virtual return released before a lookup)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", MEMBERS_FUN + MEMBERS_BODY,
+           MEMBERS_FUN + f"      BuiltinTypes.destroyTyped({KS_VT}.ARRAY, rRet)\n"
+           "      val script = ObjectRegistry.get(instance.address()) as? KanamaScript\n"
+           f"      BuiltinTypes.construct({KS_VT}.ARRAY, rRet)\n    }}\n")],
+     "callGetMembers destroys the engine's default-constructed return cell `rRet` directly",
+     "_get_members destroys the engine's Array, then looks up its script: a throw there leaves Godot a freed Array")
+CONSTANTS_FUN = ("    fun callGetConstants(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+                 "      BuiltinTypes.writeVirtualReturn(\n")
+case("audit_ptrcall_helper_layouts.py (virtual return of the wrong type)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt", CONSTANTS_FUN + f"        {KS_VT}.DICTIONARY,\n",
+           CONSTANTS_FUN + f"        {KS_VT}.ARRAY,\n")],
+     "callGetConstants declares writeVirtualReturn(VariantType.ARRAY) but its block builds DICTIONARY",
+     "_get_constants declares an Array return while it builds a Dictionary: the engine's Dictionary would be destroyed as an Array")
+case("audit_ptrcall_helper_layouts.py (iOS shim virtual Array leak)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("ios/bootstrap/kanama_ios_shim.c",
+           "            kanama_ios_release_virtual_array_return(ret);\n            kanama_ios_init_empty_array(ret);\n",
+           "            kanama_ios_init_empty_array(ret);\n")],
+     "a virtual builds an empty array over the engine's default-constructed return cell without a kanama_ios_release_virtual_array_return(ret)",
+     "the iOS shim's ARRAY_EMPTY virtual builds its Array over the engine's constructed return cell")
+case("audit_ptrcall_helper_layouts.py (one-value allocateFrom cell)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt",
+           "      val intCell = arena.allocate(JAVA_LONG)\n      intCell.set(JAVA_LONG, 0, value.toLong())\n"
+           "      val arr = arena.allocate(ADDRESS, 1)\n      arr.setAtIndex(ADDRESS, 0, intCell)\n      return readVariantReturn(",
+           "      val intCell = arena.allocateFrom(JAVA_INT, value)\n"
+           "      val arr = arena.allocate(ADDRESS, 1)\n      arr.setAtIndex(ADDRESS, 0, intCell)\n      return readVariantReturn(")],
+     "allocates a 4-byte scalar cell with `allocateFrom(JAVA_INT, value)`",
+     "an int32 argument cell goes back to a 4-byte `allocateFrom(JAVA_INT, value)`")
 case("audit_ptrcall_helper_layouts.py (iOS shim ptrcall return)", py("audit_ptrcall_helper_layouts.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c",
            "    int64_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n",

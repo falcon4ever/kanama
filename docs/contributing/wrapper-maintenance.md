@@ -1457,7 +1457,9 @@ back narrowed (`get(JAVA_LONG, 0).toInt()`). `JAVA_INT` is only the component st
 for a `Variant` return. A 4-byte cell works by accident (the JVM rounds a native allocation up to
 8 bytes, malloc to 16, and a little-endian read of the low half is the int), so no smoke or memory
 tracker sees it: the audit guards it. An `Array` or `Dictionary` virtual return arrives already constructed
-(Godot's `Array ret;` allocates its storage), so a virtual that builds its return in that cell
-destroys it first: `BuiltinTypes.releaseVirtualReturn` on desktop and Android,
-`kanama_ios_release_virtual_*_return` in the iOS shim. A cell Kanama allocated itself is
+(Godot's `Array ret;` allocates its storage). On desktop and Android a virtual writes such a
+return only through `BuiltinTypes.writeVirtualReturn(VariantType.<kind>, rRet) { ... }`: the block
+builds the return into a cell of Kanama's own, and only then is Godot's value destroyed and the
+built one moved in, so a throw inside the block leaves Godot's value intact. The iOS shim calls
+`kanama_ios_release_virtual_*_return` right before it builds. A cell Kanama allocated itself is
 uninitialised and is never destroyed.

@@ -18,9 +18,10 @@ easy to reintroduce while adding generator shapes:
 - a Kanama virtual (`rRet`, the engine's `PtrToArg<m_ret>::EncodeT`) never writes an integer
   return as 4 bytes, on desktop/Android or in the iOS shim, and the shim's own ptrcalls use no
   4-byte integer return cell,
-- a virtual that builds an Array or Dictionary return destroys the engine's default-constructed
-  cell first (`BuiltinTypes.releaseVirtualReturn`, `kanama_ios_release_virtual_*_return`): those
-  constructors allocate, so building over the cell leaked on every call.
+- a virtual that returns an Array or Dictionary writes it through `BuiltinTypes.writeVirtualReturn`
+  (built into Kanama's own cell, then moved over the engine's default-constructed one, of the
+  matching type) and the iOS shim releases the cell right before building it: those constructors
+  allocate, so building over the cell leaked on every call.
 
 The float/Color rules absorbed `audit_scalar_float_abi.py` (retired in task 99): that
 script name-matched 30 `ptrcall*Float*` helpers, 20 of them packed-array helpers, while
@@ -55,13 +56,17 @@ INT64_KINDS = {"int64", "enum", "bitfield", "rid"}
 SCALAR_INT32_KINDS = {"int32", "uint32"}
 # 32-bit components inside a builtin value: the only legitimate JAVA_INT storage in a helper.
 INT_VECTOR_KINDS = {"vector2i", "vector3i", "rect2i"}
+# `JAVA_INT`, `ValueLayout.JAVA_INT` or `java.lang.foreign.ValueLayout.JAVA_INT` (and the `_UNALIGNED` forms).
+NARROW_LAYOUT_PREFIX = r"(?:java\.lang\.foreign\.)?(?:ValueLayout\.)?"
 # A 4-byte scalar cell (an Int/Float/Short layout allocated alone, or one element of it) in a file that
 # lays out ptrcall cells. `allocateFrom(JAVA_INT, a, b)` is a vector; with one value it is a scalar.
 SCALAR_4BYTE_ALLOC_RE = re.compile(
-    r"\ballocate\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT|JAVA_CHAR)\s*(?:,\s*1L?\s*)?\)"
+    r"\ballocate\(\s*" + NARROW_LAYOUT_PREFIX + r"(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT|JAVA_CHAR)(?:_UNALIGNED)?\s*(?:,\s*1L?\s*)?\)"
     r"|\ballocate\(\s*[24]L?\s*(?:,\s*[124]L?\s*)?\)",
 )
-ALLOCATE_FROM_RE = re.compile(r"\ballocateFrom\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?P<layout>JAVA_INT|JAVA_FLOAT|JAVA_SHORT)\b")
+ALLOCATE_FROM_RE = re.compile(
+    r"\ballocateFrom\(\s*" + NARROW_LAYOUT_PREFIX + r"(?P<layout>(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT)(?:_UNALIGNED)?)\b",
+)
 # The files whose functions build ptrcall argument/return cells: every function body in them is scanned,
 # not only the helpers whose names the shape parser reads.
 CELL_FILES = (
@@ -70,7 +75,8 @@ CELL_FILES = (
     ROOT / "src/jvmMain/kotlin/binding/runtime/UtilityCalls.kt",
 )
 NARROW_ACCESS_RE = re.compile(
-    r"(?P<cell>[\w.]+)\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?P<layout>JAVA_INT|JAVA_FLOAT),\s*(?P<offset>\w+)",
+    r"(?P<cell>[\w.]+)\.(?:set|get)\(\s*" + NARROW_LAYOUT_PREFIX
+    + r"(?P<layout>(?:JAVA_INT|JAVA_FLOAT)(?:_UNALIGNED)?),\s*(?P<offset>\w+)",
 )
 MEMBER_START_RE = re.compile(r"^  (?:/\*\*|@|(?:(?:actual|private|internal|public|inline|override|operator)\s+)*(?:fun|val|var|object|class)\b)")
 # A bool virtual return is one byte (uint8); an integer or float one never fits in 2 or 4.
@@ -338,7 +344,8 @@ def lone_narrow_cells(chunk: str) -> list[tuple[str, str]]:
     4-byte slot (a Vector2i/Rect2i/Color touches its other components too)."""
     offsets: dict[tuple[str, str], set[str]] = {}
     for match in NARROW_ACCESS_RE.finditer(chunk):
-        offsets.setdefault((match.group("cell"), match.group("layout")), set()).add(match.group("offset"))
+        offset = re.sub(r"^0+[lL]?$", "0", match.group("offset"))
+        offsets.setdefault((match.group("cell"), match.group("layout")), set()).add(offset)
     return sorted(key for key, seen in offsets.items() if seen == {"0"})
 
 
@@ -370,7 +377,7 @@ def audit_scalar_allocations(content: str) -> list[str]:
                     re.search(rf"setAtIndex\(\s*ADDRESS,\s*[^,]+,\s*{escaped}\s*\)", chunk)
                     or re.search(rf"bindPtrcall\([^)]*\b{escaped}\s*\)", chunk)
                 )
-                use = re.search(rf"{escaped}\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?{layout}", chunk)
+                use = re.search(rf"{escaped}\.(?:set|get)\(\s*{NARROW_LAYOUT_PREFIX}{layout}", chunk)
                 line = first_line + (chunk.count("\n", 0, use.start()) if use else 0)
                 where = " (it is passed to the ptrcall)" if passed else ""
                 errors.append(
@@ -395,42 +402,109 @@ def audit_shim_ptrcall_returns(text: str) -> list[tuple[int, str]]:
 
 
 VIRTUAL_FUN_RE = re.compile(r"\bfun\s+(?P<name>\w+)\([^)]*\brRet:\s*MemorySegment")
-# A container return built in place over the engine's cell (an Array/TypedArray or a Dictionary).
-CONTAINER_RET_WRITE_RE = re.compile(
-    r"construct\(\s*(?:[\w.]+\.)?VariantType\.(?:ARRAY|DICTIONARY)\s*,\s*rRet\b"
-    r"|\binit(?:Dictionary|Array\w*)\(\s*rRet\b"
-    r"|\bwrite\w*(?:List|MethodInfo)\([^)]*\brRet\b",
-)
+VARIANT_TYPE = r"(?:[\w.]+\.)?VariantType\.(?P<kind>ARRAY|DICTIONARY)"
+# The only way a virtual may write an Array/Dictionary return: built into Kanama's own cell, then moved
+# over Godot's default-constructed one (BuiltinTypes.writeVirtualReturn).
+WRAPPED_WRITE_RE = re.compile(r"\bwriteVirtualReturn\(\s*" + VARIANT_TYPE + r"\s*,\s*(?P<cell>\w+)\s*,?\s*\)\s*\{")
+# Writers whose return is a Variant (Godot's NIL Variant needs no release): the generated registrar's
+# `writeRpcConfig` (`_get_rpc_config`) and `writePropertyDefault` (`_get_property_default_value`).
+VARIANT_RET_WRITERS = {"writeRpcConfig", "writePropertyDefault", "writeVirtualReturn", "writeCopyTo"}
+# Container writers and the kind they build, for a write inside a writeVirtualReturn block.
+WRITER_KINDS = {
+    "writeScriptMethodList": "ARRAY",
+    "writeScriptPropertyList": "ARRAY",
+    "writeScriptSignalList": "ARRAY",
+    "writeMethodInfo": "DICTIONARY",
+}
+VIRTUAL_CONTAINER_WRITES: list[int] = []  # the count the last run read, for the PASS line
 SHIM_CONTAINER_RET_RE = re.compile(r"kanama_ios_init_empty_(?P<kind>array|dictionary)\(\s*ret\s*\)")
+
+
+def container_writes(body: str, cell: str) -> list[tuple[int, str]]:
+    """(offset, kind) of every Array/Dictionary write into [cell] in [body]; kind is ARRAY, DICTIONARY
+    or "?" for a writer whose kind this audit does not know."""
+    escaped = re.escape(cell)
+    found: list[tuple[int, str]] = []
+    for match in re.finditer(r"\bconstruct\(\s*" + VARIANT_TYPE + rf"\s*,\s*{escaped}\b", body):
+        found.append((match.start(), match.group("kind")))
+    for match in re.finditer(rf"\binit(?P<what>Dictionary|Array\w*)\(\s*{escaped}\b", body):
+        found.append((match.start(), "DICTIONARY" if match.group("what") == "Dictionary" else "ARRAY"))
+    for match in re.finditer(rf"\b(?P<writer>write\w*)\((?P<args>[^()]*(?:\([^()]*\)[^()]*)*)\)", body):
+        args = [arg.strip() for arg in match.group("args").split(",")]
+        if match.group("writer") in VARIANT_RET_WRITERS or cell not in args:
+            continue
+        found.append((match.start(), WRITER_KINDS.get(match.group("writer"), "?")))
+    for match in re.finditer(r"\bdestroyTyped\(\s*" + VARIANT_TYPE + rf"\s*,\s*{escaped}\b", body):
+        found.append((match.start(), "destroy"))
+    return sorted(found)
 
 
 def audit_virtual_container_returns() -> list[str]:
     """A virtual's Array/Dictionary return cell arrives default-constructed (`PtrToArg<m_ret>::EncodeT ret;`,
-    whose constructor allocates): building the return over it without destroying it first leaks that
-    allocation on every call."""
+    whose constructor allocates). Building over it leaks that allocation on every call, and destroying it
+    before a build that can throw leaves Godot a freed value to read and destroy again: a virtual writes
+    such a return only through `BuiltinTypes.writeVirtualReturn(VariantType.<kind>, rRet) { ... }`, whose
+    block builds the matching kind into Kanama's own cell."""
     errors: list[str] = []
+    wrapped_total = 0
     for path in sorted(JVM_BINDING.rglob("*.kt")):
         text = path.read_text(encoding="utf-8")
+        rel = path.relative_to(ROOT)
+        wrapped_total += len(WRAPPED_WRITE_RE.findall(text))
         for match in VIRTUAL_FUN_RE.finditer(text):
-            body = text[match.start() : find_function_end(text, match.end())]
-            write = CONTAINER_RET_WRITE_RE.search(body)
-            if write and "releaseVirtualReturn(" not in body[: write.start()]:
-                line = text.count("\n", 0, match.start() + write.start()) + 1
+            fun_start = match.start()
+            body = text[fun_start : find_function_end(text, match.end())]
+            name = match.group("name")
+            if name == "writeVirtualReturn":  # the helper itself (BuiltinTypes)
+                continue
+            cells = {"rRet"} | set(re.findall(r"\bva[lr]\s+(\w+)\s*=\s*rRet\b", body))
+            calls = len(re.findall(r"\bwriteVirtualReturn\(", body))
+            if calls != len(WRAPPED_WRITE_RE.findall(body)):
+                line = text.count("\n", 0, fun_start) + 1
                 errors.append(
-                    f"{path.relative_to(ROOT)}:{line}: {match.group('name')} builds an Array/Dictionary return "
-                    "over the engine's default-constructed cell without BuiltinTypes.releaseVirtualReturn first "
-                    "(leaks the cell's storage on every call)",
+                    f"{rel}:{line}: {name} calls writeVirtualReturn in a form this audit cannot read "
+                    "(`writeVirtualReturn(VariantType.<kind>, rRet) { ... }`)",
                 )
+            for wrapped in WRAPPED_WRITE_RE.finditer(body):
+                if wrapped.group("cell") not in cells:
+                    continue
+                block_end = find_function_end(body, wrapped.end() - 1)
+                block = body[wrapped.end() : block_end]
+                param = re.match(r"\s*(\w+)\s*->", block)
+                inner = param.group(1) if param else "it"
+                kinds = {kind for _, kind in container_writes(block, inner)}
+                line = text.count("\n", 0, fun_start + wrapped.start()) + 1
+                if not kinds:
+                    errors.append(f"{rel}:{line}: {name}'s writeVirtualReturn block builds nothing into `{inner}`")
+                for kind in sorted(kinds - {wrapped.group("kind")}):
+                    errors.append(
+                        f"{rel}:{line}: {name} declares writeVirtualReturn(VariantType.{wrapped.group('kind')}) but its "
+                        f"block builds {kind}: the engine's cell would be destroyed as the wrong type",
+                    )
+            for cell in sorted(cells):
+                for offset, kind in container_writes(body, cell):
+                    line = text.count("\n", 0, fun_start + offset) + 1
+                    what = "destroys" if kind == "destroy" else "builds an Array/Dictionary into"
+                    errors.append(
+                        f"{rel}:{line}: {name} {what} the engine's default-constructed return cell `{cell}` directly; "
+                        "use BuiltinTypes.writeVirtualReturn (building over it leaks, a release before a build that "
+                        "can throw hands Godot freed storage)",
+                    )
+    if wrapped_total == 0:
+        errors.append(f"{JVM_BINDING.relative_to(ROOT)}: no writeVirtualReturn block found: the container-return check read nothing")
+    VIRTUAL_CONTAINER_WRITES.append(wrapped_total)
     if IOS_SHIM.exists():
         text = IOS_SHIM.read_text(encoding="utf-8")
         for match in SHIM_CONTAINER_RET_RE.finditer(text):
-            before = text[text.rfind("\n", 0, text.rfind("\n", 0, match.start())) : match.start()]
-            if f"kanama_ios_release_virtual_{match.group('kind')}_return(ret)" not in before:
+            line_start = text.rfind("\n", 0, match.start())
+            previous = text[text.rfind("\n", 0, line_start) + 1 : line_start]
+            kind = match.group("kind")
+            if not re.fullmatch(rf"\s*kanama_ios_release_virtual_{kind}_return\(\s*ret\s*\);\s*", previous):
                 line = text.count("\n", 0, match.start()) + 1
                 errors.append(
-                    f"{IOS_SHIM.relative_to(ROOT)}:{line}: a virtual builds an empty {match.group('kind')} over the "
-                    f"engine's default-constructed return cell without kanama_ios_release_virtual_{match.group('kind')}_return "
-                    "first (leaks the cell's storage on every call)",
+                    f"{IOS_SHIM.relative_to(ROOT)}:{line}: a virtual builds an empty {kind} over the engine's "
+                    f"default-constructed return cell without a kanama_ios_release_virtual_{kind}_return(ret); "
+                    "statement right before it (leaks the cell's storage on every call)",
                 )
     return errors
 
@@ -714,7 +788,8 @@ def main() -> int:
         "[ptrcall_helper_layout_audit] PASS "
         f"checked={len(helpers)} skipped_unparsed={len(skipped)} "
         f"slot_checked={slot_audited} slot_skipped={slot_skipped} "
-        f"intentional_int32_narrowing={narrowing.intentional}",
+        f"intentional_int32_narrowing={narrowing.intentional} "
+        f"virtual_container_returns={sum(VIRTUAL_CONTAINER_WRITES)}",
     )
     return 0
 

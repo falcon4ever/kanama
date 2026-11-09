@@ -701,34 +701,38 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callGetGlobalClassName(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
-      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
-      rRet,
-    )
     val argsArray = args.reinterpret(8)
     val pathPtr = argsArray.get(ADDRESS, 0)
     val path = GodotStrings.readString(pathPtr)
     val globalName = KanamaScript.inferGlobalClassNameFromPath(path)
     val meta = globalName?.let { KanamaScript.metaByGlobalName(it) }
-    if (globalName == null || meta == null) {
-      // Not a @GlobalClass script (or catalog meta missing): report no global class rather
-      // than inventing one with a guessed base type.
-      BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
-      return
-    }
-    System.err.println(
-      "[kanama:kt] ScriptLanguage._get_global_class_name path=$path -> $globalName base=${meta.instanceBaseType}"
-    )
-    BuiltinTypes.initDictionary(
+    // Not a @GlobalClass script (or catalog meta missing): report no global class rather than
+    // inventing one with a guessed base type.
+    val entries =
+      if (globalName == null || meta == null) {
+        null
+      } else {
+        System.err.println(
+          "[kanama:kt] ScriptLanguage._get_global_class_name path=$path -> $globalName base=${meta.instanceBaseType}"
+        )
+        mapOf(
+          "name" to globalName,
+          "base_type" to meta.instanceBaseType,
+          "icon_path" to "",
+          "is_abstract" to false,
+          "is_tool" to meta.isTool,
+        )
+      }
+    BuiltinTypes.writeVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
       rRet,
-      mapOf(
-        "name" to globalName,
-        "base_type" to meta.instanceBaseType,
-        "icon_path" to "",
-        "is_abstract" to false,
-        "is_tool" to meta.isTool,
-      ),
-    )
+    ) {
+      if (entries == null) {
+        BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, it)
+      } else {
+        BuiltinTypes.initDictionary(it, entries)
+      }
+    }
   }
 
   @JvmStatic
@@ -799,50 +803,55 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callEmptyArray(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
       rRet,
-    )
-    BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
+    ) {
+      BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, it)
+    }
   }
 
   @JvmStatic
   fun callEmptyDictionary(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
       rRet,
-    )
-    BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
+    ) {
+      BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, it)
+    }
   }
 
   @JvmStatic
   fun callValidate(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
+    val entries = mapOf("valid" to true)
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
       rRet,
-    )
-    BuiltinTypes.initDictionary(rRet, mapOf("valid" to true))
+    ) {
+      BuiltinTypes.initDictionary(it, entries)
+    }
   }
 
   @JvmStatic
   fun callCompleteCode(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
+    val entries = mapOf("result" to ERROR_UNAVAILABLE, "force" to false, "call_hint" to "")
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
       rRet,
-    )
-    BuiltinTypes.initDictionary(
-      rRet,
-      mapOf("result" to ERROR_UNAVAILABLE, "force" to false, "call_hint" to ""),
-    )
+    ) {
+      BuiltinTypes.initDictionary(it, entries)
+    }
   }
 
   @JvmStatic
   fun callLookupCode(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
-    BuiltinTypes.releaseVirtualReturn(
+    val entries = mapOf("result" to ERROR_UNAVAILABLE, "type" to 0L)
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
       rRet,
-    )
-    BuiltinTypes.initDictionary(rRet, mapOf("result" to ERROR_UNAVAILABLE, "type" to 0L))
+    ) {
+      BuiltinTypes.initDictionary(it, entries)
+    }
   }
 
   @JvmStatic
@@ -890,11 +899,12 @@ object KanamaScriptLanguage {
     args: MemorySegment,
     rRet: MemorySegment,
   ) {
-    BuiltinTypes.releaseVirtualReturn(
+    BuiltinTypes.writeVirtualReturn(
       net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
       rRet,
-    )
-    BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
+    ) {
+      BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, it)
+    }
   }
 }
 
