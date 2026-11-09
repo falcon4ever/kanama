@@ -175,6 +175,16 @@ These steps need a person or a device, so the script prints them and stops:
   [Device and Browser Runs](device-runs.md) says how to run them.
   **Support claims move only after the matching gate passes**; the upgrade
   tooling never edits support wording.
+- **Run one full device pass while the new pin is still a trial**, not only at
+  the release. That means `scripts/ios_device_gate.sh` with the fresh starter
+  step and the demo matrix on the iPhone, and `scripts/android_smoke.sh` on the
+  Pixel. A device step can go stale without CI noticing, because CI has no
+  phone: in November 2026 the iOS starter probe still expected the String form
+  of a NodePath three weeks after #364 changed the decode, and the first iPhone
+  run on the 4.8 beta found it. Before the iPhone run, check that the phone
+  still trusts the developer (Settings > General > VPN & Device Management),
+  and keep at least one Kanama app on it: on a free Apple account, removing
+  the last one drops that trust.
 - Re-import the demos with the new editor, commit the `.import` churn in the demos
   repo, and move `DEMOS_REF` in `.github/workflows/web.yml`.
 - Refresh release-facing wording by hand: `CHANGELOG.md`, `README.md`, docs
