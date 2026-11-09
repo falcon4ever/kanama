@@ -1,0 +1,68 @@
+{
+  "info": {
+    "arguments": [
+      "devicectl",
+      "device",
+      "info",
+      "apps",
+      "--device",
+      "<udid>",
+      "--json-output",
+      "apps.json"
+    ],
+    "commandType": "devicectl.device.info.apps",
+    "outcome": "success"
+  },
+  "result": {
+    "apps": [
+      {
+        "appClip": false,
+        "builtByDeveloper": true,
+        "bundleIdentifier": "net.multigesture.kanama.match3",
+        "bundleVersion": "1",
+        "containerAccessible": true,
+        "defaultApp": false,
+        "hidden": false,
+        "internalApp": false,
+        "name": "Starter Kit Match-3",
+        "removable": true,
+        "url": "file:///private/var/containers/Bundle/Application/00000000-0000-0000-0000-000000000000/KanamaMatch3.app/",
+        "version": "0.1"
+      },
+      {
+        "appClip": false,
+        "builtByDeveloper": true,
+        "bundleIdentifier": "net.multigesture.kanama.thirdperson",
+        "bundleVersion": "1",
+        "containerAccessible": true,
+        "defaultApp": false,
+        "hidden": false,
+        "internalApp": false,
+        "name": "Third Person Controller",
+        "removable": true,
+        "url": "file:///private/var/containers/Bundle/Application/00000000-0000-0000-0000-000000000000/KanamaThirdPerson.app/",
+        "version": "0.1"
+      },
+      {
+        "appClip": false,
+        "builtByDeveloper": true,
+        "bundleIdentifier": "net.multigesture.kanama.devicegate",
+        "bundleVersion": "1",
+        "containerAccessible": true,
+        "defaultApp": false,
+        "hidden": false,
+        "internalApp": false,
+        "name": "Starter Kit Match-3",
+        "removable": true,
+        "url": "file:///private/var/containers/Bundle/Application/00000000-0000-0000-0000-000000000000/KanamaMatch3.app/",
+        "version": "0.1"
+      }
+    ],
+    "defaultAppsIncluded": false,
+    "deviceIdentifier": "<udid>",
+    "hiddenAppsIncluded": false,
+    "internalAppsIncluded": false,
+    "matchingBundleIdentifier": null,
+    "removableAppsIncluded": true
+  }
+}

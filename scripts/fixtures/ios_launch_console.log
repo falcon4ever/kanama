@@ -1,0 +1,6 @@
+Launched application with net.multigesture.kanama.iosvisualsmoke bundle identifier.
+Waiting for the application to terminate…
+[kanama][ios][c] initialize: level=0
+[kanama][ios][c] initialize: level=1
+[kanama][ios][c] PTRCALL SELFTEST MATRIX: 120 passed, 0 failed
+[kanama][ios][kn] OBJECTCALLS SELFTEST: 308 passed, 0 failed faults=7 expected=7 in 412 ms

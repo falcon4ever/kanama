@@ -172,7 +172,7 @@ build_demo_scripts
 
 echo "[android_minified] build + install Kanama AAR"
 ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar \
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${KANAMA_GRADLE_ARGS[@]}" installAndroidPluginAar \
   -PkanamaAndroidDemoDir="$DEMO_DIR"
 # The release path keeps no API exercise rows (they ride only in android_smoke.sh's flagged debug AAR).
 python3 "$ROOT_DIR/scripts/generate_api_exercise.py" --check-jar "$DEMO_DIR/android/plugins/KanamaAndroid.debug.aar"

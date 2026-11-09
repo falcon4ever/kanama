@@ -162,6 +162,84 @@ if [[ "${1:-}" == "--check-built-bundle-id" ]]; then
   exit 1
 fi
 
+# A launch iOS refused, read from devicectl's launch output. The untrusted-developer refusal says, in devicectl's
+# words, "Unable to launch <id> because it has an invalid code signature, inadequate entitlements or its profile has
+# not been explicitly trusted by the user" (BSErrorCodeDescription = Security). With a free Apple account iOS drops
+# the trust whenever the last app that developer signed leaves the phone, and nothing on the Mac can restore it:
+# say what to tap. A locked phone says "the device was not, or could not be, unlocked". Prints the reason and
+# returns 1 on a refusal, returns 0 otherwise (grep -s: a log not written yet is no refusal).
+launch_refusal_verdict() {
+  local reason
+  if grep -Eqs 'has not been explicitly trusted|invalid code signature, inadequate entitlements' "$@"; then
+    echo "[ios_visual_smoke] iOS refused the launch: the developer that signed this app is not trusted on the phone. On the phone open Settings > General > VPN & Device Management, tap the Apple Development entry under Developer App and Trust it, then re-run. (A free Apple account loses this trust whenever its last app leaves the phone.)" >&2
+    return 1
+  fi
+  if grep -Eqs 'could not be, unlocked' "$@"; then
+    echo "[ios_visual_smoke] iOS refused the launch: the device is locked. Unlock it and keep it awake (Settings > Display & Brightness > Auto-Lock: Never), then re-run." >&2
+    return 1
+  fi
+  if grep -Eqs 'failed to launch|RequestDenied' "$@"; then
+    # justified: the reason line only decorates the message; the return 1 below is the verdict.
+    reason="$(grep -Ehos 'Unable to launch[^(]*' "$@" | head -n 1 || true)"
+    echo "[ios_visual_smoke] iOS refused the launch: ${reason:-see the launch log}" >&2
+    return 1
+  fi
+  return 0
+}
+
+# Waits for the scene-init self-test line while the device's console stream (PID, `devicectl ... --console`) runs,
+# bounded by TIMEOUT seconds, and ends early when the launch is refused (returns 3, the reason printed) or the stream
+# ends before that line (returns 2: the app exited or never started). Returns 0 when the line is in, 1 on a timeout;
+# leaves the seconds spent in `waited`. A refused launch used to wait out the whole timeout and then report "no Kanama
+# iOS loader log captured", which says nothing about the phone (4.8 beta 2 rehearsal).
+wait_for_device_launch() {
+  local pid="$1" timeout="$2"
+  shift 2
+  waited=0
+  while :; do
+    launch_refusal_verdict "$@" || return 3
+    if grep -Eqs 'OBJECTCALLS SELFTEST:' "$@"; then
+      return 0
+    fi
+    if ! kill -0 "$pid" >/dev/null 2>&1; then  # justified: a liveness probe; the stream ending is handled here
+      launch_refusal_verdict "$@" || return 3
+      return 2
+    fi
+    if [[ "$waited" -ge "$timeout" ]]; then
+      return 1
+    fi
+    sleep 2
+    waited=$((waited + 2))
+  done
+}
+
+# `--check-launch-wait CONSOLE_LOG` replays a saved launch output as the device's console stream would deliver it (a
+# process that writes it and stays open, as `devicectl --console` does for a running app) and applies the same wait
+# and refusal verdict as a device run; its red runs need no device. Exit 0 when scene-init is reached, 1 otherwise.
+if [[ "${1:-}" == "--check-launch-wait" ]]; then
+  if [[ ! -f "${2:-}" ]]; then
+    echo "usage: scripts/ios_visual_smoke.sh --check-launch-wait CONSOLE_LOG" >&2
+    exit 2
+  fi
+  replay_dir="$(mktemp -d "${TMPDIR:-/tmp}/kanama_ios_launch_wait.XXXXXX")"
+  { cat "$2"; exec sleep 300; } >"$replay_dir/stdout.log" &
+  replay_pid="$!"
+  wait_status=0
+  wait_for_device_launch "$replay_pid" "${KANAMA_IOS_LAUNCH_TIMEOUT:-120}" "$replay_dir/stdout.log" || wait_status=$?
+  # justified: stopping the replay stream this mode started; it may already have exited.
+  kill "$replay_pid" >/dev/null 2>&1 || true
+  # justified: reaping the replay stream; its status is not the verdict.
+  wait "$replay_pid" >/dev/null 2>&1 || true
+  rm -rf "$replay_dir"
+  case "$wait_status" in
+    0) echo "[ios_visual_smoke] launch wait: scene-init reached after ${waited}s"; exit 0 ;;
+    2) echo "[ios_visual_smoke] launch wait: the console stream ended after ${waited}s before scene-init" >&2 ;;
+    3) echo "[ios_visual_smoke] launch wait: refused after ${waited}s" >&2 ;;
+    *) echo "[ios_visual_smoke] launch wait: no scene-init line within ${waited}s" >&2 ;;
+  esac
+  exit 1
+fi
+
 # portability: device-only below -- everything past this line drives a Mac, Xcode and a simulator or an
 # iPhone (xcrun, xcodebuild); CI never gets here (its only modes, --check-selftest-log and
 # --check-built-bundle-id, exited above). scripts/check_script_portability.py holds the lines above this one to the portable vocabulary.
@@ -2771,12 +2849,28 @@ if [[ "$physical_device" -eq 1 ]]; then
   # KANAMA_IOS_LAUNCH_TIMEOUT (default 120 s), then keep capturing for `launch_sleep` more so the
   # probe lines that follow it land. A device that never reaches scene-init still fails the loader
   # / ready assertions below, just later.
+  # A refused launch (untrusted developer, locked phone) fails here at once with what to do on the phone.
   launch_timeout="${KANAMA_IOS_LAUNCH_TIMEOUT:-120}"
-  # justified: a timeout is not the verdict; the loader/self-test assertions after the capture window decide.
-  wait_for_log_line 'OBJECTCALLS SELFTEST:' "$launch_timeout" || true
+  launch_wait_status=0
+  wait_for_device_launch "$launch_pid" "$launch_timeout" "$stderr_log" "$stdout_log" || launch_wait_status=$?
+  if [[ "$launch_wait_status" -eq 3 ]]; then
+    # justified: stopping our own console stream; devicectl has usually exited already after a refusal.
+    kill "$launch_pid" >/dev/null 2>&1 || true
+    # justified: reaping our own console stream; the refusal printed above is the verdict.
+    wait "$launch_pid" >/dev/null 2>&1 || true
+    echo "[ios_visual_smoke] launch output: $stderr_log" >&2
+    exit 1
+  fi
+  # A timeout or an ended stream is not itself the verdict: the loader/self-test assertions after the window decide.
   post_wait=$((launch_sleep + 5))
-  echo "[ios_visual_smoke] scene-init reached after ${waited}s (timeout ${launch_timeout}s); capturing ${post_wait}s more"
-  sleep "$post_wait"
+  case "$launch_wait_status" in
+    0) echo "[ios_visual_smoke] scene-init reached after ${waited}s (timeout ${launch_timeout}s); capturing ${post_wait}s more" ;;
+    2) echo "[ios_visual_smoke] the console stream ended after ${waited}s before scene-init (the app exited or never started)" >&2 ;;
+    *) echo "[ios_visual_smoke] no scene-init line within ${launch_timeout}s; capturing ${post_wait}s more" >&2 ;;
+  esac
+  if [[ "$launch_wait_status" -ne 2 ]]; then
+    sleep "$post_wait"
+  fi
   # justified: stopping our own console stream after the capture window; it may already have exited.
   kill "$launch_pid" >/dev/null 2>&1 || true
   # justified: stopping our own console stream after the capture window; it may already have exited.

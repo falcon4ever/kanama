@@ -233,7 +233,7 @@ if [[ "$API_EXERCISE" == "1" ]]; then
   AAR_ARGS+=("-PkanamaApiExercise=true")
 fi
 ANDROID_HOME="$ANDROID_SDK_DIR" ANDROID_SDK_ROOT="$ANDROID_SDK_DIR" \
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAndroidPluginAar "${AAR_ARGS[@]}"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${KANAMA_GRADLE_ARGS[@]}" installAndroidPluginAar "${AAR_ARGS[@]}"
 
 install_desktop_addon
 ensure_android_build_template

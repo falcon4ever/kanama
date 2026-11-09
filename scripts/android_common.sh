@@ -13,6 +13,15 @@
 #   drop_stale_android_build_template                  deletes android/build when it is from another Godot version
 #   ensure_android_build_template                      sets BUILD_GRADLE (and installs the template)
 
+# No Gradle daemon outlives a run (local_ci.sh's convention; a device matrix left a Gradle 9 daemon from this
+# checkout and a Gradle 8 one from Godot's Android template behind per demo). This checkout's gradlew calls pass
+# KANAMA_GRADLE_ARGS. Godot's export runs the template's own gradlew with the environment the editor inherits from
+# this script, and GRADLE_OPTS' -Dorg.gradle.daemon=false is Gradle's documented switch for a build whose command
+# line we do not own; as the template's org.gradle.jvmargs differ from the client's, that build then runs in a
+# single-use daemon that exits with it. Never `gradlew --stop`: it would stop every daemon on the machine.
+KANAMA_GRADLE_ARGS=(--no-daemon -Pkotlin.compiler.execution.strategy=in-process)
+export GRADLE_OPTS="${GRADLE_OPTS:+$GRADLE_OPTS }-Dorg.gradle.daemon=false"
+
 check_log() {
   local pattern="$1"
   if ! grep -Eq "$pattern" "$LOG_FILE"; then
@@ -54,10 +63,10 @@ build_demo_scripts() {
   if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
     echo "$ANDROID_TAG build demo scripts (against $ROOT_DIR)"
     if [[ -n "${KANAMA_DEMO_JAVA_HOME:-}" ]]; then
-      JAVA_HOME="$KANAMA_DEMO_JAVA_HOME" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
+      JAVA_HOME="$KANAMA_DEMO_JAVA_HOME" "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${KANAMA_GRADLE_ARGS[@]}" :project-scripts:jar \
         "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
     else
-      "$ROOT_DIR/gradlew" -p "$ROOT_DIR" :project-scripts:jar \
+      "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${KANAMA_GRADLE_ARGS[@]}" :project-scripts:jar \
         "-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src"
     fi
   fi
@@ -75,7 +84,7 @@ install_desktop_addon() {
   if [[ -d "$DEMO_DIR/kotlin-src" ]]; then
     addon_args+=("-PkanamaProjectScriptsDir=$DEMO_DIR/kotlin-src")
   fi
-  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" installAddonJar "${addon_args[@]}"
+  "$ROOT_DIR/gradlew" -p "$ROOT_DIR" "${KANAMA_GRADLE_ARGS[@]}" installAddonJar "${addon_args[@]}"
 }
 
 # The Godot version the templates directory and android/.build_version must equal (Godot's
