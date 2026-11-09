@@ -8275,6 +8275,24 @@ static GDExtensionObjectPtr kanama_ios_construct_extension_object(KanamaIosClass
     return g_classdb_construct_object((GDExtensionConstStringNamePtr)class_name);
 }
 
+// A virtual's Array or Dictionary return cell is Godot's own `PtrToArg<m_ret>::EncodeT ret;`, already
+// default-constructed, and those constructors allocate their storage: destroy it before building the
+// return in its place, or every call leaks that allocation (godot-cpp assigns into the cell instead).
+// Only for a virtual's return cell; a cell the shim allocated itself is uninitialised memory.
+static void kanama_ios_release_virtual_array_return(GDExtensionTypePtr ret) {
+    if (g_array_destructor == NULL) {
+        g_array_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_ARRAY);
+    }
+    if (g_array_destructor != NULL) g_array_destructor(ret);
+}
+
+static void kanama_ios_release_virtual_dictionary_return(GDExtensionTypePtr ret) {
+    if (g_dictionary_destructor == NULL) {
+        g_dictionary_destructor = g_variant_get_ptr_destructor(KANAMA_IOS_VARIANT_TYPE_DICTIONARY);
+    }
+    if (g_dictionary_destructor != NULL) g_dictionary_destructor(ret);
+}
+
 static void kanama_ios_call_virtual_with_data(
     GDExtensionClassInstancePtr instance,
     GDExtensionConstStringNamePtr name,
@@ -8314,9 +8332,11 @@ static void kanama_ios_call_virtual_with_data(
             kanama_ios_init_empty_packed_string_array(ret);
             break;
         case KANAMA_IOS_VIRTUAL_ARRAY_EMPTY:
+            kanama_ios_release_virtual_array_return(ret);
             kanama_ios_init_empty_array(ret);
             break;
         case KANAMA_IOS_VIRTUAL_DICTIONARY_EMPTY:
+            kanama_ios_release_virtual_dictionary_return(ret);
             kanama_ios_init_empty_dictionary(ret);
             break;
         case KANAMA_IOS_VIRTUAL_VARIANT_NIL:

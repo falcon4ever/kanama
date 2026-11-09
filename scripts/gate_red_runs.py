@@ -1084,6 +1084,15 @@ case("audit_ptrcall_helper_layouts.py (int argument cell)", py("audit_ptrcall_he
            "        GodotStrings.initString(stringCell, text)\n        intCell.set(JAVA_INT, 0, intArg)\n"
            "        val arr = arena.allocate(ADDRESS, 3)\n        arr.setAtIndex(ADDRESS, 0, objCell)\n        arr.setAtIndex(ADDRESS, 1, stringCell)\n")],
      "as a lone 4-byte JAVA_INT", "an int32 argument is written as 4 bytes into its 8-byte cell, leaving the engine's upper half unwritten")
+# ptrcallWithFiveIntArgs is one of the helpers whose name the shape parser does not read: the lone-cell scan
+# covers every function body, so its int argument written as 4 bytes must still go red.
+FIVE_INT_CELLS = ("    fifth: Int,\n  ) {\n    Arena.ofConfined().use { arena ->\n" + "".join(
+    f"      val arg{i} = arena.allocate(JAVA_LONG)\n" for i in range(5)))
+case("audit_ptrcall_helper_layouts.py (unparsed helper int argument)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit(f"{JVM}/binding/runtime/ObjectCalls.kt", FIVE_INT_CELLS + "      arg0.set(JAVA_LONG, 0, first.toLong())\n",
+           FIVE_INT_CELLS + "      arg0.set(JAVA_INT, 0, first)\n")],
+     "ptrcallWithFiveIntArgs reads or writes `arg0` as a lone 4-byte JAVA_INT",
+     "ptrcallWithFiveIntArgs (a helper the shape parser skips) writes its first int argument as 4 bytes")
 case("audit_ptrcall_helper_layouts.py (virtual int return)", py("audit_ptrcall_helper_layouts.py"),
      [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt",
            "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
@@ -1091,6 +1100,16 @@ case("audit_ptrcall_helper_layouts.py (virtual int return)", py("audit_ptrcall_h
            "    fun callGetMemberLine(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
            "      rRet.reinterpret(4).set(JAVA_INT, 0, -1)\n")],
      "a virtual writes its return through", "ScriptExtension._get_member_line writes its int return as 4 bytes into the engine's int64 cell")
+# A virtual's Array return cell is Godot's default-constructed `Array ret;` (its constructor allocates): building the
+# return over it without destroying it first leaks one allocation per call, which no smoke notices.
+MEMBERS_FUN = "    fun callGetMembers(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {\n"
+case("audit_ptrcall_helper_layouts.py (virtual Array return leak)", py("audit_ptrcall_helper_layouts.py"),
+     [Edit("src/jvmMain/kotlin/binding/KanamaScript.kt",
+           MEMBERS_FUN + "      BuiltinTypes.releaseVirtualReturn(\n        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,\n"
+           "        rRet,\n      )\n",
+           MEMBERS_FUN)],
+     "callGetMembers builds an Array/Dictionary return over the engine's default-constructed cell",
+     "ScriptExtension._get_members builds its Array over the engine's constructed return cell without destroying it")
 case("audit_ptrcall_helper_layouts.py (iOS shim ptrcall return)", py("audit_ptrcall_helper_layouts.py"),
      [Edit("ios/bootstrap/kanama_ios_shim.c",
            "    int64_t ret = -1;\n    g_object_method_bind_ptrcall(method_bind, instance, args, &ret);\n",

@@ -1131,6 +1131,10 @@ class KanamaScript(
 
     @JvmStatic
     fun callGetScriptMethodList(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+        rRet,
+      )
       val script = ObjectRegistry.get(instance.address()) as? KanamaScript
       if (script == null) {
         BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
@@ -1145,6 +1149,10 @@ class KanamaScript(
       args: MemorySegment,
       rRet: MemorySegment,
     ) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+        rRet,
+      )
       val script = ObjectRegistry.get(instance.address()) as? KanamaScript
       if (script == null) {
         BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
@@ -1155,11 +1163,19 @@ class KanamaScript(
 
     @JvmStatic
     fun callGetConstants(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+        rRet,
+      )
       BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
     }
 
     @JvmStatic
     fun callGetMembers(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+        rRet,
+      )
       BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
     }
 
@@ -1230,6 +1246,10 @@ class KanamaScript(
 
     @JvmStatic
     fun callGetMethodInfo(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+        rRet,
+      )
       val script = ObjectRegistry.get(instance.address()) as? KanamaScript
       if (script == null) {
         BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
@@ -1245,6 +1265,10 @@ class KanamaScript(
 
     @JvmStatic
     fun callGetScriptSignalList(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+        rRet,
+      )
       val script = ObjectRegistry.get(instance.address()) as? KanamaScript
       if (script == null) {
         BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
@@ -1310,11 +1334,19 @@ class KanamaScript(
 
     @JvmStatic
     fun callEmptyArray(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+        rRet,
+      )
       BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
     }
 
     @JvmStatic
     fun callEmptyDictionary(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+      BuiltinTypes.releaseVirtualReturn(
+        net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+        rRet,
+      )
       BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
     }
 

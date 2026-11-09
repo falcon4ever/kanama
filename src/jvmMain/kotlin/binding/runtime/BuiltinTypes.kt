@@ -220,6 +220,21 @@ object BuiltinTypes {
     ptrDestructor(type).invoke(valuePtr)
   }
 
+  /**
+   * Empties a GDExtension virtual's Array or Dictionary return cell before Kanama builds its return
+   * in place. The cell is Godot's own `PtrToArg<m_ret>::EncodeT ret;`, already default-constructed,
+   * and an Array's or Dictionary's default constructor allocates its storage: constructing over it
+   * without this leaked that allocation on every call (godot-cpp assigns into the cell instead).
+   * Only for a virtual's return cell: a cell Kanama allocated itself is uninitialised memory, never
+   * destroyed.
+   */
+  fun releaseVirtualReturn(type: VariantType, rRet: MemorySegment) {
+    require(type == VariantType.ARRAY || type == VariantType.DICTIONARY) {
+      "releaseVirtualReturn is for the Array/Dictionary cells Godot default-constructs, not $type"
+    }
+    destroyTyped(type, rRet)
+  }
+
   /** Initialize [dest] as a Variant containing nil. */
   fun initNilVariant(dest: MemorySegment) {
     variantNewNil.invoke(dest)

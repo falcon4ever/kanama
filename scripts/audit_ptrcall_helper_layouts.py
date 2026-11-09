@@ -10,12 +10,17 @@ easy to reintroduce while adding generator shapes:
   the smaller ints and enums) as int64 (`PtrToArg<int32_t>` converts through `int64_t`, in
   `core/variant/method_ptrcall.h`), so a 4-byte `JAVA_INT` argument cell is read past its end
   and a 4-byte return cell is overflowed by the engine's 8-byte write; `JAVA_INT` is left for
-  the components of `Vector2i`/`Vector3i`/`Rect2i`, and no 4-byte scalar cell is allocated,
+  the components of `Vector2i`/`Vector3i`/`Rect2i`, and no 4-byte scalar cell is allocated or
+  touched alone in any function of the cell files (every body, not only the helpers whose names the
+  shape parser reads),
 - scalar Godot `float` helpers use the 64-bit ptrcall float slot,
 - `Color` component helpers remain fixed 32-bit component storage,
 - a Kanama virtual (`rRet`, the engine's `PtrToArg<m_ret>::EncodeT`) never writes an integer
   return as 4 bytes, on desktop/Android or in the iOS shim, and the shim's own ptrcalls use no
-  4-byte integer return cell.
+  4-byte integer return cell,
+- a virtual that builds an Array or Dictionary return destroys the engine's default-constructed
+  cell first (`BuiltinTypes.releaseVirtualReturn`, `kanama_ios_release_virtual_*_return`): those
+  constructors allocate, so building over the cell leaked on every call.
 
 The float/Color rules absorbed `audit_scalar_float_abi.py` (retired in task 99): that
 script name-matched 30 `ptrcall*Float*` helpers, 20 of them packed-array helpers, while
@@ -50,21 +55,34 @@ INT64_KINDS = {"int64", "enum", "bitfield", "rid"}
 SCALAR_INT32_KINDS = {"int32", "uint32"}
 # 32-bit components inside a builtin value: the only legitimate JAVA_INT storage in a helper.
 INT_VECTOR_KINDS = {"vector2i", "vector3i", "rect2i"}
-# A 4-byte scalar cell anywhere in ObjectCalls (an Int/Float/Short layout allocated alone).
+# A 4-byte scalar cell (an Int/Float/Short layout allocated alone, or one element of it) in a file that
+# lays out ptrcall cells. `allocateFrom(JAVA_INT, a, b)` is a vector; with one value it is a scalar.
 SCALAR_4BYTE_ALLOC_RE = re.compile(
-    r"\ballocate\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT|JAVA_CHAR)\s*\)"
+    r"\ballocate\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT|JAVA_CHAR)\s*(?:,\s*1L?\s*)?\)"
     r"|\ballocate\(\s*[24]L?\s*(?:,\s*[124]L?\s*)?\)",
 )
-INT_ACCESS_RE = re.compile(r"(?P<cell>[\w.]+)\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?JAVA_INT,\s*(?P<offset>\w+)")
+ALLOCATE_FROM_RE = re.compile(r"\ballocateFrom\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?P<layout>JAVA_INT|JAVA_FLOAT|JAVA_SHORT)\b")
+# The files whose functions build ptrcall argument/return cells: every function body in them is scanned,
+# not only the helpers whose names the shape parser reads.
+CELL_FILES = (
+    OBJECT_CALLS,
+    ROOT / "src/jvmMain/kotlin/binding/runtime/SignalCallables.kt",
+    ROOT / "src/jvmMain/kotlin/binding/runtime/UtilityCalls.kt",
+)
+NARROW_ACCESS_RE = re.compile(
+    r"(?P<cell>[\w.]+)\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?P<layout>JAVA_INT|JAVA_FLOAT),\s*(?P<offset>\w+)",
+)
+MEMBER_START_RE = re.compile(r"^  (?:/\*\*|@|(?:(?:actual|private|internal|public|inline|override|operator)\s+)*(?:fun|val|var|object|class)\b)")
 # A bool virtual return is one byte (uint8); an integer or float one never fits in 2 or 4.
 VIRTUAL_NARROW_RET_RE = re.compile(
     r"\brRet(?:\.reinterpret\(\s*\w+\s*\))?\.set\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?(?:JAVA_INT|JAVA_FLOAT|JAVA_SHORT)\b"
     r"|\brRet\.reinterpret\(\s*[24]L?\s*\)",
 )
-SHIM_NARROW_VIRTUAL_RET_RE = re.compile(r"\*\(\(\s*(?:int32_t|uint32_t|int16_t|uint16_t|float)\s*\*\s*\)\s*ret\s*\)\s*=")
-SHIM_NARROW_PTRCALL_RET_RE = re.compile(
-    r"\b(?:int32_t|uint32_t|int16_t|uint16_t|float)\s+(?P<name>\w+)\s*=[^;]*;\s*\n\s*g_object_method_bind_ptrcall\([^;]*&(?P=name)\s*\)",
-)
+NARROW_C_TYPES = r"(?:int32_t|uint32_t|int16_t|uint16_t|int8_t|float|int|unsigned)"
+# `*((int32_t *)ret) = ...` or `*(int32_t *)ret = ...` in a virtual: the return is an 8-byte EncodeT.
+SHIM_NARROW_VIRTUAL_RET_RE = re.compile(r"\*\s*\(+\s*" + NARROW_C_TYPES + r"\s*\*\s*\)\s*\(?\s*(?:r_)?ret\s*\)*\s*=")
+# A ptrcall whose return argument is the address of a local: the local's declaration in the same function.
+SHIM_PTRCALL_ADDR_RET_RE = re.compile(r"\bg_object_method_bind_ptrcall\((?P<args>[^;]*?)&\s*(?P<name>\w+)\s*\)\s*;")
 ARRAY_KINDS = {
     "array",
     "typed_object_array",
@@ -269,11 +287,6 @@ def audit_helper(helper: PtrcallHelper) -> list[str]:
             f"{location} uses JAVA_INT but helper shape has no Vector2i/Vector3i/Rect2i slot "
             "(a scalar int32/uint32 ptrcall slot is an int64 cell)",
         )
-    for cell in scalar_int_cells(helper.body):
-        errors.append(
-            f"{location} reads or writes `{cell}` as a lone 4-byte JAVA_INT: Godot's ptrcall carries "
-            "a scalar int32/uint32 in an 8-byte int64 cell",
-        )
     if uses_java_float(helper.body) and not expects_color:
         errors.append(f"{location} uses JAVA_FLOAT outside Color component storage")
 
@@ -291,27 +304,139 @@ def audit_helper(helper: PtrcallHelper) -> list[str]:
     return errors
 
 
-def scalar_int_cells(body: str) -> list[str]:
-    """Cells a helper touches with JAVA_INT only at offset 0: a scalar in a 4-byte slot."""
-    offsets: dict[str, set[str]] = {}
-    for match in INT_ACCESS_RE.finditer(body):
-        offsets.setdefault(match.group("cell"), set()).add(match.group("offset"))
-    return sorted(cell for cell, seen in offsets.items() if seen == {"0"})
+def call_arguments(text: str, open_paren: int) -> list[str]:
+    """The top-level comma-separated arguments of the call whose `(` is at [open_paren]."""
+    depth = 0
+    args: list[str] = []
+    start = open_paren + 1
+    for index in range(open_paren, len(text)):
+        char = text[index]
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            depth -= 1
+            if depth == 0:
+                args.append(text[start:index].strip())
+                return args
+        elif char == "," and depth == 1:
+            args.append(text[start:index].strip())
+            start = index + 1
+    return args
+
+
+def member_chunks(content: str) -> list[tuple[int, str]]:
+    """The object's members (2-space indent declarations) as (first line, text); a nested class's
+    methods stay in its chunk."""
+    lines = content.split("\n")
+    starts = [index for index, line in enumerate(lines) if MEMBER_START_RE.match(line)]
+    starts.append(len(lines))
+    return [(start + 1, "\n".join(lines[start:end])) for start, end in zip(starts, starts[1:])]
+
+
+def lone_narrow_cells(chunk: str) -> list[tuple[str, str]]:
+    """(cell, layout) pairs a member touches with JAVA_INT/JAVA_FLOAT only at offset 0: a scalar in a
+    4-byte slot (a Vector2i/Rect2i/Color touches its other components too)."""
+    offsets: dict[tuple[str, str], set[str]] = {}
+    for match in NARROW_ACCESS_RE.finditer(chunk):
+        offsets.setdefault((match.group("cell"), match.group("layout")), set()).add(match.group("offset"))
+    return sorted(key for key, seen in offsets.items() if seen == {"0"})
 
 
 def audit_scalar_allocations(content: str) -> list[str]:
+    """Every function body of the cell files, parsed helper or not."""
     errors: list[str] = []
-    for match in SCALAR_4BYTE_ALLOC_RE.finditer(content):
-        line = content.count("\n", 0, match.start()) + 1
-        errors.append(
-            f"{OBJECT_CALLS.relative_to(ROOT)}:{line}: allocates a 4-byte scalar cell `{match.group(0)}`; "
-            "every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE)",
-        )
+    for path in CELL_FILES:
+        text = content if path == OBJECT_CALLS else path.read_text(encoding="utf-8")
+        rel = path.relative_to(ROOT)
+        for match in SCALAR_4BYTE_ALLOC_RE.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            errors.append(
+                f"{rel}:{line}: allocates a 4-byte scalar cell `{match.group(0)}`; "
+                "every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE)",
+            )
+        for match in ALLOCATE_FROM_RE.finditer(text):
+            if len(call_arguments(text, text.index("(", match.start()))) == 2:
+                line = text.count("\n", 0, match.start()) + 1
+                errors.append(
+                    f"{rel}:{line}: allocates a 4-byte scalar cell with `allocateFrom({match.group('layout')}, value)`; "
+                    "every scalar int/float ptrcall cell is 8 bytes (JAVA_LONG / JAVA_DOUBLE)",
+                )
+        for first_line, chunk in member_chunks(text):
+            name_match = re.search(r"\bfun\s+(\w+)", chunk)
+            name = name_match.group(1) if name_match else "<member>"
+            for cell, layout in lone_narrow_cells(chunk):
+                escaped = re.escape(cell)
+                passed = bool(
+                    re.search(rf"setAtIndex\(\s*ADDRESS,\s*[^,]+,\s*{escaped}\s*\)", chunk)
+                    or re.search(rf"bindPtrcall\([^)]*\b{escaped}\s*\)", chunk)
+                )
+                use = re.search(rf"{escaped}\.(?:set|get)\(\s*(?:java\.lang\.foreign\.ValueLayout\.)?{layout}", chunk)
+                line = first_line + (chunk.count("\n", 0, use.start()) if use else 0)
+                where = " (it is passed to the ptrcall)" if passed else ""
+                errors.append(
+                    f"{rel}:{line}: {name} reads or writes `{cell}` as a lone 4-byte {layout}{where}: Godot's "
+                    "ptrcall carries a scalar int32/uint32 in an 8-byte int64 cell and a float in a double",
+                )
+    return errors
+
+
+def audit_shim_ptrcall_returns(text: str) -> list[tuple[int, str]]:
+    """Shim ptrcalls whose return is the address of a 4-byte local declared anywhere earlier in the same
+    function (an array local is component storage and is left alone)."""
+    found: list[tuple[int, str]] = []
+    for match in SHIM_PTRCALL_ADDR_RET_RE.finditer(text):
+        function_start = text.rfind("\n}", 0, match.start())
+        scope = text[function_start + 1 if function_start != -1 else 0 : match.start()]
+        name = re.escape(match.group("name"))
+        if re.search(rf"\b{NARROW_C_TYPES}\s+{name}\s*(?:=|;)", scope):
+            line = text.count("\n", 0, match.start()) + 1
+            found.append((line, match.group("name")))
+    return found
+
+
+VIRTUAL_FUN_RE = re.compile(r"\bfun\s+(?P<name>\w+)\([^)]*\brRet:\s*MemorySegment")
+# A container return built in place over the engine's cell (an Array/TypedArray or a Dictionary).
+CONTAINER_RET_WRITE_RE = re.compile(
+    r"construct\(\s*(?:[\w.]+\.)?VariantType\.(?:ARRAY|DICTIONARY)\s*,\s*rRet\b"
+    r"|\binit(?:Dictionary|Array\w*)\(\s*rRet\b"
+    r"|\bwrite\w*(?:List|MethodInfo)\([^)]*\brRet\b",
+)
+SHIM_CONTAINER_RET_RE = re.compile(r"kanama_ios_init_empty_(?P<kind>array|dictionary)\(\s*ret\s*\)")
+
+
+def audit_virtual_container_returns() -> list[str]:
+    """A virtual's Array/Dictionary return cell arrives default-constructed (`PtrToArg<m_ret>::EncodeT ret;`,
+    whose constructor allocates): building the return over it without destroying it first leaks that
+    allocation on every call."""
+    errors: list[str] = []
+    for path in sorted(JVM_BINDING.rglob("*.kt")):
+        text = path.read_text(encoding="utf-8")
+        for match in VIRTUAL_FUN_RE.finditer(text):
+            body = text[match.start() : find_function_end(text, match.end())]
+            write = CONTAINER_RET_WRITE_RE.search(body)
+            if write and "releaseVirtualReturn(" not in body[: write.start()]:
+                line = text.count("\n", 0, match.start() + write.start()) + 1
+                errors.append(
+                    f"{path.relative_to(ROOT)}:{line}: {match.group('name')} builds an Array/Dictionary return "
+                    "over the engine's default-constructed cell without BuiltinTypes.releaseVirtualReturn first "
+                    "(leaks the cell's storage on every call)",
+                )
+    if IOS_SHIM.exists():
+        text = IOS_SHIM.read_text(encoding="utf-8")
+        for match in SHIM_CONTAINER_RET_RE.finditer(text):
+            before = text[text.rfind("\n", 0, text.rfind("\n", 0, match.start())) : match.start()]
+            if f"kanama_ios_release_virtual_{match.group('kind')}_return(ret)" not in before:
+                line = text.count("\n", 0, match.start()) + 1
+                errors.append(
+                    f"{IOS_SHIM.relative_to(ROOT)}:{line}: a virtual builds an empty {match.group('kind')} over the "
+                    f"engine's default-constructed return cell without kanama_ios_release_virtual_{match.group('kind')}_return "
+                    "first (leaks the cell's storage on every call)",
+                )
     return errors
 
 
 def audit_virtual_returns() -> list[str]:
-    errors: list[str] = []
+    errors: list[str] = audit_virtual_container_returns()
     for path in sorted(JVM_BINDING.rglob("*.kt")):
         text = path.read_text(encoding="utf-8")
         for match in VIRTUAL_NARROW_RET_RE.finditer(text):
@@ -322,15 +447,17 @@ def audit_virtual_returns() -> list[str]:
             )
     if IOS_SHIM.exists():
         text = IOS_SHIM.read_text(encoding="utf-8")
-        for regex, what in (
-            (SHIM_NARROW_VIRTUAL_RET_RE, "a virtual writes a 4-byte integer/float return"),
-            (SHIM_NARROW_PTRCALL_RET_RE, "a ptrcall return cell is 4 bytes"),
-        ):
-            for match in regex.finditer(text):
-                line = text.count("\n", 0, match.start()) + 1
-                errors.append(
-                    f"{IOS_SHIM.relative_to(ROOT)}:{line}: {what}; Godot's ptrcall uses an 8-byte int64/double",
-                )
+        for match in SHIM_NARROW_VIRTUAL_RET_RE.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            errors.append(
+                f"{IOS_SHIM.relative_to(ROOT)}:{line}: a virtual writes a 4-byte integer/float return; "
+                "Godot's ptrcall uses an 8-byte int64/double",
+            )
+        for line, name in audit_shim_ptrcall_returns(text):
+            errors.append(
+                f"{IOS_SHIM.relative_to(ROOT)}:{line}: a ptrcall return cell is 4 bytes (`{name}`); "
+                "Godot's ptrcall uses an 8-byte int64/double",
+            )
     return errors
 
 

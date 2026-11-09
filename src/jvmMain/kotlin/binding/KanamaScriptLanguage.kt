@@ -701,6 +701,10 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callGetGlobalClassName(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+      rRet,
+    )
     val argsArray = args.reinterpret(8)
     val pathPtr = argsArray.get(ADDRESS, 0)
     val path = GodotStrings.readString(pathPtr)
@@ -795,21 +799,37 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callEmptyArray(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+      rRet,
+    )
     BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
   }
 
   @JvmStatic
   fun callEmptyDictionary(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+      rRet,
+    )
     BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY, rRet)
   }
 
   @JvmStatic
   fun callValidate(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+      rRet,
+    )
     BuiltinTypes.initDictionary(rRet, mapOf("valid" to true))
   }
 
   @JvmStatic
   fun callCompleteCode(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+      rRet,
+    )
     BuiltinTypes.initDictionary(
       rRet,
       mapOf("result" to ERROR_UNAVAILABLE, "force" to false, "call_hint" to ""),
@@ -818,6 +838,10 @@ object KanamaScriptLanguage {
 
   @JvmStatic
   fun callLookupCode(instance: MemorySegment, args: MemorySegment, rRet: MemorySegment) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.DICTIONARY,
+      rRet,
+    )
     BuiltinTypes.initDictionary(rRet, mapOf("result" to ERROR_UNAVAILABLE, "type" to 0L))
   }
 
@@ -866,6 +890,10 @@ object KanamaScriptLanguage {
     args: MemorySegment,
     rRet: MemorySegment,
   ) {
+    BuiltinTypes.releaseVirtualReturn(
+      net.multigesture.kanama.binding.runtime.VariantType.ARRAY,
+      rRet,
+    )
     BuiltinTypes.construct(net.multigesture.kanama.binding.runtime.VariantType.ARRAY, rRet)
   }
 }

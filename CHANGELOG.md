@@ -67,14 +67,26 @@ scripts rewrite your old annotations, export hints and enum constants.
 
 ### Details
 
-#### Fixed — integer and float engine calls use Godot's 8-byte cells
+#### Fixed — integer engine calls use Godot's 8-byte cells, and script virtuals return the right types
 
 Godot passes every integer argument and return of an engine method (also `int32`, `uint32` and enums) as 8 bytes, and
 Kanama asked for 4-byte cells for them on desktop and Android: the engine wrote 8 bytes into each int return and read 8
 from each int argument. It went unnoticed because the allocators round such a small block up to at least 8 bytes (the
-JVM's to its word size), so the values came out right; nothing guaranteed it. Kanama's own script virtuals and the iOS
-shim had the same mistake in a few returns, one of them a 4-byte stack cell on iOS, and a script's method argument
-count, which Godot asks the script for when no instance answers, reached it as a garbled value instead of an int.
+JVM's to its word size), so the values came out right; nothing guaranteed it. The script virtuals Kanama implements
+returned their `int` and `Error` values in 4 bytes too, and on iOS `register_script_language`'s result landed in a
+4-byte stack cell.
+
+Some virtual returns had the wrong type or leaked:
+
+- A script's method argument count, which Godot asks the script for when no instance answers, reached Godot as a
+  garbled Variant instead of an int.
+- The script lists, the method info, the constants and the language's dictionaries (validate, code completion, the
+  global class name) built their Array or Dictionary over the one Godot had already made, leaking one small allocation
+  per call, mostly in the editor and from calls such as `get_method_list()`.
+- On iOS, `_get_members` wrote a 16-byte PackedStringArray into an 8-byte Array slot (reached through the remote scene
+  debugger in debug builds), `_placeholder_instance_create` wrote a Variant where Godot expects a pointer, and
+  `_get_doc_class_name` returned a String where Godot expects a StringName. The last two only run in an editor, which
+  iOS does not have.
 
 #### Added — the Godot 4.8 methods the API was missing
 
