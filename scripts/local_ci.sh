@@ -289,6 +289,11 @@ stage "gates index docs check"
 # gate ledger (task 99); regenerate with the same command minus --check.
 python3 "$ROOT_DIR/scripts/generate_gates_index.py" --markdown "$ROOT_DIR/docs/reference/generated/gates.md" --check
 
+stage "red-run mutations still apply"
+# The slow red-run cases only run in the nightly; this checks in seconds that every fixed edit they make still
+# finds its text, so renaming a variable a case edits fails here instead of a day later.
+python3 "$ROOT_DIR/scripts/gate_red_runs.py" --check-mutations
+
 # The stage name carries the pin, so it does not go stale at a bump (the index page shows `<pin>`).
 godot_pin="$(sed -nE 's/^kanamaGodotVersion=(.+)$/\1/p' "$ROOT_DIR/gradle.properties" | tr -d '[:space:]')"
 stage "wrapper KDoc staleness check ($godot_pin)"
