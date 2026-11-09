@@ -13,8 +13,8 @@ internal object ApiExerciseRows {
   /** Referenced helpers the inventory excludes (case E): reported, never run. */
   const val EXCLUDED: Int = 339
 
-  /** Rows in this file: 45 static (C), 60 pair (A), 337 const (B), 173 singleton (D), 141 Variant type (T), 609 reach (F). */
-  const val ROWS: Int = 1365
+  /** Rows in this file: 45 static (C), 60 pair (A), 337 const (B), 173 singleton (D), 141 Variant type (T), 611 reach (F). */
+  const val ROWS: Int = 1367
 
   fun runStatic(r: ApiExerciseRunner) {
     c000(r)
@@ -1397,6 +1397,8 @@ internal object ApiExerciseRows {
     f606(r)
     f607(r)
     f608(r)
+    f609(r)
+    f610(r)
   }
 
   // static with a return value; weak: argument-free static whose result can be its type's zero on a healthy host
@@ -24475,8 +24477,25 @@ internal object ApiExerciseRows {
     r.end()
   }
 
-  // a hint for where the IME draws: nothing shows while no text field has focus (SCENE_ROWS)
+  // only Windows shows a toast, so a Windows host skips the call; elsewhere Godot answers INVALID_NOTIFICATION_ID (-1), which a no-op cannot (SCENE_ROWS)
   private fun f605(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithTwoStringObjectCallableArgsRetInt", "DisplayServer.send_toast_notification")
+    try {
+      if (OS.getName() == "Windows") {
+        r.weakBecause("a Windows desktop would show the toast")
+      } else {
+        val got = DisplayServer.sendToastNotification("Kanama", "API exercise", null, r.noopCallable())
+        r.readBack(got, -1, "send_toast_notification")
+        r.reached()
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
+  // a hint for where the IME draws: nothing shows while no text field has focus (SCENE_ROWS)
+  private fun f606(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iAndIntArg", "DisplayServer.window_set_ime_rect")
     try {
       DisplayServer.windowSetImeRect(Rect2i(Vector2i(1, 2), Vector2i(3, 4)), 0)
@@ -24488,7 +24507,7 @@ internal object ApiExerciseRows {
   }
 
   // instantiable only in the editor: weak in a game. The plugin only stores the package (SCENE_ROWS)
-  private fun f606(r: ApiExerciseRunner) {
+  private fun f607(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringPackedStringListArgs", "EditorExportPlugin.add_apple_embedded_platform_spm_package")
     try {
       if (!ClassDB.canInstantiate("EditorExportPlugin")) {
@@ -24504,8 +24523,24 @@ internal object ApiExerciseRows {
     r.end()
   }
 
+  // needs OpenXR on, or the singleton is missing (weak); without a running session Godot answers null (SCENE_ROWS)
+  private fun f608(r: ApiExerciseRunner) {
+    r.begin('F', "ptrcallWithObjectListObjectTwoCallableArgsRetObject", "OpenXRSpatialEntityExtension.create_spatial_context")
+    try {
+      if (!Engine.hasSingleton("OpenXRSpatialEntityExtension")) {
+        r.weakBecause("OpenXR is off: no OpenXRSpatialEntityExtension singleton")
+      } else {
+        val e = OpenXRSpatialEntityExtension(checkNotNull(Engine.getSingleton("OpenXRSpatialEntityExtension")).handle)
+        r.reached(e.createSpatialContext(emptyList(), null, r.noopCallable(), r.noopCallable()))
+      }
+    } catch (t: Throwable) {
+      r.threw(t)
+    }
+    r.end()
+  }
+
   // a real 6DOF joint; the read-back is the getter's row (SCENE_ROWS)
-  private fun f607(r: ApiExerciseRunner) {
+  private fun f609(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndQuaternionArgs", "PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation")
     try {
       val j = r.joint6dof()
@@ -24518,7 +24553,7 @@ internal object ApiExerciseRows {
   }
 
   // two views with offsets, the shape a headset uses; the server has no getter for them (SCENE_ROWS)
-  private fun f608(r: ApiExerciseRunner) {
+  private fun f610(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDProjectionListTransform3DListArgs", "RenderingServer.camera_set_xr_projections")
     try {
       var camera = RID(0L)

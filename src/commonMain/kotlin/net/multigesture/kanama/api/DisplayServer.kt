@@ -3011,6 +3011,23 @@ object DisplayServer {
     }
 
     /**
+     * Displays a toast notification with `title`, `text`, and optionally `image`. `image` should be
+     * square, have a maximum edge length of 512 pixels, and should not exceed 4 MB when encoded as
+     * PNG. `callback` should accept two arguments: `int` (notification ID) and `NotificationStatus`.
+     * Returns the notification ID or `INVALID_NOTIFICATION_ID` if it failed. Note: This method is only
+     * implemented on Windows.
+     *
+     * Generated from Godot docs: DisplayServer.send_toast_notification
+     */
+    @JvmStatic
+    fun sendToastNotification(title: String, text: String, image: Texture2D?, callback: GodotCallable): Int {
+        val ret = ObjectCalls.ptrcallWithTwoStringObjectCallableArgsRetInt(Binds.sendToastNotificationBind, singleton, title, text, image?.requireOpenHandle() ?: NULL_SEGMENT, callback.target.segment, callback.method)
+        ObjectCalls.keepReachable(image)
+        ObjectCalls.keepReachable(callback)
+        return ret
+    }
+
+    /**
      * Hides the toast notification with `id` returned by `send_toast_notification`. Note: This method
      * is only implemented on Windows.
      *
@@ -6682,6 +6699,11 @@ object DisplayServer {
         @JvmField
         val cursorSetCustomImageBind =
             ObjectCalls.getMethodBind("DisplayServer", "cursor_set_custom_image", CURSOR_SET_CUSTOM_IMAGE_HASH)
+
+        private const val SEND_TOAST_NOTIFICATION_HASH = 3914862447L
+        @JvmField
+        val sendToastNotificationBind =
+            ObjectCalls.getMethodBind("DisplayServer", "send_toast_notification", SEND_TOAST_NOTIFICATION_HASH)
 
         private const val HIDE_TOAST_NOTIFICATION_HASH = 1286410249L
         @JvmField

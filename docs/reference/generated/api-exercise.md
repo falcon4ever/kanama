@@ -13,7 +13,7 @@ scratch directory, the singleton rows, the Variant type values) are hand-kept in
 the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
 reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1502 (1497 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15697 generated (13319 instance, 2262 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 894 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 549 (of the 549 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 609; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1504 (1499 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15699 generated (13320 instance, 2263 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 896 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 549 (of the 549 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 611; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -28,7 +28,7 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
 | B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 316 |
 | D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 97 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 609 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 611 |
 | E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
@@ -48,21 +48,21 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 832 | 3523 | 19 | 2 | 199 | 32 | 348 | 232 |
+| `PT_INT64` | 833 | 3524 | 19 | 2 | 199 | 32 | 349 | 232 |
 | `PT_VOID` | 578 | 2971 | – | 34 | – | – | 432 | 112 |
 | `PT_RID` | 368 | 1770 | – | 2 | 56 | 42 | 178 | 90 |
 | `PT_BOOL` | 352 | 1287 | 9 | – | 65 | 25 | 170 | 83 |
-| `PT_OBJECT` | 271 | 703 | 20 | – | 28 | 2 | 124 | 97 |
-| `PT_STRING` | 264 | 1019 | 25 | 3 | 29 | 8 | 67 | 132 |
+| `PT_OBJECT` | 273 | 705 | 20 | – | 28 | 2 | 126 | 97 |
+| `PT_STRING` | 265 | 1020 | 25 | 3 | 29 | 8 | 68 | 132 |
 | `PT_FLOAT64` | 235 | 700 | 2 | – | 54 | 10 | 150 | 19 |
 | `PT_STRING_NAME` | 136 | 505 | – | 1 | 33 | 14 | 60 | 28 |
 | `PT_VECTOR2` | 134 | 260 | 1 | – | 38 | 12 | 77 | 6 |
 | `PT_VECTOR2I` | 101 | 186 | – | – | 48 | 1 | 46 | 6 |
 | `PT_COLOR` | 97 | 167 | – | – | 8 | 1 | 78 | 10 |
 | `PT_VARIANT` | 77 | 158 | 3 | 3 | 12 | 2 | 37 | 20 |
-| `PT_TYPED_ARRAY_BLOB` | 66 | 112 | 3 | 11 | – | 3 | 22 | 27 |
+| `PT_TYPED_ARRAY_BLOB` | 67 | 113 | 3 | 11 | – | 3 | 23 | 27 |
 | `PT_VECTOR3` | 60 | 192 | 1 | – | 18 | 16 | 20 | 5 |
-| `PT_CALLABLE` | 54 | 122 | – | – | – | – | 15 | 39 |
+| `PT_CALLABLE` | 56 | 124 | – | – | – | – | 17 | 39 |
 | `PT_PACKED_BYTE_ARRAY` | 47 | 64 | 5 | 1 | – | 1 | 21 | 19 |
 | `PT_RECT2` | 45 | 56 | – | – | 9 | 1 | 29 | 6 |
 | `PT_TRANSFORM3D` | 34 | 114 | 1 | 2 | 3 | 2 | 18 | 8 |
@@ -1029,6 +1029,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectListArgRetLong` | F | `ImageTextureLayered.create_from_images` on `Cubemap` (non-const method) | 2 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListIntArgsRetTypedObjectList` | E | `EditorInterface.make_mesh_previews` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListLongArgsRetRID` | F | `RenderingServer.texture_2d_layered_create` (non-const singleton method) | 2 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
+| `ptrcallWithObjectListObjectTwoCallableArgsRetObject` | F | `OpenXRSpatialEntityExtension.create_spatial_context` (needs OpenXR on, or the singleton is missing (weak); without a running session Godot answers null (SCENE_ROWS)) | 1 | PT_CALLABLE PT_OBJECT PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListRIDUInt32ArgsRetRID` | E | `RenderingDevice.uniform_set_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_RID PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListTransform3DListBoolArgsRetObject` | C | `ImporterMesh.merge_importer_meshes` (static with a return value) | 1 | PT_BOOL PT_OBJECT PT_TYPED_ARRAY_BLOB |
 | `ptrcallWithObjectListUInt32ArgsRetLong` | E | `RenderingDevice.framebuffer_format_create` (*RenderingDevice*: needs a RenderingDevice (the headless and Compatibility renderers have none)) | 1 | PT_INT64 PT_TYPED_ARRAY_BLOB |
@@ -1866,6 +1867,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithTwoStringNameLongUInt32LongVector2iTwoUInt32TwoBoolArgsRetRID` | E | `RenderSceneBuffersRD.create_texture` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_BOOL PT_INT64 PT_RID PT_STRING_NAME PT_VECTOR2I |
 | `ptrcallWithTwoStringNameTwoObjectBoolArgsRetRID` | E | `RenderSceneBuffersRD.create_texture_from_format` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_BOOL PT_OBJECT PT_RID PT_STRING_NAME |
 | `ptrcallWithTwoStringNameUInt32ArgRetVector2i` | E | `RenderSceneBuffersRD.get_texture_slice_size` (*RenderSceneBuffers*: only meaningful inside a frame being rendered by a RenderingDevice renderer) | 1 | PT_INT64 PT_STRING_NAME PT_VECTOR2I |
+| `ptrcallWithTwoStringObjectCallableArgsRetInt` | F | `DisplayServer.send_toast_notification` (only Windows shows a toast, so a Windows host skips the call; elsewhere Godot answers INVALID_NOTIFICATION_ID (-1), which a no-op cannot (SCENE_ROWS)) | 1 | PT_CALLABLE PT_INT64 PT_OBJECT PT_STRING |
 | `ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong` | E | `EditorExportPlatform.ssh_push_to_remote` (api_type=editor: `api_type` is `editor` in extension_api.json) | 1 | PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |
 | `ptrcallWithTwoStringPackedStringListArgs` | F | `EditorExportPlugin.add_apple_embedded_platform_spm_package` (instantiable only in the editor: weak in a game. The plugin only stores the package (SCENE_ROWS)) | 1 | PT_PACKED_STRING_ARRAY PT_STRING PT_VOID |
 | `ptrcallWithTwoStringPackedStringListCallableArgsRetLong` | E | `DisplayServer.dialog_show` (DisplayServer: needs a window or the display server (headless has a dummy one that errors or no-ops)) | 1 | PT_CALLABLE PT_INT64 PT_PACKED_STRING_ARRAY PT_STRING |

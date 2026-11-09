@@ -17746,7 +17746,10 @@ actual object ObjectCalls {
     }
   }
 
-  /** Calls [methodBind] with (bool, bool) and String return value. */
+  /**
+   * Calls [methodBind] with (bool, bool, float) and an int64 return value: Godot 4.8's
+   * `Image.generate_mipmaps`, whose `Error` the wrapper maps.
+   */
   actual fun ptrcallWithTwoBoolDoubleArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -17771,6 +17774,7 @@ actual object ObjectCalls {
     }
   }
 
+  /** Calls [methodBind] with (bool, bool) and String return value. */
   actual fun ptrcallWithTwoBoolArgsRetString(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -23121,6 +23125,45 @@ actual object ObjectCalls {
     }
   }
 
+  /**
+   * String, String, Object, Callable -> int32: Godot 4.8's `DisplayServer.send_toast_notification`.
+   * The display server copies the Callable if it keeps it, so this call's cell is destroyed after.
+   */
+  actual fun ptrcallWithTwoStringObjectCallableArgsRetInt(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    firstString: String,
+    secondString: String,
+    objectArg: MemorySegment,
+    callableObject: MemorySegment,
+    callableMethod: String,
+  ): Int {
+    Arena.ofConfined().use { arena ->
+      val firstCell = arena.allocate(8L, 8L)
+      val secondCell = arena.allocate(8L, 8L)
+      val objectCell = arena.allocate(ADDRESS)
+      val callable = BuiltinTypes.allocateCallable(arena)
+      try {
+        GodotStrings.initString(firstCell, firstString)
+        GodotStrings.initString(secondCell, secondString)
+        objectCell.set(ADDRESS, 0, objectArg)
+        BuiltinTypes.initCallable(callable, callableObject, callableMethod)
+        val arr = arena.allocate(ADDRESS, 4)
+        arr.setAtIndex(ADDRESS, 0, firstCell)
+        arr.setAtIndex(ADDRESS, 1, secondCell)
+        arr.setAtIndex(ADDRESS, 2, objectCell)
+        arr.setAtIndex(ADDRESS, 3, callable)
+        val ret = arena.allocate(JAVA_INT)
+        bindPtrcall(methodBind, instance, arr, ret)
+        return ret.get(JAVA_INT, 0)
+      } finally {
+        BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
+        GodotStrings.destroyString(secondCell)
+        GodotStrings.destroyString(firstCell)
+      }
+    }
+  }
+
   actual fun ptrcallWithRIDUInt32CallableArgsRetLong(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -23717,31 +23760,42 @@ actual object ObjectCalls {
     }
   }
 
-  fun ptrcallWithObjectListObjectCallableArgsRetObject(
+  /**
+   * Array[T: Object], Object, two Callables -> Object: Godot 4.8's
+   * `OpenXRSpatialEntityExtension.create_spatial_context`. The engine copies both Callables into
+   * the future it returns, so destroying this call's Callable cells after the call is safe.
+   */
+  actual fun ptrcallWithObjectListObjectTwoCallableArgsRetObject(
     methodBind: MemorySegment,
     instance: MemorySegment,
     values: List<*>,
     objectArg: MemorySegment,
-    callableObject: MemorySegment,
-    callableMethod: String,
+    firstCallableObject: MemorySegment,
+    firstCallableMethod: String,
+    secondCallableObject: MemorySegment,
+    secondCallableMethod: String,
   ): MemorySegment {
     Arena.ofConfined().use { arena ->
       val arrayCell = arena.allocate(8L, 8L)
       val objectCell = arena.allocate(ADDRESS)
-      val callable = BuiltinTypes.allocateCallable(arena)
+      val firstCallable = BuiltinTypes.allocateCallable(arena)
+      val secondCallable = BuiltinTypes.allocateCallable(arena)
       try {
         BuiltinTypes.initArrayOfObjects(arrayCell, values)
         objectCell.set(ADDRESS, 0, objectArg)
-        BuiltinTypes.initCallable(callable, callableObject, callableMethod)
-        val arr = arena.allocate(ADDRESS, 3)
+        BuiltinTypes.initCallable(firstCallable, firstCallableObject, firstCallableMethod)
+        BuiltinTypes.initCallable(secondCallable, secondCallableObject, secondCallableMethod)
+        val arr = arena.allocate(ADDRESS, 4)
         arr.setAtIndex(ADDRESS, 0, arrayCell)
         arr.setAtIndex(ADDRESS, 1, objectCell)
-        arr.setAtIndex(ADDRESS, 2, callable)
+        arr.setAtIndex(ADDRESS, 2, firstCallable)
+        arr.setAtIndex(ADDRESS, 3, secondCallable)
         val ret = arena.allocate(ADDRESS)
         bindPtrcall(methodBind, instance, arr, ret)
         return ret.get(ADDRESS, 0)
       } finally {
-        BuiltinTypes.destroyTyped(VariantType.CALLABLE, callable)
+        BuiltinTypes.destroyTyped(VariantType.CALLABLE, secondCallable)
+        BuiltinTypes.destroyTyped(VariantType.CALLABLE, firstCallable)
         BuiltinTypes.destroyTyped(VariantType.ARRAY, arrayCell)
       }
     }

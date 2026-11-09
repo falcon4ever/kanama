@@ -74,9 +74,8 @@ Godot 4.8's new methods on classes Kanama already wraps are now in the Kotlin AP
 dictionary (`intersectRayInto`, `intersectPointInto`, `intersectShapeInto`, `castMotionInto`, `collideShapeInto`,
 `getRestInfoInto`), `DisplayServer.windowSetImeRect`, `EditorExportPlugin.addAppleEmbeddedPlatformSpmPackage`,
 `Input.getJoyTouchpadFingerPressure`, `PhysicsServer3D.generic6dofJointGetAngularTargetRotation` and its setter,
-`RenderingServer.cameraSetXrProjections`, and `getCameraProjections` and `getCameraOffsets` on `XRInterface` and
-`XRServer`. `DisplayServer.sendToastNotification` and `OpenXRSpatialEntityExtension.createSpatialContext` stay out on
-purpose: they keep a `Callable` past the call, and the API has no shape for that.
+`RenderingServer.cameraSetXrProjections`, `getCameraProjections` and `getCameraOffsets` on `XRInterface` and
+`XRServer`, and `DisplayServer.sendToastNotification` (Godot shows the toast on Windows only; elsewhere it returns -1).
 
 #### Changed — Godot 4.8 beta 2
 
@@ -103,8 +102,9 @@ Godot's own changes to the API make these source breaks:
 - **Source break:** `DisplayServer.getDisplayCutouts` `Image.generateMipmaps` `RenderingDevice.textureCreateSharedFromSlice`:
   these gained parameters in Godot, at the end and with defaults. A call compiles as before; a function reference
   (`Image::generateMipmaps`) names the new signature.
-- **Source break:** `OpenXRSpatialEntityExtension.createSpatialContext` now takes a second `Callable`, a shape the API
-  does not generate.
+- **Source break:** `OpenXRSpatialEntityExtension.createSpatialContext` takes a second `GodotCallable`,
+  `failedCallback`, which Godot calls when the context cannot be created. A 4.7 call with one callback no longer
+  compiles: pass a second callback.
 - **Source break:** `Node.replaceBy` has a `keepOwnedChildren` parameter on 4.8 beta 2 only. Godot has reverted the change
   on its master branch, so expect the parameter to be gone at the next bump. Do not pass it.
 

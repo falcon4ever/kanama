@@ -182,16 +182,6 @@ BY_DESIGN_METHOD_SKIPS = {
         "by design: Dictionary->Dictionary passthrough via the generic Map<String, Any?> helper "
         "silently drops non-String keys; shape reverted in 27b06fe6 (editor-LSP only)"
     ),
-    # Godot 4.8. A Callable argument is ownership-sensitive: the engine keeps these callbacks past
-    # the call, and a shape for them is a feature, not a table row (issue 402).
-    ("DisplayServer", "send_toast_notification"): (
-        "by design: keeps a Callable past the call, and a Callable argument is ownership-sensitive; "
-        "a new Callable shape is a feature, not a helper row"
-    ),
-    ("OpenXRSpatialEntityExtension", "create_spatial_context"): (
-        "by design: keeps two Callables past the call, and a Callable argument is ownership-sensitive; "
-        "a new Callable shape is a feature, not a helper row"
-    ),
 }
 
 # Members desktop deliberately keeps desktop-only (task 100 close-out): their argument types have no
@@ -2291,6 +2281,7 @@ def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape 
     if logical_return == "int32":
         callable_int_helpers = {
             ("Object", "String", "Callable"): "ptrcallWithObjectStringCallableArgsRetInt",
+            ("String", "String", "Object", "Callable"): "ptrcallWithTwoStringObjectCallableArgsRetInt",
             ("String", "String", "Callable", "Callable", "Variant", "enum", "int32"): (
                 "ptrcallWithTwoStringTwoCallableVariantLongIntArgsRetInt"
             ),
@@ -2326,11 +2317,13 @@ def _candidate_for_impl(method: ApiMethod, object_types: set[str]) -> CallShape 
         return CallShape("ptrcallWithObjectRIDCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
     if logical_return == "Object" and method.return_type == "OpenXRFutureResult":
         if (
-            len(logical_args) == 3
+            len(logical_args) == 4
             and typed_object_array_element(logical_args[0])
-            and logical_args[1:] == ("Object", "Callable")
+            and logical_args[1:] == ("Object", "Callable", "Callable")
         ):
-            return CallShape("ptrcallWithObjectListObjectCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
+            return CallShape(
+                "ptrcallWithObjectListObjectTwoCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL"
+            )
         if logical_args == ("RID", "PackedInt64Array", "Object", "Callable"):
             return CallShape("ptrcallWithRIDPackedInt64ListObjectCallableArgsRetObject", "MemorySegment", "MemorySegment.NULL")
         if (

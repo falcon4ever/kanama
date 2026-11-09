@@ -16,9 +16,9 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | --- | ---: |
 | API classes | 1069 |
 | Classes with generated output | 874 |
-| Classes with complete method generation | 783 |
-| Methods generated | 15694/17203 (91.2%) |
-| Methods skipped | 1509 |
+| Classes with complete method generation | 785 |
+| Methods generated | 15696/17203 (91.2%) |
+| Methods skipped | 1507 |
 | Properties generated | 4199/4270 (98.3%) |
 | Signals generated | 518/518 (100.0%) |
 
@@ -29,8 +29,8 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | Virtual/internal | 1448 |
 | Other | 49 |
 | Missing helper shape | 5 |
-| Blocked object wrapper | 4 |
 | Dictionary | 2 |
+| Blocked object wrapper | 2 |
 | Packed array | 1 |
 
 ## Missing Helper Shapes
@@ -54,10 +54,8 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 | `ownership-sensitive RefCounted lifetime method is hand-shaped` | 2 |
 | `unsupported helper shape args=('int32', 'enum', 'String') return=String` | 2 |
 | `unsupported helper shape args=('int32', 'int32', 'int32', 'int32') return=bool` | 2 |
-| `by design: keeps a Callable past the call, and a Callable argument is ownership-sensitive; a new Callable shape is a feature, not a helper row` | 1 |
 | `unsupported helper shape args=('String', 'String') return=Object` | 1 |
 | `unsupported helper shape args=('String', 'PackedStringArray') return=TypedObjectArray::FuzzySearchMatch` | 1 |
-| `by design: keeps two Callables past the call, and a Callable argument is ownership-sensitive; a new Callable shape is a feature, not a helper row` | 1 |
 
 ## Complete Method Classes
 
@@ -66,6 +64,7 @@ These classes have every method covered by the conservative generator. Promotion
 | Class | Methods | Properties | Signals |
 | --- | ---: | ---: | ---: |
 | RenderingServer | 542/542 | 1/1 | 2/2 |
+| DisplayServer | 290/290 | 0/0 | 1/1 |
 | TextServer | 245/245 | 0/0 | 0/0 |
 | Environment | 188/188 | 93/93 | 0/0 |
 | PhysicsServer3D | 177/177 | 0/0 | 0/0 |
@@ -114,13 +113,11 @@ These classes have every method covered by the conservative generator. Promotion
 | AnimationPlayer | 56/56 | 13/13 | 2/2 |
 | TileData | 54/54 | 11/11 | 1/1 |
 | TabContainer | 53/53 | 13/13 | 7/7 |
-| OpenXRAPIExtension | 52/52 | 0/0 | 0/0 |
 
 ## Near Ready Classes
 
 | Class | Methods | Properties | Signals | Skips |
 | --- | ---: | ---: | ---: | ---: |
-| DisplayServer | 289/290 (99.7%) | 0/0 | 1/1 | 1 |
 | Window | 141/142 (99.3%) | 42/42 | 16/16 | 1 |
 | CanvasItem | 93/94 (98.9%) | 16/16 | 4/4 | 1 |
 | RigidBody3D | 61/62 (98.4%) | 23/23 | 5/5 | 1 |
@@ -131,7 +128,6 @@ These classes have every method covered by the conservative generator. Promotion
 | CodeEdit | 114/117 (97.4%) | 22/22 | 5/5 | 3 |
 | PhysicalBone3D | 38/39 (97.4%) | 16/16 | 0/0 | 1 |
 | TileMap | 61/63 (96.8%) | 5/5 | 1/1 | 2 |
-| OpenXRSpatialEntityExtension | 25/26 (96.2%) | 0/0 | 1/1 | 1 |
 | Range | 23/24 (95.8%) | 10/10 | 2/2 | 1 |
 | GraphEdit | 75/79 (94.9%) | 25/25 | 19/19 | 4 |
 | TileMapLayer | 55/58 (94.8%) | 13/13 | 1/1 | 3 |
@@ -163,7 +159,7 @@ These classes have every method covered by the conservative generator. Promotion
 | Class | Methods | Properties | Signals | Skips |
 | --- | ---: | ---: | ---: | ---: |
 | RenderingServer | 542/542 | 1/1 | 2/2 | 0 |
-| DisplayServer | 289/290 | 0/0 | 1/1 | 1 |
+| DisplayServer | 290/290 | 0/0 | 1/1 | 0 |
 | TextEdit | 251/257 | 48/48 | 7/7 | 6 |
 | TextServer | 245/245 | 0/0 | 0/0 | 0 |
 | Environment | 188/188 | 93/93 | 0/0 | 0 |
@@ -187,12 +183,12 @@ These classes have every method covered by the conservative generator. Promotion
 
 Godot gives these parameters a default value that the generator cannot write as a Kotlin default argument, so the generated parameter is **required** (Rule 9 of the [Generated API Conventions](../wrapper-conventions.md#9-defaults-and-overloads)). Giving one a default later is not a source break. A new row here is a new required parameter in a signature, and a row that disappears gained its default.
 
-231 parameters, by Godot default:
+233 parameters, by Godot default:
 
 | Godot default | Parameters |
 | --- | ---: |
 | Color: `Color(1, 1, 1, 1)` | 52 |
-| Callable: `Callable()` | 49 |
+| Callable: `Callable()` | 51 |
 | RID: `RID()` | 15 |
 | Vector3: `Vector3(0, 0, 0)` | 15 |
 | Rect2: `Rect2(0, 0, 0, 0)` | 10 |
@@ -335,6 +331,8 @@ Godot gives these parameters a default value that the generator cannot write as 
 | OpenXRSpatialAnchorCapability | `start_entity_discovery` | `user_callback` | `Callable()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `persistence_context` | `RID()` |
 | OpenXRSpatialAnchorCapability | `unpersist_anchor` | `user_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `failed_callback` | `Callable()` |
+| OpenXRSpatialEntityExtension | `create_spatial_context` | `user_callback` | `Callable()` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities` | `user_callback` | `Callable()` |
 | OpenXRSpatialEntityExtension | `discover_spatial_entities_with_component_data` | `user_callback` | `Callable()` |
 | OpenXRSpatialMarkerTrackingCapability | `start_entity_discovery` | `user_callback` | `Callable()` |

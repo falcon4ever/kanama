@@ -987,4 +987,30 @@ SCENE_ROWS: dict[tuple[str, str], tuple[str, str, tuple[str, ...]]] = {
             "}",
         ),
     ),
+    ("DisplayServer", "send_toast_notification"): (
+        "F",
+        "only Windows shows a toast, so a Windows host skips the call; elsewhere Godot answers "
+        "INVALID_NOTIFICATION_ID (-1), which a no-op cannot",
+        (
+            'if (OS.getName() == "Windows") {',
+            '  r.weakBecause("a Windows desktop would show the toast")',
+            "} else {",
+            '  val got = DisplayServer.sendToastNotification("Kanama", "API exercise", null, r.noopCallable())',
+            '  r.readBack(got, -1, "send_toast_notification")',
+            "  r.reached()",
+            "}",
+        ),
+    ),
+    ("OpenXRSpatialEntityExtension", "create_spatial_context"): (
+        "F",
+        "needs OpenXR on, or the singleton is missing (weak); without a running session Godot answers null",
+        (
+            'if (!Engine.hasSingleton("OpenXRSpatialEntityExtension")) {',
+            '  r.weakBecause("OpenXR is off: no OpenXRSpatialEntityExtension singleton")',
+            "} else {",
+            '  val e = OpenXRSpatialEntityExtension(checkNotNull(Engine.getSingleton("OpenXRSpatialEntityExtension")).handle)',
+            "  r.reached(e.createSpatialContext(emptyList(), null, r.noopCallable(), r.noopCallable()))",
+            "}",
+        ),
+    ),
 }

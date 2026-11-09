@@ -13870,6 +13870,41 @@ actual object ObjectCalls {
     RID(ret.value)
   }
 
+  actual fun ptrcallWithObjectListObjectTwoCallableArgsRetObject(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    values: List<*>,
+    objectArg: MemorySegment,
+    firstCallableObject: MemorySegment,
+    firstCallableMethod: String,
+    secondCallableObject: MemorySegment,
+    secondCallableMethod: String,
+  ): MemorySegment = memScoped {
+    val ret = alloc<LongVar>()
+    ret.value = 0
+    val c0 = packTypedObjectArrayDesc(values)
+    val c1 = alloc<LongVar>()
+    c1.value = objectArg.address()
+    val c2 = alloc<KanamaIosCallableArgDesc>()
+    c2.object_handle = firstCallableObject.address()
+    c2.method = firstCallableMethod.cstr.ptr
+    val c3 = alloc<KanamaIosCallableArgDesc>()
+    c3.object_handle = secondCallableObject.address()
+    c3.method = secondCallableMethod.cstr.ptr
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_TYPED_ARRAY_BLOB
+    types[1] = PT_OBJECT
+    types[2] = PT_CALLABLE
+    types[3] = PT_CALLABLE
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = c0.reinterpret<CPointed>()
+    ptrs[1] = c1.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_OBJECT, ret.ptr)
+    MemorySegment.ofAddress(ret.value)
+  }
+
   actual fun ptrcallWithObjectListRIDUInt32ArgsRetRID(
     methodBind: MemorySegment,
     instance: MemorySegment,
@@ -35663,6 +35698,35 @@ actual object ObjectCalls {
     ptrs[2] = c2.ptr.reinterpret<CPointed>()
     ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 3, PT_VECTOR2I, ret)
     Vector2i(ret[0], ret[1])
+  }
+
+  actual fun ptrcallWithTwoStringObjectCallableArgsRetInt(
+    methodBind: MemorySegment,
+    instance: MemorySegment,
+    firstString: String,
+    secondString: String,
+    objectArg: MemorySegment,
+    callableObject: MemorySegment,
+    callableMethod: String,
+  ): Int = memScoped {
+    val ret = alloc<LongVar>()
+    val c2 = alloc<LongVar>()
+    c2.value = objectArg.address()
+    val c3 = alloc<KanamaIosCallableArgDesc>()
+    c3.object_handle = callableObject.address()
+    c3.method = callableMethod.cstr.ptr
+    val types = allocArray<IntVar>(4)
+    types[0] = PT_STRING
+    types[1] = PT_STRING
+    types[2] = PT_OBJECT
+    types[3] = PT_CALLABLE
+    val ptrs = allocArray<COpaquePointerVar>(4)
+    ptrs[0] = firstString.cstr.ptr.reinterpret<CPointed>()
+    ptrs[1] = secondString.cstr.ptr.reinterpret<CPointed>()
+    ptrs[2] = c2.ptr.reinterpret<CPointed>()
+    ptrs[3] = c3.ptr.reinterpret<CPointed>()
+    ptrcallDispatch(methodBind.address(), instance.address(), types, ptrs, 4, PT_INT64, ret.ptr)
+    ret.value.toInt()
   }
 
   actual fun ptrcallWithTwoStringPackedStringListAndTwoStringArgsRetLong(
