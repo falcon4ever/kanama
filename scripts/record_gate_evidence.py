@@ -24,7 +24,7 @@ import json
 import subprocess
 from pathlib import Path
 
-from check_gate_evidence import LEDGER, RESULTS, TAG, current_pin, load_ledger
+from check_gate_evidence import DEVICE_ID, LEDGER, RESULTS, TAG, current_pin, load_ledger
 
 
 def head_sha() -> str:
@@ -54,6 +54,8 @@ def main() -> int:
     parser.add_argument("--source", default="scripts/record_gate_evidence.py")
     parser.add_argument("--ledger", type=Path, default=LEDGER)
     args = parser.parse_args()
+    if DEVICE_ID.search(args.where):
+        raise SystemExit(f"{TAG.replace('check', 'record')} FAIL --where carries a device id; the ledger is public, so name the model")
 
     entries = load_ledger(args.ledger) if args.ledger.is_file() and args.ledger.stat().st_size else []
     entry = {

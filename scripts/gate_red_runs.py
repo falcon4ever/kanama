@@ -519,6 +519,9 @@ case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
 case("check_gate_evidence.py", py("check_gate_evidence.py"),
      [Edit("evidence/gates.json", '"schemaVersion": 1', '"schemaVersion": 2')],
      "ledger must be an object with schemaVersion 1", "the evidence ledger carries a wrong schema version")
+case("check_gate_evidence.py (device id in where)", py("check_gate_evidence.py"),
+     [Edit("evidence/gates.json", '"where": "iPhone 12, iOS 26.6"', '"where": "00000000-0000000000000000"')],
+     "field 'where' carries a device id", "a ledger row names the phone by its device id (the iOS gate wrote the raw id when it had no --device-label)")
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=", "kanamaGodotVersion=0.")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")

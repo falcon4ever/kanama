@@ -970,10 +970,14 @@ results_verdict "$RESULTS_TSV" || exit 1
 echo "[ios_device_gate] PASS"
 echo "[ios_device_gate] summary: $SUMMARY"
 # Ledger the run (task 99): the Godot pin + Kanama commit this device gate passed on. A partial
-# matrix (--start-at) is not the full gate and must not be ledgered as one (task 105).
-if [[ -n "$START_AT" ]]; then
-  echo "[ios_device_gate] partial run (--start-at $START_AT): not recorded in evidence/gates.json"
+# run (--start-at, --fresh-only, --demos-only) is not the full gate and must not be ledgered as one
+# (task 105): its row would supersede the accepted-stale ones and back "iOS Supported" on the pin.
+# The ledger is public, so the row names the device by its label, never by its id.
+if [[ -n "$START_AT" || "$RUN_FRESH" -ne 1 || "$RUN_DEMOS" -ne 1 ]]; then
+  echo "[ios_device_gate] partial run (fresh=$RUN_FRESH demos=$RUN_DEMOS start-at=${START_AT:-none}): not recorded in evidence/gates.json"
+elif [[ -z "$DEVICE_LABEL" ]]; then
+  echo "[ios_device_gate] no --device-label (KANAMA_IOS_DEVICE_LABEL): not recorded in evidence/gates.json; re-run with a public device label to ledger it"
 else
   python3 "$ROOT_DIR/scripts/record_gate_evidence.py" --gate ios-device-gate --claim "iOS Supported" \
-    --result PASS --where "${DEVICE_LABEL:-$DEVICE_ID}" --source scripts/ios_device_gate.sh
+    --result PASS --where "$DEVICE_LABEL" --source scripts/ios_device_gate.sh
 fi

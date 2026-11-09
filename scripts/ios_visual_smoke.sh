@@ -972,7 +972,9 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
         // MultiplayerSynchronizer uses on the authority peer. Whole-number vector components are exact
         // in float32, so the round trip is bit-exact. Before the getProperty data-type fixes these
         // read back as nil. Object.get decodes Vector2/Vector3/String/NodePath on iOS; the List<String>
-        // read decodes the PackedStringArray back on iOS since task 121 and is asserted below.
+        // read decodes the PackedStringArray back on iOS since task 121 and is asserted below. A
+        // NodePath reads back as a NodePath, not its String, as on desktop (#364 changed the iOS
+        // decode; this probe still expected the String and failed the first device run after it).
         probeMotion = Vector2(3.0, 4.0)
         probeShootTarget = Vector3(5.0, 6.0, 7.0)
         probeName = "kanama"
@@ -994,7 +996,7 @@ class IosSmokeScript(godotObject: GodotHandle) : KanamaScript<Label>(godotObject
                 "vector2=${engineMotion == Vector2(3.0, 4.0)} " +
                 "vector3=${engineShootTarget == Vector3(5.0, 6.0, 7.0)} " +
                 "string=${engineName == "kanama"} " +
-                "nodepath=${(engineView as? String) == "../Background"} " +
+                "nodepath=${engineView == NodePath("../Background")} " +
                 "tags=${engineTags == listOf("alpha", "beta")} tagsSet=$tagsSetOk",
         )
         // Task 138 item 27: a Variant of another type offered to a value-type property follows
