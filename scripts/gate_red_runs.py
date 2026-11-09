@@ -1430,12 +1430,21 @@ case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.s
      [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
-     # The smoke's first Godot run after the import is the decode probe's own, so this is the first thing the
-     # smoke can report: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe
-     # dying under the double release. The later runs' aborts (HelloScript's captureScriptBacktraces, at a
-     # different line each run) are never reached.
+     # The editor import run dies first under this bug (HelloScript is @Tool, so its _ready decodes
+     # Engine.captureScriptBacktraces() in the editor: the entry comes back freed, then Godot aborts). The smoke
+     # runs the decode probe after a failed editor run before it reports that run, so the report is still the
+     # probe's: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe dying under the
+     # double release. The later runs' aborts (at a different line each run) are never reached.
      ("decode buffers: wrong reference counts", "decode buffers: the probe died before its result"),
      "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor import run is the smoke's first Godot run, and HelloScript is @Tool, so its _ready runs there: a
+# crash in it must be reported as that run's, with what died, not as an unnamed exit of the smoke's set -e.
+case("runtime_smoke.sh (editor import crash)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(HELLO, '    GD.print("Hello from Kanama script")\n',
+           '    GD.print("Hello from Kanama script")\n    if (Engine.isEditorHint()) OS.crash("red run: the editor run dies")\n')],
+     "editor import: the editor run (--editor, the main scene's @Tool scripts) exited",
+     "HelloScript's _ready crashes Godot in the editor: the smoke must name the editor import run, its exit status and its first crash line, not stop on a bare exit",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
@@ -1599,8 +1608,8 @@ case("tool_smoke.sh (build on save on by default)", ["bash", "scripts/tool_smoke
      "build on save is off by default", "the plugin creates the Build On Save editor setting switched off: a fresh editor must build on save",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (build on save builds once)", ["bash", "scripts/tool_smoke.sh", GODOT],
-     plugin_edit('    return parent_path == "res://" and (name == "build" or name == "android")',
-                 '    return parent_path == "res://" and name == "android"')
+     plugin_edit('    return parent_path == "res://" and (dir_name == "build" or dir_name == "android")',
+                 '    return parent_path == "res://" and dir_name == "android"')
      + plugin_edit("func _kt_scan_roots() -> Array:\n    var roots: Array = []\n",
                    'func _kt_scan_roots() -> Array:\n    if true:\n        return ["res://"]\n    var roots: Array = []\n'),
      "the watcher took the build's own output under build/ for a save", "the watcher scans the whole project, Gradle's build/ included, again: the .kt files KSP writes there make every build start another one",
@@ -2014,7 +2023,42 @@ case("gate_red_runs_selftest.py (signal while starting)", STOP_SELFTEST,
      [Edit("scripts/gate_red_runs.py", "        if SIGNALLED is not None:\n            stop_now(SIGNALLED)\n", "")],
      "signal at start: the gate's TERM cleanup did not run", "a Ctrl-C that lands inside Popen() is dropped again: the case it was starting runs on, and the harness with it")
 
+case("gate_red_runs.py --check-mutations", ["python3", "scripts/gate_red_runs.py", "--check-mutations"],
+     [Edit("templates/starter/addons/kanama_tools/plugin.gd", '(dir_name == "build" or dir_name == "android")', '(folder == "build" or folder == "android")')],
+     "is not in templates/starter/addons/kanama_tools/plugin.gd", "a variable a slow case edits is renamed (#414 renamed `name` to `dir_name`): the stale mutation must fail local_ci, not the next nightly")
+
 #CASES-END
+
+def check_mutations(cases: list[Case]) -> int:
+    """Every Edit and Append a case names must still apply to the files as they are now.
+
+    The slow cases only run in the nightly, so a rename in a file they edit (a GDScript warning fix renaming
+    `name` to `dir_name`) used to surface there, a day later, as "cannot apply the mutation". This reads the
+    tracked files only: a path under build/ is written by the case's own `pre` step, and a callable mutation
+    list is built when its case runs, so both are left to the run itself."""
+    tracked = set(subprocess.run(["git", "-C", str(SRC), "ls-files"], capture_output=True, text=True, check=True).stdout.splitlines())
+    problems: list[str] = []
+    checked = 0
+    for c in cases:
+        if callable(c.mutations):
+            continue
+        for mutation in c.mutations:
+            if not isinstance(mutation, (Edit, Append)) or mutation.path not in tracked:
+                continue
+            checked += 1
+            path = SRC / mutation.path
+            if not path.exists():
+                problems.append(f"{c.gate}: {mutation.path} is tracked but missing from the checkout")
+            elif isinstance(mutation, Edit) and mutation.old not in path.read_text(encoding="utf-8", errors="replace"):
+                problems.append(f"{c.gate}: `{mutation.old[:60]!r}` is not in {mutation.path} (the file changed; update the case)")
+    if problems:
+        print("gate_red_runs --check-mutations: FAIL", file=sys.stderr)
+        for problem in problems:
+            print(f"- {problem}", file=sys.stderr)
+        return 1
+    print(f"gate_red_runs --check-mutations: PASS {checked} edit(s) in {len(cases)} case(s) still apply")
+    return 0
+
 
 def main() -> int:
     global DEADLINE, WORK, STARTING
@@ -2027,7 +2071,11 @@ def main() -> int:
     parser.add_argument("--markdown", type=Path, help="write the table rows to this file")
     parser.add_argument("--shard", help="K/N: run every N-th selected case starting at the K-th (CI runs N shards in parallel)")
     parser.add_argument("--deadline-minutes", type=float, help="stop after this many minutes: the unrun cases are named and fail the run")
+    parser.add_argument("--check-mutations", action="store_true",
+                        help="run no case: check that every case's fixed edits still apply to this checkout, slow cases included (seconds; local_ci runs it)")
     args = parser.parse_args()
+    if args.check_mutations:
+        return check_mutations(CASES)
     strict = args.strict or os.environ.get("CI", "").strip().lower() in ("true", "1", "yes")
     allowed_skips = [s.strip() for s in args.allow_skip.split(",") if s.strip()]
 

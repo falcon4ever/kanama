@@ -784,6 +784,7 @@ that build itself resolves; the rest goes back to being fetched by the cases, wi
 | `gate_red_runs_selftest.py (held output)` | the harness waits for ever on a process that left the case's group and holds its output | `- held output: the harness was still running after 45s / - held output: the log lacks `still holds its output`` | green |
 | `gate_red_runs_selftest.py (cleanup waited for)` | the harness KILLs the group as soon as the output closes again: a member still cleaning up with its output elsewhere (an editor smoke's leader stopping what it started) is cut short | `- slow cleanup: the member's cleanup was cut short: KILL came before the group was empty` | green |
 | `gate_red_runs_selftest.py (signal while starting)` | a Ctrl-C that lands inside Popen() is dropped again: the case it was starting runs on, and the harness with it | `- signal at start: the gate's TERM cleanup did not run / - signal at start: left running: driver, stubborn, leader` | green |
+| `gate_red_runs.py --check-mutations` | a variable a slow case edits is renamed (#414 renamed `name` to `dir_name`): the stale mutation must fail local_ci, not the next nightly | `- tool_smoke.sh (build on save builds once): ... is not in templates/starter/addons/kanama_tools/plugin.gd (the file changed; update the case)` | green |
 
 ### 2b. Self-tests, browser/device gates, and gates exercised another way
 
