@@ -773,8 +773,9 @@ cat <<EOF
   3. Run the red runs: python3 scripts/gate_red_runs.py --strict
      A case that cannot apply its mutation names the file it needs updated (runbook, "After the Script").
   4. Run the API exercise rows headless and review the new classes' rows (runbook).
-  5. Re-run the platform smoke/device gates per the release-gate matrix (§6) in
-     the internal task repo, and record them in evidence/gates.json. This script does NOT change
+  5. Re-run the platform smoke/device gates (the "Local-only gates" table in
+     docs/reference/generated/gates.md), and record them in evidence/gates.json with
+     scripts/record_gate_evidence.py. This script does NOT change
      support claims; support wording moves only after the matching gate passes.
   6. Refresh release-facing wording by hand: CHANGELOG.md, README.md, docs
      version badges/wording, templates (the release kit's Godot version is already moved, step 6),

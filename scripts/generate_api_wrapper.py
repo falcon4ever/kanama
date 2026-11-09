@@ -599,7 +599,7 @@ IOS_ARG_KINDS = {
     # Callable args: object+method form only (GodotCallable). The iOS ptrcall dispatch builds the
     # Callable via constructor index 2 (PT_CALLABLE / KanamaIosCallableArgDesc) and destroys it after
     # the call — no Kotlin-side state outlives the call, so nothing leaks regardless of engine
-    # retention (callable-args ownership design, Decisions 1-3, 5; record in the internal task repo). Callable
+    # retention. Callable
     # *return* and Callable-as-Variant-arg stay unsupported (no emitted iOS method needs them).
     "Callable",
     # Signal args (task 129 A): the same (object handle, name) pair as Callable; the PT_SIGNAL

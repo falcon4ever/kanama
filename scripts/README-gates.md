@@ -197,9 +197,9 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `scripts/gate_red_runs.py:369` | `except BaseException:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs.py:376` | `subprocess.run(["git", "worktree", "remove", "--force", str(tree)], cwd=SRC, capture_output=True, check=False)` | justified: best effort; the rmtree and prune below finish the job |
 | `scripts/gate_red_runs.py:378` | `subprocess.run(["git", "worktree", "prune"], cwd=SRC, capture_output=True, check=False)` | justified: housekeeping of a registration that is already gone |
-| `scripts/gate_red_runs.py:1989` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
-| `scripts/gate_red_runs.py:2054` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
-| `scripts/gate_red_runs.py:2105` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2008` | `except ValueError:` | justified: a malformed --shard falls through to the range check below, which exits 2 |
+| `scripts/gate_red_runs.py:2073` | `except DeadlineCut as cut:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
+| `scripts/gate_red_runs.py:2124` | `except UnappliableMutation as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
 | `scripts/gate_red_runs_selftest.py:126` | `except ProcessLookupError:` | justified: gone is the answer; the callers report what is still alive |
 | `scripts/gate_red_runs_selftest.py:150` | `except subprocess.TimeoutExpired:` | justified: the None status is the failure, the callers report it |
 | `scripts/generate_api_exercise.py:605` | `except LiteralError as error:` | justified: the handler reports (raises, records an error or prints a FAIL), so the failure reaches the verdict |
@@ -378,7 +378,7 @@ regenerate it with `python3 scripts/audit_swallowed_failures.py --write`.
 | `.github/workflows/ci.yml:68` | `if ! command -v gdb >/dev/null 2>&1; then` | justified: probe; the exit status is the test, only its output is dropped |
 | `.github/workflows/package.yml:389` | `chmod +x "$templates/${{ matrix.export_template }}" \|\| true` | justified: a template that is not executable is not an error (Windows); the smoke below fails if it cannot run. |
 | `.github/workflows/package.yml:406` | `chmod +x "$godot_bin" \|\| true` | justified: if the editor binary is not executable the smoke's own executable check on it fails the step. |
-| `.github/workflows/package.yml:845` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
+| `.github/workflows/package.yml:852` | `gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \|\| \` | justified: `gh release view` is the existence probe; failing it means "create the release" on the next line. |
 | `.github/workflows/web.yml:237` | `continue-on-error: true` | justified: an experiment, not a gate (see the comment above the job); its failure must never block a merge. |
 | `.github/workflows/web.yml:290` | `"$godot_bin" --headless --path scripts/fixtures/godot-visibility-probe --import \|\| true` | justified: the import only warms .godot/; the export on the next line fails loudly if it did not take. |
 | `.github/workflows/web.yml:318` | `set +e` | justified: `set +e` only reads the probe's exit status into $status, which the case below prints; the job is an experiment. |
@@ -478,8 +478,8 @@ on the committed branch (`--markdown`): the fast set (253 cases) took about 25 m
 with `--slow` (`KANAMA_GODOT_BIN` set). Gates that drive a browser, a device or a long export are in the second table.
 
 **CI.** `ci.yml` job `gate-red-runs` runs the fast set with `--strict --allow-skip sync_kdoc` on every push to main and on
-every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over three
-parallel shards (`--shard 1/3` … `3/3`, every third case; about 10 minutes each).
+every pull request that touches `scripts/` or `.github/workflows/` (gated by the `changes` job), split over four
+parallel shards (`--shard 1/4` … `4/4`, every fourth case; about 15 to 20 minutes each).
 `gate-red-runs-nightly.yml` runs `--slow` nightly; it installs the Android export template and Godot's Android settings
 (the runner's SDK, a debug keystore) so the export guard's real Android exports run there too. It is not part of `local_ci.sh` (it takes minutes).
 Its twelve shards are sized for the slowest runner: hosted runners differ by a factor of 1.9, and the whole `--slow` set
