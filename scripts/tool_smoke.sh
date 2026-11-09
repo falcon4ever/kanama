@@ -122,8 +122,9 @@ check_absent "\[kanama:adapter\] downcall .* phase=post-boundary"
 # kanama#277 -- Build Scripts must pick a JDK >= 25 itself: the 'kanama/build/jdk_path' setting,
 # then JAVA_HOME, then the install locations, and fail with one clear message instead of running a
 # build that dies in the native bootstrap's compile. The editor plugin lives twice
-# (the starter template and the example project) and the two must not drift.
-for plugin_file in plugin.gd kanama_export_guard.gd; do
+# (the starter template and the example project) and the two must not drift. The highlighter is in the
+# list since a fix landed in one copy only (#79) and every kit shipped the unfixed one.
+for plugin_file in plugin.gd kanama_export_guard.gd kotlin_syntax_highlighter.gd; do
   if ! cmp -s "$ROOT_DIR/templates/starter/addons/kanama_tools/$plugin_file" \
     "$ROOT_DIR/example_project/addons/kanama_tools/$plugin_file"; then
     smoke_fail "plugin copies differ" "templates/starter/addons/kanama_tools/$plugin_file vs example_project/addons/kanama_tools/$plugin_file"

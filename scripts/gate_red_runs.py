@@ -1358,6 +1358,10 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
      "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (highlighter copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Append("example_project/addons/kanama_tools/kotlin_syntax_highlighter.gd", "\n# red run: this copy now differs from the starter template\n")],
+     "plugin copies differ", "the Kotlin syntax highlighter's two copies drift and the pre-check does not compare them (#79 fixed one copy; every kit shipped the other)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 # Only deleting the wait leaves a race: the crash needs Godot's doc thread to still be loading its cache when the
 # export quits. Linux runners always lose it; a Mac wins it about half the time (the thread finishes, its queued
 # update runs before the editor frees the docs, exit 1). So on the failing export the mutation also restarts the
