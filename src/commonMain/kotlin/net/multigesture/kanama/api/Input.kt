@@ -841,6 +841,20 @@ object Input {
     }
 
     /**
+     * Returns the pressure of the specified finger on the specified touchpad on the joypad. The return
+     * value, if the specified finger is touching the specified touchpad, is in the range from `0.0` to
+     * `1.0`. If the joypad doesn't have the specified touchpad or the specified finger is not
+     * currently touching the touchpad, this method returns `-1.0`. Note: This feature is only
+     * supported on Windows, Linux, macOS, and iOS.
+     *
+     * Generated from Godot docs: Input.get_joy_touchpad_finger_pressure
+     */
+    @JvmStatic
+    fun getJoyTouchpadFingerPressure(device: Int, finger: Int, touchpad: Int = 0): Double {
+        return ObjectCalls.ptrcallWithThreeIntArgsRetDouble(Binds.getJoyTouchpadFingerPressureBind, singleton, device, finger, touchpad)
+    }
+
+    /**
      * Returns an array of finger IDs that are currently touching the specified touchpad on the joypad.
      * If the joypad doesn't have the specified touchpad or no fingers are currently touching this
      * touchpad, this method returns an empty array. Note: To retrieve the positions of the touchpad
@@ -1668,6 +1682,11 @@ object Input {
         @JvmField
         val getJoyTouchpadFingerPositionBind =
             ObjectCalls.getMethodBind("Input", "get_joy_touchpad_finger_position", GET_JOY_TOUCHPAD_FINGER_POSITION_HASH)
+
+        private const val GET_JOY_TOUCHPAD_FINGER_PRESSURE_HASH = 4212583121L
+        @JvmField
+        val getJoyTouchpadFingerPressureBind =
+            ObjectCalls.getMethodBind("Input", "get_joy_touchpad_finger_pressure", GET_JOY_TOUCHPAD_FINGER_PRESSURE_HASH)
 
         private const val GET_JOY_TOUCHPAD_FINGERS_HASH = 3923454890L
         @JvmField

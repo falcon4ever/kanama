@@ -337,6 +337,34 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
     }
 
     /**
+     * Gets an array of projection matrices for each view for tracker `tracker_name`. `tracker_name`
+     * must refer to an `XRPositionalTracker` used as a camera. Returns an empty array if this
+     * interface is not responsible for this tracker.
+     *
+     * Generated from Godot docs: XRInterface.get_camera_projections
+     */
+    fun getCameraProjections(trackerName: String, aspect: Double, near: Double, far: Double): List<Projection> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithStringNameThreeDoubleArgsRetProjectionList(Binds.getCameraProjectionsBind, segment, trackerName, aspect, near, far)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
+     * Gets an array of offset transforms for each view for tracker `tracker_name`. `tracker_name` must
+     * refer to an `XRPositionalTracker` used as a camera. Returns an empty array if this interface is
+     * not responsible for this tracker.
+     *
+     * Generated from Godot docs: XRInterface.get_camera_offsets
+     */
+    fun getCameraOffsets(trackerName: String): List<Transform3D> {
+        checkOpen()
+        val ret = ObjectCalls.ptrcallWithStringNameArgRetTransform3DList(Binds.getCameraOffsetsBind, segment, trackerName)
+        ObjectCalls.keepReachable(this)
+        return ret
+    }
+
+    /**
      * Returns the transform for a view/eye. `view` is the view/eye index. `cam_transform` is the
      * transform that maps device coordinates to scene coordinates, typically the
      * `Node3D.global_transform` of the current XROrigin3D.
@@ -763,6 +791,16 @@ open class XRInterface(handle: GodotHandle) : RefCounted(handle) {
         @JvmField
         val stopPassthroughBind =
             ObjectCalls.getMethodBind("XRInterface", "stop_passthrough", STOP_PASSTHROUGH_HASH)
+
+        private const val GET_CAMERA_PROJECTIONS_HASH = 2969235509L
+        @JvmField
+        val getCameraProjectionsBind =
+            ObjectCalls.getMethodBind("XRInterface", "get_camera_projections", GET_CAMERA_PROJECTIONS_HASH)
+
+        private const val GET_CAMERA_OFFSETS_HASH = 689397652L
+        @JvmField
+        val getCameraOffsetsBind =
+            ObjectCalls.getMethodBind("XRInterface", "get_camera_offsets", GET_CAMERA_OFFSETS_HASH)
 
         private const val GET_TRANSFORM_FOR_VIEW_HASH = 518934792L
         @JvmField

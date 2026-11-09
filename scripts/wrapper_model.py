@@ -397,6 +397,8 @@ def logical_type(type_name: str, meta: str = "", object_types: set[str] | None =
         return "TypedPlaneArray"
     if type_name == "typedarray::Rect2":
         return "TypedRect2Array"
+    if type_name == "typedarray::Projection":
+        return "TypedProjectionArray"
     if type_name == "typedarray::Transform3D":
         return "TypedTransform3DArray"
     if type_name == "typedarray::Vector2":
@@ -489,6 +491,8 @@ def abi_kind(type_name: str, meta: str | None = None) -> str:
         return "typed_plane_array"
     if type_name == "typedarray::Rect2":
         return "typed_rect2_array"
+    if type_name == "typedarray::Projection":
+        return "typed_projection_array"
     if type_name == "typedarray::Transform3D":
         return "typed_transform3d_array"
     if type_name == "typedarray::Vector2":

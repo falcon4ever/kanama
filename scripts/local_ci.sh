@@ -870,6 +870,13 @@ if [[ $skip_web -eq 0 ]]; then
     stage "web dodge round self-test"
     node "$ROOT_DIR/scripts/web/dodge_restart_selftest.mjs"
 
+    # The tpsdemo driver on a page that answers only between frames (Chrome on SwiftShader on the
+    # hosted runner: 11-31 s per frame): an evaluate waits up to PAGE_EVALUATE_TIMEOUT_MS, the input
+    # hold and the teardown wait for frames, not only for wall time, and a frozen page still fails
+    # inside the cell's budget.
+    stage "web tpsdemo slow-page self-test"
+    node "$ROOT_DIR/scripts/web/tpsdemo_slow_page_selftest.mjs"
+
     # Correctness lint over the same drivers (task 86: an unused variable held
     # the Safari envelope's performance section back for two weeks). Pinned
     # install: npm ci against the committed scripts/web lockfile.

@@ -158,7 +158,11 @@ the processor generates (`verifyKanamaWebPackageProtocol`).
 The package workflow (`.github/workflows/package.yml`) runs only on manual
 dispatch and `v*` tags. It does not run on pull requests. On a tag, its first job
 refuses a Godot pin that is not stable, and every other job waits for that one,
-so a tag on a beta or rc builds and publishes nothing. Its jobs:
+so a tag on a beta or rc builds and publishes nothing. Its jobs, in file order:
+`gdextension-header` (the pin guard), `android-aar`, `desktop-kit`,
+`cross-runtimes`, `exported-game`, `store-addon`, `store-addon-windows`,
+`android-export`, `ios-export`, `web-export` and `publish-release`. The main
+ones:
 
 - `desktop-kit` builds and smokes a desktop kit per platform, and the store
   native library for each.
@@ -235,13 +239,28 @@ a device.
 
 ## Cutting a Release
 
-The maintainer decides when a release is cut. The steps:
+The maintainer decides when a release is cut. Use a fresh branch name for the
+release pull request: the release branches of earlier attempts stay in the
+history. For 0.5.0, `origin/release/0.5.0` already exists from an earlier
+attempt, so use a name such as `release/0.5.0-cut`. The steps:
 
-1. **Version.** Change `version` in `build.gradle.kts` together with the
-   Gradle coordinates, docs snippets, demo project versions, the status badge
-   in `README.md`, the package workflow variables and the companion demo
-   defaults. Grep the repository for the old version before you finish.
-2. **Changelog.** Turn `## Unreleased` into `## <version> - <date>`, keeping
+1. **Version.** Change `version` in `build.gradle.kts` and
+   `project-scripts/build.gradle.kts`, and `version` in
+   `example_project/addons/kanama_tools/plugin.cfg`
+   (`scripts/check_kit_version_pins.py` checks it against the root build). Then
+   change the places that name the release in words: the status badge and the
+   Godot wording in `README.md`, and the pages listed in step 2. Check with
+   `git grep -n -I -E '<old version>' -- . ':!CHANGELOG.md' ':!scripts/web/package-lock.json'`; what is left
+   should be history, not the current release.
+2. **Wording.** `scripts/upgrade_godot.sh` edits none of the pages that name the
+   Godot or the release, so change them by hand. Find them with
+   `git grep -n -I -E '<old release>|<old Godot>|beta ?[0-9]' -- README.md docs/index.md docs/getting-started docs/exporting docs/reference/version-support.md docs/contributing/wrapper-maintenance.md`.
+   These pages name the Godot a release is built on: the README badges, Get
+   Started, the kit and store addon pages, the source checkout page, the Web
+   export page, Requirements and Platform Status, and the KDoc docs pin in
+   `wrapper-maintenance.md`, which names a Godot source commit. Platform Status
+   changes only on evidence ([Support Levels](#support-levels)).
+3. **Changelog.** Turn `## Unreleased` into `## <version> - <date>`, keeping
    its "What's new" summary and its `### Details` entries under it, and open a
    new, empty `## Unreleased` above it: `check_public_signature_changes.py`
    counts no break as announced without one. Keep every `Source break` line.
@@ -250,7 +269,7 @@ The maintainer decides when a release is cut. The steps:
    `### What's new in <x.y>` yet, write one: at most 25 lines, second person,
    one link per paragraph ([docs-style.md](docs-style.md)). Entry headings
    under `### Details` are `####` and carry no task ids.
-3. **Gates.** Check that the pin is a stable Godot:
+4. **Gates.** Check that the pin is a stable Godot:
    `python3 scripts/check_godot_version_pin.py --release`. A beta or rc pin may
    live on `main`, but the package workflow stops on a tag that carries one, so
    move the pin first ([Godot Upgrade Runbook](godot-upgrade.md)). Run
@@ -258,12 +277,41 @@ The maintainer decides when a release is cut. The steps:
    isolated gates from clean clones: `scripts/fresh_clone_smoke.sh` and, for
    Web, `scripts/web_fresh_checkout_smoke.sh`. Smoke the packages as
    [Gates and Claims](gates.md#local-validation) shows.
-4. **Evidence.** Check the [Gates Index](../reference/generated/gates.md)
+   `scripts/fresh_clone_smoke.sh` clones Kanama and the demos from GitHub, at
+   their default branch, so run it after the release pull request is merged, or
+   pass `--kanama-source <path>` and `--demos-source <path>` to test local
+   checkouts (a path clones the checkout's current commit).
+5. **Evidence.** Check the [Gates Index](../reference/generated/gates.md)
    ledger: every local-only gate behind a Supported claim has a passing run on
-   the current Godot pin. Run the ones that do not.
-5. **Tag.** Push a `v<version>` tag. The package workflow builds and smokes
-   every package and publishes the desktop kits and the store addon to the
-   release.
-6. **Check the release page.** Every platform's desktop kit and the store
-   addon are attached. The workflow writes a one-line release note; the
-   changelog section is the full record.
+   the current Godot pin. Run the ones that do not. A device gate needs the
+   phone unlocked, and an iOS device gate needs Xcode signed in to an Apple
+   account; a free Apple account allows only
+   three apps on a device at a time, so remove an old test app if you hit that. The
+   ledger fails the build when an accepted-stale entry's date has passed
+   (`acceptedStaleUntil`). If the release slips past that date, re-run the gates
+   or renew the dates with a reason.
+6. **Tag.** Run the package workflow by hand on the release commit first
+   (`gh workflow run package.yml --ref main`; it takes about an hour). Then push
+   the `v<version>` tag. The workflow builds and smokes every package and, when
+   every job passes, creates the release (titled `v<version>`, with a one-line
+   note) and uploads the four desktop kits and the store addon.
+7. **Release page.** Check that those five zips are attached, then replace the
+   title and the note with the real ones:
+   `gh release edit v<version> --title <version> --notes-file <notes>`. The
+   changelog section is the full record. If the tag run fails, nothing is
+   published, because `publish-release` waits for every other job: fix the
+   cause in a pull request, delete the tag
+   (`git push --delete origin v<version>`) and push it again on the new commit.
+   If a release was created anyway, run `gh release delete v<version> --yes`
+   before you re-tag. (The recovery is plain git; it has not been rehearsed.)
+8. **Demos.** Follow "Update For A New Kanama Release" in the `AGENTS.md` of
+   [`kanama-demos`](https://github.com/falcon4ever/kanama-demos): bump the
+   version, the README badges and `KANAMA_REF`, merge, then tag the demos
+   repository `v<version>` (its earlier tags are `v0.1.0` to `v0.2.2`). Then
+   bump `DEMOS_REF` in `.github/workflows/web.yml` to the demos commit.
+9. **Docs notes.** Remove the "Until Kanama 0.5.0 is released" notes once the
+   kits are on the release page: find them with
+   `git grep -n -i -E 'until (kanama )?0\.5|until the 0\.5|published so far are for Kanama 0\.4|not out yet' -- README.md docs`.
+   One small docs pull request; the docs site redeploys when it merges. Keep the
+   "Building the Addon from Source" heading on the store addon page
+   (`source-checkout.md` links to it); reword only its first sentence.

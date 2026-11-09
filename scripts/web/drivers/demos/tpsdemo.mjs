@@ -9,7 +9,7 @@
 // run under that window. Smoke.smoke_teardown releases the cached scenes and the
 // settings ConfigFile, then frees the scene root and the Smoke autoload, draining every live handle to zero.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, PageTimeoutError } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -75,7 +75,8 @@ async function playerPosition(evaluate) {
       const x = bridge.immediateNoArgsVector3X(138, handle);
       return { x, y: bridge.immediateNoArgsVector3Y(), z: bridge.immediateNoArgsVector3Z() };
     })()`);
-  } catch {
+  } catch (error) {
+    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait
     return null;
   }
 }
@@ -84,10 +85,12 @@ async function playerPosition(evaluate) {
 // mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
 // BOUNDED and the caller's null handling is unchanged, so a position that STAYS
 // unreadable (dead bridge, freed player) still fails exactly as loudly as before.
-async function playerPositionRetry(evaluate, attempts = 5) {
+// A page that does not answer at all (PageTimeoutError) is not retried, and no retry starts past
+// the deadline: either would only multiply the evaluate limit.
+async function playerPositionRetry(evaluate, deadline, attempts = 5) {
   for (let attempt = 1; ; attempt += 1) {
     const position = await playerPosition(evaluate);
-    if (position || attempt >= attempts) return position;
+    if (position || attempt >= attempts || Date.now() >= deadline) return position;
     trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
     await delay(250);
   }
@@ -104,12 +107,19 @@ function seedFrom(snap) {
   };
 }
 
-async function observe(evaluate, seed, windowMs, deadline, predicate) {
+// Samples until `predicate` holds or the window closes, and never stops before `minSamples` samples
+// were asked for (bounded by the deadline; an unanswered one counts, so a frozen page still ends the
+// loop). A page answers a sample only between two frames, and on a slow software GL (Chrome on
+// SwiftShader, the hosted runner: 11-31 s per frame) a wall-clock window alone can close on its first
+// sample, before the frame that shows the result.
+async function observe(evaluate, seed, windowMs, deadline, predicate, { minSamples = 0 } = {}) {
   const peak = { ...seed };
   let last = null;
+  let samples = 0;
   const until = Math.min(deadline, Date.now() + windowMs);
-  while (Date.now() < until) {
+  while (Date.now() < deadline && (Date.now() < until || samples < minSamples)) {
     const snap = await snapshot(evaluate);
+    samples += 1;
     if (snap) {
       peak.processCalls = Math.max(peak.processCalls, snap.processCalls);
       peak.physicsCalls = Math.max(peak.physicsCalls, snap.physicsCalls);
@@ -130,10 +140,11 @@ async function observe(evaluate, seed, windowMs, deadline, predicate) {
 
 export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir }) {
   // Engine-level action injection (ops 86/87) on the player's own handle: browser key
-  // synthesis stalls the headless-Firefox main thread for the whole hold.
+  // synthesis stalls the headless-Firefox main thread for the whole hold. Answers the physics
+  // call count at the moment of the action.
   const action = (opcode, name) =>
     evaluate(
-      `globalThis.KanamaWebBridge.immediateObjectQuery(${opcode}, globalThis.KanamaWebBridge.tpsPlayerHandle, "${name}"); true`,
+      `globalThis.KanamaWebBridge.immediateObjectQuery(${opcode}, globalThis.KanamaWebBridge.tpsPlayerHandle, "${name}"); globalThis.KanamaWebBridge.physicsProcessCalls ?? 0`,
     );
 
   const startupStart = Date.now();
@@ -209,22 +220,34 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
     (snap) => snap.physicsCalls >= level.physicsCalls + 120,
   );
   const baseline = settled.last ?? level;
-  const startPosition = await playerPositionRetry(evaluate);
+  const startPosition = await playerPositionRetry(evaluate, deadline);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`settled: physics=${baseline.physicsCalls} start=${JSON.stringify(startPosition)}`);
 
-  // Hold move_forward for a FIXED wall-time: the tick rate races past any physics-count
-  // predicate before the first observe sample, which would cut the hold short.
-  await action(86, "move_forward");
+  // Hold move_forward for at least 4 s of wall time AND at least HOLD_PHYSICS_CALLS physics calls
+  // counted from the press (not from the settled baseline: on a slow page frames run between the
+  // two, and a hold counted from the baseline covered three frames).
+  // The wall time alone was the old rule (a physics count alone is reached before the first sample
+  // on a fast page, which would cut the hold short), but on Chrome's SwiftShader on the hosted runner
+  // one frame takes 11-31 s and runs at most 8 physics steps, so 4 s covered two frames and the player
+  // moved about 0.3 m. 200 physics calls are 40 steps of the five physics scripts: a fast page gets
+  // there in under a second, a slow one in about five frames. A page whose physics stops still ends
+  // the hold, at HOLD_MAX_MS, and fails playerMovedOnInput (on a slow page physicsFramesAdvanced can
+  // stay green: the frames between the settled sample and the press already add their 40 calls).
+  const HOLD_MIN_MS = 4_000;
+  const HOLD_PHYSICS_CALLS = 200;
+  const HOLD_MAX_MS = 240_000;
+  const physicsAtPress = await action(86, "move_forward");
+  const holdStart = Date.now();
   const gameplay = await observe(
     evaluate,
     { ...seedFrom(baseline), callbackErrors: 0 },
-    4_000,
+    HOLD_MAX_MS,
     deadline,
-    null,
+    (snap) => Date.now() - holdStart >= HOLD_MIN_MS && snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS,
   );
   await action(87, "move_forward");
-  const runPosition = await playerPositionRetry(evaluate);
+  const runPosition = await playerPositionRetry(evaluate, deadline);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? baseline;
   const displacement = runPosition
@@ -236,7 +259,8 @@ export async function runTpsdemo({ url, evaluate, navigate, deadline, exportDir 
   // ConfigFile, then frees the scene root; every node exits the tree and drops its handles.
   trace("smoke_teardown");
   await callSmokeMethod(evaluate, exportDir, "tps.Smoke", "smoke_teardown");
-  const teardown = await observe(collecting(evaluate), peak, 20_000, deadline, (snap) => snap.liveHandles === 0);
+  // At least 3 samples: on a slow page the first one can be the frame that still holds the level.
+  const teardown = await observe(collecting(evaluate), peak, 20_000, deadline, (snap) => snap.liveHandles === 0, { minSamples: 3 });
   const torndown = teardown.last ?? atPeak;
   trace(`teardown: live=${torndown.liveHandles} callbacks=${torndown.callbacks} errs=${torndown.callbackErrors}`);
 

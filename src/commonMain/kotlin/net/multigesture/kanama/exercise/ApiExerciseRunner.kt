@@ -23,6 +23,8 @@ import net.multigesture.kanama.api.SignalArgType
 import net.multigesture.kanama.api.SignalConnection
 import net.multigesture.kanama.api.Time
 import net.multigesture.kanama.api.Tween
+import net.multigesture.kanama.api.XRInterface
+import net.multigesture.kanama.api.XRServer
 import net.multigesture.kanama.binding.runtime.ObjectCalls
 import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
@@ -201,6 +203,7 @@ internal constructor(
   private var faultsAtBegin = 0
   private val toClose = ArrayList<RefCounted>()
   private val toFree = ArrayList<GodotObject>()
+  private val toRelease = ArrayList<() -> Unit>()
 
   // ---- the scratch directory and its fixtures --------------------------------------------------
 
@@ -385,6 +388,8 @@ internal constructor(
   fun end() {
     try {
       for (tween in tweens) runCatching { tween.kill() }
+      // First: a release may still need an object the row closes below (the XR interface).
+      for (release in toRelease.asReversed()) runCatching { release() }
       for (value in toClose.asReversed()) runCatching { value.close() }
       for (value in toFree.asReversed()) {
         runCatching { if (value.isInstanceLive()) ObjectCalls.destroyObject(value.segment) }
@@ -393,6 +398,7 @@ internal constructor(
       tweens.clear()
       toClose.clear()
       toFree.clear()
+      toRelease.clear()
     }
     val raised = faults() - faultsAtBegin
     if (raised > 0) {
@@ -469,6 +475,29 @@ internal constructor(
       is List<*> -> value.forEach { collect(it) }
       is Map<*, *> -> value.values.forEach { collect(it) }
     }
+  }
+
+  /** A SCENE_ROWS physics world, freed when the row ends. */
+  fun physics2D(): PhysicsScene2D = PhysicsScene2D(this).also { toRelease.add(it::release) }
+
+  /** A SCENE_ROWS physics world, freed when the row ends. */
+  fun physics3D(): PhysicsScene3D = PhysicsScene3D(this).also { toRelease.add(it::release) }
+
+  /** A real Generic 6DOF joint, freed when the row ends. */
+  fun joint6dof(): JointScene = JointScene().also { toRelease.add(it::release) }
+
+  /**
+   * The engine's XR interface that needs no headset, initialized until the row ends (null in a
+   * build without it). The interface makes itself the primary one for that time; nothing renders
+   * through it, since no viewport has `use_xr` on.
+   */
+  fun xrInterface(): XRInterface? {
+    val found = track(XRServer.findInterface("Native mobile")) ?: return null
+    if (!found.isInitialized()) {
+      check(found.initialize()) { "the Native mobile XR interface did not initialize" }
+      toRelease.add { found.uninitialize() }
+    }
+    return found
   }
 
   fun threw(t: Throwable) {
@@ -589,6 +618,25 @@ internal constructor(
       isZero(got) -> if (verdict == ' ') verdict = 'W'
       else -> pass()
     }
+  }
+
+  /**
+   * A SCENE_ROWS row that cannot do its work on this host (no RenderingDevice, a class only the
+   * editor can instantiate): weak, with the reason printed.
+   */
+  fun weakBecause(why: String) {
+    if (verdict == ' ') verdict = 'W'
+    onWeak("$helpers $label $why")
+  }
+
+  /**
+   * An out-parameter row: the engine fills [value] in place and keeps no reference, so the count
+   * the caller holds is [before] after the call too. A count that rose would leak the object, one
+   * that fell would free it under its wrapper.
+   */
+  fun sameReferences(value: RefCounted, before: Int) {
+    val now = value.getReferenceCount()
+    if (now != before) fail("the call moved a reference count: $before before, $now after")
   }
 
   /**
