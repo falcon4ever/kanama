@@ -580,7 +580,12 @@ fallback). Because a freed script's dropped wrappers release its handles only on
 collects them, every demo driver's teardown check asks the page to collect before each poll
 (`collecting` in `scripts/web/drivers/envelope.mjs`: `gc()` on Chrome, an allocation burst on
 Firefox), so does dodge's per-mob retention trough between rounds, and match3's mid-game bound leaves
-out the RefCounted handles still pinned (`rcPinned`).
+out the RefCounted handles still pinned (`rcPinned`). Safari has no `gc()` and the burst does not
+reliably make it collect within the 2 seconds before dodge's next round spawns its first mob, so when
+a round's leftovers are still live then, the trough keeps following those handles by identity (the
+ones live at that moment that were not live when the round began) for up to 15 seconds of collecting
+polls while the next round plays. A late collector reads 0 per mob; a real leak never falls and reads
+1.0.
 
 The web3d `LentProbe` rows (`lentStoredArgumentStaysValid`, `lentArgumentIdentity`,
 `lentNestedDispatchIdentity`, `lentArgumentOutlivesItsReceiver`, `lentEngineFreeIsFreedInstance`,
@@ -1277,6 +1282,20 @@ Browser-specific notes:
   plus every gameplay and teardown invariant.
 - **Firefox** collects console errors through BiDi `log.entryAdded`.
 - **Chrome** collects CDP console/exception events and is the intended CI path.
+  On the hosted Linux runner it draws on SwiftShader (ANGLE on SwiftShader's
+  Vulkan; no flag reaches the runner's Mesa), and a heavy 3D level is slow
+  there: measured per frame on 2026-11-08, one frame of tpsdemo's level (about
+  9,500 draw calls) took 9-19 s under Godot 4.7.2 and 11-31 s under 4.8 beta 2,
+  depending on the runner, with the page's main thread blocked in a WebGL call
+  that waits for the GPU process. Firefox runs the same export at about 55 fps on
+  the same runner. A page answers an evaluate only between two frames, so the
+  Chrome driver gives `Runtime.evaluate` `PAGE_EVALUATE_TIMEOUT_MS` (60 s, in
+  `scripts/web/drivers/envelope.mjs`; other CDP commands keep 20 s), and the
+  tpsdemo driver waits for frames, not only for wall time: its input hold runs
+  for 200 physics calls from the press as well as 4 s, its teardown reads at least three
+  samples. `scripts/web/tpsdemo_slow_page_selftest.mjs` drives it on a fake page
+  with these frame times, and on one that freezes, which must still fail inside
+  the cell's budget.
 
 The two WorkerThreadPool `PagedAllocator` lines printed after a `get_tree().quit()`
 from `_process` are an upstream Godot 4.7 shutdown diagnostic — reproduced by an

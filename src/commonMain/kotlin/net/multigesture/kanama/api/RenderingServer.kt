@@ -11,6 +11,7 @@ import net.multigesture.kanama.types.AABB
 import net.multigesture.kanama.types.Basis
 import net.multigesture.kanama.types.Color
 import net.multigesture.kanama.types.Plane
+import net.multigesture.kanama.types.Projection
 import net.multigesture.kanama.types.RID
 import net.multigesture.kanama.types.Rect2
 import net.multigesture.kanama.types.Rect2i
@@ -3029,6 +3030,18 @@ object RenderingServer {
     @JvmStatic
     fun cameraSetFrustum(camera: RID, size: Double, offset: Vector2, zNear: Double, zFar: Double) {
         ObjectCalls.ptrcallWithRIDDoubleVector2TwoDoubleArgs(Binds.cameraSetFrustumBind, singleton, camera, size, offset, zNear, zFar)
+    }
+
+    /**
+     * Sets camera to use any set of `projections`. You can specify one projection for each view set on
+     * the viewport. If the views are offset (e.g. ocular distance) and/or skewed, this data can be
+     * provided through `offsets`.
+     *
+     * Generated from Godot docs: RenderingServer.camera_set_xr_projections
+     */
+    @JvmStatic
+    fun cameraSetXrProjections(camera: RID, projections: List<Projection>, offsets: List<Transform3D> = emptyList()) {
+        ObjectCalls.ptrcallWithRIDProjectionListTransform3DListArgs(Binds.cameraSetXrProjectionsBind, singleton, camera, projections, offsets)
     }
 
     /**
@@ -12079,6 +12092,11 @@ object RenderingServer {
         @JvmField
         val cameraSetFrustumBind =
             ObjectCalls.getMethodBind("RenderingServer", "camera_set_frustum", CAMERA_SET_FRUSTUM_HASH)
+
+        private const val CAMERA_SET_XR_PROJECTIONS_HASH = 1352140595L
+        @JvmField
+        val cameraSetXrProjectionsBind =
+            ObjectCalls.getMethodBind("RenderingServer", "camera_set_xr_projections", CAMERA_SET_XR_PROJECTIONS_HASH)
 
         private const val CAMERA_SET_TRANSFORM_HASH = 3935195649L
         @JvmField

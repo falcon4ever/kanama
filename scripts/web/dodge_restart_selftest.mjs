@@ -63,6 +63,9 @@ const HUD_COROUTINE_TICKS = 6; // game over -> MessageTimer -> 1s delay -> Start
  *   roundFreeDelay    polls before new_game's queue_free lands (default 1: the end of the frame).
  *   teardownIgnored   a freed mob's script is never torn down by the bridge (its handles go).
  *   screenExitIgnored Mob's screen_exited dispatch reaches the bridge but frees nothing.
+ *   collectEvery      the page collects only on every Nth request (default 1: each one), as Safari,
+ *                     whose collector a page cannot force, sometimes runs only after the next round's
+ *                     first mob; Infinity: never.
  */
 function makeFakeBridge({
   hitAt = () => Infinity,
@@ -77,12 +80,24 @@ function makeFakeBridge({
   roundFreeDelay = 1,
   teardownIgnored = false,
   screenExitIgnored = false,
+  collectEvery = 1,
 }) {
+  // Handle slots as the bridge keeps them: a freed slot goes on a free list, the next mint takes the
+  // most recently freed one (last in, first out) and bumps its generation, so a handle minted after a
+  // collection lands in a slot one of the old round's handles held, under a new generation.
   const slots = [];
+  const freeSlots = [];
   const mint = (kind, extra = {}) => {
-    const slot = { kind, live: true, refCounted: false, reachable: true, ...extra };
-    slots.push(slot);
+    const reused = freeSlots.length > 0 ? slots[freeSlots.pop()] : null;
+    const slot = reused ?? { index: slots.length, generation: 0 };
+    Object.assign(slot, { kind, live: true, refCounted: false, reachable: true, generation: slot.generation + 1, ...extra });
+    if (!reused) slots.push(slot);
     return slot;
+  };
+  const release = (slot) => {
+    if (!slot.live) return;
+    slot.live = false;
+    freeSlots.push(slot.index);
   };
   for (let index = 0; index < SCENE_NODES; index += 1) mint("Node");
   mint("Resource", { refCounted: true });
@@ -98,6 +113,7 @@ function makeFakeBridge({
     hudCoroutine: null, // ticks until the HUD's game-over coroutine shows the Start button again
     startButton: null,
     collectRequested: false,
+    collectRequests: 0,
     gameOvers: 0,
     pendingHit: false,
     torn: false,
@@ -132,7 +148,7 @@ function makeFakeBridge({
   const freeMob = (mob) => {
     if (!mob.live) return;
     mob.live = false;
-    mob.node.live = false;
+    release(mob.node);
     if (!teardownIgnored) bridge.liveScriptsByClass["dodge.Mob"] -= 1; // the bridge's _exit_tree teardown
     for (let index = 0; index < leakPerMob(mob.round); index += 1) mint("Node");
   };
@@ -186,7 +202,7 @@ function makeFakeBridge({
         if (!screenExitIgnored) freeMob(mobByHandle.get(handle)); // Mob._on_VisibilityNotifier2D_screen_exited: queue_free
       } else if (handle === SMOKE_HANDLE && id === TEARDOWN_ID) {
         state.torn = true;
-        for (const slot of slots) slot.live = false;
+        for (const slot of slots) release(slot);
       } else {
         throw new Error(`fake dodge bridge: unexpected call handle=${handle} id=${id}`);
       }
@@ -207,7 +223,7 @@ function makeFakeBridge({
     // A requested collection releases every RefCounted handle no wrapper can reach any more. The
     // page never collects on its own here (Firefox on a quiet page, CI's Linux runner).
     if (state.collectRequested) {
-      for (const slot of slots) if (slot.live && slot.refCounted && !slot.reachable) slot.live = false;
+      for (const slot of slots) if (slot.refCounted && !slot.reachable) release(slot);
       state.collectRequested = false;
     }
     if (state.torn) return;
@@ -261,7 +277,11 @@ function makeFakeBridge({
     if (mob.hitIn === 0) mob.hitIn = null;
   };
   bridge.maxLiveBrowserHandles = bridge.liveBrowserHandleCount;
-  return { bridge, step, requestCollection: () => (state.collectRequested = true) };
+  const requestCollection = () => {
+    state.collectRequests += 1;
+    if (state.collectRequests % collectEvery === 0) state.collectRequested = true;
+  };
+  return { bridge, step, requestCollection };
 }
 
 async function runScenario(options, { manifestMain = MAIN_IDS } = {}) {
@@ -322,7 +342,8 @@ const redChecks = (result) => Object.entries(result.checks).filter(([, ok]) => o
 // [label, fake options, expected: { red: [checks] (empty: all green), restarts (default 1: round 1 ends
 // after 4 mobs), resumes, hits, retentionX100 (green; default 0), screenExitFrees (green; default: at
 // least 2, every mob freed off screen or by the round's end either way; also checked for an exact
-// red set), exact (red must be exactly `red`) }]
+// red set), exact (red must be exactly `red`), extended (green: the trough had to follow a round's
+// leftovers past the next round's first mob; otherwise it must not have) }]
 const round1 = (value) => (round) => (round === 1 ? value : Infinity);
 const round2 = (value) => (round) => (round === 2 ? value : Infinity);
 const scenarios = [
@@ -341,6 +362,18 @@ const scenarios = [
   ["one handle leaked per mob of round 1 (the restarted round)", { leakPerMob: (round) => (round === 1 ? 1 : 0) }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0 }],
   ["one handle leaked per mob of round 2 only", { leakPerMob: (round) => (round === 2 ? 1 : 0) }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0 }],
   ["one handle kept per round, not per mob", { leakPerRound: 1 }, { red: [], resumes: 0, hits: 0, retentionX100: 25 }],
+  // Safari: the collector runs only after the next round's first mob (the window holds ~7 polls), so
+  // the trough must follow the round's own leftovers past it. A leak still reads 1.0 there.
+  ["the collector runs after the next round's first mob (Safari)", { collectEvery: 20 }, { red: [], resumes: 0, hits: 0, extended: true }],
+  ["one handle leaked per mob, the collector late (Safari)", { leakPerMob: () => 1, collectEvery: 20 }, { red: ["noPerMobHandleRetention"], resumes: 0, hits: 0, retentionX100: 100 }],
+  ["one handle leaked per mob of round 2 only, the collector late", { leakPerMob: (round) => (round === 2 ? 1 : 0), collectEvery: 20 }, { red: ["noPerMobHandleRetention"], retentionX100: 100 }],
+  ["the page never collects", { collectEvery: Infinity }, { red: ["noPerMobHandleRetention"] }],
+  // The bridge reuses a freed slot under a new generation: once the late collection frees the old
+  // round's slots, the next round's mobs land in them. Keyed by slot alone, the trough would count a
+  // new mob there as the old round's (the collection lands on a spawn: 0.25) and drop a leaked handle
+  // whose slot was live when its round began (half of round 2's leak hidden: 0.5, green).
+  ["the next round's mob spawns into the slots the collection freed (slot reuse)", { collectEvery: 12 }, { red: [], resumes: 0, hits: 0, extended: true }],
+  ["one handle leaked per mob of round 2, in slots the old round freed (slot reuse)", { leakPerMob: (round) => (round === 2 ? 1 : 0), collectEvery: 16 }, { red: ["noPerMobHandleRetention"], retentionX100: 100 }],
   ["round 1's hit reported in the first frame after the restart", { hitAtRestart: true }, { red: [], resumes: 0, hits: 1 }],
   ["no mob is ever reported off screen (Linux CI Firefox)", { screenExits: false }, { red: ["mobsFreedOffScreen"], exact: true, resumes: 0, hits: 0, screenExitFrees: 0 }],
   ["screen_exited reaches the bridge, the mob does not free", { screenExitIgnored: true }, { red: ["mobsFreedOffScreen"], exact: true, screenExitFrees: 0 }],
@@ -364,7 +397,16 @@ for (const [label, options, expected] of scenarios) {
     expect(result.boundaryErrors.length === 0, `${label}: boundaryErrors ${JSON.stringify(result.boundaryErrors)}`);
     expect(c.bestRoundMobInstantiations >= 4, `${label}: bestRoundMobInstantiations is ${c.bestRoundMobInstantiations}, expected 4+`);
     expect(c.worstHandleRetentionPerMobX100 === retentionX100, `${label}: worstHandleRetentionPerMobX100 is ${c.worstHandleRetentionPerMobX100}, expected ${retentionX100}`);
+    if (retentionX100 === 0) {
+      expect(
+        (c.retentionTroughExtendedPolls > 0) === (expected.extended === true),
+        `${label}: retentionTroughExtendedPolls is ${c.retentionTroughExtendedPolls}, expected ${expected.extended ? "1+" : "0"}`,
+      );
+    }
   } else {
+    if (expected.retentionX100 !== undefined) {
+      expect(c.worstHandleRetentionPerMobX100 === expected.retentionX100, `${label}: worstHandleRetentionPerMobX100 is ${c.worstHandleRetentionPerMobX100}, expected ${expected.retentionX100}`);
+    }
     expect(red.length > 0, `${label}: expected a red check, but every check is green (the run would pass)`);
     for (const name of expected.red) expect(red.includes(name), `${label}: ${name} must be false (red: [${red.join(", ")}])`);
     if (expected.exact) {
@@ -384,7 +426,8 @@ for (const [label, options, expected] of scenarios) {
   }
   console.log(
     `  ${label}: restarts=${c.roundRestarts} resumes=${c.roundResumes} hits=${c.playerHits} bestRound=${c.bestRoundMobInstantiations} ` +
-      `cumulative=${c.mobInstantiations} freed=${c.mobScreenExitFrees}+${c.mobRoundEndFrees} retentionX100=${c.worstHandleRetentionPerMobX100} red=[${red.join(",")}]`,
+      `cumulative=${c.mobInstantiations} freed=${c.mobScreenExitFrees}+${c.mobRoundEndFrees} retentionX100=${c.worstHandleRetentionPerMobX100} ` +
+      `extendedPolls=${c.retentionTroughExtendedPolls} red=[${red.join(",")}]`,
   );
 }
 
@@ -424,6 +467,7 @@ if (failures.length > 0) {
 }
 console.log(
   "dodge_restart_selftest: OK (early hits resume to 4 mobs; every run restarts once and judges both rounds; " +
-    "no resume, a second hit, a hit before the first mob or too soon after it, a per-mob leak in either round, a mob left unfreed and " +
+    "no resume, a second hit, a hit before the first mob or too soon after it, a per-mob leak in either round (a late collector " +
+    "included), a mob left unfreed and " +
     "a run where no mob frees itself off screen are red; a host that never reports one is red on mobsFreedOffScreen alone)",
 );

@@ -115,6 +115,7 @@ TOKEN_KIND = {
     "PackedStringListList": "typed_packed_string_array",
     "PackedVector2ListList": "typed_packed_vector2_array",
     "PlaneList": "typed_plane_array",
+    "ProjectionList": "typed_projection_array",
     "Rect2List": "typed_rect2_array",
     "Transform3DList": "typed_transform3d_array",
     "Vector2List": "typed_vector2_array",

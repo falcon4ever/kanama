@@ -859,6 +859,15 @@ case("generate_api_exercise.py --check (row arguments of no row)", API_EXERCISE_
      [Edit("scripts/api_exercise_policy.py", '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n',
            '    ("ClassDB", "class_get_enum_list"): (\'"Node"\',),\n    ("ClassDB", "class_get_enum_list_red_run"): (\'"Node"\',),\n')],
      "ROW_ARGS names ClassDB.class_get_enum_list_red_run, which is not a B, D or F row", "a `ROW_ARGS` entry names a method that is no B or D row (renamed or gone): its arguments would silently go unused")
+case("generate_api_exercise.py --check (scene row of no call)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '    ("XRInterface", "get_camera_offsets"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n',
+           '    ("XRInterface", "get_camera_offsets"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n'
+           '    ("XRInterface", "get_camera_offsets_red_run"): _xr("XRInterface", "get_camera_offsets", _XR_OFFSETS),\n')],
+     "SCENE_ROWS names XRInterface.get_camera_offsets_red_run, which no wrapper calls", "a `SCENE_ROWS` entry names a method no wrapper calls (renamed or gone): its row would run nothing")
+case("generate_api_exercise.py --check (scene row case)", API_EXERCISE_CHECK,
+     [Edit("scripts/api_exercise_policy.py", '        "F",\n        "a real 6DOF joint; the read-back is the getter\'s row",\n',
+           '        "A",\n        "a real 6DOF joint; the read-back is the getter\'s row",\n')],
+     "a scene row is B, D or F", "a `SCENE_ROWS` entry claims a case its row cannot be: the case decides which verdict calls it counts under")
 case("generate_api_exercise.py --check (known finding names no row)", API_EXERCISE_CHECK,
      [Edit("scripts/api_exercise_policy.py", KNOWN_FINDINGS_OPEN,
            KNOWN_FINDINGS_OPEN + '("A", "CharFXTransform.font_red_run"): (("ios",), "got null", "red run", "red run"),')],
@@ -1864,12 +1873,39 @@ case("web/dodge_restart_selftest.mjs (per-round mob count)", ["node", "scripts/w
 case("web/dodge_restart_selftest.mjs (per-round retention)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "for (const finished of rounds) {", "for (const finished of rounds.slice(-1)) {")],
      "leaked per mob of round 1 (the restarted round): noPerMobHandleRetention must be false", "dodge judges only the last round's retention again: a per-mob leak in a round that ended in a restart passes")
+case("web/tpsdemo_slow_page_selftest.mjs", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/envelope.mjs", "export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;", "export const PAGE_EVALUATE_TIMEOUT_MS = 20_000;")],
+     "23 s frames (a slow runner): checks red", "an evaluate gets the old 20 s CDP limit again: the runner's Chrome, whose tpsdemo frames take up to 31 s, fails the cell")
+case("web/tpsdemo_slow_page_selftest.mjs (frozen page)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/envelope.mjs", "export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;", "export const PAGE_EVALUATE_TIMEOUT_MS = 600_000;")],
+     "freezes during the input hold: the driver took", "an evaluate waits ten minutes: a page that never answers (a frozen main thread) runs past the cell's budget instead of failing")
+case("web/tpsdemo_slow_page_selftest.mjs (input hold)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "const HOLD_PHYSICS_CALLS = 200;", "const HOLD_PHYSICS_CALLS = 0;")],
+     "(a slow runner): checks red: playerMovedOnInput", "tpsdemo holds move_forward for 4 s of wall time only: on 23 s frames that is two frames and the player barely moves")
+case("web/tpsdemo_slow_page_selftest.mjs (hold from the press)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "snap.physicsCalls >= physicsAtPress + HOLD_PHYSICS_CALLS", "snap.physicsCalls >= baseline.physicsCalls + HOLD_PHYSICS_CALLS")],
+     "(a slow runner): move_forward was held for", "tpsdemo counts the hold from the settled baseline again: on a slow page the frames between that sample and the press shorten the hold (CI: 0.65 m)")
+case("web/tpsdemo_slow_page_selftest.mjs (read retry on a frozen page)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait\n", "")],
+     "freezes once the level is up: a frozen page must fail, got error \"could not read the player's global position\"", "tpsdemo's position read retries a page that does not answer again: five 60 s waits, then a message that blames the read")
+case("web/tpsdemo_slow_page_selftest.mjs (teardown samples)", ["node", "scripts/web/tpsdemo_slow_page_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/tpsdemo.mjs", "(snap) => snap.liveHandles === 0, { minSamples: 3 });", "(snap) => snap.liveHandles === 0);")],
+     "(a slow runner): checks red: fullTeardownToZero", "tpsdemo's teardown window closes on its first sample again: on a slow page that is the frame still holding the level")
 case("web/dodge_restart_selftest.mjs (restart every run)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "if (roundRestarts === 0 && p.roundMobs >= FORCED_RESTART_AT_MOBS) {", "if (false) {")],
      "one handle leaked per mob of round 2 only: noPerMobHandleRetention must be false", "dodge stops ending round 1 with a restart in every run: a leak that only shows after the first new_game passes CI (it was behind KANAMA_WEB_DODGE_FORCE_RESTART)")
 case("web/dodge_restart_selftest.mjs (forced collection)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "const takeCollected = () => snapshot(collecting(evaluate));", "const takeCollected = take;")],
      "healthy: checks red: noPerMobHandleRetention", "dodge's between-rounds trough stops forcing a collection: a mob's dropped SpriteFrames wrapper reads as a retained handle until the browser collects on its own (CI: 4 over 7 mobs)")
+case("web/dodge_restart_selftest.mjs (late collector)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "if (reference && !settled && samples > 0 && keys && startKeys) {", "if (false) {")],
+     "the collector runs after the next round's first mob (Safari): checks red: noPerMobHandleRetention", "dodge's retention trough stops following a round's leftover handles past the next round's first mob: a collector that runs late (Safari, which no page can force) reads as one handle retained per mob (1.0 in 6 of 10 local Safari runs)")
+case("web/dodge_restart_selftest.mjs (late collector, leak)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", "Math.min(byKind[kind], (reference[kind] ?? 0) + (left[kind] ?? 0))", "Math.min(byKind[kind], reference[kind] ?? 0)")],
+     "one handle leaked per mob: noPerMobHandleRetention must be false", "dodge's extended retention trough stops counting the round's own handles still live: a real one-handle-per-mob leak settles there and passes")
+case("web/dodge_restart_selftest.mjs (late collector, slot reuse)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
+     [Edit("scripts/web/drivers/demos/dodge.mjs", 'push(index + "." + (slot.generation ?? 0));', "push(String(index));")],
+     "slot reuse): worstHandleRetentionPerMobX100 is", "dodge's extended retention trough keys a handle by its slot alone again: the bridge reuses a freed slot under a new generation, so a next-round mob in an old round's slot counts as retained and a leaked handle in a slot live at the round's start goes uncounted")
 case("web/dodge_restart_selftest.mjs (instant kill)", ["node", "scripts/web/dodge_restart_selftest.mjs"],
      [Edit("scripts/web/drivers/demos/dodge.mjs", "noHitBeforeFirstMob: !hits.some((hit) => hit.mobs === 0),", "noHitBeforeFirstMob: true,")],
      "hit before round 1's first mob: noHitBeforeFirstMob must be false", "dodge stops failing a build where the player is hit before a round spawned a mob (resuming the round would hide it)")

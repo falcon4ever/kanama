@@ -9,6 +9,31 @@ import path from "node:path";
 
 const SCHEMA_VERSION = 1;
 
+// How long a driver waits for the page to answer one evaluate. A page runs a script only between two
+// frames, so the wait is bounded by the longest frame, not by the evaluate's own cost. On the hosted
+// Linux runner Chrome draws on SwiftShader, and one frame of tpsdemo's level took 11-31 s there under
+// Godot 4.8 (9-19 s under 4.7.2), most of it with the page's main thread blocked in a WebGL call
+// waiting for the GPU process (measured per frame on the runner, 2026-11-08: "Chrome" under Validation
+// Fixtures in docs/contributing/backends/web.md). The old 20 s CDP call limit was below that, so the
+// cell failed whenever the runner drew slowly. Twice the worst measured frame still fails a page that
+// never answers (a frozen main thread) well inside every cell's budget;
+// scripts/web/tpsdemo_slow_page_selftest.mjs proves both.
+export const PAGE_EVALUATE_TIMEOUT_MS = 60_000;
+
+/**
+ * The page did not answer one evaluate within PAGE_EVALUATE_TIMEOUT_MS: its main thread is frozen, or
+ * one frame outlasted the limit. A read helper that retries a null answer (a one-shot miss under host
+ * load) rethrows this one instead: retrying a page that does not answer only multiplies the limit,
+ * and the run then ends at the driver's hard stop with no result, or with a message that blames the
+ * read.
+ */
+export class PageTimeoutError extends Error {
+  constructor(timeoutMs) {
+    super(`CDP Runtime.evaluate timed out after ${timeoutMs}ms: the page did not answer (a frozen main thread, or one frame longer than the limit)`);
+    this.name = "PageTimeoutError";
+  }
+}
+
 // Protocol 37: a RefCounted handle lives while a Kotlin wrapper of it is reachable, so after a
 // teardown a handle that a freed script's dropped wrapper still holds goes when the browser collects
 // that wrapper (desktop's late release), on the next frame of a proxy that still runs (a smoke

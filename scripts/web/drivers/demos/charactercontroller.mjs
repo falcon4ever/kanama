@@ -10,7 +10,7 @@
 // SmokeQuit.smoke_teardown frees the Events autoload + scene root, draining every live
 // handle to zero.
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, PageTimeoutError } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // How far below the start height counts as "off the platform and falling". The level's
@@ -84,7 +84,8 @@ async function playerPosition(evaluate) {
       const x = bridge.immediateNoArgsVector3X(138, handle);
       return { x, y: bridge.immediateNoArgsVector3Y(), z: bridge.immediateNoArgsVector3Z() };
     })()`);
-  } catch {
+  } catch (error) {
+    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait
     return null;
   }
 }
@@ -93,10 +94,12 @@ async function playerPosition(evaluate) {
 // mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
 // BOUNDED and the caller's null handling is unchanged, so a position that STAYS
 // unreadable (dead bridge, freed player) still fails exactly as loudly as before.
-async function playerPositionRetry(evaluate, attempts = 5) {
+// A page that does not answer at all (PageTimeoutError) is not retried, and no retry starts past
+// the deadline: either would only multiply the evaluate limit.
+async function playerPositionRetry(evaluate, deadline, attempts = 5) {
   for (let attempt = 1; ; attempt += 1) {
     const position = await playerPosition(evaluate);
-    if (position || attempt >= attempts) return position;
+    if (position || attempt >= attempts || Date.now() >= deadline) return position;
     trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
     await delay(250);
   }
@@ -177,7 +180,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
   // itself consumes physics frames and must not eat into the movement window.
   await observe(evaluate, { ...seedFrom(ready), callbackErrors: 0 }, 2_000, deadline, null);
   const baseline = (await snapshot(evaluate)) ?? ready;
-  const startPosition = await playerPositionRetry(evaluate);
+  const startPosition = await playerPositionRetry(evaluate, deadline);
   if (!startPosition) throw new Error("could not read the player's global position");
   trace(`start position: ${JSON.stringify(startPosition)}`);
 
@@ -192,7 +195,7 @@ export async function runCharactercontroller({ url, evaluate, navigate, keys, de
     (snap, p) => p.physicsCalls >= baseline.physicsCalls + 150,
   );
   await keyUp();
-  const runPosition = await playerPositionRetry(evaluate);
+  const runPosition = await playerPositionRetry(evaluate, deadline);
   const peak = gameplay.peak;
   const atPeak = gameplay.last ?? ready;
   const displacement = runPosition

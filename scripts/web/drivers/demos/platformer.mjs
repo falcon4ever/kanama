@@ -24,7 +24,7 @@
 //   wrong-audio-path  -> op 287 queries a nonexistent child: footstepsPipelineLive false
 //   no-coin           -> coin pin skipped: coinCollectedOnHud false
 
-import { callSmokeMethod, collecting } from "../envelope.mjs";
+import { callSmokeMethod, collecting, PageTimeoutError } from "../envelope.mjs";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const DEBUG = process.env.KANAMA_WEB_SMOKE_DEBUG === "1";
@@ -106,7 +106,8 @@ async function playerPosition(evaluate) {
       const x = bridge.immediateNoArgsVector3X(138, handle);
       return { x, y: bridge.immediateNoArgsVector3Y(), z: bridge.immediateNoArgsVector3Z() };
     })()`);
-  } catch {
+  } catch (error) {
+    if (error instanceof PageTimeoutError) throw error; // the page did not answer: retrying only multiplies the wait
     return null;
   }
 }
@@ -115,10 +116,12 @@ async function playerPosition(evaluate) {
 // mid-frame) -- observed as a one-shot flake in the kanama#170 validation. Retries are
 // BOUNDED and the caller's null handling is unchanged, so a position that STAYS
 // unreadable (dead bridge, freed player) still fails exactly as loudly as before.
-async function playerPositionRetry(evaluate, attempts = 5) {
+// A page that does not answer at all (PageTimeoutError) is not retried, and no retry starts past
+// the deadline: either would only multiply the evaluate limit.
+async function playerPositionRetry(evaluate, deadline, attempts = 5) {
   for (let attempt = 1; ; attempt += 1) {
     const position = await playerPosition(evaluate);
-    if (position || attempt >= attempts) return position;
+    if (position || attempt >= attempts || Date.now() >= deadline) return position;
     trace(`position read null (attempt ${attempt}/${attempts}); retrying`);
     await delay(250);
   }
@@ -315,7 +318,7 @@ export async function runPlatformer({ url, evaluate, navigate, deadline, exportD
   // Fixed short holds released in page; NO early exit of any hold, and no physics-count
   // predicates (standing lore). The pulse LOOP stops once both movement and walking
   // audio have been evidenced, or after the pulse budget.
-  const startPosition = await playerPositionRetry(evaluate);
+  const startPosition = await playerPositionRetry(evaluate, deadline);
   if (!startPosition) throw new Error("could not read the player's global position");
   let maxDisplacement = 0;
   let footstepsLiveDuringWalk = false;
