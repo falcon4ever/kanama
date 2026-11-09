@@ -1381,6 +1381,10 @@ case("tool_smoke.sh (plugin copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
      [Append("example_project/addons/kanama_tools/plugin.gd", "\n# red run: this copy now differs from the starter template\n")],
      "plugin copies differ", "the example project's editor plugin drifts from the starter template's copy (the cheap pre-check)",
      requires_env="KANAMA_GODOT_BIN", slow=True)
+case("tool_smoke.sh (highlighter copies)", ["bash", "scripts/tool_smoke.sh", GODOT],
+     [Append("example_project/addons/kanama_tools/kotlin_syntax_highlighter.gd", "\n# red run: this copy now differs from the starter template\n")],
+     "plugin copies differ", "the Kotlin syntax highlighter's two copies drift and the pre-check does not compare them (#79 fixed one copy; every kit shipped the other)",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
 # Only deleting the wait leaves a race: the crash needs Godot's doc thread to still be loading its cache when the
 # export quits. Linux runners always lose it; a Mac wins it about half the time (the thread finishes, its queued
 # update runs before the editor frees the docs, exit 1). So on the failing export the mutation also restarts the
@@ -1449,12 +1453,21 @@ case("runtime_smoke.sh (decode buffer reuse)", ["bash", "scripts/runtime_smoke.s
      [Edit("src/jvmMain/kotlin/binding/runtime/BuiltinTypes.kt",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          destroyVariantToNil(valueVariant)",
            "            wrapper(handle)?.let(values::add)\n          }\n        } finally {\n          variantDestroy.invoke(valueVariant)")],
-     # The smoke's first Godot run after the import is the decode probe's own, so this is the first thing the
-     # smoke can report: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe
-     # dying under the double release. The later runs' aborts (HelloScript's captureScriptBacktraces, at a
-     # different line each run) are never reached.
+     # The editor import run dies first under this bug (HelloScript is @Tool, so its _ready decodes
+     # Engine.captureScriptBacktraces() in the editor: the entry comes back freed, then Godot aborts). The smoke
+     # runs the decode probe after a failed editor run before it reports that run, so the report is still the
+     # probe's: wrong counts (array_objects=1,1,1,1:kept on 4.8, 2,2,1,1 on 4.7.2), or the probe dying under the
+     # double release. The later runs' aborts (at a different line each run) are never reached.
      ("decode buffers: wrong reference counts", "decode buffers: the probe died before its result"),
      "readArrayObjects hands its destroyed Variant buffer to the next Array.get again (no NIL reset): the assignment releases the previous element a second time, a bound Callable on 4.7.2 (array_objects=2,2,1,1), an Object on 4.8",
+     requires_env="KANAMA_GODOT_BIN", slow=True)
+# The editor import run is the smoke's first Godot run, and HelloScript is @Tool, so its _ready runs there: a
+# crash in it must be reported as that run's, with what died, not as an unnamed exit of the smoke's set -e.
+case("runtime_smoke.sh (editor import crash)", ["bash", "scripts/runtime_smoke.sh", GODOT],
+     [Edit(HELLO, '    GD.print("Hello from Kanama script")\n',
+           '    GD.print("Hello from Kanama script")\n    if (Engine.isEditorHint()) OS.crash("red run: the editor run dies")\n')],
+     "editor import: the editor run (--editor, the main scene's @Tool scripts) exited",
+     "HelloScript's _ready crashes Godot in the editor: the smoke must name the editor import run, its exit status and its first crash line, not stop on a bare exit",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("runtime_smoke.sh (typed-signal self-test)",["bash", "scripts/runtime_smoke.sh", GODOT],
      [Edit("src/jvmMain/kotlin/binding/runtime/SignalEmitFrame.kt", "      if (!send) return\n", "      if (!send || count >= 0) return\n")],
@@ -1618,8 +1631,8 @@ case("tool_smoke.sh (build on save on by default)", ["bash", "scripts/tool_smoke
      "build on save is off by default", "the plugin creates the Build On Save editor setting switched off: a fresh editor must build on save",
      requires_env="KANAMA_GODOT_BIN", slow=True)
 case("tool_smoke.sh (build on save builds once)", ["bash", "scripts/tool_smoke.sh", GODOT],
-     plugin_edit('    return parent_path == "res://" and (name == "build" or name == "android")',
-                 '    return parent_path == "res://" and name == "android"')
+     plugin_edit('    return parent_path == "res://" and (dir_name == "build" or dir_name == "android")',
+                 '    return parent_path == "res://" and dir_name == "android"')
      + plugin_edit("func _kt_scan_roots() -> Array:\n    var roots: Array = []\n",
                    'func _kt_scan_roots() -> Array:\n    if true:\n        return ["res://"]\n    var roots: Array = []\n'),
      "the watcher took the build's own output under build/ for a save", "the watcher scans the whole project, Gradle's build/ included, again: the .kt files KSP writes there make every build start another one",

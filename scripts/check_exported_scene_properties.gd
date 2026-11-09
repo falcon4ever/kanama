@@ -206,12 +206,12 @@ func _compare(source: String, saved: String) -> int:
 	if src == null:
 		printerr("%s cannot load source scene %s" % [TAG, source])
 		return -1
-	var exp := ResourceLoader.load(saved, "PackedScene", ResourceLoader.CACHE_MODE_IGNORE) as PackedScene
-	if exp == null:
+	var saved_scene := ResourceLoader.load(saved, "PackedScene", ResourceLoader.CACHE_MODE_IGNORE) as PackedScene
+	if saved_scene == null:
 		printerr("%s cannot load converted scene %s (from %s)" % [TAG, saved, source])
 		return -1
 	var ss := src.get_state()
-	var es := exp.get_state()
+	var es := saved_scene.get_state()
 	var exported := {}
 	for i in es.get_node_count():
 		var names := {}
@@ -222,7 +222,6 @@ func _compare(source: String, saved: String) -> int:
 	var checked := 0
 	for i in ss.get_node_count():
 		var path := String(ss.get_node_path(i))
-		var type := String(ss.get_node_type(i))
 		var got: Dictionary = exported.get(path, {})
 		# Which properties can be lost the task-106 way? Those the node's TYPE does not own: a
 		# native property (transform, position, …) is the engine's business, everything else stored
