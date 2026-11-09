@@ -240,8 +240,9 @@ a device.
 ## Cutting a Release
 
 The maintainer decides when a release is cut. Use a fresh branch name for the
-release pull request (not `release/<version>`, which an earlier attempt may have
-used): the release branches of earlier attempts stay in the history. The steps:
+release pull request: the release branches of earlier attempts stay in the
+history. For 0.5.0, `origin/release/0.5.0` already exists from an earlier
+attempt, so use a name such as `release/0.5.0-cut`. The steps:
 
 1. **Version.** Change `version` in `build.gradle.kts` and
    `project-scripts/build.gradle.kts`, and `version` in
@@ -249,7 +250,7 @@ used): the release branches of earlier attempts stay in the history. The steps:
    (`scripts/check_kit_version_pins.py` checks it against the root build). Then
    change the places that name the release in words: the status badge and the
    Godot wording in `README.md`, and the pages listed in step 2. Check with
-   `git grep -n -I -E '<old version>' -- . ':!CHANGELOG.md'`; what is left
+   `git grep -n -I -E '<old version>' -- . ':!CHANGELOG.md' ':!scripts/web/package-lock.json'`; what is left
    should be history, not the current release.
 2. **Wording.** `scripts/upgrade_godot.sh` edits none of the pages that name the
    Godot or the release, so change them by hand. Find them with
@@ -283,7 +284,8 @@ used): the release branches of earlier attempts stay in the history. The steps:
 5. **Evidence.** Check the [Gates Index](../reference/generated/gates.md)
    ledger: every local-only gate behind a Supported claim has a passing run on
    the current Godot pin. Run the ones that do not. A device gate needs the
-   phone unlocked and Xcode signed in; a free Apple account allows only
+   phone unlocked, and an iOS device gate needs Xcode signed in to an Apple
+   account; a free Apple account allows only
    three apps on a device at a time, so remove an old test app if you hit that. The
    ledger fails the build when an accepted-stale entry's date has passed
    (`acceptedStaleUntil`). If the release slips past that date, re-run the gates
@@ -297,10 +299,11 @@ used): the release branches of earlier attempts stay in the history. The steps:
    title and the note with the real ones:
    `gh release edit v<version> --title <version> --notes-file <notes>`. The
    changelog section is the full record. If the tag run fails, nothing is
-   published, because `publish-release` runs last: fix the cause in a pull
-   request, delete the tag (`git push --delete origin v<version>`) and push it
-   again on the new commit. (The recovery is plain git; it has not been
-   rehearsed.)
+   published, because `publish-release` waits for every other job: fix the
+   cause in a pull request, delete the tag
+   (`git push --delete origin v<version>`) and push it again on the new commit.
+   If a release was created anyway, run `gh release delete v<version> --yes`
+   before you re-tag. (The recovery is plain git; it has not been rehearsed.)
 8. **Demos.** Follow "Update For A New Kanama Release" in the `AGENTS.md` of
    [`kanama-demos`](https://github.com/falcon4ever/kanama-demos): bump the
    version, the README badges and `KANAMA_REF`, merge, then tag the demos
@@ -308,7 +311,7 @@ used): the release branches of earlier attempts stay in the history. The steps:
    bump `DEMOS_REF` in `.github/workflows/web.yml` to the demos commit.
 9. **Docs notes.** Remove the "Until Kanama 0.5.0 is released" notes once the
    kits are on the release page: find them with
-   `git grep -n -i -E 'until (kanama )?0\.5|until the 0\.5|published so far are for Kanama 0\.4' -- README.md docs`.
-   One small docs pull request; the docs site redeploys when it merges. Note the
-   `#building-the-addon-from-source` anchor on the store addon page, which other
-   pages link to.
+   `git grep -n -i -E 'until (kanama )?0\.5|until the 0\.5|published so far are for Kanama 0\.4|not out yet' -- README.md docs`.
+   One small docs pull request; the docs site redeploys when it merges. Keep the
+   "Building the Addon from Source" heading on the store addon page
+   (`source-checkout.md` links to it); reword only its first sentence.

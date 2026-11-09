@@ -30,16 +30,17 @@ releases follow the same runbook; the diff is just smaller.
 ## What You Need
 
 - The Godot editor and export templates from the `godot-builds` release for
-  the new version (`Godot_v<version>-stable_macos.universal.zip` on macOS,
-  `Godot_v<version>-stable_export_templates.tpz`; `<version>` is the dash form
-  the workflows use, such as `4.8-stable`, and a prerelease is `4.8-beta2`).
+  the new version (`Godot_v<version>_macos.arm64.zip` or
+  `Godot_v<version>_macos.universal.zip`, whichever the release ships, and
+  `Godot_v<version>_export_templates.tpz`; `<version>` is the dash form the
+  workflows use, such as `4.8-stable`, and a prerelease is `4.8-beta2`).
   `GODOT_VERSION=<version> scripts/download_godot_macos.sh <zip>` downloads the
   macOS editor.
 - `JEXTRACT_HOME` pointing at a jextract 25+ install, unpacked from the OpenJDK
   jextract downloads.
-- A Godot **source checkout at the matching tag**:
-  `git clone --depth 1 --branch <version> https://github.com/godotengine/godot.git`
-  (`<version>` as above, such as `4.7.2-stable`). KDoc is synced from its
+- A Godot **source checkout at the matching tag**: a stable tag such as
+  `4.8-stable` (`git clone --depth 1 --branch 4.8-stable https://github.com/godotengine/godot.git`);
+  for a prerelease, check out the commit named in its `godot-builds` release. KDoc is synced from its
   `doc/classes` (`--godot-docs`), and the script checks the checkout's
   `version.py` against the pin. Never sync from `master`, or from a tree of
   another build. A prerelease takes the commit of that build: its `version.py`
