@@ -19,6 +19,7 @@ Rules (one entry = one run of one gate):
     WARN line -- the quarantine pattern, with an expiry, so acceptance cannot outlive
     the decision that granted it;
   * an `acceptedStaleUntil` in the past FAILS;
+  * a `where` that carries a device id FAILS: the ledger is public, so it names the model;
   * an empty ledger FAILS (vacuous-pass guard, as the other checkers do).
 
 Usage:
@@ -44,6 +45,9 @@ OPTIONAL_FIELDS = ("acceptedStaleUntil", "acceptedStaleReason")
 NON_EMPTY_FIELDS = ("gate", "godotPin", "date", "where", "result")
 RESULTS = ("PASS", "FAIL", "PARTIAL")
 ISO_DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+# An Apple device UDID (the 25-character 8-16 form of recent iPhones, or the older 40-hex one): `where` names
+# the device by its model, because the ledger is a public file.
+DEVICE_ID = re.compile(r"\b(?:[0-9A-Fa-f]{8}-[0-9A-Fa-f]{16}|[0-9A-Fa-f]{40})\b")
 TAG = "[check_gate_evidence]"
 
 
@@ -114,6 +118,8 @@ def main() -> int:
                 errors.append(f"{label}: field {field!r} must be a string")
             elif field in NON_EMPTY_FIELDS and not entry[field].strip():
                 errors.append(f"{label}: field {field!r} must not be empty")
+        if isinstance(entry.get("where"), str) and DEVICE_ID.search(entry["where"]):
+            errors.append(f"{label}: field 'where' carries a device id; name the device by its model (--device-label)")
         if entry.get("result") not in RESULTS:
             errors.append(f"{label}: result must be one of {RESULTS}, got {entry.get('result')!r}")
         date = parse_date(entry.get("date"), f"{label}: date", errors)

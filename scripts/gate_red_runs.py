@@ -519,6 +519,9 @@ case("check_expect_no_defaults.py", py("check_expect_no_defaults.py"),
 case("check_gate_evidence.py", py("check_gate_evidence.py"),
      [Edit("evidence/gates.json", '"schemaVersion": 1', '"schemaVersion": 2')],
      "ledger must be an object with schemaVersion 1", "the evidence ledger carries a wrong schema version")
+case("check_gate_evidence.py (device id in where)", py("check_gate_evidence.py"),
+     [Edit("evidence/gates.json", '"where": "iPhone 12, iOS 26.6"', '"where": "00000000-0000000000000000"')],
+     "field 'where' carries a device id", "a ledger row names the phone by its device id (the iOS gate wrote the raw id when it had no --device-label)")
 case("check_godot_version_pin.py", py("check_godot_version_pin.py"),
      [Edit("gradle.properties", "kanamaGodotVersion=", "kanamaGodotVersion=0.")],
      "Godot version pins drifted", "gradle.properties pins a different Godot than CI")
@@ -1398,7 +1401,7 @@ case("runtime_smoke.sh (self-test workers at shutdown)", ["bash", "scripts/runti
            "  fun shutdown() {\n    return\n    stopping = true\n")],
      "self-test quick quit: shutdown did not stop the worker", "engine shutdown no longer stops the ownership self-test's worker: a run that quits while it makes Resources leaks thousands of ObjectDB instances at exit and can abort in realloc (the Android Platformer scene check); the leak is a race (most runs on macOS, none seen on Linux CI), so the smoke holds every run to shutdown's own `stopped N worker(s), 0 still running` line",
      requires_env="KANAMA_GODOT_BIN", slow=True)
-case("OwnedReleasesTest (low frame rate drain)", ["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
+case("OwnedReleasesTest (low frame rate drain)",["./gradlew", "-p", ".", ":jvmTest", "--tests", "*OwnedReleasesTest*"],
      [Edit("src/commonMain/kotlin/net/multigesture/kanama/binding/runtime/OwnedReleases.kt",
            "    drain(budget = null, sinceLastDrain = sinceLastDrain)\n", "    drain(budget = frameBudget, sinceLastDrain = sinceLastDrain)\n")],
      "aLargeBacklogAtALowFrameRateDrainsInAFewFrames", "the per-frame drain goes back to a fixed 1 ms: at a few frames a second, with releases at a loaded phone's cost, 10,000 dropped wrappers take minutes to release (the Pixel 7 Bunnymark run: 1,361 of 10,000 in 30 s)",
