@@ -63,9 +63,18 @@ scripts rewrite your old annotations, export hints and enum constants.
   See [Edit, Build, Run](docs/getting-started/editor-workflow.md).
 - **Exports are safe to ship.** The editor stops an export whose Kotlin scripts do not bind, and a desktop game carries
   its own trimmed Java runtime, which you can build for another desktop platform.
-- **Toolchain:** Kotlin 2.4.21, KSP 2.3.12 and Godot 4.8 (`main` builds on 4.8 beta 2 until 4.8 stable ships). <!-- the Godot upgrade updates this line -->
+- **Toolchain:** Kotlin 2.4.21, KSP 2.3.12 and Godot 4.8 (`main` builds on 4.8 beta 4 until 4.8 stable ships). <!-- the Godot upgrade updates this line -->
 
 ### Details
+
+#### Changed — Godot 4.8 beta 4
+
+`main` now builds against Godot 4.8 beta 4 instead of beta 2; 0.5.0 still ships on 4.8 stable. Beta 3 and 4 fix
+regressions, and the API barely moves. `Trail3D` extends the new abstract `LineBase3D`, which replaces the `Line3D` of
+beta 2: write `LineBase3D.MaterialMode` and the other enums where you wrote `Line3D.MaterialMode`. `Node.replaceBy`
+loses the `keepOwnedChildren` parameter beta 2 had, and internal children stay with the replaced node again, as on
+4.7. `RenderingDevice.textureGetNearestSupportedSamples` is new. No release had `Line3D` or the parameter, so neither
+is a source break against 0.4.
 
 #### Fixed — integer engine calls use Godot's 8-byte cells, and script virtuals return the right types
 
@@ -108,7 +117,7 @@ exported-scene check drops an unused variable.
 #### Changed — Godot 4.8 beta 2
 
 `main` now builds against Godot 4.8 beta 2, and 0.5.0 ships on 4.8 stable. The 0.4.0 release stays on Godot 4.7.2. The API
-gains 33 classes, among them `Line3D`, `Trail3D`, `StreamedTexture2D` and the `Physics*Result` classes. New defaulted
+gains 33 classes, among them `Trail3D`, `StreamedTexture2D` and the `Physics*Result` classes. New defaulted
 parameters at the end of `DisplayServer.getDisplaySafeArea`, `Skeleton3D.resetBonePose` and `Skeleton3D.resetBonePoses`
 change no call in your source, but a scripts jar built before them calls the old method: rebuild your scripts after
 updating. A Kanama built on Godot 4.8 declares `compatibility_minimum = "4.8"`, so a Godot 4.7 editor refuses to load it
@@ -133,8 +142,6 @@ Godot's own changes to the API make these source breaks:
 - **Source break:** `OpenXRSpatialEntityExtension.createSpatialContext` takes a second `GodotCallable`,
   `failedCallback`, which Godot calls when the context cannot be created. A 4.7 call with one callback no longer
   compiles: pass a second callback.
-- **Source break:** `Node.replaceBy` has a `keepOwnedChildren` parameter on 4.8 beta 2 only. Godot has reverted the change
-  on its master branch, so expect the parameter to be gone at the next bump. Do not pass it.
 
 #### Added — Android export from the release kit and the store addon
 
