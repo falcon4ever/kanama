@@ -347,6 +347,7 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 | `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 4)` |
 | `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 4)` |
 | `CanvasItem.get_visibility_layer_bit` | `3` | `visibility_layer = 8` |
+| `ClassDB.class_call_static` | `"DirAccess"`, `"get_drive_count"` | — |
 | `ClassDB.class_get_enum_constants` | `"Node"`, `"ProcessMode"` | — |
 | `ClassDB.class_get_enum_list` | `"Node"` | — |
 | `ClassDB.class_get_integer_constant` | `"Node"`, `"NOTIFICATION_READY"` | — |

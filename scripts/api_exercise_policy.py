@@ -476,6 +476,9 @@ ROW_ARGS: dict[tuple[str, str], tuple[str, ...]] = {
     ("ClassDB", "class_get_signal"): ('"Node"', '"ready"'),
     ("ClassDB", "class_get_integer_constant"): ('"Node"', '"NOTIFICATION_READY"'),
     ("ClassDB", "class_get_property_default_value"): ('"Node2D"', '"scale"'),
+    # A static method that exists: since 4.8 beta 4 Godot reports a missing class or method as a call error,
+    # which the Variant call path throws on, instead of logging it and returning null.
+    ("ClassDB", "class_call_static"): ('"DirAccess"', '"get_drive_count"'),
     # Valid input: the int 7 as Godot encodes a Variant, and "kanama125" in base64.
     ("Marshalls", "base64_to_variant"): ('"AgAAAAcAAAA="',),
     ("Marshalls", "base64_to_raw"): ('"a2FuYW1hMTI1"',),

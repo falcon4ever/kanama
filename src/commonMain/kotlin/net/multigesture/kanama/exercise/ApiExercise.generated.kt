@@ -14418,8 +14418,8 @@ internal object ApiExerciseRows {
     r.begin('F', "callWithVariantArgsOwned", "ClassDB.class_call_static")
     try {
       val s = r.singleton("ClassDB")
-      val a0: String = "kanama125"
-      val a1: String = "kanama7"
+      val a0: String = "DirAccess"
+      val a1: String = "get_drive_count"
       r.reached(ClassDB.classCallStatic(a0, a1))
     } catch (t: Throwable) {
       r.threw(t)
