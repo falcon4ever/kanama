@@ -46,7 +46,7 @@ config_errors() {
   echo "${errors:-Godot named none}"
 }
 
-# The templates folder is the version up to the build name: 4.7.2.stable, 4.8.beta2, 4.8.stable.
+# The templates folder is the version up to the build name: 4.7.2.stable, 4.8.beta4, 4.8.stable.
 godot_version="$("$GODOT_BIN" --version | head -n 1 | sed -E 's/\.[^.]+\.[0-9a-f]+$//')"
 templates_root="${KANAMA_GODOT_TEMPLATES_DIR:-}"
 if [[ -z "$templates_root" ]]; then

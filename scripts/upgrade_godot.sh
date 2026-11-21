@@ -68,7 +68,7 @@ Modes:
                      this Godot added all diff against it, so a bump whose half-done result was
                      committed can be re-run with the pre-bump commit here and reach the same result.
 
---prerelease         allow a beta/rc pin (4.8.beta2) and a source checkout whose version.py says `beta`.
+--prerelease         allow a beta/rc pin (4.8.beta4) and a source checkout whose version.py says `beta`.
                      A prerelease pin may live on main; a release may not: a tag on one stops
                      (scripts/check_godot_version_pin.py --release). A stable pin needs no flag.
 --templates PATH     the export templates .tpz (or the directory holding it): installed into the

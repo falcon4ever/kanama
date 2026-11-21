@@ -1025,8 +1025,8 @@ imported from Godot's `doc/classes/*.xml` files. The generated blocks include a
 `Generated from Godot docs:` marker so they can be refreshed safely instead of
 hand-edited.
 
-**Docs version pin:** wrapper KDoc is synced from the **Godot 4.8 beta 2**
-`doc/classes` (commit `cafc17a192`), matching the runtime baseline. Do
+**Docs version pin:** wrapper KDoc is synced from the **Godot 4.8 beta 4**
+`doc/classes` (commit `b070e63b16`), matching the runtime baseline. Do
 not sync from any other tree: a mismatched docs tree reintroduces
 version skew. Bump this pin when the Godot runtime baseline moves, and re-run the
 full refresh (part of the [Godot Upgrade Runbook](godot-upgrade.md)).

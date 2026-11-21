@@ -22,7 +22,7 @@ run natively, and Godot's Web export runs them in the page next to your game.
   **Editor > Manage Export Templates**
   ([Godot Version](../reference/version-support.md#godot-version)). The Web export
   uses `web_nothreads_release.zip` from the templates folder, whose last part is
-  `4.7.2.stable` for release 0.4.0 and `4.8.beta2` for a checkout of `main`:
+  `4.7.2.stable` for release 0.4.0 and `4.8.beta4` for a checkout of `main`:
 
     | OS | Export templates folder |
     | --- | --- |

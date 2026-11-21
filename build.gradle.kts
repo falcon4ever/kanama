@@ -1016,7 +1016,7 @@ val verifyNativeBootstrapArtifact by
     }
   }
 
-// The oldest Godot that may load Kanama: the pin's major.minor (kanamaGodotVersion 4.8.beta2 -> "4.8").
+// The oldest Godot that may load Kanama: the pin's major.minor (kanamaGodotVersion 4.8.beta4 -> "4.8").
 // The runtime is generated from the pin's extension_api.json, so an older editor must refuse it outright
 // instead of loading it and failing on an engine API it does not have. scripts/check_godot_version_pin.py
 // holds the committed descriptors (example_project, the Android plugin assets) to the same value.

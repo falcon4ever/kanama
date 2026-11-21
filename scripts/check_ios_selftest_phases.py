@@ -47,8 +47,8 @@ must each yield at least one construction: zero means a pattern stopped matching
 
 Usage:
     python3 scripts/check_ios_selftest_phases.py                         # gate
-    python3 scripts/check_ios_selftest_phases.py --regenerate --godot-src ~/dev/github/godot-4.8-beta2 \
-        --godot-bin ~/dev/godot-4.8-beta2/Godot.app/Contents/MacOS/Godot
+    python3 scripts/check_ios_selftest_phases.py --regenerate --godot-src ~/dev/github/godot-4.8-beta4 \
+        --godot-bin ~/dev/godot-4.8-beta4/Godot.app/Contents/MacOS/Godot
 """
 
 from __future__ import annotations
@@ -195,7 +195,7 @@ def pin_version(root: Path) -> str:
 def check_source_is_pin(godot: Path, root: Path, godot_bin: str | None) -> str | None:
     """None when the checkout is exactly the pinned Godot, else why not. A stable checkout's version.py equals the pin.
     A prerelease checkout's says `beta` without the number, which only the build knows, so the pinned editor must be
-    given: its `--version` (4.8.beta2.official.cafc17a19) must name the pin and the checkout's commit."""
+    given: its `--version` (4.8.beta4.official.b070e63b1) must name the pin and the checkout's commit."""
     src, pin = source_version(godot), pin_version(root)
     if src == pin:
         return None

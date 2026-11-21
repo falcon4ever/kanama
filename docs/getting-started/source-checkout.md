@@ -6,7 +6,7 @@ when no kit has been published for the version you want.
 
 ## Requirements
 
-- **Godot 4.8 beta 2** and **a JDK 25 or newer**. A checkout of `main` needs that
+- **Godot 4.8 beta 4** and **a JDK 25 or newer**. A checkout of `main` needs that
   Godot, not the 4.7.2 of release 0.4.0; see
   [Godot Version](../reference/version-support.md#godot-version). Any JDK 25 or newer runs the build. If
   you have no JDK 25 itself, the build downloads one once into
