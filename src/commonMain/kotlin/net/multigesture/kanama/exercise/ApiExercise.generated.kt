@@ -11,10 +11,10 @@ import net.multigesture.kanama.types.*
 
 internal object ApiExerciseRows {
   /** Referenced helpers the inventory excludes (case E): reported, never run. */
-  const val EXCLUDED: Int = 339
+  const val EXCLUDED: Int = 340
 
-  /** Rows in this file: 45 static (C), 60 pair (A), 337 const (B), 173 singleton (D), 141 Variant type (T), 611 reach (F). */
-  const val ROWS: Int = 1367
+  /** Rows in this file: 45 static (C), 60 pair (A), 337 const (B), 173 singleton (D), 141 Variant type (T), 610 reach (F). */
+  const val ROWS: Int = 1366
 
   fun runStatic(r: ApiExerciseRunner) {
     c000(r)
@@ -1398,7 +1398,6 @@ internal object ApiExerciseRows {
     f607(r)
     f608(r)
     f609(r)
-    f610(r)
   }
 
   // static with a return value; weak: argument-free static whose result can be its type's zero on a healthy host
@@ -17014,23 +17013,8 @@ internal object ApiExerciseRows {
     r.end()
   }
 
-  // void method
-  private fun f174(r: ApiExerciseRunner) {
-    r.begin('F', "ptrcallWithObjectAndTwoBoolArgs", "Node.replace_by")
-    try {
-      val o = r.obj(Node(r.construct("Node")))
-      val f0 = r.obj(Node(r.construct("Node")))
-      val a0: Node = f0
-      o.replaceBy(a0)
-      r.reached()
-    } catch (t: Throwable) {
-      r.threw(t)
-    }
-    r.end()
-  }
-
   // an item's area before any layout is the zero Rect2, which a no-op answers too (METHOD_OVERRIDES)
-  private fun f175(r: ApiExerciseRunner) {
+  private fun f174(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectAndTwoIntArgsRetRect2", "Tree.get_item_area_rect")
     try {
       val o = r.obj(Tree(r.construct("Tree")))
@@ -17043,7 +17027,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f176(r: ApiExerciseRunner) {
+  private fun f175(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectArgRetLong", "PackedScene.pack")
     try {
       val o = r.ref(PackedScene(r.construct("PackedScene")))
@@ -17057,7 +17041,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f177(r: ApiExerciseRunner) {
+  private fun f176(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectArgRetRID", "RenderingServer.texture_2d_create")
     try {
       val s = r.singleton("RenderingServer")
@@ -17073,7 +17057,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f178(r: ApiExerciseRunner) {
+  private fun f177(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectArgRetUInt32", "CollisionObject2D.create_shape_owner on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -17087,7 +17071,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f179(r: ApiExerciseRunner) {
+  private fun f178(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectBoolLongArgs", "Node.add_child")
     try {
       val o = r.obj(Node(r.construct("Node")))
@@ -17102,7 +17086,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f180(r: ApiExerciseRunner) {
+  private fun f179(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectDoubleIntStringNameArgs", "AnimationNodeBlendSpace1D.add_blend_point")
     try {
       val o = r.ref(AnimationNodeBlendSpace1D(r.construct("AnimationNodeBlendSpace1D")))
@@ -17118,7 +17102,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f181(r: ApiExerciseRunner) {
+  private fun f180(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectDoubleTwoBoolArgsRetObject", "GLTFDocument.generate_scene")
     try {
       val o = r.ref(GLTFDocument(r.construct("GLTFDocument")))
@@ -17132,7 +17116,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f182(r: ApiExerciseRunner) {
+  private fun f181(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectIntStringArgs", "SurfaceTool.create_from_blend_shape")
     try {
       val o = r.ref(SurfaceTool(r.construct("SurfaceTool")))
@@ -17149,7 +17133,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f183(r: ApiExerciseRunner) {
+  private fun f182(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectIntTransform3DArgs", "Node3D.set_subgizmo_selection")
     try {
       val o = r.obj(Node3D(r.construct("Node3D")))
@@ -17165,7 +17149,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f184(r: ApiExerciseRunner) {
+  private fun f183(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectListArgRetLong", "ImageTextureLayered.create_from_images on Cubemap")
     try {
       val o = r.ref(Cubemap(r.construct("Cubemap")))
@@ -17180,7 +17164,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f185(r: ApiExerciseRunner) {
+  private fun f184(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectListLongArgsRetRID", "RenderingServer.texture_2d_layered_create")
     try {
       val s = r.singleton("RenderingServer")
@@ -17198,7 +17182,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f186(r: ApiExerciseRunner) {
+  private fun f185(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectLongBoolDoubleArgs", "PortableCompressedTexture2D.create_from_image")
     try {
       val o = r.ref(PortableCompressedTexture2D(r.construct("PortableCompressedTexture2D")))
@@ -17214,7 +17198,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f187(r: ApiExerciseRunner) {
+  private fun f186(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectNodePathVariantDoubleArgsRetObject", "Tween.tween_property")
     try {
       val o = r.track(r.tween()) // REACH_RECEIVERS
@@ -17231,7 +17215,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f188(r: ApiExerciseRunner) {
+  private fun f187(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectRect2BoolColorBoolArgs", "CanvasItem.draw_texture_rect on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17249,7 +17233,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f189(r: ApiExerciseRunner) {
+  private fun f188(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectRect2iAndVector2iArgs", "Image.blend_rect")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -17266,7 +17250,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f190(r: ApiExerciseRunner) {
+  private fun f189(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectStringAndIntArgs", "OptionButton.add_icon_item")
     try {
       val o = r.obj(OptionButton(r.construct("OptionButton")))
@@ -17282,7 +17266,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f191(r: ApiExerciseRunner) {
+  private fun f190(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectStringNameAndVariantArg", "UndoRedo.add_do_property")
     try {
       val o = r.obj(UndoRedo(r.construct("UndoRedo")))
@@ -17299,7 +17283,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f192(r: ApiExerciseRunner) {
+  private fun f191(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectThreeStringArgsRetObject", "Crypto.generate_self_signed_certificate")
     try {
       val o = r.ref(Crypto(r.construct("Crypto")))
@@ -17313,7 +17297,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f193(r: ApiExerciseRunner) {
+  private fun f192(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectTwoDoubleArgs", "HeightMapShape3D.update_map_data_from_image")
     try {
       val o = r.ref(HeightMapShape3D(r.construct("HeightMapShape3D")))
@@ -17330,7 +17314,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f194(r: ApiExerciseRunner) {
+  private fun f193(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectTwoDoubleColorLongRect2VariantBoolStringTwoLongStringArgs", "RichTextLabel.add_image")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -17350,7 +17334,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f195(r: ApiExerciseRunner) {
+  private fun f194(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectTwoRect2AndColorArgs", "CanvasItem.draw_lcd_texture_rect_region on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17368,7 +17352,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f196(r: ApiExerciseRunner) {
+  private fun f195(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectTwoRect2ColorThreeDoubleArgs", "CanvasItem.draw_msdf_texture_rect_region on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17386,7 +17370,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f197(r: ApiExerciseRunner) {
+  private fun f196(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectTwoRect2ColorTwoBoolArgs", "CanvasItem.draw_texture_rect_region on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17404,7 +17388,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f198(r: ApiExerciseRunner) {
+  private fun f197(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2AndColorArgs", "CanvasItem.draw_texture on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17421,7 +17405,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f199(r: ApiExerciseRunner) {
+  private fun f198(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2AndIntArgs", "VisualShaderGroup.add_node")
     try {
       val o = r.ref(VisualShaderGroup(r.construct("VisualShaderGroup")))
@@ -17438,7 +17422,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f200(r: ApiExerciseRunner) {
+  private fun f199(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2IntStringNameArgs", "AnimationNodeBlendSpace2D.add_blend_point")
     try {
       val o = r.ref(AnimationNodeBlendSpace2D(r.construct("AnimationNodeBlendSpace2D")))
@@ -17454,7 +17438,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f201(r: ApiExerciseRunner) {
+  private fun f200(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringIntColorDoubleArgs", "CanvasItem.draw_char on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17473,7 +17457,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f202(r: ApiExerciseRunner) {
+  private fun f201(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringLongDoubleIntColorThreeLongDoubleArgs", "CanvasItem.draw_string on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17494,7 +17478,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f203(r: ApiExerciseRunner) {
+  private fun f202(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringLongDoubleThreeIntColorFourLongDoubleArgs", "CanvasItem.draw_multiline_string_outline on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17517,7 +17501,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f204(r: ApiExerciseRunner) {
+  private fun f203(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringLongDoubleTwoIntColorFourLongDoubleArgs", "CanvasItem.draw_multiline_string on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17539,7 +17523,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f205(r: ApiExerciseRunner) {
+  private fun f204(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs", "CanvasItem.draw_string_outline on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17561,7 +17545,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f206(r: ApiExerciseRunner) {
+  private fun f205(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectVector2StringTwoIntColorDoubleArgs", "CanvasItem.draw_char_outline on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17581,7 +17565,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f207(r: ApiExerciseRunner) {
+  private fun f206(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedByteArrayStringObjectUInt32ArgsRetLong", "GLTFDocument.append_from_buffer")
     try {
       val o = r.ref(GLTFDocument(r.construct("GLTFDocument")))
@@ -17597,7 +17581,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f208(r: ApiExerciseRunner) {
+  private fun f207(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedFloat32ListAndPackedInt32ListArgs", "NavigationMeshSourceGeometryData3D.append_arrays")
     try {
       val o = r.ref(NavigationMeshSourceGeometryData3D(r.construct("NavigationMeshSourceGeometryData3D")))
@@ -17612,7 +17596,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f209(r: ApiExerciseRunner) {
+  private fun f208(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedFloat32ListArgRetLong", "RandomNumberGenerator.rand_weighted")
     try {
       val o = r.ref(RandomNumberGenerator(r.construct("RandomNumberGenerator")))
@@ -17625,7 +17609,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f210(r: ApiExerciseRunner) {
+  private fun f209(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedStringListArgRetDictionary", "RichTextLabel.parse_expressions_for_values")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -17638,7 +17622,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f211(r: ApiExerciseRunner) {
+  private fun f210(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListAndBoolArg", "NavigationMeshSourceGeometryData2D.add_projected_obstruction")
     try {
       val o = r.ref(NavigationMeshSourceGeometryData2D(r.construct("NavigationMeshSourceGeometryData2D")))
@@ -17653,7 +17637,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f212(r: ApiExerciseRunner) {
+  private fun f211(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListAndDoubleArgRetPackedVector2List", "NavigationServer2D.simplify_path")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -17667,7 +17651,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f213(r: ApiExerciseRunner) {
+  private fun f212(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListAndIntArgs", "NavigationPolygon.add_outline_at_index")
     try {
       val o = r.ref(NavigationPolygon(r.construct("NavigationPolygon")))
@@ -17682,7 +17666,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f214(r: ApiExerciseRunner) {
+  private fun f213(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListAndPackedInt32ListArgs", "PolygonPathFinder.setup")
     try {
       val o = r.ref(PolygonPathFinder(r.construct("PolygonPathFinder")))
@@ -17697,7 +17681,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f215(r: ApiExerciseRunner) {
+  private fun f214(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListColorDoubleAndBoolArgs", "CanvasItem.draw_multiline on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17712,7 +17696,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f216(r: ApiExerciseRunner) {
+  private fun f215(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListColorPackedVector2ListAndObjectArgs", "CanvasItem.draw_colored_polygon on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17728,7 +17712,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f217(r: ApiExerciseRunner) {
+  private fun f216(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListPackedColorListDoubleAndBoolArgs", "CanvasItem.draw_multiline_colors on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17743,7 +17727,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f218(r: ApiExerciseRunner) {
+  private fun f217(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector2ListPackedColorListPackedVector2ListAndObjectArgs", "CanvasItem.draw_polygon on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -17759,7 +17743,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f219(r: ApiExerciseRunner) {
+  private fun f218(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListAndDoubleArgRetPackedVector3List", "NavigationServer3D.simplify_path")
     try {
       val s = r.singleton("NavigationServer3D")
@@ -17773,7 +17757,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f220(r: ApiExerciseRunner) {
+  private fun f219(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListAndPackedInt32ListArgs", "ArrayOccluder3D.set_arrays")
     try {
       val o = r.ref(ArrayOccluder3D(r.construct("ArrayOccluder3D")))
@@ -17788,7 +17772,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f221(r: ApiExerciseRunner) {
+  private fun f220(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListAndTransform3DArg", "NavigationMeshSourceGeometryData3D.add_faces")
     try {
       val o = r.ref(NavigationMeshSourceGeometryData3D(r.construct("NavigationMeshSourceGeometryData3D")))
@@ -17803,7 +17787,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f222(r: ApiExerciseRunner) {
+  private fun f221(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListArgRetBool", "TriangleMesh.create_from_faces")
     try {
       val o = r.ref(TriangleMesh(r.construct("TriangleMesh")))
@@ -17816,7 +17800,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f223(r: ApiExerciseRunner) {
+  private fun f222(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListPackedVector2ListPackedColorListPackedVector2ListPackedVector3ListPlaneListArgs", "SurfaceTool.add_triangle_fan")
     try {
       val o = r.ref(SurfaceTool(r.construct("SurfaceTool")))
@@ -17835,7 +17819,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f224(r: ApiExerciseRunner) {
+  private fun f223(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithPackedVector3ListTwoDoubleAndBoolArgs", "NavigationMeshSourceGeometryData3D.add_projected_obstruction")
     try {
       val o = r.ref(NavigationMeshSourceGeometryData3D(r.construct("NavigationMeshSourceGeometryData3D")))
@@ -17852,7 +17836,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f225(r: ApiExerciseRunner) {
+  private fun f224(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndAABBArg", "RenderingServer.instance_set_custom_aabb")
     try {
       val s = r.singleton("RenderingServer")
@@ -17872,7 +17856,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f226(r: ApiExerciseRunner) {
+  private fun f225(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndArrayArg", "TextServer.shaped_text_set_bidi_override on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -17892,7 +17876,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f227(r: ApiExerciseRunner) {
+  private fun f226(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndBasisArg", "RenderingServer.environment_set_sky_orientation")
     try {
       val s = r.singleton("RenderingServer")
@@ -17907,7 +17891,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f228(r: ApiExerciseRunner) {
+  private fun f227(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndBoolArg", "AccessibilityServer.update_set_checked")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -17922,7 +17906,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f229(r: ApiExerciseRunner) {
+  private fun f228(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndByteArrayArg", "TextServer.font_set_data on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -17942,7 +17926,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f230(r: ApiExerciseRunner) {
+  private fun f229(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndColorArg", "AccessibilityServer.update_set_background_color")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -17957,7 +17941,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f231(r: ApiExerciseRunner) {
+  private fun f230(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndDictionaryArg", "RenderingServer.mesh_add_surface")
     try {
       val s = r.singleton("RenderingServer")
@@ -17977,7 +17961,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f232(r: ApiExerciseRunner) {
+  private fun f231(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndDoubleArg", "AccessibilityServer.update_set_num_jump")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -17992,7 +17976,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f233(r: ApiExerciseRunner) {
+  private fun f232(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndIntArg", "AccessibilityServer.update_set_list_item_count")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18007,7 +17991,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f234(r: ApiExerciseRunner) {
+  private fun f233(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndIntArgRetDictionary", "RenderingServer.mesh_get_surface")
     try {
       val s = r.singleton("RenderingServer")
@@ -18026,7 +18010,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f235(r: ApiExerciseRunner) {
+  private fun f234(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndIntArgRetObject", "RenderingServer.texture_2d_layer_get")
     try {
       val s = r.singleton("RenderingServer")
@@ -18045,7 +18029,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f236(r: ApiExerciseRunner) {
+  private fun f235(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndLongArg", "AccessibilityServer.update_set_live")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18060,7 +18044,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f237(r: ApiExerciseRunner) {
+  private fun f236(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndObjectArg", "NavigationServer2D.region_set_navigation_polygon")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -18081,7 +18065,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f238(r: ApiExerciseRunner) {
+  private fun f237(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndObjectListArgs", "RenderingServer.texture_3d_update")
     try {
       val s = r.singleton("RenderingServer")
@@ -18103,7 +18087,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f239(r: ApiExerciseRunner) {
+  private fun f238(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndPackedColorListArgs", "TextServer.font_set_palette_custom_colors on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -18123,7 +18107,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f240(r: ApiExerciseRunner) {
+  private fun f239(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndPackedFloat32ListArg", "RenderingServer.multimesh_set_buffer")
     try {
       val s = r.singleton("RenderingServer")
@@ -18143,7 +18127,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f241(r: ApiExerciseRunner) {
+  private fun f240(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndPackedFloat32ListArgRetDouble", "TextServer.shaped_text_tab_align on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -18162,7 +18146,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f242(r: ApiExerciseRunner) {
+  private fun f241(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndPackedVector2ListArg", "NavigationServer2D.obstacle_set_vertices")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -18182,7 +18166,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f243(r: ApiExerciseRunner) {
+  private fun f242(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndPackedVector3ListArg", "NavigationServer3D.obstacle_set_vertices")
     try {
       val s = r.singleton("NavigationServer3D")
@@ -18202,7 +18186,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f244(r: ApiExerciseRunner) {
+  private fun f243(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndRIDListArgs", "RenderingServer.compositor_set_compositor_effects")
     try {
       val s = r.singleton("RenderingServer")
@@ -18222,7 +18206,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f245(r: ApiExerciseRunner) {
+  private fun f244(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndRect2Arg", "AccessibilityServer.update_set_bounds")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18237,7 +18221,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f246(r: ApiExerciseRunner) {
+  private fun f245(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndStringArg", "AccessibilityServer.update_set_braille_label")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18252,7 +18236,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f247(r: ApiExerciseRunner) {
+  private fun f246(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndThreeDoubleArgs", "RenderingServer.camera_set_orthogonal")
     try {
       val s = r.singleton("RenderingServer")
@@ -18274,7 +18258,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f248(r: ApiExerciseRunner) {
+  private fun f247(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndThreeIntArgs", "RenderingServer.viewport_set_size")
     try {
       val s = r.singleton("RenderingServer")
@@ -18295,7 +18279,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f249(r: ApiExerciseRunner) {
+  private fun f248(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTransform2DArg", "AccessibilityServer.update_set_transform")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18310,7 +18294,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f250(r: ApiExerciseRunner) {
+  private fun f249(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTransform3DArg", "NavigationServer3D.region_set_transform")
     try {
       val s = r.singleton("NavigationServer3D")
@@ -18330,7 +18314,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f251(r: ApiExerciseRunner) {
+  private fun f250(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTransform3DListArgs", "RenderingServer.particles_set_trail_bind_poses")
     try {
       val s = r.singleton("RenderingServer")
@@ -18350,7 +18334,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f252(r: ApiExerciseRunner) {
+  private fun f251(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoDoubleArgs", "AccessibilityServer.update_set_num_range")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18366,7 +18350,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f253(r: ApiExerciseRunner) {
+  private fun f252(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoIntArgs", "AccessibilityServer.update_set_table_cell_position")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18382,7 +18366,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f254(r: ApiExerciseRunner) {
+  private fun f253(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoLongArgs", "RenderingServer.viewport_set_sdf_oversize_and_scale")
     try {
       val s = r.singleton("RenderingServer")
@@ -18403,7 +18387,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f255(r: ApiExerciseRunner) {
+  private fun f254(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoLongArgsRetInt", "RenderingServer.viewport_get_render_info")
     try {
       val s = r.singleton("RenderingServer")
@@ -18423,7 +18407,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f256(r: ApiExerciseRunner) {
+  private fun f255(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoObjectArgsRetBool", "PhysicsServer2D.body_test_motion")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -18443,7 +18427,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f257(r: ApiExerciseRunner) {
+  private fun f256(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoPackedFloat32ListArgs", "RenderingServer.multimesh_set_buffer_interpolated")
     try {
       val s = r.singleton("RenderingServer")
@@ -18464,7 +18448,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f258(r: ApiExerciseRunner) {
+  private fun f257(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoVector2Args", "PhysicsServer2D.body_add_constant_force")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -18484,7 +18468,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f259(r: ApiExerciseRunner) {
+  private fun f258(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndTwoVector3Args", "PhysicsServer3D.body_add_constant_force")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -18505,7 +18489,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f260(r: ApiExerciseRunner) {
+  private fun f259(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndUInt32Arg", "NavigationServer2D.agent_set_avoidance_layers")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -18525,7 +18509,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f261(r: ApiExerciseRunner) {
+  private fun f260(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndVariantArg", "AccessibilityServer.element_set_meta")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -18540,7 +18524,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f262(r: ApiExerciseRunner) {
+  private fun f261(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndVector2Arg", "NavigationServer2D.agent_set_position")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -18560,7 +18544,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f263(r: ApiExerciseRunner) {
+  private fun f262(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndVector2iArg", "TextServer.font_clear_glyphs on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -18580,7 +18564,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f264(r: ApiExerciseRunner) {
+  private fun f263(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndVector3Arg", "NavigationServer3D.agent_set_position")
     try {
       val s = r.singleton("NavigationServer3D")
@@ -18600,7 +18584,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f265(r: ApiExerciseRunner) {
+  private fun f264(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDArgRetObject", "PhysicsServer2D.body_get_direct_state")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -18618,7 +18602,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f266(r: ApiExerciseRunner) {
+  private fun f265(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDArgRetPackedStringList", "TextServer.font_get_language_support_overrides on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -18636,7 +18620,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f267(r: ApiExerciseRunner) {
+  private fun f266(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolColorDoubleDoubleDoubleDoubleDoubleDoubleDoubleLongArgs", "RenderingServer.environment_set_fog")
     try {
       val s = r.singleton("RenderingServer")
@@ -18659,7 +18643,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f268(r: ApiExerciseRunner) {
+  private fun f267(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolDoubleArgs", "RenderingServer.particles_set_trails")
     try {
       val s = r.singleton("RenderingServer")
@@ -18680,7 +18664,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f269(r: ApiExerciseRunner) {
+  private fun f268(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolDoubleDoubleDoubleDoubleDoubleDoubleDoubleDoubleArgs", "RenderingServer.environment_set_ssao")
     try {
       val s = r.singleton("RenderingServer")
@@ -18703,7 +18687,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f270(r: ApiExerciseRunner) {
+  private fun f269(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolDoubleTwoColorDoubleDoubleDoubleDoubleDoubleBoolThreeDoubleArgs", "RenderingServer.environment_set_volumetric_fog")
     try {
       val s = r.singleton("RenderingServer")
@@ -18730,7 +18714,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f271(r: ApiExerciseRunner) {
+  private fun f270(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolFourDoubleArgs", "RenderingServer.camera_attributes_set_auto_exposure")
     try {
       val s = r.singleton("RenderingServer")
@@ -18754,7 +18738,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f272(r: ApiExerciseRunner) {
+  private fun f271(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolIntDoubleLongBoolDoubleBoolThreeDoubleArgs", "RenderingServer.environment_set_sdfgi")
     try {
       val s = r.singleton("RenderingServer")
@@ -18778,7 +18762,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f273(r: ApiExerciseRunner) {
+  private fun f272(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolIntThreeDoubleArgs", "RenderingServer.environment_set_ssr")
     try {
       val s = r.singleton("RenderingServer")
@@ -18797,7 +18781,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f274(r: ApiExerciseRunner) {
+  private fun f273(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolPackedFloat32ListFourDoubleLongFourDoubleRIDArgs", "RenderingServer.environment_set_glow")
     try {
       val s = r.singleton("RenderingServer")
@@ -18823,7 +18807,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f275(r: ApiExerciseRunner) {
+  private fun f274(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolRect2Args", "RenderingServer.canvas_item_set_copy_to_backbuffer")
     try {
       val s = r.singleton("RenderingServer")
@@ -18839,7 +18823,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f276(r: ApiExerciseRunner) {
+  private fun f275(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolRect2TwoCallableArgs", "RenderingServer.canvas_item_set_visibility_notifier")
     try {
       val s = r.singleton("RenderingServer")
@@ -18857,7 +18841,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f277(r: ApiExerciseRunner) {
+  private fun f276(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolThreeDoubleArgs", "RenderingServer.light_set_distance_fade")
     try {
       val s = r.singleton("RenderingServer")
@@ -18880,7 +18864,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f278(r: ApiExerciseRunner) {
+  private fun f277(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolThreeDoubleBoolRIDArgs", "RenderingServer.environment_set_adjustment")
     try {
       val s = r.singleton("RenderingServer")
@@ -18900,7 +18884,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f279(r: ApiExerciseRunner) {
+  private fun f278(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolTwoDoubleArgs", "RenderingServer.decal_set_distance_fade")
     try {
       val s = r.singleton("RenderingServer")
@@ -18922,7 +18906,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f280(r: ApiExerciseRunner) {
+  private fun f279(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolTwoDoubleBoolThreeDoubleArgs", "RenderingServer.camera_attributes_set_dof_blur")
     try {
       val s = r.singleton("RenderingServer")
@@ -18948,7 +18932,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f281(r: ApiExerciseRunner) {
+  private fun f280(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDBoolVector2iArgsRetObject", "RenderingServer.environment_bake_panorama")
     try {
       val s = r.singleton("RenderingServer")
@@ -18968,7 +18952,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f282(r: ApiExerciseRunner) {
+  private fun f281(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDCallableArgs", "NavigationServer2D.agent_set_avoidance_callback")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -18988,7 +18972,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f283(r: ApiExerciseRunner) {
+  private fun f282(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDCallableVariantArgs", "PhysicsServer2D.body_set_force_integration_callback")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19008,7 +18992,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f284(r: ApiExerciseRunner) {
+  private fun f283(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDColorDoubleArgs", "RenderingServer.canvas_texture_set_shading_parameters")
     try {
       val s = r.singleton("RenderingServer")
@@ -19029,7 +19013,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f285(r: ApiExerciseRunner) {
+  private fun f284(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDColorLongTwoDoubleLongArgs", "RenderingServer.environment_set_ambient_light")
     try {
       val s = r.singleton("RenderingServer")
@@ -19044,7 +19028,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f286(r: ApiExerciseRunner) {
+  private fun f285(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDDoubleAndLongArgs", "TextServer.shaped_text_overrun_trim_to_width on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19063,7 +19047,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f287(r: ApiExerciseRunner) {
+  private fun f286(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDDoubleAndLongArgsRetDouble", "TextServer.shaped_text_fit_to_width on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19082,7 +19066,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f288(r: ApiExerciseRunner) {
+  private fun f287(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDDoubleBoolArgs", "RenderingServer.instance_set_pivot_data")
     try {
       val s = r.singleton("RenderingServer")
@@ -19103,7 +19087,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f289(r: ApiExerciseRunner) {
+  private fun f288(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDDoubleBoolVector2iArgsRetObject", "RenderingServer.sky_bake_panorama")
     try {
       val s = r.singleton("RenderingServer")
@@ -19124,7 +19108,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f290(r: ApiExerciseRunner) {
+  private fun f289(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDDoubleVector2TwoDoubleArgs", "RenderingServer.camera_set_frustum")
     try {
       val s = r.singleton("RenderingServer")
@@ -19147,7 +19131,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f291(r: ApiExerciseRunner) {
+  private fun f290(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDFourDoubleArgs", "RenderingServer.canvas_item_add_animation_slice")
     try {
       val s = r.singleton("RenderingServer")
@@ -19164,7 +19148,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f292(r: ApiExerciseRunner) {
+  private fun f291(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDFourDoubleLongArgs", "RenderingServer.instance_geometry_set_visibility_range")
     try {
       val s = r.singleton("RenderingServer")
@@ -19188,7 +19172,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f293(r: ApiExerciseRunner) {
+  private fun f292(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndBoolArgs", "PhysicsServer2D.area_set_shape_disabled")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19209,7 +19193,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f294(r: ApiExerciseRunner) {
+  private fun f293(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndColorArgs", "RenderingServer.multimesh_instance_set_color")
     try {
       val s = r.singleton("RenderingServer")
@@ -19230,7 +19214,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f295(r: ApiExerciseRunner) {
+  private fun f294(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndRIDArgs", "PhysicsServer2D.area_set_shape")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19251,7 +19235,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f296(r: ApiExerciseRunner) {
+  private fun f295(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndStringArgs", "AccessibilityServer.update_add_custom_action")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -19267,7 +19251,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f297(r: ApiExerciseRunner) {
+  private fun f296(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndTransform2DArg", "PhysicsServer2D.area_set_shape_transform")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19288,7 +19272,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f298(r: ApiExerciseRunner) {
+  private fun f297(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndTransform3DArg", "PhysicsServer3D.area_set_shape_transform")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -19309,7 +19293,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f299(r: ApiExerciseRunner) {
+  private fun f298(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntAndVector3Arg", "PhysicsServer3D.soft_body_apply_point_force")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -19330,7 +19314,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f300(r: ApiExerciseRunner) {
+  private fun f299(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntBoolDoubleVector2Args", "PhysicsServer2D.body_set_shape_as_one_way_collision")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19353,7 +19337,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f301(r: ApiExerciseRunner) {
+  private fun f300(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntDoubleArgs", "RenderingServer.instance_set_blend_shape_weight")
     try {
       val s = r.singleton("RenderingServer")
@@ -19374,7 +19358,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f302(r: ApiExerciseRunner) {
+  private fun f301(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntIntAndByteArrayArgs", "RenderingServer.mesh_surface_update_attribute_region")
     try {
       val s = r.singleton("RenderingServer")
@@ -19396,7 +19380,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f303(r: ApiExerciseRunner) {
+  private fun f302(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDIntLongThreeBoolArgs", "RenderingServer.multimesh_allocate_data")
     try {
       val s = r.singleton("RenderingServer")
@@ -19417,7 +19401,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f304(r: ApiExerciseRunner) {
+  private fun f303(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDListRect2iRIDColorRIDListIntArgs", "RenderingServer.texture_drawable_blit_rect")
     try {
       val s = r.singleton("RenderingServer")
@@ -19440,7 +19424,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f305(r: ApiExerciseRunner) {
+  private fun f304(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongAndBoolArgs", "AccessibilityServer.update_set_flag")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -19456,7 +19440,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f306(r: ApiExerciseRunner) {
+  private fun f305(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongAndDoubleArgs", "PhysicsServer2D.damped_spring_joint_set_param")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19477,7 +19461,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f307(r: ApiExerciseRunner) {
+  private fun f306(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongAndRIDArgs", "RenderingServer.canvas_texture_set_channel")
     try {
       val s = r.singleton("RenderingServer")
@@ -19500,7 +19484,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f308(r: ApiExerciseRunner) {
+  private fun f307(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongAndVariantArgs", "PhysicsServer2D.area_set_param")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -19521,7 +19505,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f309(r: ApiExerciseRunner) {
+  private fun f308(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongCallableArgs", "AccessibilityServer.update_add_action")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -19537,7 +19521,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f310(r: ApiExerciseRunner) {
+  private fun f309(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongDoubleBoolDoubleBoolArgs", "RenderingServer.canvas_item_set_canvas_group_mode")
     try {
       val s = r.singleton("RenderingServer")
@@ -19552,7 +19536,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f311(r: ApiExerciseRunner) {
+  private fun f310(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongIntArgsRetRID", "AccessibilityServer.create_sub_element")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -19566,7 +19550,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f312(r: ApiExerciseRunner) {
+  private fun f311(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongRIDListLongDictionaryArgs", "TextServer.shaped_set_span_update_font on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19588,7 +19572,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f313(r: ApiExerciseRunner) {
+  private fun f312(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongTwoArrayDictionaryLongArgs", "RenderingServer.mesh_add_surface_from_arrays")
     try {
       val s = r.singleton("RenderingServer")
@@ -19609,7 +19593,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f314(r: ApiExerciseRunner) {
+  private fun f313(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongTwoDoubleArgs", "RenderingServer.environment_set_tonemap")
     try {
       val s = r.singleton("RenderingServer")
@@ -19626,7 +19610,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f315(r: ApiExerciseRunner) {
+  private fun f314(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongVector2LongColorArgs", "TextServer.draw_hex_code_box on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19644,7 +19628,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f316(r: ApiExerciseRunner) {
+  private fun f315(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongVector2iAndVector2Args", "TextServer.font_set_kerning on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19666,7 +19650,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f317(r: ApiExerciseRunner) {
+  private fun f316(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDLongVector2iArgs", "TextServer.font_remove_kerning on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -19687,7 +19671,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f318(r: ApiExerciseRunner) {
+  private fun f317(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDObjectIntArgs", "RenderingServer.texture_2d_update")
     try {
       val s = r.singleton("RenderingServer")
@@ -19709,7 +19693,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f319(r: ApiExerciseRunner) {
+  private fun f318(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedInt32ListPackedVector2ListPackedColorListPackedVector2ListPackedInt32ListPackedFloat32ListRIDIntArgs", "RenderingServer.canvas_item_add_triangle_array")
     try {
       val s = r.singleton("RenderingServer")
@@ -19730,7 +19714,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f320(r: ApiExerciseRunner) {
+  private fun f319(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedVector2ListAndBoolArg", "RenderingServer.canvas_occluder_polygon_set_shape")
     try {
       val s = r.singleton("RenderingServer")
@@ -19746,7 +19730,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f321(r: ApiExerciseRunner) {
+  private fun f320(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedVector2ListPackedColorListDoubleAndBoolArgs", "RenderingServer.canvas_item_add_multiline")
     try {
       val s = r.singleton("RenderingServer")
@@ -19762,7 +19746,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f322(r: ApiExerciseRunner) {
+  private fun f321(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedVector2ListPackedColorListPackedVector2ListAndRIDArgs", "RenderingServer.canvas_item_add_polygon")
     try {
       val s = r.singleton("RenderingServer")
@@ -19780,7 +19764,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f323(r: ApiExerciseRunner) {
+  private fun f322(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedVector3ListPackedColorListTwoPackedInt32ListArgs", "RenderingServer.lightmap_set_probe_capture_data")
     try {
       val s = r.singleton("RenderingServer")
@@ -19803,7 +19787,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f324(r: ApiExerciseRunner) {
+  private fun f323(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDPackedVector3ListPackedInt32ListArgs", "RenderingServer.occluder_set_mesh")
     try {
       val s = r.singleton("RenderingServer")
@@ -19824,7 +19808,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f325(r: ApiExerciseRunner) {
+  private fun f324(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRIDListVector2iArgsRetTypedObjectList", "RenderingServer.bake_render_uv2")
     try {
       val s = r.singleton("RenderingServer")
@@ -19839,7 +19823,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f326(r: ApiExerciseRunner) {
+  private fun f325(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRIDTransform3DRIDTransform3DArgs", "PhysicsServer3D.joint_make_cone_twist")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -19862,7 +19846,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f327(r: ApiExerciseRunner) {
+  private fun f326(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2BoolColorBoolArgs", "Texture2D.draw_rect")
     try {
       val o = r.ref(Texture2D(r.construct("Texture2D")))
@@ -19879,7 +19863,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f328(r: ApiExerciseRunner) {
+  private fun f327(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2ColorBoolArgs", "RenderingServer.canvas_item_add_rect")
     try {
       val s = r.singleton("RenderingServer")
@@ -19895,7 +19879,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f329(r: ApiExerciseRunner) {
+  private fun f328(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2IntArgs", "RenderingServer.viewport_attach_to_screen")
     try {
       val s = r.singleton("RenderingServer")
@@ -19915,7 +19899,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f330(r: ApiExerciseRunner) {
+  private fun f329(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2RIDBoolColorBoolArgs", "RenderingServer.canvas_item_add_texture_rect")
     try {
       val s = r.singleton("RenderingServer")
@@ -19938,7 +19922,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f331(r: ApiExerciseRunner) {
+  private fun f330(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2RIDRect2ColorArgs", "RenderingServer.canvas_item_add_lcd_texture_rect_region")
     try {
       val s = r.singleton("RenderingServer")
@@ -19961,7 +19945,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f332(r: ApiExerciseRunner) {
+  private fun f331(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2RIDRect2ColorIntTwoDoubleArgs", "RenderingServer.canvas_item_add_msdf_texture_rect_region")
     try {
       val s = r.singleton("RenderingServer")
@@ -19984,7 +19968,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f333(r: ApiExerciseRunner) {
+  private fun f332(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDRect2RIDRect2ColorTwoBoolArgs", "RenderingServer.canvas_item_add_texture_rect_region")
     try {
       val s = r.singleton("RenderingServer")
@@ -20007,7 +19991,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f334(r: ApiExerciseRunner) {
+  private fun f333(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDStringAndBoolArgs", "TextServer.font_set_language_support_override on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20028,7 +20012,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f335(r: ApiExerciseRunner) {
+  private fun f334(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDStringNameAndVariantArgs", "RenderingServer.canvas_item_set_instance_shader_parameter")
     try {
       val s = r.singleton("RenderingServer")
@@ -20049,7 +20033,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f336(r: ApiExerciseRunner) {
+  private fun f335(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDStringNameRIDIntArgs", "RenderingServer.shader_set_default_texture_parameter")
     try {
       val s = r.singleton("RenderingServer")
@@ -20072,7 +20056,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f337(r: ApiExerciseRunner) {
+  private fun f336(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDStringRIDListLongDictionaryStringVariantArgsRetBool", "TextServer.shaped_text_add_string on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20093,7 +20077,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f338(r: ApiExerciseRunner) {
+  private fun f337(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDThreeBoolAndColorArgs", "AccessibilityServer.update_set_text_decorations")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -20111,7 +20095,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f339(r: ApiExerciseRunner) {
+  private fun f338(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDThreeVector2TwoRIDArgs", "PhysicsServer2D.joint_make_groove")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -20135,7 +20119,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f340(r: ApiExerciseRunner) {
+  private fun f339(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTransform3DAABBVector3iThreeByteArrayPackedInt32ListArgs", "RenderingServer.voxel_gi_allocate_data")
     try {
       val s = r.singleton("RenderingServer")
@@ -20161,7 +20145,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f341(r: ApiExerciseRunner) {
+  private fun f340(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTransform3DVector3TwoColorUInt32Args", "RenderingServer.particles_emit")
     try {
       val s = r.singleton("RenderingServer")
@@ -20185,7 +20169,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f342(r: ApiExerciseRunner) {
+  private fun f341(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoCallableArgs", "RenderingServer.visibility_notifier_set_callbacks")
     try {
       val s = r.singleton("RenderingServer")
@@ -20201,7 +20185,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f343(r: ApiExerciseRunner) {
+  private fun f342(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoLongAndVector2Args", "TextServer.font_set_glyph_advance on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20223,7 +20207,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f344(r: ApiExerciseRunner) {
+  private fun f343(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoLongBoolArgs", "PhysicsServer3D.generic_6dof_joint_set_flag")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -20245,7 +20229,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f345(r: ApiExerciseRunner) {
+  private fun f344(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoLongDoubleArgs", "PhysicsServer3D.generic_6dof_joint_set_param")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -20267,7 +20251,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f346(r: ApiExerciseRunner) {
+  private fun f345(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoRect2ColorTwoBoolArgs", "Texture2D.draw_rect_region")
     try {
       val o = r.ref(Texture2D(r.construct("Texture2D")))
@@ -20284,7 +20268,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f347(r: ApiExerciseRunner) {
+  private fun f346(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoRect2RIDTwoVector2TwoLongBoolColorArgs", "RenderingServer.canvas_item_add_nine_patch")
     try {
       val s = r.singleton("RenderingServer")
@@ -20312,7 +20296,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f348(r: ApiExerciseRunner) {
+  private fun f347(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoVector2BoolUInt32ArgsRetPackedVector2List", "NavigationServer2D.map_get_path")
     try {
       val s = r.singleton("NavigationServer2D")
@@ -20333,7 +20317,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f349(r: ApiExerciseRunner) {
+  private fun f348(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoVector2ColorDoubleBoolArgs", "RenderingServer.canvas_item_add_line")
     try {
       val s = r.singleton("RenderingServer")
@@ -20350,7 +20334,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f350(r: ApiExerciseRunner) {
+  private fun f349(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoVector2TwoRIDArgs", "PhysicsServer2D.joint_make_damped_spring")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -20373,7 +20357,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f351(r: ApiExerciseRunner) {
+  private fun f350(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDTwoVector3BoolUInt32ArgsRetPackedVector3List", "NavigationServer3D.map_get_path")
     try {
       val s = r.singleton("NavigationServer3D")
@@ -20394,7 +20378,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f352(r: ApiExerciseRunner) {
+  private fun f351(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVariantVector2LongDoubleArgsRetBool", "TextServer.shaped_text_resize_object on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20414,7 +20398,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f353(r: ApiExerciseRunner) {
+  private fun f352(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVariantVector2LongLongDoubleArgsRetBool", "TextServer.shaped_text_add_object on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20434,7 +20418,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f354(r: ApiExerciseRunner) {
+  private fun f353(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2ColorBoolArgs", "Texture2D.draw")
     try {
       val o = r.ref(Texture2D(r.construct("Texture2D")))
@@ -20450,7 +20434,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f355(r: ApiExerciseRunner) {
+  private fun f354(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2ColorDoubleArgs", "TextLine.draw")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -20466,7 +20450,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f356(r: ApiExerciseRunner) {
+  private fun f355(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2DoubleColorBoolArgs", "RenderingServer.canvas_item_add_circle")
     try {
       val s = r.singleton("RenderingServer")
@@ -20483,7 +20467,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f357(r: ApiExerciseRunner) {
+  private fun f356(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2IntArgs", "RenderingServer.canvas_set_item_repeat")
     try {
       val s = r.singleton("RenderingServer")
@@ -20499,7 +20483,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f358(r: ApiExerciseRunner) {
+  private fun f357(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2IntColorDoubleArgs", "TextLine.draw_outline")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -20516,7 +20500,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f359(r: ApiExerciseRunner) {
+  private fun f358(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2IntTwoColorDoubleArgs", "TextParagraph.draw_outline")
     try {
       val o = r.ref(TextParagraph(r.construct("TextParagraph")))
@@ -20534,7 +20518,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f360(r: ApiExerciseRunner) {
+  private fun f359(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2StringLongDoubleIntColorThreeLongDoubleArgs", "Font.draw_string on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -20559,7 +20543,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f361(r: ApiExerciseRunner) {
+  private fun f360(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2StringLongDoubleThreeIntColorFourLongDoubleArgs", "Font.draw_multiline_string_outline on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -20586,7 +20570,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f362(r: ApiExerciseRunner) {
+  private fun f361(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2StringLongDoubleTwoIntColorFourLongDoubleArgs", "Font.draw_multiline_string on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -20612,7 +20596,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f363(r: ApiExerciseRunner) {
+  private fun f362(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2StringLongDoubleTwoIntColorThreeLongDoubleArgs", "Font.draw_string_outline on FontFile")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -20638,7 +20622,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f364(r: ApiExerciseRunner) {
+  private fun f363(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2TwoColorDoubleArgs", "TextParagraph.draw")
     try {
       val o = r.ref(TextParagraph(r.construct("TextParagraph")))
@@ -20655,7 +20639,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f365(r: ApiExerciseRunner) {
+  private fun f364(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2TwoDoubleColorBoolArgs", "RenderingServer.canvas_item_add_ellipse")
     try {
       val s = r.singleton("RenderingServer")
@@ -20673,7 +20657,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f366(r: ApiExerciseRunner) {
+  private fun f365(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2TwoIntColorDoubleArgs", "TextParagraph.draw_line_outline")
     try {
       val o = r.ref(TextParagraph(r.construct("TextParagraph")))
@@ -20691,7 +20675,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f367(r: ApiExerciseRunner) {
+  private fun f366(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2TwoRIDArgs", "PhysicsServer2D.joint_make_pin")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -20713,7 +20697,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f368(r: ApiExerciseRunner) {
+  private fun f367(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iLongArgs", "TextServer.font_remove_glyph on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20734,7 +20718,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f369(r: ApiExerciseRunner) {
+  private fun f368(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iLongObjectArgs", "TextServer.font_set_texture_image on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20757,7 +20741,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f370(r: ApiExerciseRunner) {
+  private fun f369(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iLongPackedInt32ListArgs", "TextServer.font_set_texture_offsets on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20779,7 +20763,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f371(r: ApiExerciseRunner) {
+  private fun f370(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iLongRect2Args", "TextServer.font_set_glyph_uv_rect on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20801,7 +20785,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f372(r: ApiExerciseRunner) {
+  private fun f371(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iLongVector2Args", "TextServer.font_set_glyph_offset on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20823,7 +20807,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f373(r: ApiExerciseRunner) {
+  private fun f372(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDVector2iTwoLongArgs", "TextServer.font_render_range on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -20845,7 +20829,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f374(r: ApiExerciseRunner) {
+  private fun f373(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2ColorBoolDoubleBoolArgs", "CanvasItem.draw_rect on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -20860,7 +20844,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f375(r: ApiExerciseRunner) {
+  private fun f374(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iAndBoolArg", "AStarGrid2D.fill_solid_region")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -20874,7 +20858,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f376(r: ApiExerciseRunner) {
+  private fun f375(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iAndColorArg", "Image.fill_rect")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -20889,7 +20873,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f377(r: ApiExerciseRunner) {
+  private fun f376(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iAndDoubleArg", "AStarGrid2D.fill_weight_scale_region")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -20904,7 +20888,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f378(r: ApiExerciseRunner) {
+  private fun f377(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iArgRetObject", "Image.get_region")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -20917,7 +20901,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f379(r: ApiExerciseRunner) {
+  private fun f378(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iObjectColorIntObjectArgs", "DrawableTexture2D.blit_rect")
     try {
       val o = r.ref(DrawableTexture2D(r.construct("DrawableTexture2D")))
@@ -20934,7 +20918,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f380(r: ApiExerciseRunner) {
+  private fun f379(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iTwoObjectListColorIntObjectArgs", "DrawableTexture2D.blit_rect_multi")
     try {
       val o = r.ref(DrawableTexture2D(r.construct("DrawableTexture2D")))
@@ -20955,7 +20939,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f381(r: ApiExerciseRunner) {
+  private fun f380(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithSignalArgRetObject", "Tween.tween_await")
     try {
       val o = r.track(r.tween()) // REACH_RECEIVERS
@@ -20968,7 +20952,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f382(r: ApiExerciseRunner) {
+  private fun f381(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndArrayArgRetLong", "ResourceLoader.load_threaded_get_status")
     try {
       val s = r.singleton("ResourceLoader")
@@ -20981,7 +20965,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f383(r: ApiExerciseRunner) {
+  private fun f382(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndArrayOfDictionariesArg", "Object.add_user_signal")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -20995,7 +20979,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f384(r: ApiExerciseRunner) {
+  private fun f383(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndBoolArg", "FontFile.set_language_support_override")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -21010,7 +20994,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f385(r: ApiExerciseRunner) {
+  private fun f384(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndBoolArgRetByteArray", "ZIPReader.read_file")
     try {
       val o = r.ref(ZIPReader(r.construct("ZIPReader")))
@@ -21023,7 +21007,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f386(r: ApiExerciseRunner) {
+  private fun f385(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndBoolArgRetInt", "ZIPReader.get_compression_level")
     try {
       val o = r.ref(ZIPReader(r.construct("ZIPReader")))
@@ -21036,7 +21020,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f387(r: ApiExerciseRunner) {
+  private fun f386(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndByteArrayArgRetLong", "ConfigFile.load_encrypted")
     try {
       val o = r.ref(ConfigFile(r.construct("ConfigFile")))
@@ -21050,7 +21034,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f388(r: ApiExerciseRunner) {
+  private fun f387(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndColorArg", "CodeHighlighter.add_keyword_color")
     try {
       val o = r.ref(CodeHighlighter(r.construct("CodeHighlighter")))
@@ -21065,7 +21049,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f389(r: ApiExerciseRunner) {
+  private fun f388(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndIntArg", "NavigationServer2DManager.set_default_server")
     try {
       val s = r.singleton("NavigationServer2DManager")
@@ -21080,7 +21064,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f390(r: ApiExerciseRunner) {
+  private fun f389(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndObjectArg", "TabBar.add_tab")
     try {
       val o = r.obj(TabBar(r.construct("TabBar")))
@@ -21093,7 +21077,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f391(r: ApiExerciseRunner) {
+  private fun f390(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndTransform3DArg", "Skin.add_named_bind")
     try {
       val o = r.ref(Skin(r.construct("Skin")))
@@ -21108,7 +21092,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f392(r: ApiExerciseRunner) {
+  private fun f391(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndTwoIntArgsRetObject", "RegEx.search")
     try {
       val o = r.ref(RegEx(r.construct("RegEx")))
@@ -21121,7 +21105,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f393(r: ApiExerciseRunner) {
+  private fun f392(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndTwoVariantArgsRetDictionary", "JSONRPC.make_request")
     try {
       val o = r.obj(JSONRPC(r.construct("JSONRPC")))
@@ -21136,7 +21120,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f394(r: ApiExerciseRunner) {
+  private fun f393(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringAndVariantArgRetDictionary", "JSONRPC.make_notification")
     try {
       val o = r.obj(JSONRPC(r.construct("JSONRPC")))
@@ -21150,7 +21134,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f395(r: ApiExerciseRunner) {
+  private fun f394(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringByteArrayAndBoolArgRetLong", "PCKPacker.add_file_from_buffer")
     try {
       val o = r.ref(PCKPacker(r.construct("PCKPacker")))
@@ -21164,7 +21148,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f396(r: ApiExerciseRunner) {
+  private fun f395(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringCallableArgs", "JSONRPC.set_method")
     try {
       val o = r.obj(JSONRPC(r.construct("JSONRPC")))
@@ -21179,7 +21163,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f397(r: ApiExerciseRunner) {
+  private fun f396(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringIntStringBoolArgsRetLong", "PCKPacker.pck_start")
     try {
       val o = r.ref(PCKPacker(r.construct("PCKPacker")))
@@ -21192,7 +21176,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f398(r: ApiExerciseRunner) {
+  private fun f397(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringLongBoolArgs", "UndoRedo.create_action")
     try {
       val o = r.obj(UndoRedo(r.construct("UndoRedo")))
@@ -21206,7 +21190,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f399(r: ApiExerciseRunner) {
+  private fun f398(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndBoolArg", "AnimationNodeStateMachinePlayback.start")
     try {
       val o = r.ref(AnimationNodeStateMachinePlayback(r.construct("AnimationNodeStateMachinePlayback")))
@@ -21220,7 +21204,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f400(r: ApiExerciseRunner) {
+  private fun f399(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndBoundCallableArgs", "Object.disconnect")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -21234,7 +21218,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f401(r: ApiExerciseRunner) {
+  private fun f400(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndCallableArgs", "Object.disconnect")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -21248,7 +21232,7 @@ internal object ApiExerciseRows {
   }
 
   // the hand-written root spells it isConnected(signal, target, method), not with Godot's Callable argument (METHOD_OVERRIDES)
-  private fun f402(r: ApiExerciseRunner) {
+  private fun f401(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndCallableArgsRetBool", "Object.is_connected")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -21261,7 +21245,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f403(r: ApiExerciseRunner) {
+  private fun f402(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndColorArg", "Animation.set_marker_color")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -21276,7 +21260,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f404(r: ApiExerciseRunner) {
+  private fun f403(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndDoubleArg", "Animation.add_marker")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -21291,7 +21275,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f405(r: ApiExerciseRunner) {
+  private fun f404(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndIntArg", "AnimationNodeBlendTree.disconnect_node")
     try {
       val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
@@ -21306,7 +21290,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f406(r: ApiExerciseRunner) {
+  private fun f405(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndIntArgRetInt", "GraphEdit.get_connection_count")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21320,7 +21304,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f407(r: ApiExerciseRunner) {
+  private fun f406(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndLongArg", "SpriteFrames.set_animation_loop_mode")
     try {
       val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
@@ -21335,7 +21319,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f408(r: ApiExerciseRunner) {
+  private fun f407(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndObjectArg", "AnimationNodeStateMachine.replace_node")
     try {
       val o = r.ref(AnimationNodeStateMachine(r.construct("AnimationNodeStateMachine")))
@@ -21351,7 +21335,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f409(r: ApiExerciseRunner) {
+  private fun f408(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndObjectArgRetLong", "AnimationLibrary.add_animation")
     try {
       val o = r.ref(AnimationLibrary(r.construct("AnimationLibrary")))
@@ -21366,7 +21350,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f410(r: ApiExerciseRunner) {
+  private fun f409(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndThreeDoubleArgs", "AnimationPlayer.play_section_backwards")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -21379,7 +21363,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f411(r: ApiExerciseRunner) {
+  private fun f410(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndVariantArg", "AnimationNode.set_parameter")
     try {
       val o = r.ref(AnimationNode(r.construct("AnimationNode")))
@@ -21394,7 +21378,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f412(r: ApiExerciseRunner) {
+  private fun f411(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameAndVector2Arg", "AnimationNodeBlendTree.set_node_position")
     try {
       val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
@@ -21409,7 +21393,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f413(r: ApiExerciseRunner) {
+  private fun f412(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameArgRetStringNameList", "GraphEdit.get_attached_nodes_of_frame")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21422,7 +21406,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f414(r: ApiExerciseRunner) {
+  private fun f413(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameArgRetTypedObjectList", "SceneTree.get_nodes_in_group")
     try {
       val o = r.obj(SceneTree(r.construct("SceneTree")))
@@ -21435,7 +21419,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f415(r: ApiExerciseRunner) {
+  private fun f414(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameArgRetVariantScalarOwned", "ClassDB.instantiate")
     try {
       val s = r.singleton("ClassDB")
@@ -21448,7 +21432,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f416(r: ApiExerciseRunner) {
+  private fun f415(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameArrayBoolArgs", "Node.propagate_call")
     try {
       val o = r.obj(Node(r.construct("Node")))
@@ -21462,7 +21446,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f417(r: ApiExerciseRunner) {
+  private fun f416(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameBoundCallableAndUInt32ArgsRetLong", "Object.connect")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -21474,7 +21458,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f418(r: ApiExerciseRunner) {
+  private fun f417(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameCallableAndUInt32ArgsRetLong", "Object.connect")
     try {
       val o = r.obj(GodotObject(r.construct("Object")))
@@ -21486,7 +21470,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f419(r: ApiExerciseRunner) {
+  private fun f418(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameDoubleBoolArgs", "AnimatedSprite2D.play")
     try {
       val o = r.obj(AnimatedSprite2D(r.construct("AnimatedSprite2D")))
@@ -21499,7 +21483,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f420(r: ApiExerciseRunner) {
+  private fun f419(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameDoubleDoubleBoolArgs", "AnimationPlayer.play")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -21512,7 +21496,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f421(r: ApiExerciseRunner) {
+  private fun f420(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameDoubleTwoLongArgs", "AnimationMixer.capture on AnimationPlayer")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -21527,7 +21511,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f422(r: ApiExerciseRunner) {
+  private fun f421(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameFourDoubleBoolArgs", "AnimationPlayer.play_section")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -21540,7 +21524,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f423(r: ApiExerciseRunner) {
+  private fun f422(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntAndStringNameArgs", "AnimationNodeBlendTree.connect_node")
     try {
       val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
@@ -21556,7 +21540,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f424(r: ApiExerciseRunner) {
+  private fun f423(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntObjectDoubleArgs", "SpriteFrames.set_frame")
     try {
       val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
@@ -21573,7 +21557,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f425(r: ApiExerciseRunner) {
+  private fun f424(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntStringNameIntArgs", "GraphEdit.disconnect_node")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21590,7 +21574,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f426(r: ApiExerciseRunner) {
+  private fun f425(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntStringNameIntArgsRetBool", "GraphEdit.is_node_connected")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21606,7 +21590,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f427(r: ApiExerciseRunner) {
+  private fun f426(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntStringNameIntBoolArgsRetLong", "GraphEdit.connect_node")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21622,7 +21606,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f428(r: ApiExerciseRunner) {
+  private fun f427(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameIntStringNameIntDoubleArgs", "GraphEdit.set_connection_activity")
     try {
       val o = r.obj(GraphEdit(r.construct("GraphEdit")))
@@ -21640,7 +21624,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f429(r: ApiExerciseRunner) {
+  private fun f428(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameListArg", "PhysicalBoneSimulator3D.physical_bones_start_simulation")
     try {
       val o = r.obj(PhysicalBoneSimulator3D(r.construct("PhysicalBoneSimulator3D")))
@@ -21654,7 +21638,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f430(r: ApiExerciseRunner) {
+  private fun f429(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameLongVariantArgs", "RenderingServer.global_shader_parameter_add")
     try {
       val s = r.singleton("RenderingServer")
@@ -21671,7 +21655,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f431(r: ApiExerciseRunner) {
+  private fun f430(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameObjectAndVector2Arg", "AnimationNodeBlendTree.add_node")
     try {
       val o = r.ref(AnimationNodeBlendTree(r.construct("AnimationNodeBlendTree")))
@@ -21687,7 +21671,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f432(r: ApiExerciseRunner) {
+  private fun f431(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameObjectDoubleIntArgs", "SpriteFrames.add_frame")
     try {
       val o = r.ref(SpriteFrames(r.construct("SpriteFrames")))
@@ -21703,7 +21687,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f433(r: ApiExerciseRunner) {
+  private fun f432(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameObjectDoubleTwoBoolDoubleLongTwoBoolArgsRetDouble", "AnimationNode.blend_node")
     try {
       val o = r.ref(AnimationNode(r.construct("AnimationNode")))
@@ -21722,7 +21706,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f434(r: ApiExerciseRunner) {
+  private fun f433(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameObjectIntArgs", "Shader.set_default_texture_parameter")
     try {
       val o = r.ref(Shader(r.construct("Shader")))
@@ -21738,7 +21722,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f435(r: ApiExerciseRunner) {
+  private fun f434(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNamePackedStringListAndStringNameArgs", "Translation.add_plural_message")
     try {
       val o = r.ref(Translation(r.construct("Translation")))
@@ -21753,7 +21737,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f436(r: ApiExerciseRunner) {
+  private fun f435(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameStringAndVariantArg", "SceneTree.set_group")
     try {
       val o = r.obj(SceneTree(r.construct("SceneTree")))
@@ -21769,7 +21753,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f437(r: ApiExerciseRunner) {
+  private fun f436(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameThreeDoubleBoolTwoLongArgs", "AnimationPlayer.play_with_capture")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -21782,7 +21766,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f438(r: ApiExerciseRunner) {
+  private fun f437(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringNameTwoDoubleTwoBoolDoubleLongArgs", "AnimationNode.blend_animation")
     try {
       val o = r.ref(AnimationNode(r.construct("AnimationNode")))
@@ -21801,7 +21785,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f439(r: ApiExerciseRunner) {
+  private fun f438(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringObjectBoolArgsRetInt", "ItemList.add_item")
     try {
       val o = r.obj(ItemList(r.construct("ItemList")))
@@ -21814,7 +21798,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f440(r: ApiExerciseRunner) {
+  private fun f439(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringObjectIntRect2ColorIntColorArgs", "RichTextLabel.push_dropcap")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -21835,7 +21819,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f441(r: ApiExerciseRunner) {
+  private fun f440(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringObjectIntRect2StringArgsRetBool", "TextParagraph.set_dropcap")
     try {
       val o = r.ref(TextParagraph(r.construct("TextParagraph")))
@@ -21852,7 +21836,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f442(r: ApiExerciseRunner) {
+  private fun f441(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringObjectIntStringVariantArgsRetBool", "TextLine.add_string")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -21868,7 +21852,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f443(r: ApiExerciseRunner) {
+  private fun f442(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringObjectUInt32StringArgsRetLong", "GLTFDocument.append_from_file")
     try {
       val o = r.ref(GLTFDocument(r.construct("GLTFDocument")))
@@ -21883,7 +21867,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f444(r: ApiExerciseRunner) {
+  private fun f443(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringTwoIntTwoBoolArgs", "TextEdit.insert_text")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -21899,7 +21883,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f445(r: ApiExerciseRunner) {
+  private fun f444(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringTwoLongArgs", "VisualShader.add_varying")
     try {
       val o = r.ref(VisualShader(r.construct("VisualShader")))
@@ -21915,7 +21899,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f446(r: ApiExerciseRunner) {
+  private fun f445(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithStringTwoLongArgsRetLong", "ZIPPacker.add_directory")
     try {
       val o = r.ref(ZIPPacker(r.construct("ZIPPacker")))
@@ -21928,7 +21912,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f447(r: ApiExerciseRunner) {
+  private fun f446(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeCallableArgs", "Control.set_drag_forwarding")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -21944,7 +21928,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f448(r: ApiExerciseRunner) {
+  private fun f447(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeDoubleArgs", "Camera3D.set_orthogonal")
     try {
       val o = r.obj(Camera3D(r.construct("Camera3D")))
@@ -21960,7 +21944,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f449(r: ApiExerciseRunner) {
+  private fun f448(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeDoubleBoolArgsRetDouble", "SkeletonModification2D.clamp_angle")
     try {
       val o = r.ref(SkeletonModification2D(r.construct("SkeletonModification2D")))
@@ -21976,7 +21960,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f450(r: ApiExerciseRunner) {
+  private fun f449(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeIntAndVector2Arg", "FontFile.set_glyph_advance")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -21993,7 +21977,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f451(r: ApiExerciseRunner) {
+  private fun f450(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeIntArgs", "AudioServer.swap_bus_effects")
     try {
       val s = r.singleton("AudioServer")
@@ -22009,7 +21993,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f452(r: ApiExerciseRunner) {
+  private fun f451(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeIntArgsRetObject", "AudioServer.get_bus_effect_instance")
     try {
       val s = r.singleton("AudioServer")
@@ -22023,7 +22007,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f453(r: ApiExerciseRunner) {
+  private fun f452(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeIntBoolDoubleBoolArgsRetTypedObjectList", "Noise.get_seamless_image_3d on FastNoiseLite")
     try {
       val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
@@ -22038,7 +22022,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f454(r: ApiExerciseRunner) {
+  private fun f453(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeIntTwoBoolArgsRetTypedObjectList", "Noise.get_image_3d on FastNoiseLite")
     try {
       val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
@@ -22053,7 +22037,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f455(r: ApiExerciseRunner) {
+  private fun f454(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeLongArgsRetLong", "Image.compress")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -22066,7 +22050,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f456(r: ApiExerciseRunner) {
+  private fun f455(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeObjectCallableArgs", "NavigationMeshGenerator.parse_source_geometry_data")
     try {
       val s = r.singleton("NavigationMeshGenerator")
@@ -22086,7 +22070,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f457(r: ApiExerciseRunner) {
+  private fun f456(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeRIDArgs", "RenderingServer.canvas_item_add_multimesh")
     try {
       val s = r.singleton("RenderingServer")
@@ -22107,7 +22091,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f458(r: ApiExerciseRunner) {
+  private fun f457(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeStringNameAndDoubleArg", "AnimationPlayer.play_section_with_markers_backwards")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -22120,7 +22104,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f459(r: ApiExerciseRunner) {
+  private fun f458(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeStringNameArgs", "Theme.rename_color")
     try {
       val o = r.ref(Theme(r.construct("Theme")))
@@ -22136,7 +22120,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f460(r: ApiExerciseRunner) {
+  private fun f459(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeStringNameTwoDoubleBoolArgs", "AnimationPlayer.play_section_with_markers")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -22149,7 +22133,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f461(r: ApiExerciseRunner) {
+  private fun f460(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeVector2AndIntArg", "Curve2D.add_point")
     try {
       val o = r.ref(Curve2D(r.construct("Curve2D")))
@@ -22163,7 +22147,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f462(r: ApiExerciseRunner) {
+  private fun f461(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeVector2iArgs", "TileSetAtlasSource.move_tile_in_atlas")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -22179,7 +22163,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f463(r: ApiExerciseRunner) {
+  private fun f462(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeVector3AndBoolArgs", "Node3D.look_at_from_position")
     try {
       val o = r.obj(Node3D(r.construct("Node3D")))
@@ -22194,7 +22178,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f464(r: ApiExerciseRunner) {
+  private fun f463(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithThreeVector3AndIntArg", "Curve3D.add_point")
     try {
       val o = r.ref(Curve3D(r.construct("Curve3D")))
@@ -22210,7 +22194,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f465(r: ApiExerciseRunner) {
+  private fun f464(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DObjectTransform2DArgsRetBool", "Shape2D.collide on CapsuleShape2D")
     try {
       val o = r.ref(CapsuleShape2D(r.construct("CapsuleShape2D")))
@@ -22226,7 +22210,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f466(r: ApiExerciseRunner) {
+  private fun f465(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DObjectTransform2DArgsRetPackedVector2List", "Shape2D.collide_and_get_contacts on CapsuleShape2D")
     try {
       val o = r.ref(CapsuleShape2D(r.construct("CapsuleShape2D")))
@@ -22242,7 +22226,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f467(r: ApiExerciseRunner) {
+  private fun f466(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DVector2ArgsRetObject", "InputEvent.xformed_by on InputEventAction")
     try {
       val o = r.ref(InputEventAction(r.construct("InputEventAction")))
@@ -22255,7 +22239,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f468(r: ApiExerciseRunner) {
+  private fun f467(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DVector2ObjectDoubleBoolArgsRetBool", "PhysicsBody2D.test_move on CharacterBody2D")
     try {
       val o = r.obj(CharacterBody2D(r.construct("CharacterBody2D")))
@@ -22269,7 +22253,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f469(r: ApiExerciseRunner) {
+  private fun f468(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetBool", "Shape2D.collide_with_motion on CapsuleShape2D")
     try {
       val o = r.ref(CapsuleShape2D(r.construct("CapsuleShape2D")))
@@ -22287,7 +22271,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f470(r: ApiExerciseRunner) {
+  private fun f469(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DVector2ObjectTransform2DVector2ArgsRetPackedVector2List", "Shape2D.collide_with_motion_and_get_contacts on CapsuleShape2D")
     try {
       val o = r.ref(CapsuleShape2D(r.construct("CapsuleShape2D")))
@@ -22305,7 +22289,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f471(r: ApiExerciseRunner) {
+  private fun f470(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform2DVector2TwoColorUInt32Args", "GPUParticles2D.emit_particle")
     try {
       val o = r.obj(GPUParticles2D(r.construct("GPUParticles2D")))
@@ -22323,7 +22307,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f472(r: ApiExerciseRunner) {
+  private fun f471(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform3DAABBVector3ThreeByteArrayPackedInt32ListArgs", "VoxelGIData.allocate")
     try {
       val o = r.ref(VoxelGIData(r.construct("VoxelGIData")))
@@ -22343,7 +22327,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f473(r: ApiExerciseRunner) {
+  private fun f472(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform3DAndDoubleArgRetLong", "ArrayMesh.lightmap_unwrap")
     try {
       val o = r.ref(ArrayMesh(r.construct("ArrayMesh")))
@@ -22357,7 +22341,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f474(r: ApiExerciseRunner) {
+  private fun f473(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform3DVector3ObjectDoubleBoolIntArgsRetBool", "PhysicsBody3D.test_move on CharacterBody3D")
     try {
       val o = r.obj(CharacterBody3D(r.construct("CharacterBody3D")))
@@ -22371,7 +22355,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f475(r: ApiExerciseRunner) {
+  private fun f474(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTransform3DVector3TwoColorUInt32Args", "GPUParticles3D.emit_particle")
     try {
       val o = r.obj(GPUParticles3D(r.construct("GPUParticles3D")))
@@ -22389,7 +22373,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f476(r: ApiExerciseRunner) {
+  private fun f475(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoBoolArgs", "ItemList.center_on_current")
     try {
       val o = r.obj(ItemList(r.construct("ItemList")))
@@ -22402,7 +22386,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f477(r: ApiExerciseRunner) {
+  private fun f476(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoBoolArgsRetObject", "Mesh.create_convex_shape")
     try {
       val o = r.ref(Mesh(r.construct("Mesh")))
@@ -22414,7 +22398,7 @@ internal object ApiExerciseRows {
   }
 
   // reads the clock: two reads an oracle compares can differ (METHOD_OVERRIDES)
-  private fun f478(r: ApiExerciseRunner) {
+  private fun f477(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoBoolArgsRetString", "Time.get_datetime_string_from_system")
     try {
       val s = r.singleton("Time")
@@ -22426,7 +22410,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f479(r: ApiExerciseRunner) {
+  private fun f478(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoByteArrayArgsRetBool", "Crypto.constant_time_compare")
     try {
       val o = r.ref(Crypto(r.construct("Crypto")))
@@ -22440,7 +22424,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f480(r: ApiExerciseRunner) {
+  private fun f479(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoColorArgs", "RichTextLabel.set_cell_row_background_color")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -22455,7 +22439,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f481(r: ApiExerciseRunner) {
+  private fun f480(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoDoubleAndIntArgs", "Animation.optimize")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22468,7 +22452,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f482(r: ApiExerciseRunner) {
+  private fun f481(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoDoubleArgs", "AnimationPlayer.set_section")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -22481,7 +22465,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f483(r: ApiExerciseRunner) {
+  private fun f482(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoDoubleArrayArgs", "ImporterMesh.generate_lods")
     try {
       val o = r.ref(ImporterMesh(r.construct("ImporterMesh")))
@@ -22497,7 +22481,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f484(r: ApiExerciseRunner) {
+  private fun f483(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndBoolArgs", "AudioServer.set_bus_effect_enabled")
     try {
       val s = r.singleton("AudioServer")
@@ -22513,7 +22497,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f485(r: ApiExerciseRunner) {
+  private fun f484(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndByteArrayArg", "ArrayMesh.surface_update_attribute_region")
     try {
       val o = r.ref(ArrayMesh(r.construct("ArrayMesh")))
@@ -22529,7 +22513,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f486(r: ApiExerciseRunner) {
+  private fun f485(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndColorArg", "Image.set_pixel")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -22545,7 +22529,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f487(r: ApiExerciseRunner) {
+  private fun f486(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndDoubleArgs", "Animation.audio_track_set_key_end_offset")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22561,7 +22545,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f488(r: ApiExerciseRunner) {
+  private fun f487(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndLongArgs", "Image.resize")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -22576,7 +22560,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f489(r: ApiExerciseRunner) {
+  private fun f488(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndNodePathArg", "SpringBoneSimulator3D.set_collision_path")
     try {
       val o = r.obj(SpringBoneSimulator3D(r.construct("SpringBoneSimulator3D")))
@@ -22592,7 +22576,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f490(r: ApiExerciseRunner) {
+  private fun f489(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndObjectArg", "Animation.audio_track_set_key_stream")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22609,7 +22593,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f491(r: ApiExerciseRunner) {
+  private fun f490(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndPackedVector2ListArg", "TileData.set_collision_polygon_points")
     try {
       val o = r.obj(TileData(r.construct("TileData")))
@@ -22625,7 +22609,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f492(r: ApiExerciseRunner) {
+  private fun f491(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndQuaternionArg", "IterateIK3D.set_joint_limitation_rotation_offset on CCDIK3D")
     try {
       val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
@@ -22641,7 +22625,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f493(r: ApiExerciseRunner) {
+  private fun f492(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndStringArgs", "TextEdit.set_line_gutter_text")
     try {
       val o = r.obj(TextEdit(r.construct("TextEdit")))
@@ -22657,7 +22641,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f494(r: ApiExerciseRunner) {
+  private fun f493(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndStringNameArg", "Animation.animation_track_set_key_animation")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22673,7 +22657,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f495(r: ApiExerciseRunner) {
+  private fun f494(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndVariantArg", "Animation.track_set_key_value")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22689,7 +22673,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f496(r: ApiExerciseRunner) {
+  private fun f495(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndVector2iArg", "FontFile.remove_kerning")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -22705,7 +22689,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f497(r: ApiExerciseRunner) {
+  private fun f496(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntAndVector3Arg", "IterateIK3D.set_joint_limitation_right_axis_vector on CCDIK3D")
     try {
       val o = r.obj(CCDIK3D(r.construct("CCDIK3D")))
@@ -22721,7 +22705,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f498(r: ApiExerciseRunner) {
+  private fun f497(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntArgs", "Animation.track_move_to")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22736,7 +22720,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f499(r: ApiExerciseRunner) {
+  private fun f498(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntBoolLongByteArrayArgs", "Image.set_data")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -22754,7 +22738,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f500(r: ApiExerciseRunner) {
+  private fun f499(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntColorLongTwoBoolArgs", "RichTextLabel.add_hr")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -22770,7 +22754,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f501(r: ApiExerciseRunner) {
+  private fun f500(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntDoubleArgsRetRID", "RenderingServer.make_sphere_mesh")
     try {
       val s = r.singleton("RenderingServer")
@@ -22787,7 +22771,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f502(r: ApiExerciseRunner) {
+  private fun f501(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntLongColorBoolArgs", "DrawableTexture2D.setup")
     try {
       val o = r.ref(DrawableTexture2D(r.construct("DrawableTexture2D")))
@@ -22804,7 +22788,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f503(r: ApiExerciseRunner) {
+  private fun f502(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntLongColorBoolArgsRetRID", "RenderingServer.texture_drawable_create")
     try {
       val s = r.singleton("RenderingServer")
@@ -22822,7 +22806,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f504(r: ApiExerciseRunner) {
+  private fun f503(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntThreeLongDoubleBoolIntBoolArgs", "AudioStreamInteractive.add_transition")
     try {
       val o = r.ref(AudioStreamInteractive(r.construct("AudioStreamInteractive")))
@@ -22841,7 +22825,7 @@ internal object ApiExerciseRows {
   }
 
   // returns a new object per call: an oracle would compare two different objects (METHOD_OVERRIDES)
-  private fun f505(r: ApiExerciseRunner) {
+  private fun f504(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntTwoBoolDoubleBoolArgsRetObject", "Noise.get_seamless_image on FastNoiseLite")
     try {
       val o = r.ref(FastNoiseLite(r.construct("FastNoiseLite")))
@@ -22855,7 +22839,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f506(r: ApiExerciseRunner) {
+  private fun f505(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntVector2DoubleArgs", "Animation.bezier_track_set_key_in_handle")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -22871,7 +22855,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f507(r: ApiExerciseRunner) {
+  private fun f506(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoIntVector2iVector2Args", "FontFile.set_kerning")
     try {
       val o = r.ref(FontFile(r.construct("FontFile")))
@@ -22888,7 +22872,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f508(r: ApiExerciseRunner) {
+  private fun f507(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongAndBoolArgs", "AStar2D.connect_points")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -22903,7 +22887,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f509(r: ApiExerciseRunner) {
+  private fun f508(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongAndBoolArgsRetPackedInt64List", "AStar2D.get_id_path")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -22917,7 +22901,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f510(r: ApiExerciseRunner) {
+  private fun f509(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongAndBoolArgsRetPackedVector2List", "AStar2D.get_point_path")
     try {
       val o = r.ref(AStar2D(r.construct("AStar2D")))
@@ -22931,7 +22915,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f511(r: ApiExerciseRunner) {
+  private fun f510(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongAndBoolArgsRetPackedVector3List", "AStar3D.get_point_path")
     try {
       val o = r.ref(AStar3D(r.construct("AStar3D")))
@@ -22945,7 +22929,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f512(r: ApiExerciseRunner) {
+  private fun f511(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongAndIntArgs", "Control.set_anchors_and_offsets_preset")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -22959,7 +22943,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f513(r: ApiExerciseRunner) {
+  private fun f512(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongArgs", "GLTFObjectModelProperty.set_types")
     try {
       val o = r.ref(GLTFObjectModelProperty(r.construct("GLTFObjectModelProperty")))
@@ -22974,7 +22958,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f514(r: ApiExerciseRunner) {
+  private fun f513(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongArgsRetInt", "Viewport.get_render_info on SubViewport")
     try {
       val o = r.obj(SubViewport(r.construct("SubViewport")))
@@ -22988,7 +22972,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f515(r: ApiExerciseRunner) {
+  private fun f514(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoLongStringTwoLongPackedFloat32ListArgs", "RichTextLabel.push_paragraph")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -23007,7 +22991,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f516(r: ApiExerciseRunner) {
+  private fun f515(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectArgs", "CanvasItem.draw_multimesh on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -23024,7 +23008,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f517(r: ApiExerciseRunner) {
+  private fun f516(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectCallableArgs", "NavigationMeshGenerator.bake_from_source_geometry_data")
     try {
       val s = r.singleton("NavigationMeshGenerator")
@@ -23042,7 +23026,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f518(r: ApiExerciseRunner) {
+  private fun f517(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectIntArgsRetInt", "GLTFState.append_gltf_node")
     try {
       val o = r.ref(GLTFState(r.construct("GLTFState")))
@@ -23059,7 +23043,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f519(r: ApiExerciseRunner) {
+  private fun f518(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectRect2iAndVector2iArgs", "Image.blend_rect_mask")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -23078,7 +23062,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f520(r: ApiExerciseRunner) {
+  private fun f519(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectTransform2DColorArgs", "CanvasItem.draw_mesh on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -23097,7 +23081,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f521(r: ApiExerciseRunner) {
+  private fun f520(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoObjectUInt32ArgsRetLong", "GLTFDocument.append_from_scene")
     try {
       val o = r.ref(GLTFDocument(r.construct("GLTFDocument")))
@@ -23113,7 +23097,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f522(r: ApiExerciseRunner) {
+  private fun f521(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoPackedFloat32ListArgs", "MultiMesh.set_buffer_interpolated")
     try {
       val o = r.ref(MultiMesh(r.construct("MultiMesh")))
@@ -23128,7 +23112,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f523(r: ApiExerciseRunner) {
+  private fun f522(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDAndTransform2DArg", "RenderingServer.viewport_set_canvas_transform")
     try {
       val s = r.singleton("RenderingServer")
@@ -23151,7 +23135,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f524(r: ApiExerciseRunner) {
+  private fun f523(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDAndVector2Arg", "RenderingServer.canvas_set_item_mirroring")
     try {
       val s = r.singleton("RenderingServer")
@@ -23172,7 +23156,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f525(r: ApiExerciseRunner) {
+  private fun f524(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDArgs", "AccessibilityServer.update_add_child")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -23187,7 +23171,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f526(r: ApiExerciseRunner) {
+  private fun f525(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDArgsRetRID", "RenderingServer.instance_create2")
     try {
       val s = r.singleton("RenderingServer")
@@ -23208,7 +23192,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f527(r: ApiExerciseRunner) {
+  private fun f526(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDBoolArgs", "RenderingServer.lightmap_set_textures")
     try {
       val s = r.singleton("RenderingServer")
@@ -23229,7 +23213,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f528(r: ApiExerciseRunner) {
+  private fun f527(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDDoubleIntBoolArgsRetRID", "AccessibilityServer.create_sub_text_edit_elements")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -23244,7 +23228,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f529(r: ApiExerciseRunner) {
+  private fun f528(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDIntRIDIntArgs", "AccessibilityServer.update_set_text_selection")
     try {
       val s = r.singleton("AccessibilityServer")
@@ -23262,7 +23246,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f530(r: ApiExerciseRunner) {
+  private fun f529(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDLongVector2LongColorDoubleArgs", "TextServer.font_draw_glyph on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -23286,7 +23270,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f531(r: ApiExerciseRunner) {
+  private fun f530(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDRect2IntArgs", "RenderingServer.instance_geometry_set_lightmap")
     try {
       val s = r.singleton("RenderingServer")
@@ -23310,7 +23294,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f532(r: ApiExerciseRunner) {
+  private fun f531(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDTransform2DBoolArgs", "PhysicsServer2D.area_add_shape")
     try {
       val s = r.singleton("PhysicsServer2D")
@@ -23331,7 +23315,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f533(r: ApiExerciseRunner) {
+  private fun f532(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDTransform2DColorRIDArgs", "RenderingServer.canvas_item_add_mesh")
     try {
       val s = r.singleton("RenderingServer")
@@ -23354,7 +23338,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f534(r: ApiExerciseRunner) {
+  private fun f533(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDTransform3DBoolArgs", "PhysicsServer3D.area_add_shape")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -23375,7 +23359,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f535(r: ApiExerciseRunner) {
+  private fun f534(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDTwoIntArgs", "RenderingServer.viewport_set_canvas_stacking")
     try {
       val s = r.singleton("RenderingServer")
@@ -23399,7 +23383,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f536(r: ApiExerciseRunner) {
+  private fun f535(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDTwoLongVector2LongColorDoubleArgs", "TextServer.font_draw_glyph_outline on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -23424,7 +23408,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f537(r: ApiExerciseRunner) {
+  private fun f536(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDVector2TwoDoubleColorDoubleArgs", "TextServer.shaped_text_draw on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -23448,7 +23432,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f538(r: ApiExerciseRunner) {
+  private fun f537(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDVector2TwoDoubleLongColorDoubleArgs", "TextServer.shaped_text_draw_outline on TextServerManager.get_primary_interface()")
     try {
       val o = r.track(checkNotNull(TextServerManager.getPrimaryInterface()))
@@ -23473,7 +23457,7 @@ internal object ApiExerciseRows {
   }
 
   // void singleton method
-  private fun f539(r: ApiExerciseRunner) {
+  private fun f538(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoRIDVector3RIDVector3Args", "PhysicsServer3D.joint_make_pin")
     try {
       val s = r.singleton("PhysicsServer3D")
@@ -23496,7 +23480,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f540(r: ApiExerciseRunner) {
+  private fun f539(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringAndBoolArgs", "CodeEdit.add_comment_delimiter")
     try {
       val o = r.obj(CodeEdit(r.construct("CodeEdit")))
@@ -23511,7 +23495,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f541(r: ApiExerciseRunner) {
+  private fun f540(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringAndLongArgsRetObject", "ResourceLoader.load")
     try {
       val s = r.singleton("ResourceLoader")
@@ -23524,7 +23508,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f542(r: ApiExerciseRunner) {
+  private fun f541(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringAndVariantArg", "ConfigFile.set_value")
     try {
       val o = r.ref(ConfigFile(r.construct("ConfigFile")))
@@ -23540,7 +23524,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f543(r: ApiExerciseRunner) {
+  private fun f542(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringArgs", "CodeEdit.add_auto_brace_completion_pair")
     try {
       val o = r.obj(CodeEdit(r.construct("CodeEdit")))
@@ -23555,7 +23539,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f544(r: ApiExerciseRunner) {
+  private fun f543(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringBoolArgsRetLong", "PCKPacker.add_file")
     try {
       val o = r.ref(PCKPacker(r.construct("PCKPacker")))
@@ -23569,7 +23553,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const singleton method
-  private fun f545(r: ApiExerciseRunner) {
+  private fun f544(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringBoolLongArgsRetLong", "ResourceLoader.load_threaded_request")
     try {
       val s = r.singleton("ResourceLoader")
@@ -23583,7 +23567,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f546(r: ApiExerciseRunner) {
+  private fun f545(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringColorBoolArgs", "CodeHighlighter.add_color_region")
     try {
       val o = r.ref(CodeHighlighter(r.construct("CodeHighlighter")))
@@ -23599,7 +23583,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f547(r: ApiExerciseRunner) {
+  private fun f546(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringNameAndColorArg", "Theme.set_color")
     try {
       val o = r.ref(Theme(r.construct("Theme")))
@@ -23615,7 +23599,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f548(r: ApiExerciseRunner) {
+  private fun f547(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringNameAndDoubleArg", "AnimationPlayer.set_blend_time")
     try {
       val o = r.obj(AnimationPlayer(r.construct("AnimationPlayer")))
@@ -23631,7 +23615,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f549(r: ApiExerciseRunner) {
+  private fun f548(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringNameAndIntArg", "Theme.set_constant")
     try {
       val o = r.ref(Theme(r.construct("Theme")))
@@ -23647,7 +23631,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f550(r: ApiExerciseRunner) {
+  private fun f549(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringNameAndObjectArg", "AnimationNodeStateMachine.add_transition")
     try {
       val o = r.ref(AnimationNodeStateMachine(r.construct("AnimationNodeStateMachine")))
@@ -23664,7 +23648,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f551(r: ApiExerciseRunner) {
+  private fun f550(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringNameArgs", "AnimationLibrary.rename_animation")
     try {
       val o = r.ref(AnimationLibrary(r.construct("AnimationLibrary")))
@@ -23679,7 +23663,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f552(r: ApiExerciseRunner) {
+  private fun f551(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoUInt32AndDoubleArg", "Animation.compress")
     try {
       val o = r.ref(Animation(r.construct("Animation")))
@@ -23692,7 +23676,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f553(r: ApiExerciseRunner) {
+  private fun f552(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVariantArgsRetDictionary", "JSONRPC.make_response")
     try {
       val o = r.obj(JSONRPC(r.construct("JSONRPC")))
@@ -23706,7 +23690,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f554(r: ApiExerciseRunner) {
+  private fun f553(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2Args", "RichTextLabel.set_cell_size_override")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -23721,7 +23705,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f555(r: ApiExerciseRunner) {
+  private fun f554(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2ColorDoubleBoolArgs", "CanvasItem.draw_line on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -23737,7 +23721,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f556(r: ApiExerciseRunner) {
+  private fun f555(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2ColorTwoDoubleTwoBoolArgs", "CanvasItem.draw_dashed_line on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -23753,7 +23737,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f557(r: ApiExerciseRunner) {
+  private fun f556(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2iAndBoolArgsRetPackedVector2List", "AStarGrid2D.get_point_path")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -23767,7 +23751,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f558(r: ApiExerciseRunner) {
+  private fun f557(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2iAndBoolArgsRetVector2iList", "AStarGrid2D.get_id_path")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -23781,7 +23765,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f559(r: ApiExerciseRunner) {
+  private fun f558(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2iAndObjectArgRetVector2i", "TileMap.map_pattern")
     try {
       val o = r.obj(TileMap(r.construct("TileMap")))
@@ -23797,7 +23781,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f560(r: ApiExerciseRunner) {
+  private fun f559(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector2iArgs", "TileSetAtlasSource.create_tile")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -23812,7 +23796,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f561(r: ApiExerciseRunner) {
+  private fun f560(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector3AndBoolArgs", "Node3D.look_at")
     try {
       val o = r.obj(Node3D(r.construct("Node3D")))
@@ -23826,7 +23810,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f562(r: ApiExerciseRunner) {
+  private fun f561(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoVector3Args", "PhysicalBone3D.apply_impulse")
     try {
       val o = r.obj(PhysicalBone3D(r.construct("PhysicalBone3D")))
@@ -23841,7 +23825,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f563(r: ApiExerciseRunner) {
+  private fun f562(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndBoolArgs", "CanvasItem.set_visibility_layer_bit on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -23856,7 +23840,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f564(r: ApiExerciseRunner) {
+  private fun f563(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndDoubleArg", "CollisionObject2D.shape_owner_set_one_way_collision_margin on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -23871,7 +23855,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f565(r: ApiExerciseRunner) {
+  private fun f564(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndIntArg", "CollisionObject2D.shape_owner_remove_shape on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -23886,7 +23870,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f566(r: ApiExerciseRunner) {
+  private fun f565(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndObjectArg", "CollisionObject2D.shape_owner_add_shape on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -23902,7 +23886,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f567(r: ApiExerciseRunner) {
+  private fun f566(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndTransform2DArg", "CollisionObject2D.shape_owner_set_transform on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -23917,7 +23901,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f568(r: ApiExerciseRunner) {
+  private fun f567(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndTransform3DArg", "CollisionObject3D.shape_owner_set_transform on Area3D")
     try {
       val o = r.obj(Area3D(r.construct("Area3D")))
@@ -23932,7 +23916,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f569(r: ApiExerciseRunner) {
+  private fun f568(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32AndVector2Args", "CollisionObject2D.shape_owner_set_one_way_collision_direction on Area2D")
     try {
       val o = r.obj(Area2D(r.construct("Area2D")))
@@ -23947,7 +23931,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f570(r: ApiExerciseRunner) {
+  private fun f569(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32StringNameAndIntArgs", "SceneTree.notify_group_flags")
     try {
       val o = r.obj(SceneTree(r.construct("SceneTree")))
@@ -23963,7 +23947,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f571(r: ApiExerciseRunner) {
+  private fun f570(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithUInt32StringNameStringVariantArgs", "SceneTree.set_group_flags")
     try {
       val o = r.obj(SceneTree(r.construct("SceneTree")))
@@ -23980,7 +23964,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f572(r: ApiExerciseRunner) {
+  private fun f571(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantAndBoolArg", "StreamPeer.put_var on StreamPeerBuffer")
     try {
       val o = r.ref(StreamPeerBuffer(r.construct("StreamPeerBuffer")))
@@ -23994,7 +23978,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f573(r: ApiExerciseRunner) {
+  private fun f572(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantAndBoolArgRetLong", "PacketPeer.put_var on PacketPeerStream")
     try {
       val o = r.ref(PacketPeerStream(r.construct("PacketPeerStream")))
@@ -24007,7 +23991,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f574(r: ApiExerciseRunner) {
+  private fun f573(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantAndObjectArg", "Control.force_drag")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24023,7 +24007,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f575(r: ApiExerciseRunner) {
+  private fun f574(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantArgRetLong", "PackedDataContainer.pack")
     try {
       val o = r.ref(PackedDataContainer(r.construct("PackedDataContainer")))
@@ -24036,7 +24020,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f576(r: ApiExerciseRunner) {
+  private fun f575(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantArgRetObject", "PropertyTweener.from")
     try {
       val o = r.track(r.tween().tweenProperty(r.typeObject(), NodePath("process_priority"), 7L, 1.0)) // REACH_RECEIVERS
@@ -24049,7 +24033,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f577(r: ApiExerciseRunner) {
+  private fun f576(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantLongObjectTwoDoubleColorLongRect2BoolStringTwoLongArgs", "RichTextLabel.update_image")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -24071,7 +24055,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f578(r: ApiExerciseRunner) {
+  private fun f577(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantLongStringArgs", "RichTextLabel.push_meta")
     try {
       val o = r.obj(RichTextLabel(r.construct("RichTextLabel")))
@@ -24085,7 +24069,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f579(r: ApiExerciseRunner) {
+  private fun f578(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantVector2LongDoubleArgsRetBool", "TextLine.resize_object")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -24099,7 +24083,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f580(r: ApiExerciseRunner) {
+  private fun f579(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVariantVector2LongIntDoubleArgsRetBool", "TextLine.add_object")
     try {
       val o = r.ref(TextLine(r.construct("TextLine")))
@@ -24113,7 +24097,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f581(r: ApiExerciseRunner) {
+  private fun f580(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2AndBoolArg", "Control.set_global_position")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24127,7 +24111,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f582(r: ApiExerciseRunner) {
+  private fun f581(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2AndIntArg", "Line2D.add_point")
     try {
       val o = r.obj(Line2D(r.construct("Line2D")))
@@ -24141,7 +24125,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f583(r: ApiExerciseRunner) {
+  private fun f582(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2BoolFloatBoolArgsRetObject", "PhysicsBody2D.move_and_collide on CharacterBody2D")
     try {
       val o = r.obj(CharacterBody2D(r.construct("CharacterBody2D")))
@@ -24154,7 +24138,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f584(r: ApiExerciseRunner) {
+  private fun f583(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2DoubleColorBoolDoubleBoolArgs", "CanvasItem.draw_circle on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24170,7 +24154,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f585(r: ApiExerciseRunner) {
+  private fun f584(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2DoubleVector2Args", "CanvasItem.draw_set_transform on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24186,7 +24170,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f586(r: ApiExerciseRunner) {
+  private fun f585(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2FourDoubleIntColorDoubleBoolArgs", "CanvasItem.draw_ellipse_arc on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24206,7 +24190,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f587(r: ApiExerciseRunner) {
+  private fun f586(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2ThreeDoubleIntColorDoubleBoolArgs", "CanvasItem.draw_arc on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24225,7 +24209,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f588(r: ApiExerciseRunner) {
+  private fun f587(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2TwoDoubleColorBoolDoubleBoolArgs", "CanvasItem.draw_ellipse on Control")
     try {
       val o = r.obj(Control(r.construct("Control")))
@@ -24242,7 +24226,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f589(r: ApiExerciseRunner) {
+  private fun f588(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2TwoDoubleTwoLongArgsRetInt", "Curve.add_point")
     try {
       val o = r.ref(Curve(r.construct("Curve")))
@@ -24255,7 +24239,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f590(r: ApiExerciseRunner) {
+  private fun f589(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndBoolArg", "AStarGrid2D.set_point_solid")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -24269,7 +24253,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f591(r: ApiExerciseRunner) {
+  private fun f590(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndColorArg", "Image.set_pixelv")
     try {
       val o = r.ref(Image(r.construct("Image")))
@@ -24284,7 +24268,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f592(r: ApiExerciseRunner) {
+  private fun f591(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndDoubleArg", "AStarGrid2D.set_point_weight_scale")
     try {
       val o = r.ref(AStarGrid2D(r.construct("AStarGrid2D")))
@@ -24299,7 +24283,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f593(r: ApiExerciseRunner) {
+  private fun f592(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndIntArg", "TileSetAtlasSource.remove_alternative_tile")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -24314,7 +24298,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f594(r: ApiExerciseRunner) {
+  private fun f593(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndLongArg", "TileSetAtlasSource.set_tile_animation_mode")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -24329,7 +24313,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f595(r: ApiExerciseRunner) {
+  private fun f594(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndObjectArg", "TileMapLayer.set_pattern")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -24345,7 +24329,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f596(r: ApiExerciseRunner) {
+  private fun f595(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iAndTwoIntArgs", "TileSetAtlasSource.set_alternative_tile_id")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -24361,7 +24345,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f597(r: ApiExerciseRunner) {
+  private fun f596(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iArgRetVector2iList", "TileMap.get_surrounding_cells")
     try {
       val o = r.obj(TileMap(r.construct("TileMap")))
@@ -24374,7 +24358,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f598(r: ApiExerciseRunner) {
+  private fun f597(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iIntDoubleArgs", "TileSetAtlasSource.set_tile_animation_frame_duration")
     try {
       val o = r.ref(TileSetAtlasSource(r.construct("TileSetAtlasSource")))
@@ -24390,7 +24374,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f599(r: ApiExerciseRunner) {
+  private fun f598(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iIntVector2iIntArgs", "TileMapLayer.set_cell")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -24406,7 +24390,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f600(r: ApiExerciseRunner) {
+  private fun f599(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iListArgRetObject", "TileMapLayer.get_pattern")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -24419,7 +24403,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f601(r: ApiExerciseRunner) {
+  private fun f600(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector2iListTwoIntAndBoolArgs", "TileMapLayer.set_cells_terrain_connect")
     try {
       val o = r.obj(TileMapLayer(r.construct("TileMapLayer")))
@@ -24435,7 +24419,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f602(r: ApiExerciseRunner) {
+  private fun f601(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector3AndDoubleArg", "Node3D.global_rotate")
     try {
       val o = r.obj(Node3D(r.construct("Node3D")))
@@ -24450,7 +24434,7 @@ internal object ApiExerciseRows {
   }
 
   // non-const method
-  private fun f603(r: ApiExerciseRunner) {
+  private fun f602(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector3BoolFloatBoolIntArgsRetObject", "PhysicsBody3D.move_and_collide on CharacterBody3D")
     try {
       val o = r.obj(CharacterBody3D(r.construct("CharacterBody3D")))
@@ -24463,7 +24447,7 @@ internal object ApiExerciseRows {
   }
 
   // void method
-  private fun f604(r: ApiExerciseRunner) {
+  private fun f603(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithVector3iIntIntArgs", "GridMap.set_cell_item")
     try {
       val o = r.obj(GridMap(r.construct("GridMap")))
@@ -24478,7 +24462,7 @@ internal object ApiExerciseRows {
   }
 
   // only Windows shows a toast, so a Windows host skips the call; elsewhere Godot answers INVALID_NOTIFICATION_ID (-1), which a no-op cannot (SCENE_ROWS)
-  private fun f605(r: ApiExerciseRunner) {
+  private fun f604(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringObjectCallableArgsRetInt", "DisplayServer.send_toast_notification")
     try {
       if (OS.getName() == "Windows") {
@@ -24495,7 +24479,7 @@ internal object ApiExerciseRows {
   }
 
   // a hint for where the IME draws: nothing shows while no text field has focus (SCENE_ROWS)
-  private fun f606(r: ApiExerciseRunner) {
+  private fun f605(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRect2iAndIntArg", "DisplayServer.window_set_ime_rect")
     try {
       DisplayServer.windowSetImeRect(Rect2i(Vector2i(1, 2), Vector2i(3, 4)), 0)
@@ -24507,7 +24491,7 @@ internal object ApiExerciseRows {
   }
 
   // instantiable only in the editor: weak in a game. The plugin only stores the package (SCENE_ROWS)
-  private fun f607(r: ApiExerciseRunner) {
+  private fun f606(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithTwoStringPackedStringListArgs", "EditorExportPlugin.add_apple_embedded_platform_spm_package")
     try {
       if (!ClassDB.canInstantiate("EditorExportPlugin")) {
@@ -24524,7 +24508,7 @@ internal object ApiExerciseRows {
   }
 
   // needs OpenXR on, or the singleton is missing (weak); without a running session Godot answers null (SCENE_ROWS)
-  private fun f608(r: ApiExerciseRunner) {
+  private fun f607(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithObjectListObjectTwoCallableArgsRetObject", "OpenXRSpatialEntityExtension.create_spatial_context")
     try {
       if (!Engine.hasSingleton("OpenXRSpatialEntityExtension")) {
@@ -24540,7 +24524,7 @@ internal object ApiExerciseRows {
   }
 
   // a real 6DOF joint; the read-back is the getter's row (SCENE_ROWS)
-  private fun f609(r: ApiExerciseRunner) {
+  private fun f608(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDAndQuaternionArgs", "PhysicsServer3D.generic_6dof_joint_set_angular_target_rotation")
     try {
       val j = r.joint6dof()
@@ -24553,7 +24537,7 @@ internal object ApiExerciseRows {
   }
 
   // two views with offsets, the shape a headset uses; the server has no getter for them (SCENE_ROWS)
-  private fun f610(r: ApiExerciseRunner) {
+  private fun f609(r: ApiExerciseRunner) {
     r.begin('F', "ptrcallWithRIDProjectionListTransform3DListArgs", "RenderingServer.camera_set_xr_projections")
     try {
       var camera = RID(0L)

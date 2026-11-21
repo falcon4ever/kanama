@@ -106,8 +106,8 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Starts the video playback from the beginning. If the video is paused, this will not unpause the
-     * video.
+     * Starts the video playback from the beginning, unless the video is already playing. Note: If the
+     * video is paused, this will not unpause the video.
      *
      * Generated from Godot docs: VideoStreamPlayer.play
      */
@@ -358,7 +358,8 @@ class VideoStreamPlayer(handle: GodotHandle) : Control(handle) {
     }
 
     /**
-     * Returns the current frame as a `Texture2D`.
+     * Returns the video playback texture. The texture will be continually updated as the video plays,
+     * so call `Texture2D.get_image` to get a still frame.
      *
      * Generated from Godot docs: VideoStreamPlayer.get_video_texture
      */

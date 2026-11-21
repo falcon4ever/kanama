@@ -672,11 +672,35 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
         return Mesh.wrapOwned(ObjectCalls.ptrcallWithIntArgRetObject(Binds.getDrawPassMeshBind, segment, pass))
     }
 
+    /**
+     * Defines a skin to use with particle trails when `trail_enabled` is enabled. It will apply this
+     * skin to a skinned mesh assigned as a draw pass. This should be left empty if using
+     * `RibbonTrailMesh` or `TubeTrailMesh`. Note: Bones will be positioned in the trail in order based
+     * on the ID of the bone, no matter their position in the skeleton. Bone `0`, followed by Bone `1`,
+     * followed by Bone `2`, etc. When making a skinned mesh for this purpose, care should be taken
+     * that the bones are evenly spaced and facing away from the following bone, or the result will
+     * look incorrect. This means that if each parent bone points toward its child, that is 180 degrees
+     * off from what it should be, and could result in a trail that looks "inside-out."
+     *
+     * Generated from Godot docs: GPUParticles3D.set_skin
+     */
     fun setSkin(skin: Skin?) {
         ObjectCalls.ptrcallWithObjectArgs(Binds.setSkinBind, segment, listOf(skin?.requireOpenHandle() ?: NULL_SEGMENT))
         ObjectCalls.keepReachable(skin)
     }
 
+    /**
+     * Defines a skin to use with particle trails when `trail_enabled` is enabled. It will apply this
+     * skin to a skinned mesh assigned as a draw pass. This should be left empty if using
+     * `RibbonTrailMesh` or `TubeTrailMesh`. Note: Bones will be positioned in the trail in order based
+     * on the ID of the bone, no matter their position in the skeleton. Bone `0`, followed by Bone `1`,
+     * followed by Bone `2`, etc. When making a skinned mesh for this purpose, care should be taken
+     * that the bones are evenly spaced and facing away from the following bone, or the result will
+     * look incorrect. This means that if each parent bone points toward its child, that is 180 degrees
+     * off from what it should be, and could result in a trail that looks "inside-out."
+     *
+     * Generated from Godot docs: GPUParticles3D.get_skin
+     */
     fun getSkin(): Skin? {
         return Skin.wrapOwned(ObjectCalls.ptrcallNoArgsRetObject(Binds.getSkinBind, segment))
     }
@@ -743,10 +767,12 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * If `true`, enables particle trails using a mesh skinning system. Designed to work with
-     * `RibbonTrailMesh` and `TubeTrailMesh`. Note: `BaseMaterial3D.use_particle_trails` must also be
-     * enabled on the particle mesh's material. Otherwise, setting `trail_enabled` to `true` will have
-     * no effect. Note: Unlike `GPUParticles2D`, the number of trail sections and subdivisions is set
-     * in the `RibbonTrailMesh` or the `TubeTrailMesh`'s properties.
+     * `RibbonTrailMesh` and `TubeTrailMesh` or with a custom skinned mesh if `draw_skin` is set. Note:
+     * `BaseMaterial3D.use_particle_trails` must also be enabled on the particle mesh's material.
+     * Otherwise, setting `trail_enabled` to `true` will have no effect. Note: Unlike `GPUParticles2D`,
+     * the number of trail sections and subdivisions is set in the `RibbonTrailMesh` or the
+     * `TubeTrailMesh`'s properties. If `draw_skin` is set, the number of trail sections will be based
+     * on the number of bones in the skin.
      *
      * Generated from Godot docs: GPUParticles3D.set_trail_enabled
      */
@@ -766,10 +792,12 @@ class GPUParticles3D(handle: GodotHandle) : GeometryInstance3D(handle) {
 
     /**
      * If `true`, enables particle trails using a mesh skinning system. Designed to work with
-     * `RibbonTrailMesh` and `TubeTrailMesh`. Note: `BaseMaterial3D.use_particle_trails` must also be
-     * enabled on the particle mesh's material. Otherwise, setting `trail_enabled` to `true` will have
-     * no effect. Note: Unlike `GPUParticles2D`, the number of trail sections and subdivisions is set
-     * in the `RibbonTrailMesh` or the `TubeTrailMesh`'s properties.
+     * `RibbonTrailMesh` and `TubeTrailMesh` or with a custom skinned mesh if `draw_skin` is set. Note:
+     * `BaseMaterial3D.use_particle_trails` must also be enabled on the particle mesh's material.
+     * Otherwise, setting `trail_enabled` to `true` will have no effect. Note: Unlike `GPUParticles2D`,
+     * the number of trail sections and subdivisions is set in the `RibbonTrailMesh` or the
+     * `TubeTrailMesh`'s properties. If `draw_skin` is set, the number of trail sections will be based
+     * on the number of bones in the skin.
      *
      * Generated from Godot docs: GPUParticles3D.is_trail_enabled
      */

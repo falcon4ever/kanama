@@ -746,11 +746,13 @@ open class CanvasItem(handle: GodotHandle) : Node(handle) {
     }
 
     /**
-     * Breaks `text` into lines and draws it using the specified `font` at the `pos` in local space
-     * (top-left corner). The text will have its color multiplied by `modulate`. If `width` is greater
-     * than or equal to 0, the text will be clipped if it exceeds the specified width. If
-     * `oversampling` is greater than zero, it is used as font oversampling factor, otherwise viewport
-     * oversampling settings are used.
+     * Breaks `text` into lines and draws it using the specified `font` at the `pos` in local space.
+     * `pos.x` indicates the left side of the column of text (including the full `width` even if the
+     * text is narrower, and regardless of `alignment`); `pos.y` indicates the vertical position of the
+     * baseline of the first line of text. The text will have its color multiplied by `modulate`. If
+     * `width` is greater than or equal to 0, the text will be clipped if it exceeds the specified
+     * width. If `oversampling` is greater than zero, it is used as font oversampling factor, otherwise
+     * viewport oversampling settings are used.
      *
      * Generated from Godot docs: CanvasItem.draw_multiline_string
      */

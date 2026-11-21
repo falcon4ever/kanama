@@ -20,7 +20,7 @@ concurrency:
 
 env:
   # Dash form of kanamaGodotVersion in gradle.properties (the single-source pin).
-  GODOT_VERSION: 4.8-beta2
+  GODOT_VERSION: 4.8-beta4
 
 jobs:
   slow:

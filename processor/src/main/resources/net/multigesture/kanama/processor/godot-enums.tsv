@@ -300,9 +300,9 @@ E	LightmapGIData.ShadowmaskMode	net.multigesture.kanama.api.LightmapGIData.Shado
 E	Line2D.LineCapMode	net.multigesture.kanama.api.Line2D.LineCapMode	enum	NONE=0,BOX=1,ROUND=2
 E	Line2D.LineJointMode	net.multigesture.kanama.api.Line2D.LineJointMode	enum	SHARP=0,BEVEL=1,ROUND=2
 E	Line2D.LineTextureMode	net.multigesture.kanama.api.Line2D.LineTextureMode	enum	NONE=0,TILE=1,STRETCH=2
-E	Line3D.MaterialMode	net.multigesture.kanama.api.Line3D.MaterialMode	enum	MIX=0,ADD=1,CUSTOM=2,MAX=3
-E	Line3D.MeshAlignment	net.multigesture.kanama.api.Line3D.MeshAlignment	enum	LOCAL=0,BILLBOARD=1,MAX=2
-E	Line3D.TilingMode	net.multigesture.kanama.api.Line3D.TilingMode	enum	MODE_STRETCH=0,MODE_TILE=1,MAX=2
+E	LineBase3D.MaterialMode	net.multigesture.kanama.api.LineBase3D.MaterialMode	enum	MIX=0,ADD=1,CUSTOM=2,MAX=3
+E	LineBase3D.MeshAlignment	net.multigesture.kanama.api.LineBase3D.MeshAlignment	enum	LOCAL=0,BILLBOARD=1,MAX=2
+E	LineBase3D.TilingMode	net.multigesture.kanama.api.LineBase3D.TilingMode	enum	MODE_STRETCH=0,MODE_TILE=1,MAX=2
 E	LineEdit.ExpandMode	net.multigesture.kanama.api.LineEdit.ExpandMode	enum	ORIGINAL_SIZE=0,FIT_TO_TEXT=1,FIT_TO_LINE_EDIT=2
 E	LineEdit.MenuItems	net.multigesture.kanama.api.LineEdit.MenuItems	enum	CUT=0,COPY=1,PASTE=2,CLEAR=3,SELECT_ALL=4,UNDO=5,REDO=6,SUBMENU_TEXT_DIR=7,DIR_INHERITED=8,DIR_AUTO=9,DIR_LTR=10,DIR_RTL=11,DISPLAY_UCC=12,SUBMENU_INSERT_UCC=13,INSERT_LRM=14,INSERT_RLM=15,INSERT_LRE=16,INSERT_RLE=17,INSERT_LRO=18,INSERT_RLO=19,INSERT_PDF=20,INSERT_ALM=21,INSERT_LRI=22,INSERT_RLI=23,INSERT_FSI=24,INSERT_PDI=25,INSERT_ZWJ=26,INSERT_ZWNJ=27,INSERT_WJ=28,INSERT_SHY=29,EMOJI_AND_SYMBOL=30,MAX=31
 E	LineEdit.VirtualKeyboardType	net.multigesture.kanama.api.LineEdit.VirtualKeyboardType	enum	DEFAULT=0,MULTILINE=1,NUMBER=2,NUMBER_DECIMAL=3,PHONE=4,EMAIL_ADDRESS=5,PASSWORD=6,URL=7

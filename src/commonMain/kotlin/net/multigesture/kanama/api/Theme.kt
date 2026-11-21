@@ -907,8 +907,7 @@ class Theme(handle: GodotHandle) : Resource(handle) {
      * for `Control.theme_type_variation` on a `Control` that is of the `base_type` class. Variations
      * can also be nested, i.e. `base_type` can be another variation. If a chain of variations ends
      * with a `base_type` matching the class of the `Control`, the whole chain is going to be suggested
-     * as options. Note: Suggestions only show up if this theme resource is set as the project default
-     * theme. See `ProjectSettings.gui/theme/custom`.
+     * as options.
      *
      * Generated from Godot docs: Theme.set_type_variation
      */

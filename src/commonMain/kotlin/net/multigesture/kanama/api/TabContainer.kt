@@ -105,7 +105,10 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The current tab index. When set, this index's `Control` node's `visible` property is set to
-     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected.
+     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected. Note:
+     * Setting this property before the `TabContainer` is in the scene tree will not switch the current
+     * tab, even if the index is within bounds (but the property will still be assigned). The actual
+     * switch will happen when the container enters the tree.
      *
      * Generated from Godot docs: TabContainer.set_current_tab
      */
@@ -115,7 +118,10 @@ class TabContainer(handle: GodotHandle) : Container(handle) {
 
     /**
      * The current tab index. When set, this index's `Control` node's `visible` property is set to
-     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected.
+     * `true` and all others are set to `false`. A value of `-1` means that no tab is selected. Note:
+     * Setting this property before the `TabContainer` is in the scene tree will not switch the current
+     * tab, even if the index is within bounds (but the property will still be assigned). The actual
+     * switch will happen when the container enters the tree.
      *
      * Generated from Godot docs: TabContainer.get_current_tab
      */

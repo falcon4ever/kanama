@@ -102,9 +102,9 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * (see GDScript format strings
      * ($DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html)). If empty, the value is
      * displayed with no special formatting. If the format string is invalid, the `SpinBox` will
-     * display `"ERROR"`, with the error message available as a configuration warning. The following
-     * format strings can be used as examples: - `"(%s)"` displays as a number in parentheses (e.g.
-     * `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
+     * display `"<Invalid>"`, with the error message available as a configuration warning. The
+     * following format strings can be used as examples: - `"(%s)"` displays as a number in parentheses
+     * (e.g. `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
      * `"%0.2f%%"` displays as a percentage, with 2 decimal places of precision (e.g. `21.37%`).
      *
      * Generated from Godot docs: SpinBox.set_format
@@ -118,9 +118,9 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
      * (see GDScript format strings
      * ($DOCS_URL/tutorials/scripting/gdscript/gdscript_format_string.html)). If empty, the value is
      * displayed with no special formatting. If the format string is invalid, the `SpinBox` will
-     * display `"ERROR"`, with the error message available as a configuration warning. The following
-     * format strings can be used as examples: - `"(%s)"` displays as a number in parentheses (e.g.
-     * `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
+     * display `"<Invalid>"`, with the error message available as a configuration warning. The
+     * following format strings can be used as examples: - `"(%s)"` displays as a number in parentheses
+     * (e.g. `(6.9)`). - `"%d ms"` displays as an integer with milliseconds unit (e.g. `420 ms`). -
      * `"%0.2f%%"` displays as a percentage, with 2 decimal places of precision (e.g. `21.37%`).
      *
      * Generated from Godot docs: SpinBox.get_format
@@ -131,7 +131,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
 
     /**
      * Plural version of `format`. Used only if `format` is not empty and `format_auto_translate_mode`
-     * is not disabled. See also `Object.tr_n`.
+     * is not disabled. If either `format` or this contain `%s` the other must also use it. See also
+     * `Object.tr_n`.
      *
      * Generated from Godot docs: SpinBox.set_plural_format
      */
@@ -141,7 +142,8 @@ class SpinBox(handle: GodotHandle) : Range(handle) {
 
     /**
      * Plural version of `format`. Used only if `format` is not empty and `format_auto_translate_mode`
-     * is not disabled. See also `Object.tr_n`.
+     * is not disabled. If either `format` or this contain `%s` the other must also use it. See also
+     * `Object.tr_n`.
      *
      * Generated from Godot docs: SpinBox.get_plural_format
      */
