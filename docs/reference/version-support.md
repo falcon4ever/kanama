@@ -2,14 +2,14 @@
 
 This page lists what you need to install for each way of working with Kanama,
 and how far each platform is supported. The current release is Kanama
-`0.4.0`, on Godot 4.7.2. The `main` branch is on Godot 4.8 beta 4, on its way
+`0.4.0`, on Godot 4.7.2. The `main` branch is on Godot 4.8 beta 2, on its way
 to 0.5.0; see [Godot Version](#godot-version).
 
 ## Requirements
 
 | Workflow | What you need |
 | --- | --- |
-| A desktop project, from a release kit, the store addon or a source checkout | **Godot**, the editor and its export templates: [4.7.2 stable](https://godotengine.org/download/archive/4.7.2-stable/) for release 0.4.0, [4.8 beta 4](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta4) for a checkout of `main` (see [Godot Version](#godot-version)). A **JDK 25** or newer; Temurin 25 is a good choice. A computer running macOS on Apple silicon, Windows x64, Linux x64 or Linux arm64. |
+| A desktop project, from a release kit, the store addon or a source checkout | **Godot**, the editor and its export templates: [4.7.2 stable](https://godotengine.org/download/archive/4.7.2-stable/) for release 0.4.0, [4.8 beta 2](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta2) for a checkout of `main` (see [Godot Version](#godot-version)). A **JDK 25** or newer; Temurin 25 is a good choice. A computer running macOS on Apple silicon, Windows x64, Linux x64 or Linux arm64. |
 | A source checkout | Everything in the first row, plus **CMake 3.22** or newer and a C compiler, because the checkout builds Kanama's native library. Release kits and the store addon ship that library prebuilt. You do not need Godot's source code. |
 | Exporting for Android | The Android export templates of that Godot, a **JDK 21** for Godot's Android build, and the Android SDK packages listed in [Export for Android](../exporting/android.md#requirements). Kanama and your scripts still build with your JDK 25. |
 | Exporting for iOS | The iOS export templates of that Godot, a Mac with the full Xcode app and 16 GB of memory, and an Apple Developer account. See [Export for iOS](../exporting/ios.md#requirements). |
@@ -46,7 +46,7 @@ version for the editor, the export templates and the games you ship:
 | Your Kanama | Godot |
 | --- | --- |
 | Release 0.4.0: a release kit or the store addon | 4.7.2 stable |
-| A source checkout of `main` | 4.8 beta 4 |
+| A source checkout of `main` | 4.8 beta 2 |
 | Release 0.5.0, not out yet | 4.8 stable |
 
 If you use a release, you never need a beta: a Kanama release ships only on a

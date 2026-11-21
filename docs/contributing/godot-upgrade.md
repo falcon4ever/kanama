@@ -18,9 +18,9 @@ in flight should land first.
 
 The baseline has one source of truth: `kanamaGodotVersion` in
 `gradle.properties`, in Godot's own spelling (`4.8.stable` for a `.0` release,
-`4.7.2.stable` for a maintenance release, `4.8.beta4` for a prerelease). The CI
+`4.7.2.stable` for a maintenance release, `4.8.beta2` for a prerelease). The CI
 workflows carry the same version in dash form (`GODOT_VERSION: 4.8-stable` or
-`4.8-beta4`, the GitHub release tag) in
+`4.8-beta2`, the GitHub release tag) in
 `package.yml`, `ci.yml`, `web.yml` and `gate-red-runs-nightly.yml`, and
 `web.yml` derives the export-template folder from it. Everything else reads the
 property. `scripts/check_godot_version_pin.py` fails the build when a pin
@@ -33,7 +33,7 @@ releases follow the same runbook; the diff is just smaller.
   the new version (`Godot_v<version>_macos.arm64.zip` or
   `Godot_v<version>_macos.universal.zip`, whichever the release ships, and
   `Godot_v<version>_export_templates.tpz`; `<version>` is the dash form the
-  workflows use, such as `4.8-stable`, and a prerelease is `4.8-beta4`).
+  workflows use, such as `4.8-stable`, and a prerelease is `4.8-beta2`).
   `GODOT_VERSION=<version> scripts/download_godot_macos.sh <zip>` downloads the
   macOS editor.
 - `JEXTRACT_HOME` pointing at a jextract 25+ install, unpacked from the OpenJDK
@@ -314,20 +314,30 @@ real bump starts from a proven pipeline.
 Behaviour of the pinned Godot that is not expected to last. Read this list at
 every bump, confirm each item, and delete it once it is settled.
 
-Nothing is open at the moment.
+- **`Node.replace_by` on 4.8 beta 2.** On this build `Node.replace_by` also moves
+  internal children and takes `keep_owned_children`. Upstream reverted that change
+  on `master` (`06e0b37ce`). At the next bump, confirm that:
+    - the parameter is gone from `extension_api.json` and from `Node.replaceBy`;
+    - the API changes since 4.7.2 drop from 19 signatures to 18. The signature gate
+      counts 15 of the 19 as breaks and 4 as compatible; `Node.replaceBy` is one of
+      the 4. Losing the parameter is a change against the snapshot, so keep its
+      `Source break` line in `CHANGELOG.md` until `--write` has recorded it, then
+      remove the line: no release ever had the parameter;
+    - internal children stay put: a node with an `INTERNAL_MODE_FRONT` child keeps
+      that child after `replace_by`.
 
 ## Pinning a Prerelease
 
 To put `main` on a beta or rc, or to see what one would break on a throwaway
 branch, add `--prerelease` to the same commands. It accepts a pin such as
-`4.8.beta4` and a source checkout whose `version.py` says `beta`. A prerelease
+`4.8.beta2` and a source checkout whose `version.py` says `beta`. A prerelease
 differs from a stable bump in two ways:
 
 - **A tag refuses it.** `main` can merge the pin and run every gate on it, but no
   release is cut until the pin is stable. Manual runs of the package workflow
   still build, for testing the packages.
 - **The download names change.** The release tag and the files carry the same
-  dash form (`4.8-beta4`, `Godot_v4.8-beta4_linux.x86_64.zip`), so the workflows
+  dash form (`4.8-beta2`, `Godot_v4.8-beta2_linux.x86_64.zip`), so the workflows
   need nothing for that. A 4.8 prerelease has no universal macOS zip;
   `scripts/download_godot_macos.sh` takes the `macos.arm64` zip when a release
   has one, and `macos.universal` when not.
