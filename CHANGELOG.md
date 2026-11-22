@@ -74,7 +74,8 @@ regressions, and the API barely moves. `Trail3D` extends the new abstract `LineB
 beta 2: write `LineBase3D.MaterialMode` and the other enums where you wrote `Line3D.MaterialMode`. `Node.replaceBy`
 loses the `keepOwnedChildren` parameter beta 2 had, and internal children stay with the replaced node again, as on
 4.7. `RenderingDevice.textureGetNearestSupportedSamples` is new. No release had `Line3D` or the parameter, so neither
-is a source break against 0.4.
+is a source break against 0.4. `ClassDB.classCallStatic` with a class or method that does not exist, or a method that is
+not static, now throws, as GDScript reports it, instead of returning null.
 
 #### Fixed — integer engine calls use Godot's 8-byte cells, and script virtuals return the right types
 
