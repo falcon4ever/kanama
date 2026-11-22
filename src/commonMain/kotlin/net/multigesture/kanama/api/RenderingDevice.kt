@@ -254,6 +254,20 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
     }
 
     /**
+     * Returns the sample count that `texture_create` will use for `format`. This is
+     * `RDTextureFormat.samples` if the driver supports that sample count for the format and usage,
+     * otherwise the nearest lower supported sample count. Use this to know the actual sample count in
+     * advance, for example when choosing a matching sample count for shaders or pipelines.
+     *
+     * Generated from Godot docs: RenderingDevice.texture_get_nearest_supported_samples
+     */
+    fun textureGetNearestSupportedSamples(format: RDTextureFormat?): RenderingDevice.TextureSamples {
+        val ret = RenderingDevice.TextureSamples(ObjectCalls.ptrcallWithObjectArgRetLong(Binds.textureGetNearestSupportedSamplesBind, segment, format?.requireOpenHandle() ?: NULL_SEGMENT))
+        ObjectCalls.keepReachable(format)
+        return ret
+    }
+
+    /**
      * Returns the internal graphics handle for this texture object. For use when communicating with
      * third-party APIs mostly with GDExtension. Note: This function returns a `uint64_t` which
      * internally maps to a `GLuint` (OpenGL) or `VkImage` (Vulkan).
@@ -5764,6 +5778,11 @@ class RenderingDevice(handle: GodotHandle) : GodotObject(handle) {
         @JvmField
         val textureGetFormatBind =
             ObjectCalls.getMethodBind("RenderingDevice", "texture_get_format", TEXTURE_GET_FORMAT_HASH)
+
+        private const val TEXTURE_GET_NEAREST_SUPPORTED_SAMPLES_HASH = 1603719724L
+        @JvmField
+        val textureGetNearestSupportedSamplesBind =
+            ObjectCalls.getMethodBind("RenderingDevice", "texture_get_nearest_supported_samples", TEXTURE_GET_NEAREST_SUPPORTED_SAMPLES_HASH)
 
         private const val TEXTURE_GET_NATIVE_HANDLE_HASH = 3917799429L
         @JvmField

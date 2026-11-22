@@ -416,7 +416,7 @@ internal object SharedGodotClasses : GodotClassTable() {
         LightmapperRD::class,
         LimitAngularVelocityModifier3D::class,
         Line2D::class,
-        Line3D::class,
+        LineBase3D::class,
         LineEdit::class,
         LinkButton::class,
         Logger::class,
@@ -1446,7 +1446,7 @@ internal object SharedGodotClasses : GodotClassTable() {
         "LightmapperRD",
         "LimitAngularVelocityModifier3D",
         "Line2D",
-        "Line3D",
+        "LineBase3D",
         "LineEdit",
         "LinkButton",
         "Logger",
@@ -2476,7 +2476,7 @@ internal object SharedGodotClasses : GodotClassTable() {
         404 -> LightmapperRD(handle)
         405 -> LimitAngularVelocityModifier3D(handle)
         406 -> Line2D(handle)
-        407 -> Line3D(handle)
+        407 -> LineBase3D(handle)
         408 -> LineEdit(handle)
         409 -> LinkButton(handle)
         410 -> Logger(handle)

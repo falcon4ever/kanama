@@ -13,7 +13,7 @@ bump can't land a partial upgrade.
     python3 scripts/check_godot_version_pin.py --skip-api-header # pins only (before the API re-dump)
     python3 scripts/check_godot_version_pin.py --release         # refuse a pin a release may not ship on
 
-A prerelease pin (`4.8.beta2`) may live on main; a release may not. `--release` fails unless the pin is
+A prerelease pin (`4.8.beta4`) may live on main; a release may not. `--release` fails unless the pin is
 a stable Godot, and `package.yml` runs it first on every `v*` tag, in the job every package job needs, so
 a tag on a prerelease pin publishes nothing. The plain gate fails when that step is gone from the workflow,
 when a package job has no `needs` path to that job (it would start, and build, on a refused tag), or when a

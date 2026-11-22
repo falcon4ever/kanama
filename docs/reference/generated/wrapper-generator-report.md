@@ -17,8 +17,8 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 | API classes | 1069 |
 | Classes with generated output | 874 |
 | Classes with complete method generation | 785 |
-| Methods generated | 15696/17203 (91.2%) |
-| Methods skipped | 1507 |
+| Methods generated | 15697/17205 (91.2%) |
+| Methods skipped | 1508 |
 | Properties generated | 4199/4270 (98.3%) |
 | Signals generated | 518/518 (100.0%) |
 
@@ -26,7 +26,7 @@ Generated drafts are not automatically promoted. A class only becomes public sou
 
 | Category | Skipped Methods |
 | --- | ---: |
-| Virtual/internal | 1448 |
+| Virtual/internal | 1449 |
 | Other | 49 |
 | Missing helper shape | 5 |
 | Dictionary | 2 |
@@ -48,7 +48,7 @@ These are the highest-leverage ptrcall helper shapes to add next, excluding broa
 
 | Reason | Count |
 | --- | ---: |
-| `internal/virtual callback methods are not emitted as public wrappers` | 1448 |
+| `internal/virtual callback methods are not emitted as public wrappers` | 1449 |
 | `root Object methods are exposed through the hand-shaped GodotObject policy` | 49 |
 | `by design: Dictionary->Dictionary passthrough via the generic Map<String, Any?> helper silently drops non-String keys; shape reverted in 27b06fe6 (editor-LSP only)` | 2 |
 | `ownership-sensitive RefCounted lifetime method is hand-shaped` | 2 |
@@ -72,7 +72,7 @@ These classes have every method covered by the conservative generator. Promotion
 | BaseMaterial3D | 154/154 | 132/132 | 0/0 |
 | RichTextLabel | 147/147 | 34/34 | 4/4 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 |
-| RenderingDevice | 135/135 | 0/0 | 0/0 |
+| RenderingDevice | 136/136 | 0/0 | 0/0 |
 | Viewport | 130/130 | 50/50 | 2/2 |
 | TreeItem | 125/125 | 4/4 | 0/0 |
 | PhysicsServer2D | 119/119 | 0/0 | 0/0 |
@@ -170,7 +170,7 @@ These classes have every method covered by the conservative generator. Promotion
 | RichTextLabel | 147/147 | 34/34 | 4/4 | 0 |
 | Window | 141/142 | 42/42 | 16/16 | 1 |
 | NavigationServer2D | 137/137 | 0/0 | 3/3 | 0 |
-| RenderingDevice | 135/135 | 0/0 | 0/0 | 0 |
+| RenderingDevice | 136/136 | 0/0 | 0/0 | 0 |
 | Viewport | 130/130 | 50/50 | 2/2 | 0 |
 | TreeItem | 125/125 | 4/4 | 0/0 | 0 |
 | Node | 121/133 | 14/14 | 11/11 | 12 |

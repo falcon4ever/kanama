@@ -15,7 +15,7 @@ import net.multigesture.kanama.types.Color
  *
  * Generated from Godot docs: Trail3D
  */
-class Trail3D(handle: GodotHandle) : Line3D(handle) {
+class Trail3D(handle: GodotHandle) : LineBase3D(handle) {
     var emitting: Boolean
         @JvmName("emittingProperty")
         get() = isEmitting()
@@ -64,13 +64,13 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
         @JvmName("setColorGradientProperty")
         set(value) = setColorGradient(value)
 
-    var meshAlignment: Line3D.MeshAlignment
+    var meshAlignment: LineBase3D.MeshAlignment
         @JvmName("meshAlignmentProperty")
         get() = getMeshAlignment()
         @JvmName("setMeshAlignmentProperty")
         set(value) = setMeshAlignment(value)
 
-    var materialMode: Line3D.MaterialMode
+    var materialMode: LineBase3D.MaterialMode
         @JvmName("materialModeProperty")
         get() = getMaterialMode()
         @JvmName("setMaterialModeProperty")
@@ -82,7 +82,7 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
         @JvmName("setMaterialProperty")
         set(value) = setMaterial(value)
 
-    var tilingMode: Line3D.TilingMode
+    var tilingMode: LineBase3D.TilingMode
         @JvmName("tilingModeProperty")
         get() = getTilingMode()
         @JvmName("setTilingModeProperty")
@@ -221,7 +221,7 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
      *
      * Generated from Godot docs: Trail3D.set_material_mode
      */
-    fun setMaterialMode(materialMode: Line3D.MaterialMode) {
+    fun setMaterialMode(materialMode: LineBase3D.MaterialMode) {
         ObjectCalls.ptrcallWithLongArg(Binds.setMaterialModeBind, segment, materialMode.value)
     }
 
@@ -230,12 +230,13 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
      *
      * Generated from Godot docs: Trail3D.get_material_mode
      */
-    fun getMaterialMode(): Line3D.MaterialMode {
-        return Line3D.MaterialMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMaterialModeBind, segment))
+    fun getMaterialMode(): LineBase3D.MaterialMode {
+        return LineBase3D.MaterialMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMaterialModeBind, segment))
     }
 
     /**
-     * The material to assign to the trail mesh when `material_mode` is `Line3D.MaterialMode.CUSTOM`.
+     * The material to assign to the trail mesh when `material_mode` is
+     * `LineBase3D.MaterialMode.CUSTOM`.
      *
      * Generated from Godot docs: Trail3D.set_material
      */
@@ -245,7 +246,8 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
     }
 
     /**
-     * The material to assign to the trail mesh when `material_mode` is `Line3D.MaterialMode.CUSTOM`.
+     * The material to assign to the trail mesh when `material_mode` is
+     * `LineBase3D.MaterialMode.CUSTOM`.
      *
      * Generated from Godot docs: Trail3D.get_material
      */
@@ -254,23 +256,23 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
     }
 
     /**
-     * Alignment of the trail. Possible options are `Line3D.MeshAlignment.LOCAL` for a 3D line, and
-     * `Line3D.MeshAlignment.BILLBOARD` for a billboarded line.
+     * Alignment of the trail. Possible options are `LineBase3D.MeshAlignment.LOCAL` for a 3D line, and
+     * `LineBase3D.MeshAlignment.BILLBOARD` for a billboarded line.
      *
      * Generated from Godot docs: Trail3D.set_mesh_alignment
      */
-    fun setMeshAlignment(alignment: Line3D.MeshAlignment) {
+    fun setMeshAlignment(alignment: LineBase3D.MeshAlignment) {
         ObjectCalls.ptrcallWithLongArg(Binds.setMeshAlignmentBind, segment, alignment.value)
     }
 
     /**
-     * Alignment of the trail. Possible options are `Line3D.MeshAlignment.LOCAL` for a 3D line, and
-     * `Line3D.MeshAlignment.BILLBOARD` for a billboarded line.
+     * Alignment of the trail. Possible options are `LineBase3D.MeshAlignment.LOCAL` for a 3D line, and
+     * `LineBase3D.MeshAlignment.BILLBOARD` for a billboarded line.
      *
      * Generated from Godot docs: Trail3D.get_mesh_alignment
      */
-    fun getMeshAlignment(): Line3D.MeshAlignment {
-        return Line3D.MeshAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMeshAlignmentBind, segment))
+    fun getMeshAlignment(): LineBase3D.MeshAlignment {
+        return LineBase3D.MeshAlignment(ObjectCalls.ptrcallNoArgsRetLong(Binds.getMeshAlignmentBind, segment))
     }
 
     /**
@@ -296,7 +298,7 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
      *
      * Generated from Godot docs: Trail3D.set_tiling_mode
      */
-    fun setTilingMode(tilingMode: Line3D.TilingMode) {
+    fun setTilingMode(tilingMode: LineBase3D.TilingMode) {
         ObjectCalls.ptrcallWithLongArg(Binds.setTilingModeBind, segment, tilingMode.value)
     }
 
@@ -305,8 +307,8 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
      *
      * Generated from Godot docs: Trail3D.get_tiling_mode
      */
-    fun getTilingMode(): Line3D.TilingMode {
-        return Line3D.TilingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTilingModeBind, segment))
+    fun getTilingMode(): LineBase3D.TilingMode {
+        return LineBase3D.TilingMode(ObjectCalls.ptrcallNoArgsRetLong(Binds.getTilingModeBind, segment))
     }
 
     /**
@@ -512,12 +514,12 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
         val getColorGradientBind =
             ObjectCalls.getMethodBind("Trail3D", "get_color_gradient", GET_COLOR_GRADIENT_HASH)
 
-        private const val SET_MATERIAL_MODE_HASH = 2165032565L
+        private const val SET_MATERIAL_MODE_HASH = 838352442L
         @JvmField
         val setMaterialModeBind =
             ObjectCalls.getMethodBind("Trail3D", "set_material_mode", SET_MATERIAL_MODE_HASH)
 
-        private const val GET_MATERIAL_MODE_HASH = 3629890196L
+        private const val GET_MATERIAL_MODE_HASH = 3506372543L
         @JvmField
         val getMaterialModeBind =
             ObjectCalls.getMethodBind("Trail3D", "get_material_mode", GET_MATERIAL_MODE_HASH)
@@ -532,12 +534,12 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
         val getMaterialBind =
             ObjectCalls.getMethodBind("Trail3D", "get_material", GET_MATERIAL_HASH)
 
-        private const val SET_MESH_ALIGNMENT_HASH = 3254932473L
+        private const val SET_MESH_ALIGNMENT_HASH = 1728914772L
         @JvmField
         val setMeshAlignmentBind =
             ObjectCalls.getMethodBind("Trail3D", "set_mesh_alignment", SET_MESH_ALIGNMENT_HASH)
 
-        private const val GET_MESH_ALIGNMENT_HASH = 603151927L
+        private const val GET_MESH_ALIGNMENT_HASH = 1842977196L
         @JvmField
         val getMeshAlignmentBind =
             ObjectCalls.getMethodBind("Trail3D", "get_mesh_alignment", GET_MESH_ALIGNMENT_HASH)
@@ -552,12 +554,12 @@ class Trail3D(handle: GodotHandle) : Line3D(handle) {
         val getTilingMultiplierBind =
             ObjectCalls.getMethodBind("Trail3D", "get_tiling_multiplier", GET_TILING_MULTIPLIER_HASH)
 
-        private const val SET_TILING_MODE_HASH = 3698560511L
+        private const val SET_TILING_MODE_HASH = 3386846958L
         @JvmField
         val setTilingModeBind =
             ObjectCalls.getMethodBind("Trail3D", "set_tiling_mode", SET_TILING_MODE_HASH)
 
-        private const val GET_TILING_MODE_HASH = 1009472955L
+        private const val GET_TILING_MODE_HASH = 73744199L
         @JvmField
         val getTilingModeBind =
             ObjectCalls.getMethodBind("Trail3D", "get_tiling_mode", GET_TILING_MODE_HASH)

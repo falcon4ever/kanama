@@ -13,8 +13,8 @@ Generated drafts are emitted to `build/wrapper-generator/drafts` during local ru
 | API classes | 1069 |  |
 | Classes with generated output | 874 | `██████████░░` 81.8% |
 | Classes with complete method generation | 785 | `█████████░░░` 73.4% |
-| Methods generated | 15696/17203 (91.2%) | `███████████░` 91.2% |
-| Methods skipped | 1507 |  |
+| Methods generated | 15697/17205 (91.2%) | `███████████░` 91.2% |
+| Methods skipped | 1508 |  |
 | Properties generated | 4199/4270 (98.3%) | `████████████` 98.3% |
 | Signals generated | 518/518 (100.0%) | `████████████` 100.0% |
 
@@ -28,7 +28,7 @@ These numbers count only checked-in Kotlin API wrappers. Class coverage may incl
 Rows marked `inherited only` are promoted wrappers whose Godot class declares no own methods in `extension_api.json`; behavior comes from their parent wrapper.
 
 - Classes: 1069 / 1069 `████████████` 100.0%
-- Methods: 15746 / 15755 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
+- Methods: 15747 / 15756 `████████████` 99.9% (callable methods; engine virtuals excluded — see below)
 
 ### Per-Platform Class Sets
 
@@ -39,7 +39,7 @@ One generated tree, held to the single-tree drift gate (`check_single_tree`: com
 
 ## Virtual Methods
 
-`extension_api.json` declares **1448** engine virtual methods (the `_*` callbacks). These are not wrapped as callable methods — a script overrides them with `@OverrideVirtual` (Phase 5), where the Kotlin function name is the virtual name (GDScript-style `fun _draw()`). The processor validates each override against a generated signature table (`scripts/generate_virtual_signature_table.py`, all virtuals) and dispatches it on both targets. They are reported here separately so they neither dilute callable-method coverage nor count as wrapper gaps. Practical marshalling bounds (tasks 13 + 29): desktop/Android cover **every** Variant-expressible return family — the audited scalar/POD shapes, String, all Packed* arrays, Dictionary (`Map<String, Any?>`), generic/typed Array (`List<Any?>`), RID, Rect2, AABB, Transform2D, Transform3D, Projection, and Variant (`Any?`); the only excluded returns are the 6 raw-pointer virtuals (`void*`, `const Glyph*`), which are not Variant-expressible by design (see wrapper-maintenance.md). iOS value-returns cover Bool/Int/Float/Vector2/Vector2i/Vector3/String/RID, all fixed-element Packed* arrays, PackedStringArray, Dictionary, generic Array, and Variant returns over that audited inner-type set (unaudited inner types serialize as nil on iOS); the Rect2/AABB/Transform2D/Transform3D/Projection returns stay desktop/Android-only for now (by design, wrapper-maintenance.md).
+`extension_api.json` declares **1449** engine virtual methods (the `_*` callbacks). These are not wrapped as callable methods — a script overrides them with `@OverrideVirtual` (Phase 5), where the Kotlin function name is the virtual name (GDScript-style `fun _draw()`). The processor validates each override against a generated signature table (`scripts/generate_virtual_signature_table.py`, all virtuals) and dispatches it on both targets. They are reported here separately so they neither dilute callable-method coverage nor count as wrapper gaps. Practical marshalling bounds (tasks 13 + 29): desktop/Android cover **every** Variant-expressible return family — the audited scalar/POD shapes, String, all Packed* arrays, Dictionary (`Map<String, Any?>`), generic/typed Array (`List<Any?>`), RID, Rect2, AABB, Transform2D, Transform3D, Projection, and Variant (`Any?`); the only excluded returns are the 6 raw-pointer virtuals (`void*`, `const Glyph*`), which are not Variant-expressible by design (see wrapper-maintenance.md). iOS value-returns cover Bool/Int/Float/Vector2/Vector2i/Vector3/String/RID, all fixed-element Packed* arrays, PackedStringArray, Dictionary, generic Array, and Variant returns over that audited inner-type set (unaudited inner types serialize as nil on iOS); the Rect2/AABB/Transform2D/Transform3D/Projection returns stay desktop/Android-only for now (by design, wrapper-maintenance.md).
 
 ## Promoted Source By Area
 
@@ -53,7 +53,7 @@ One generated tree, held to the single-tree drift gate (`check_single_tree`: com
 | 2D | 119/119 | `████████████` 100.0% | 2077/2077 | `████████████` 100.0% |
 | 3D | 180/180 | `████████████` 100.0% | 3117/3117 | `████████████` 100.0% |
 | Physics | 6/6 | `████████████` 100.0% | 55/55 | `████████████` 100.0% |
-| Rendering | 27/27 | `████████████` 100.0% | 810/810 | `████████████` 100.0% |
+| Rendering | 27/27 | `████████████` 100.0% | 811/811 | `████████████` 100.0% |
 | Audio | 14/14 | `████████████` 100.0% | 232/232 | `████████████` 100.0% |
 | Multiplayer | 8/8 | `████████████` 100.0% | 66/66 | `████████████` 100.0% |
 | Editor | 54/54 | `████████████` 100.0% | 455/455 | `████████████` 100.0% |
@@ -494,7 +494,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `LightmapperRD` | Rendering | 0/0 | inherited only |
 | `LimitAngularVelocityModifier3D` | 3D | 16/16 | `████████` 100.0% |
 | `Line2D` | 2D | 34/34 | `████████` 100.0% |
-| `Line3D` | 3D | 0/0 | inherited only |
+| `LineBase3D` | 3D | 0/0 | inherited only |
 | `LineEdit` | UI | 97/97 | `████████` 100.0% |
 | `LinkButton` | UI | 18/18 | `████████` 100.0% |
 | `Logger` | Core | 0/0 | inherited only |
@@ -774,7 +774,7 @@ These notes summarize wrapper feedback from real ports. They are contextual sign
 | `RenderSceneData` | Core | 6/6 | `████████` 100.0% |
 | `RenderSceneDataExtension` | Core | 0/0 | inherited only |
 | `RenderSceneDataRD` | Core | 0/0 | inherited only |
-| `RenderingDevice` | Rendering | 135/135 | `████████` 100.0% |
+| `RenderingDevice` | Rendering | 136/136 | `████████` 100.0% |
 | `RenderingServer` | Rendering | 542/542 | `████████` 100.0% |
 | `Resource` | Resources | 22/22 | `████████` 100.0% |
 | `ResourceFormatLoader` | Core | 0/0 | inherited only |

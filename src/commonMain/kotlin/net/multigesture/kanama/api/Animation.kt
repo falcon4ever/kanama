@@ -479,7 +479,10 @@ class Animation(handle: GodotHandle) : Resource(handle) {
     }
 
     /**
-     * If `true`, the track at `track_idx` wraps the interpolation loop.
+     * If `true`, the track at `track_idx` wraps the interpolation loop. Note: If `interpolation` is
+     * `true`, the animation interpolates between the last and first key of the track. If the last key
+     * is placed exactly at the end of the animation, it is ignored as being placed outside the looped
+     * animation range.
      *
      * Generated from Godot docs: Animation.track_set_interpolation_loop_wrap
      */
@@ -1190,7 +1193,9 @@ class Animation(handle: GodotHandle) : Resource(handle) {
             /**
              * Cubic interpolation. This looks smoother than linear interpolation, but is more expensive to
              * interpolate. Stick to `InterpolationType.LINEAR` for complex 3D animations imported from
-             * external software, even if it requires using a higher animation framerate in return.
+             * external software, even if it requires using a higher animation framerate in return. Note: If
+             * the last and first keys have different values and are close to the ends of the track, a huge
+             * overshoot in interpolation may occur if `track_set_interpolation_loop_wrap` is set to `true`.
              *
              * Generated from Godot docs: Animation.INTERPOLATION_CUBIC
              */

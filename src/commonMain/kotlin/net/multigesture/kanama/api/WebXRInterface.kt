@@ -99,7 +99,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of required features used by `XRInterface.initialize` when setting up the
+     * A comma-separated list of required features used by `XRInterface.initialize` when setting up the
      * WebXR session. If a user's browser or device doesn't support one of the given features,
      * initialization will fail and `session_failed` will be emitted. This doesn't have any effect on
      * the interface when already initialized. See the MDN documentation on WebXR's session features
@@ -115,7 +115,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of required features used by `XRInterface.initialize` when setting up the
+     * A comma-separated list of required features used by `XRInterface.initialize` when setting up the
      * WebXR session. If a user's browser or device doesn't support one of the given features,
      * initialization will fail and `session_failed` will be emitted. This doesn't have any effect on
      * the interface when already initialized. See the MDN documentation on WebXR's session features
@@ -132,7 +132,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of optional features used by `XRInterface.initialize` when setting up the
+     * A comma-separated list of optional features used by `XRInterface.initialize` when setting up the
      * WebXR session. If a user's browser or device doesn't support one of the given features,
      * initialization will continue, but you won't be able to use the requested feature. This doesn't
      * have any effect on the interface when already initialized. See the MDN documentation on WebXR's
@@ -149,7 +149,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of optional features used by `XRInterface.initialize` when setting up the
+     * A comma-separated list of optional features used by `XRInterface.initialize` when setting up the
      * WebXR session. If a user's browser or device doesn't support one of the given features,
      * initialization will continue, but you won't be able to use the requested feature. This doesn't
      * have any effect on the interface when already initialized. See the MDN documentation on WebXR's
@@ -187,8 +187,8 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
      * A comma-separated list of features that were successfully enabled by `XRInterface.initialize`
      * when setting up the WebXR session. This may include features requested by setting
      * `required_features` and `optional_features`, and will only be available after `session_started`
-     * has been emitted. Note: This may not be support by all web browsers, in which case it will be an
-     * empty string.
+     * has been emitted. Note: This may not be supported by all web browsers, in which case it will be
+     * an empty string.
      *
      * Generated from Godot docs: WebXRInterface.get_enabled_features
      */
@@ -200,7 +200,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of reference space types used by `XRInterface.initialize` when setting up
+     * A comma-separated list of reference space types used by `XRInterface.initialize` when setting up
      * the WebXR session. The reference space types are requested in order, and the first one supported
      * by the user's device or browser will be used. The `reference_space_type` property contains the
      * reference space type that was ultimately selected. This doesn't have any effect on the interface
@@ -218,7 +218,7 @@ class WebXRInterface(handle: GodotHandle) : XRInterface(handle) {
     }
 
     /**
-     * A comma-seperated list of reference space types used by `XRInterface.initialize` when setting up
+     * A comma-separated list of reference space types used by `XRInterface.initialize` when setting up
      * the WebXR session. The reference space types are requested in order, and the first one supported
      * by the user's device or browser will be used. The `reference_space_type` property contains the
      * reference space type that was ultimately selected. This doesn't have any effect on the interface

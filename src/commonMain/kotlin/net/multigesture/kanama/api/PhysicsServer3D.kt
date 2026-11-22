@@ -746,7 +746,7 @@ object PhysicsServer3D {
     }
 
     /**
-     * Assigns the area to a descendant of `Object`, so it can exist in the node tree.
+     * Assigns the body to a descendant of `Object`, so it can exist in the node tree.
      *
      * Generated from Godot docs: PhysicsServer3D.body_attach_object_instance_id
      */

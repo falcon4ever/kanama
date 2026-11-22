@@ -11,7 +11,7 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg"></a>
-  <img alt="Godot 4.7.2 stable, main on 4.8 beta 2" src="https://img.shields.io/badge/Godot-4.7.2_stable%20%7C%20main%3A%204.8_beta_2-478cbf.svg">
+  <img alt="Godot 4.7.2 stable, main on 4.8 beta 4" src="https://img.shields.io/badge/Godot-4.7.2_stable%20%7C%20main%3A%204.8_beta_4-478cbf.svg">
   <img alt="JDK 25+" src="https://img.shields.io/badge/JDK-25%2B-f89820.svg">
   <img alt="Android: supported" src="https://img.shields.io/badge/Android-supported-3ddc84.svg">
   <img alt="iOS: supported" src="https://img.shields.io/badge/iOS-supported-000000.svg">
@@ -55,7 +55,7 @@ class Player(godotObject: GodotHandle) :
 
 You need [Godot 4.7.2](https://godotengine.org/download/archive/4.7.2-stable/)
 and a JDK 25 or newer for release 0.4.0. (A checkout of `main` needs
-[Godot 4.8 beta 2](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta2);
+[Godot 4.8 beta 4](https://github.com/godotengine/godot-builds/releases/tag/4.8-beta4);
 see [Godot Version](docs/reference/version-support.md#godot-version).)
 Download a desktop kit for your machine from the
 [releases page](https://github.com/falcon4ever/kanama/releases), unzip it, and

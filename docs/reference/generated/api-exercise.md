@@ -13,7 +13,7 @@ scratch directory, the singleton rows, the Variant type values) are hand-kept in
 the desktop smoke and in the iOS self-test build, the C, A, B and D rows asserting values, the F rows
 reach only, and the T rows one value per Godot Variant type through each generic Variant path.
 
-**Referenced helpers:** 1504 (1499 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15699 generated (13320 instance, 2263 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 896 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 549 (of the 549 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 611; excluded 339. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
+**Referenced helpers:** 1504 (1499 called by generated methods with a MethodBind, 5 runtime helpers). **MethodBind call sites:** 15700 generated (13321 instance, 2263 singleton, 116 static) and 55 in the hand-written roots (`GodotObject`, `RefCounted`); 897 helpers have exactly one call site. **Helpers with a row that asserts a value a no-op cannot produce:** 549 (of the 549 whose best case is C/A/B/D: 0 have only a weak row, and 5 weak C rows are backed by a non-weak A/B/D row of the same helper); reach-only 610; excluded 340. A B or D row is weak at run time when its result is its type's zero (a fresh object's empty state): the runs count those apart (`weak` in the summary line), so this count is an upper bound.
 
 ## Cases
 
@@ -28,8 +28,8 @@ on a healthy host (**weak**), and then the second row is the one that can tell a
 | A property pair | setter or getter of a non-indexed property of an instantiable class (or its receiver below), or of a `SINGLETON_PAIRS` singleton, or a `SINGLETON_KEYED_PAIRS` method | a value set through the wrapper reads back through the getter and `Object.get` (on a singleton, the value read first is set back in a `finally`) | 91 |
 | B const oracle | const non-void instance method on such a class (or an argument-free RID factory of a `RID_FACTORIES` class) | the wrapper's result equals `Object.call` with the same arguments on the same object; a result equal to its type's zero is **weak** (counted apart, not failed) | 316 |
 | D singleton | const non-void method of a non-excluded singleton, any non-void method of a stateless singleton, or an argument-free RID factory of a `RID_FACTORIES` server | the wrapper's result equals `Object.call` on the singleton (weak as B); a factory returns a valid RID, one read of it agrees on both paths, and the RID is freed | 97 |
-| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 611 |
-| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 339 |
+| F reach only | void or non-const methods, void statics, `METHOD_OVERRIDES` (clock reads, a new object per call) | the call returns without an exception or a backend fault | 610 |
+| E excluded | every site is on an excluded or editor class, on an abstract class without a receiver, or a method `METHOD_OVERRIDES` excludes | nothing; listed below with the reason | 340 |
 | N runtime helper | no generated method calls it with a MethodBind | nothing of its own: every row uses it | 5 |
 
 179 of the rows get their receiver elsewhere than a fresh instance of the declaring class (a descendant,
@@ -48,11 +48,11 @@ The generated iOS helpers by the type tags their bodies pack (a helper counts on
 
 | tag | helpers | sites | C | A | B | D | F | E |
 |---|---|---|---|---|---|---|---|---|
-| `PT_INT64` | 833 | 3524 | 19 | 2 | 199 | 32 | 349 | 232 |
-| `PT_VOID` | 578 | 2971 | – | 34 | – | – | 432 | 112 |
+| `PT_INT64` | 833 | 3525 | 19 | 2 | 199 | 32 | 349 | 232 |
+| `PT_VOID` | 578 | 2971 | – | 34 | – | – | 431 | 113 |
 | `PT_RID` | 368 | 1770 | – | 2 | 56 | 42 | 178 | 90 |
-| `PT_BOOL` | 352 | 1287 | 9 | – | 65 | 25 | 170 | 83 |
-| `PT_OBJECT` | 273 | 705 | 20 | – | 28 | 2 | 126 | 97 |
+| `PT_BOOL` | 352 | 1287 | 9 | – | 65 | 25 | 169 | 84 |
+| `PT_OBJECT` | 273 | 706 | 20 | – | 28 | 2 | 125 | 98 |
 | `PT_STRING` | 265 | 1020 | 25 | 3 | 29 | 8 | 68 | 132 |
 | `PT_FLOAT64` | 235 | 700 | 2 | – | 54 | 10 | 150 | 19 |
 | `PT_STRING_NAME` | 136 | 505 | – | 1 | 33 | 14 | 60 | 28 |
@@ -108,7 +108,7 @@ instantiable descendant it excludes.
 | `CameraServer` | exact | camera hardware | 1 | 0 |
 | `CameraFeed` | exact | camera hardware | 1 | 1 |
 | `OS` | exact | host process control (execute, kill, shell_open, environment) | 1 | 7 |
-| `EngineDebugger` | exact | the debugger connection of the running engine | 1 | 2 |
+| `EngineDebugger` | exact | the debugger connection of the running engine | 1 | 3 |
 | `GDExtensionManager` | exact | loads and unloads native extensions | 1 | 0 |
 | `ResourceSaver` | exact | writes resources outside the scratch directory | 1 | 1 |
 | `MovieWriter` | exact | movie-maker output files | 1 | 0 |
@@ -213,7 +213,7 @@ Referenced by the shared sources, but never with a generated MethodBind (`NON_BI
 
 | helper | used by | why it has no row of its own |
 |---|---|---|
-| `constructObject` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (874 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
+| `constructObject` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (873 files) | constructs the fresh instance of every A/B/F row; a row that constructs is its check |
 | `destroyObject` | `ApiExerciseRunner`, `RefCounted` | frees what a row constructed (a RefCounted's last release); part of every row's teardown |
 | `getMethodBind` | `AESContext`, `AStar2D`, `AStar3D`, `AStarGrid2D`, … (867 files) | resolves the MethodBind every row's call passes; a wrong bind fails the row that uses it |
 | `getSingleton` | `AccessibilityServer`, `ApiExerciseRunner`, `AudioServer`, `CameraServer`, … (44 files) | resolves the singleton handle every D row calls |
@@ -347,6 +347,7 @@ B and D rows whose per-type arguments would leave them weak take chosen ones (`R
 | `AStarGrid2D.is_in_bounds` | `7`, `3` | `region = Rect2i(0, 0, 8, 4)` |
 | `AStarGrid2D.is_in_boundsv` | `Vector2i(7, 3)` | `region = Rect2i(0, 0, 8, 4)` |
 | `CanvasItem.get_visibility_layer_bit` | `3` | `visibility_layer = 8` |
+| `ClassDB.class_call_static` | `"DirAccess"`, `"get_drive_count"` | — |
 | `ClassDB.class_get_enum_constants` | `"Node"`, `"ProcessMode"` | — |
 | `ClassDB.class_get_enum_list` | `"Node"` | — |
 | `ClassDB.class_get_integer_constant` | `"Node"`, `"NOTIFICATION_READY"` | — |
@@ -961,7 +962,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithNodePathListArg` | A | `Control.set_accessibility_controls_nodes` (setter of `accessibility_controls_nodes`) | 5 | PT_TYPED_ARRAY_BLOB PT_VOID |
 | `ptrcallWithNodePathRect2TwoIntArgs` | F | `LightmapGIData.add_user` (void method) | 1 | PT_INT64 PT_NODE_PATH PT_RECT2 PT_VOID |
 | `ptrcallWithNodePathStringNameArgs` | F | `GLTFObjectModelProperty.append_path_to_property` (void method) | 1 | PT_NODE_PATH PT_STRING_NAME PT_VOID |
-| `ptrcallWithObjectAndBoolArg` | F | `GLTFDocument.register_gltf_document_extension` (void static: nothing to compare) | 14 | PT_BOOL PT_OBJECT PT_VOID |
+| `ptrcallWithObjectAndBoolArg` | F | `GLTFDocument.register_gltf_document_extension` (void static: nothing to compare) | 15 | PT_BOOL PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndBoolArgRetBool` | B | `InputEvent.is_match` on `InputEventAction` (const non-void method) | 2 | PT_BOOL PT_OBJECT |
 | `ptrcallWithObjectAndBoolArgRetDictionary` | F | `Image.compute_image_metrics` (non-const method) | 2 | PT_BOOL PT_OBJECT |
 | `ptrcallWithObjectAndBoolArgRetInt` | F | `ItemList.add_icon_item` (non-const method) | 1 | PT_BOOL PT_INT64 PT_OBJECT |
@@ -989,7 +990,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectAndStringNameArg` | F | `RDShaderFile.set_bytecode` (void method) | 2 | PT_OBJECT PT_STRING_NAME PT_VOID |
 | `ptrcallWithObjectAndThreeVector2iArgsRetPackedVector2List` | F | `TileSetAtlasSource.get_tiles_to_be_removed_on_change` (non-const method) | 1 | PT_OBJECT PT_VECTOR2I |
 | `ptrcallWithObjectAndTransform3DArg` | F | `NavigationMeshSourceGeometryData3D.add_mesh` (void method) | 1 | PT_OBJECT PT_TRANSFORM3D PT_VOID |
-| `ptrcallWithObjectAndTwoBoolArgs` | F | `Node.replace_by` (void method) | 2 | PT_BOOL PT_OBJECT PT_VOID |
+| `ptrcallWithObjectAndTwoBoolArgs` | E | `EngineDebugger.script_debug` (EngineDebugger: the debugger connection of the running engine) | 1 | PT_BOOL PT_OBJECT PT_VOID |
 | `ptrcallWithObjectAndTwoIntArgsRetRect2` | F | `Tree.get_item_area_rect` (an item's area before any layout is the zero Rect2, which a no-op answers too (METHOD_OVERRIDES)) | 1 | PT_INT64 PT_OBJECT PT_RECT2 |
 | `ptrcallWithObjectAndVariantArgRetLong` | E | `MultiplayerAPI.object_configuration_add` (*Multiplayer*: opens sockets or talks to the network) | 2 | PT_INT64 PT_OBJECT PT_VARIANT |
 | `ptrcallWithObjectAndVector2iArg` | E | `EditorInterface.popup_dialog_centered` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT PT_VECTOR2I PT_VOID |
@@ -997,7 +998,7 @@ Rows of other cases whose method takes a path (20): each takes one under the scr
 | `ptrcallWithObjectArgRetByteArray` | B | `GLTFBufferView.load_buffer_view_data` (const non-void method) | 3 | PT_OBJECT |
 | `ptrcallWithObjectArgRetDictionary` | E | `PhysicsDirectSpaceState2D.get_rest_info` (*Extension*: abstract; every instantiable descendant is excluded by it) | 4 | PT_OBJECT |
 | `ptrcallWithObjectArgRetInt` | B | `GLTFState.get_node_index` (const non-void method) | 3 | PT_INT64 PT_OBJECT |
-| `ptrcallWithObjectArgRetLong` | F | `Engine.register_script_language` (non-const singleton method) | 9 | PT_INT64 PT_OBJECT |
+| `ptrcallWithObjectArgRetLong` | F | `Engine.register_script_language` (non-const singleton method) | 10 | PT_INT64 PT_OBJECT |
 | `ptrcallWithObjectArgRetObject` | C | `GLTFCamera.from_node` (static with a return value); then B `CanvasItem.make_input_local` on `Control` (const non-void method) | 18 | PT_OBJECT |
 | `ptrcallWithObjectArgRetPackedFloat32List` | E | `PhysicsDirectSpaceState2D.cast_motion` (*Extension*: abstract; every instantiable descendant is excluded by it) | 2 | PT_OBJECT |
 | `ptrcallWithObjectArgRetPackedStringList` | E | `EditorExportPlatform.get_forced_export_files` (api_type=editor: `api_type` is `editor` in extension_api.json) | 2 | PT_OBJECT |
